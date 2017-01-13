@@ -1,7 +1,6 @@
 //Starship Arena - Created on 1/11/17 by Nathan Purwosumarto
 //Example of LWJGL 3, displays ships that move randomly in the window
 
-import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
@@ -14,6 +13,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 
@@ -26,11 +26,12 @@ public class StarshipArena {
 	
 	Random random = new Random();
 	
-    Starship[] ships;
+	ArrayList<Projectile> projectiles = new ArrayList<>();
+	ArrayList<Starship> ships = new ArrayList<>();
     
 	public void run() {
 		
-        ships = createShips(5);
+        createShips(5);
 
 		init();
 		loop();
@@ -113,8 +114,12 @@ public class StarshipArena {
 		// Set the clear color
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		
-		for(int s = 0; s < ships.length; s++){
-			ships[s].setTexture();
+		//Enable transparency
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		
+		for(int s = 0; s < ships.size(); s++){
+			ships.get(s).setTexture();
 		}
 
 		// Run the rendering loop until the user has attempted to close
@@ -129,11 +134,21 @@ public class StarshipArena {
 			glEnable(GL_TEXTURE_2D);
 			
 			//Display all the ships on the window
-			for(int s = 0; s < ships.length; s++){
-				ships[s].doRandomMovement();
-		    	ships[s].setPoints();
-				ships[s].display();
+			for(int s = 0; s < ships.size(); s++){
+				ships.get(s).doRandomMovement();
+		    	ships.get(s).setPoints();
+				ships.get(s).display();
 			}
+			
+			//Display all the projectiles on the window
+			for(int p = 0; p < projectiles.size(); p++){
+		    	projectiles.get(p).setPoints();
+		    	if(projectiles.size() == 0){
+		    		break;
+		    	}
+				projectiles.get(p).display();
+			}
+			
 			
 			glDisable(GL_TEXTURE_2D);
 			
@@ -156,17 +171,32 @@ public class StarshipArena {
 	
 	//Creates the number of ships specified by the user
 	//Each ship has a random starting location and angle
-	public Starship[] createShips(int num){
+	public void createShips(int num){
 		int startx;
 		int starty;
 		int angle;
-		ships = new Starship[num];
 		for(int i = 0; i < num; i++){
 			startx = random.nextInt(1001) + 50;
 			starty = random.nextInt(701) + 50;
 			angle = random.nextInt(360);
-			ships[i] = new Starship(this, startx, starty, angle, 10);
+			new Starship(this, startx, starty, angle, 10);
 		}
-		return ships;
+		new Fighter(this, 300, 300, 330, 10);
 	}
+	
+	 public void addShip(Starship s){
+    	ships.add(s);
+	 }
+	    
+	 public void removeShip(Starship s){
+    	ships.remove(s);
+	 }
+	 
+	 public void addProjectile(Projectile p){
+    	projectiles.add(p);
+	 }
+    
+     public void removeProjectile(Projectile p){
+    	projectiles.remove(p);
+     }
 }

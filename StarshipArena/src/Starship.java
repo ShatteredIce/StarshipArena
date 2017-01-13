@@ -1,7 +1,3 @@
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-
 import java.util.Random;
 
 public class Starship {
@@ -11,15 +7,10 @@ public class Starship {
 	Model model;
 	Texture tex;
 	
-	double[] vertices = new double[6];
+	double[] vertices;
 	double[] textureCoords; 
-	Point center = new Point();
-	//Left vertex
-	Point p1 = new Point();
-	//Front vertex
-	Point p2 = new Point();
-	//Right vertex
-	Point p3 = new Point();
+	Point center;
+	Point[] points;
 	
 	int angle;
 	double targeted_velocity;
@@ -31,18 +22,17 @@ public class Starship {
 	//Ship specifications
 	int max_health;
 	int current_health;
-	double acceleration = 0.1;
-	double max_velocity = 5;
-	double max_reverse_velocity = -2;
-	double min_turn_velocity = 2;
-	int max_turn_speed = 2;
-	//Weaponry
-	boolean primary_fired = false;
-	int primary_cooldown = 20;
-	int primary_current_cooldown = 0;
-	double primary_speed = 5.5;
-	double primary_lifetime = 450/primary_speed;
-	int primary_accuracy = 95;
+	double acceleration;
+	double max_velocity;
+	double max_reverse_velocity;
+	double min_turn_velocity;
+	int max_turn_speed;
+	boolean primary_fire = false;
+	int primary_cooldown;
+	int primary_current_cooldown;
+	double primary_speed;
+	double primary_lifetime;
+	int primary_accuracy;
 	
 	//Screen bounds
 	int x_min;
@@ -65,13 +55,16 @@ public class Starship {
 				e.printStackTrace();
 			}
 		}
-		center.setX(spawnx);
-		center.setY(spawny);
-		angle = spawnangle;
 		max_health = spawnhealth;
 		current_health = spawnhealth;
+		angle = spawnangle;
+		shipStats();
+		center = new Point(spawnx, spawny);
+		points = generatePoints();
+		vertices = new double[points.length * 2];
+		setTextureCoords();
 		setPoints();
-		textureCoords = new double[]{0, 1, 0.5, 0, 1, 1};
+		game.addShip(this);
 	}
 	
 	public void setPoints(){
@@ -89,34 +82,28 @@ public class Starship {
 		angle += current_turn_speed;
 		normalizeAngle();
 		//Set points for ship facing upward, then rotate points to player angle
-		p1.setX(center.X()-10);
-		p1.setY(center.Y()-20);
-		p2.setX(center.X());
-		p2.setY(center.Y()+20);
-		p3.setX(center.X()+10);
-		p3.setY(center.Y()-20);
-		p1.rotatePoint(center.X(), center.Y(), angle);
-		p2.rotatePoint(center.X(), center.Y(), angle);
-		p3.rotatePoint(center.X(), center.Y(), angle);
-		vertices[0] = p1.X();
-		vertices[1] = p1.Y(); 
-		vertices[2] = p2.X();
-		vertices[3] = p2.Y();
-		vertices[4] = p3.X();
-		vertices[5] = p3.Y();
-//		if(primary_fired == true && primary_current_cooldown == 0){
-//			primary_current_cooldown = primary_cooldown;
-//			//new Projectile(game,p1.X(),p1.Y(),1,angle,primary_accuracy,primary_speed,primary_lifetime,1,0,0);
-//		}
-//		else if(primary_current_cooldown > 0){
-//			primary_current_cooldown -= 1;
-//			if(primary_current_cooldown < 0){
-//				primary_current_cooldown = 0;
-//			}
-//		}
-//		if(current_health <= 0){
-//			destroy();
-//		}
+		int v_index = 0;
+		for (int i = 0; i < points.length; i++) {
+			points[i].setX(center.X() + points[i].getXOffset());
+			points[i].setY(center.Y() + points[i].getYOffset());
+			points[i].rotatePoint(center.X(), center.Y(), angle);
+			v_index = 2*i;
+			vertices[v_index] = points[i].X();
+			vertices[v_index+1] = points[i].Y();	
+		}
+		if(primary_fire == true && primary_current_cooldown == 0){
+			primary_current_cooldown = primary_cooldown;
+			new Projectile(game,center.X(),center.Y(),1,angle,primary_accuracy,primary_speed,primary_lifetime);
+		}
+		else if(primary_current_cooldown > 0){
+			primary_current_cooldown -= 1;
+			if(primary_current_cooldown < 0){
+				primary_current_cooldown = 0;
+			}
+		}
+		if(current_health <= 0){
+			//destroy();
+		}
 	}
 	
 //	public void destroy(){
@@ -143,6 +130,10 @@ public class Starship {
 	
 	public void setTexture(){
 		tex = new Texture("triangle_spaceship.jpg");
+	}
+	
+	public void setTextureCoords(){
+		textureCoords = new double[]{0, 1, 0.5, 0, 1, 1};
 	}
 	
 	public void display(){
@@ -173,6 +164,30 @@ public class Starship {
 			targeted_velocity = min_turn_velocity;
 		}
 		
+	}
+	
+	public Point[] generatePoints(){
+		Point[] points = new Point[]{
+			new Point(-10, -20, true),
+			new Point(0, 20, true),
+			new Point(10, -20, true),
+		};
+		return points;
+	}
+	
+	public void shipStats(){
+		//movement
+		acceleration = 0.1;
+		max_velocity = 5;
+		max_reverse_velocity = -2;
+		min_turn_velocity = 2;
+		max_turn_speed = 2;
+		//weaponry
+		primary_cooldown = 20;
+		primary_current_cooldown = 0;
+		primary_speed = 5.5;
+		primary_lifetime = 450/primary_speed;
+		primary_accuracy = 95;
 	}
 	
 	public void setScreenBounds(int[] bounds){
@@ -249,18 +264,6 @@ public class Starship {
 		current_health = newhealth;
 	}
 	
-	public Point getP1() {
-		return p1;
-	}
-	
-	public Point getP2() {
-		return p2;
-	}
-	
-	public Point getP3() {
-		return p3;
-	}
-	
 	public double getMVelocity(){
 		return targeted_velocity;
 	}
@@ -278,11 +281,11 @@ public class Starship {
 	}
 	
 	public void setPrimaryFired(boolean state){
-		primary_fired = state;
+		primary_fire = state;
 	}
 	
-	public boolean getPrimaryFired(){
-		return primary_fired;
+	public boolean getPrimaryState(){
+		return primary_fire;
 	}
 	
 	public int getMaxHealth(){
