@@ -69,6 +69,7 @@ public class Starship {
 	
 	public void setPoints(){
 		updateCurrentVelocity();
+		//set the center point if not offscreen
 		Point newcenter = new Point(center.X(), center.Y()+current_velocity);
 		newcenter.rotatePoint(center.X(), center.Y(), angle);
 		if(onScreen(newcenter.X(), newcenter.Y())){
@@ -93,7 +94,7 @@ public class Starship {
 		}
 		if(primary_fire == true && primary_current_cooldown == 0){
 			primary_current_cooldown = primary_cooldown;
-			new Projectile(game,center.X(),center.Y(),1,angle,primary_accuracy,primary_speed,primary_lifetime);
+			new Projectile(this, game,center.X(),center.Y(),1,angle,primary_accuracy,primary_speed,primary_lifetime);
 		}
 		else if(primary_current_cooldown > 0){
 			primary_current_cooldown -= 1;
@@ -102,31 +103,13 @@ public class Starship {
 			}
 		}
 		if(current_health <= 0){
-			//destroy();
+			destroy();
 		}
 	}
 	
-//	public void destroy(){
-//		game.setPlayerAlive(false);
-//		int explosion_projectiles = 20;
-//        int drawingangle = 0;
-//        while(drawingangle < 360){
-//            int x_shift = random.nextInt(4) - 2;
-//            int y_shift = random.nextInt(4) - 2;
-//            int color = random.nextInt(3);
-//            if(color == 1){
-//            	new Projectile(game, center.X()+x_shift,center.Y()+y_shift,1, drawingangle, 90, 2, 10, 1.0, 0.6, 0);
-//            }
-//            else if(color == 2){
-//            	new Projectile(game, center.X()+x_shift,center.Y()+y_shift,1, drawingangle, 90, 2, 10, 1.0, 0.3, 0);
-//            }
-//            else{
-//            	new Projectile(game, center.X()+x_shift,center.Y()+y_shift,1, drawingangle, 90, 2, 10, 1.0, 0, 0);
-//            }
-//            drawingangle += (360/explosion_projectiles);
-//        }
-//
-//	}
+	public void destroy(){
+		game.removeShip(this);
+	}
 	
 	public void setTexture(){
 		tex = new Texture("triangle_spaceship.jpg");
@@ -143,27 +126,25 @@ public class Starship {
 	}
 
 	public void doRandomMovement(){
-		int v = random.nextInt(4);
-		int t = random.nextInt(3);
-		boolean turning = false;
-		if(v == 0){
-			targeted_velocity = max_velocity;
-		}
-		else if(v == 1){
-			targeted_velocity = 0;
-		}
-		if(t == 0){
-			current_turn_speed = max_turn_speed;
-			turning = true;
-		}
-		else if(t == 1){
-			current_turn_speed = -max_turn_speed;
-			turning = true;
-		}
-		if(turning == true && targeted_velocity < min_turn_velocity){
-			targeted_velocity = min_turn_velocity;
-		}
-		
+//		int v = random.nextInt(4);
+//		int t = random.nextInt(3);
+//		if(v == 0){
+//			targeted_velocity = max_velocity;
+//		}
+//		else if(v == 1){
+//			targeted_velocity = 0;
+//		}
+//		if(t == 0){
+//			current_turn_speed = max_turn_speed;
+//		}
+//		else if(t == 1){
+//			current_turn_speed = -max_turn_speed;
+//		}
+//		if(current_turn_speed != 0 && targeted_velocity < min_turn_velocity){
+//			targeted_velocity = min_turn_velocity;
+//		}
+		targeted_velocity = max_velocity;
+		current_turn_speed = max_turn_speed;
 	}
 	
 	public Point[] generatePoints(){
@@ -238,6 +219,10 @@ public class Starship {
 	
 	public double getY() {
 		return center.Y();
+	}
+	
+	public Point[] getPoints(){
+		return points;
 	}
 	
 	public void setX(int newx) {

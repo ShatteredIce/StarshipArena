@@ -4,6 +4,7 @@ public class Projectile {
 	
 	Random random = new Random();
 	StarshipArena game;
+	Starship owner;
 	Model model;
 	Texture tex;
 	
@@ -18,7 +19,8 @@ public class Projectile {
 	double lifetime;
 	double current_lifetime = 0;
 	
-	Projectile(StarshipArena mygame, double spawnx, double spawny, int newdamage, int spawnangle, int accuracy, double newspeed, double newlifetime){
+	Projectile(Starship newowner, StarshipArena mygame, double spawnx, double spawny, int newdamage, int spawnangle, int accuracy, double newspeed, double newlifetime){
+		owner = newowner;
 		game = mygame;
 		damage = newdamage;
 		angle = spawnangle;
@@ -93,6 +95,14 @@ public class Projectile {
 		model = new Model(vertices, textureCoords);
 		tex.bind();
 		model.render();
+	}
+	
+	public Starship getOwner(){
+		return owner;
+	}
+	
+	public Point[] getPoints(){
+		return points;
 	}
 	
 	public int getDamage(){

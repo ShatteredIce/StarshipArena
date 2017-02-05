@@ -1,5 +1,8 @@
+import java.util.ArrayList;
 
 public class Fighter extends Starship{
+	
+	Starship target = null;
 	
 	public Fighter(StarshipArena mygame, int spawnx, int spawny){
 		super(mygame, spawnx, spawny);
@@ -42,28 +45,77 @@ public class Fighter extends Starship{
 	}
 	
 	public void doRandomMovement(){
-		int v = random.nextInt(4);
-		int t = random.nextInt(3);
-		int f = random.nextInt(5);
-		boolean turning = false;
-		if(v == 0){
-			targeted_velocity = max_velocity;
+		//check if the target is already dead
+		if(target != null && target.getHealth() <= 0){
+			target = null;
 		}
-		else if(v == 1){
-			targeted_velocity = 0;
+		//get a new target
+		if(target == null){
+			ArrayList<Starship> shipsList = game.getAllShips();
+			for(int i = 0; i < shipsList.size(); i++){
+				if(!shipsList.get(i).equals(this)){
+					target = shipsList.get(i);
+					break;
+				}
+			}
+			int v = random.nextInt(4);
+			int t = random.nextInt(3);
+			int f = random.nextInt(5);
+			if(v == 0){
+				targeted_velocity = max_velocity / 2;
+			}
+			else if(v == 1){
+				targeted_velocity = 0;
+			}
+			if(t == 0){
+				current_turn_speed = max_turn_speed;
+			}
+			else if(t == 1){
+				current_turn_speed = -max_turn_speed;
+			}
+			primary_fire = false;
 		}
-		if(t == 0){
-			current_turn_speed = max_turn_speed;
-			turning = true;
+		else{
+			int relativeAngle = game.angleToPoint(center.X(), center.Y(), target.getX(), target.getY());
+			if(game.distance(center.X(), center.Y(), target.getX(), target.getY()) > 100){
+				targeted_velocity = max_velocity;
+				int leftBearing = 0;
+				int rightBearing = 0;
+				//don't turn if angle is already pointed toward player
+				if(angle > relativeAngle - 5 && angle < relativeAngle + 5){
+					current_turn_speed = 0;
+				}
+				else{
+					//Find which direction to turn is shortest
+					if(angle >= relativeAngle){
+						rightBearing = angle - relativeAngle;
+						leftBearing = 360 - angle + relativeAngle;
+					}
+					else if(angle < relativeAngle){
+						leftBearing = relativeAngle - angle;
+						rightBearing = angle + 360 - relativeAngle;
+					}
+					//turn appropriate way 
+					if(leftBearing <= rightBearing){
+						current_turn_speed = max_turn_speed;
+					}
+					else{
+						current_turn_speed = -max_turn_speed;
+					}
+				}
+			}
+			relativeAngle = game.angleToPoint(center.X(), center.Y(), target.getX(), target.getY());
+			if(angle > relativeAngle - 5 && angle < relativeAngle + 5){
+				//if pointed toward player and gun cooldown is zero, fire
+				primary_fire = true;
+			}
+			else{
+				primary_fire = false;
+			}
 		}
-		else if(t == 1){
-			current_turn_speed = -max_turn_speed;
-			turning = true;
-		}
-		if(turning == true && targeted_velocity < min_turn_velocity){
+		if(current_turn_speed != 0 && targeted_velocity < min_turn_velocity){
 			targeted_velocity = min_turn_velocity;
 		}
-		primary_fire = true;
 		
 	}
 

@@ -20,8 +20,10 @@ public class Point {
 			x_offset = xvalue;
 			y_offset = yvalue;
 		}
-		x = xvalue;
-		y = yvalue;
+		else{
+			x = xvalue;
+			y = yvalue;
+		}
 	}
 	
 	public Point(double startx, double starty, double new_x_offset, double new_y_offset){
