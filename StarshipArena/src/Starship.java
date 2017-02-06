@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Starship {
@@ -126,25 +127,58 @@ public class Starship {
 	}
 
 	public void doRandomMovement(){
-//		int v = random.nextInt(4);
-//		int t = random.nextInt(3);
-//		if(v == 0){
-//			targeted_velocity = max_velocity;
-//		}
-//		else if(v == 1){
-//			targeted_velocity = 0;
-//		}
-//		if(t == 0){
-//			current_turn_speed = max_turn_speed;
-//		}
-//		else if(t == 1){
-//			current_turn_speed = -max_turn_speed;
-//		}
-//		if(current_turn_speed != 0 && targeted_velocity < min_turn_velocity){
-//			targeted_velocity = min_turn_velocity;
-//		}
-		targeted_velocity = max_velocity;
-		current_turn_speed = max_turn_speed;
+		int v = random.nextInt(4);
+		int t = random.nextInt(3);
+		if(v == 0){
+			targeted_velocity = max_velocity;
+		}
+		else if(v == 1){
+			targeted_velocity = 0;
+		}
+		if(t == 0){
+			current_turn_speed = max_turn_speed;
+		}
+		else if(t == 1){
+			current_turn_speed = -max_turn_speed;
+		}
+		if(current_turn_speed != 0 && targeted_velocity < min_turn_velocity){
+			targeted_velocity = min_turn_velocity;
+		}
+		edgeGuard();
+//		targeted_velocity = max_velocity;
+//		current_turn_speed = max_turn_speed;
+	}
+	
+	public void edgeGuard(){
+		int BORDER = 100;
+		//left edge
+		if(center.X() < BORDER && angle <= 90){
+			current_turn_speed = -max_turn_speed;
+		}
+		else if(center.X() < BORDER && angle <= 180){
+			current_turn_speed = max_turn_speed;
+		}
+		//right edge
+		else if(center.X() > x_max - BORDER && angle >= 270){
+			current_turn_speed = max_turn_speed;
+		}
+		else if(center.X() > x_max - BORDER && angle >= 180){
+			current_turn_speed = -max_turn_speed;
+		}
+		//bottom edge
+		else if(center.Y() < BORDER && angle >= 90 && angle <= 180){
+			current_turn_speed = -max_turn_speed;
+		}
+		else if(center.Y() < BORDER && angle > 180 && angle <= 270){
+			current_turn_speed = max_turn_speed;
+		}
+		//top edge
+		else if(center.Y() > y_max - BORDER && angle <= 90){
+			current_turn_speed = max_turn_speed;
+		}
+		else if(center.Y() > y_max - BORDER && angle >= 270){
+			current_turn_speed = -max_turn_speed;
+		}
 	}
 	
 	public Point[] generatePoints(){
@@ -154,6 +188,17 @@ public class Starship {
 			new Point(10, -20, true),
 		};
 		return points;
+	}
+	
+	public ArrayList<Starship> scan(){
+		ArrayList<Starship> shipsList = game.getAllShips();
+		ArrayList<Starship> scanned = new ArrayList<Starship>();
+		for(int i = 0; i < shipsList.size(); i++){
+			if(!shipsList.get(i).equals(this) && (game.distance(center.X(), center.Y(), shipsList.get(i).getX(), shipsList.get(i).getY()) <= 200)){
+				scanned.add(shipsList.get(i));
+			}
+		}
+		return scanned;
 	}
 	
 	public void shipStats(){
