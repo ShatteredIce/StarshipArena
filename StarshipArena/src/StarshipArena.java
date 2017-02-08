@@ -1,6 +1,7 @@
 //Starship Arena - Created on 1/11/17 by Nathan Purwosumarto
 //Example of LWJGL 3, displays ships that move randomly in the window
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
@@ -21,17 +22,19 @@ public class StarshipArena {
 
 	//The window handle and size
 	private long window;
-	int WIDTH = 1100;
-    int HEIGHT = 800;
+	int WIDTH = 1300;
+    int HEIGHT = 900;
 	
 	Random random = new Random();
 	
 	ArrayList<Projectile> projectiles = new ArrayList<>();
 	ArrayList<Starship> ships = new ArrayList<>();
+	ArrayList<Planet> planets = new ArrayList<>();
+	
+	Planet selectedPlanet = null;
+	Sidebar sidebar;
     
 	public void run() {
-		
-        createShips(10);
 
 		init();
 		loop();
@@ -68,8 +71,9 @@ public class StarshipArena {
 		glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
 			if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
 				glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
+		
 		});
-
+		
 		// Get the thread stack and push a new frame
 		try ( MemoryStack stack = stackPush() ) {
 			IntBuffer pWidth = stack.mallocInt(1); // int*
@@ -108,7 +112,7 @@ public class StarshipArena {
 		
 		glMatrixMode(GL_PROJECTION);
         glLoadIdentity(); // Resets any previous projection matrices
-        glOrtho(0, 1100, 0, 800, 1, -1);
+        glOrtho(0, WIDTH, 0, HEIGHT, 1, -1);
         glMatrixMode(GL_MODELVIEW);
 
 		// Set the clear color
@@ -118,9 +122,10 @@ public class StarshipArena {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
-		for(int s = 0; s < ships.size(); s++){
-			ships.get(s).setTexture();
-		}
+		createShips(10);
+		
+		new Planet(this, 500, 500);
+		sidebar = new Sidebar(this, 1175, 450);
 
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
@@ -133,14 +138,19 @@ public class StarshipArena {
 			
 			glEnable(GL_TEXTURE_2D);
 			
-			//Display all the ships on the window
-			for(int s = 0; s < ships.size(); s++){
-				ships.get(s).display();
-				ships.get(s).doRandomMovement();
-		    	ships.get(s).setPoints();
+			//Display planets
+			for(int p = 0; p < planets.size(); p++){
+				planets.get(p).display();
 			}
 			
-			//Display all the projectiles on the window
+			//display ships
+			for(int s = 0; s < ships.size(); s++){
+				ships.get(s).doRandomMovement();
+		    	ships.get(s).setPoints();
+		    	ships.get(s).display();
+			}
+			
+			//display projectiles
 			for(int p = 0; p < projectiles.size(); p++){
 		    	projectiles.get(p).setPoints();
 		    	if(projectiles.size() == 0){
@@ -148,8 +158,17 @@ public class StarshipArena {
 		    	}
 				projectiles.get(p).display();
 			}
+			
+			//Display sidebar
+			for(int p = 0; p < planets.size(); p++){
+				if(planets.get(p).getSelected() == true){
+					sidebar.display();
+				}
+			}
 		
 			checkProjectiles();
+			
+			onMouseEvent();
 			
 			glDisable(GL_TEXTURE_2D);
 			
@@ -182,7 +201,7 @@ public class StarshipArena {
 			angle = random.nextInt(360);
 			new Starship(this, startx, starty, angle, 1);
 		}
-		new Fighter(this, 300, 300, 330, 10);
+		new Fighter(this, 300, 300, 0, 10);
 	}
 	
 	//check projectile collisions
@@ -198,6 +217,38 @@ public class StarshipArena {
 			}
 		}
     }
+	
+	//responds to mouse clicks
+	public void onMouseEvent(){
+		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == 1){
+			boolean clickedOnSprite = false;
+			DoubleBuffer xpos = BufferUtils.createDoubleBuffer(1);
+			DoubleBuffer ypos = BufferUtils.createDoubleBuffer(1);
+			glfwGetCursorPos(window, xpos, ypos);
+			//convert the glfw coordinate to our coordinate system
+			ypos.put(0, HEIGHT - ypos.get(0));
+			//System.out.println(xpos.get(0) + " " +ypos.get(0));
+
+			for (int i = 0; i < planets.size(); i++) {
+				Planet p = planets.get(i);
+				if(distance(p.getX(), p.getY(), xpos.get(0), ypos.get(0)) <= p.getSize() - 30){
+					if(selectedPlanet != null){
+						selectedPlanet.setSelected(false);
+					}
+					selectedPlanet = p;
+					p.setSelected(true);
+					clickedOnSprite = true;
+					break;
+				}
+			}
+			if(clickedOnSprite == false){
+				if(selectedPlanet != null){
+					selectedPlanet.setSelected(false);
+					selectedPlanet = null;
+				}
+			}
+		}
+	}
 	
 	public int angleToPoint(double center_x, double center_y, double target_x, double target_y){
     	//first quadrant
@@ -291,5 +342,13 @@ public class StarshipArena {
 	
 	public void removeProjectile(Projectile p){
 		projectiles.remove(p);
+	}
+	
+	public void addPlanet(Planet p){
+    	planets.add(p);
+	}
+	    
+	public void removePlanet(Planet p){
+		planets.remove(p);
 	}
 }

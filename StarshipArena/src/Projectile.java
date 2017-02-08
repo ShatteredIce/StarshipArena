@@ -9,7 +9,8 @@ public class Projectile {
 	Texture tex;
 	
 	double[] vertices;
-	double[] textureCoords; 
+	double[] textureCoords;
+	int[] indices;
 	Point center;
 	Point[] points;
 	
@@ -31,8 +32,9 @@ public class Projectile {
 		points = generatePoints();
 		vertices = new double[points.length * 2];
 		setTextureCoords();
-		setPoints();
+		setIndices();
 		setTexture();
+		setPoints();
 		game.addProjectile(this);
 	}
 	
@@ -76,9 +78,7 @@ public class Projectile {
 			new Point(-3, -10, true),
 			new Point(-3, 10, true),
 			new Point(3, 10, true),
-			new Point(3, 10, true),
 			new Point(3, -10, true),
-			new Point(-3, -10, true)
 		};
 		return points;
 	}
@@ -88,11 +88,15 @@ public class Projectile {
 	}
 	
 	public void setTextureCoords(){
-		textureCoords = new double[]{1, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1};
+		textureCoords = new double[]{1, 1, 0, 1, 0, 0, 1, 0};
+	}
+	
+	public void setIndices(){
+		indices = new int[]{0, 1, 2, 2, 3, 0};
 	}
 	
 	public void display(){
-		model = new Model(vertices, textureCoords);
+		model = new Model(vertices, textureCoords, indices);
 		tex.bind();
 		model.render();
 	}

@@ -10,6 +10,7 @@ public class Starship {
 	
 	double[] vertices;
 	double[] textureCoords; 
+	int[] indices;
 	Point center;
 	Point[] points;
 	
@@ -64,6 +65,8 @@ public class Starship {
 		points = generatePoints();
 		vertices = new double[points.length * 2];
 		setTextureCoords();
+		setIndices();
+		setTexture();
 		setPoints();
 		game.addShip(this);
 	}
@@ -103,9 +106,6 @@ public class Starship {
 				primary_current_cooldown = 0;
 			}
 		}
-		if(current_health <= 0){
-			destroy();
-		}
 	}
 	
 	public void destroy(){
@@ -120,10 +120,19 @@ public class Starship {
 		textureCoords = new double[]{0, 1, 0.5, 0, 1, 1};
 	}
 	
+	public void setIndices(){
+		indices = new int[]{0, 1, 2};
+	}
+	
 	public void display(){
-		model = new Model(vertices, textureCoords);
-		tex.bind();
-		model.render();
+		if(current_health <= 0){
+			destroy();
+		}
+		else{
+			model = new Model(vertices, textureCoords, indices);
+			tex.bind();
+			model.render();
+		}
 	}
 
 	public void doRandomMovement(){

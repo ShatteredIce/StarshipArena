@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 public class Fighter extends Starship{
 	
 	Starship target = null;
@@ -56,7 +54,6 @@ public class Fighter extends Starship{
 			}
 			//random movement if fighter has no target
 			int t = random.nextInt(4);
-			int f = random.nextInt(5);
 			targeted_velocity = max_velocity / 2;
 			//turn left
 			if(t == 0){
