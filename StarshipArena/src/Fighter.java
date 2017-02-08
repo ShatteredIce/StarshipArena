@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Fighter extends Starship{
 	
 	Starship target = null;
@@ -6,8 +8,8 @@ public class Fighter extends Starship{
 		super(mygame, spawnx, spawny);
 	}
 
-	public Fighter(StarshipArena mygame, int spawnx, int spawny, int spawnangle, int spawnhealth) {
-		super(mygame, spawnx, spawny, spawnangle, spawnhealth);
+	public Fighter(StarshipArena mygame, String newteam, int spawnx, int spawny, int spawnangle, int spawnhealth) {
+		super(mygame, newteam, spawnx, spawny, spawnangle, spawnhealth);
 	}
 	
 	public void shipStats(){
@@ -49,8 +51,13 @@ public class Fighter extends Starship{
 		}
 		//get a new target if possible
 		if(target == null){
-			if(scan().size() != 0){
-				target = scan().get(0);
+			ArrayList<Starship> scanned = scan();
+			if(scanned.size() != 0){
+				for (int i = 0; i < scanned.size(); i++) {
+					if(!scanned.get(i).getTeam().equals(this.getTeam())){
+						target = scanned.get(i);
+					}
+				}
 			}
 			//random movement if fighter has no target
 			int t = random.nextInt(4);

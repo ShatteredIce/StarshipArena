@@ -14,6 +14,7 @@ public class Starship {
 	Point center;
 	Point[] points;
 	
+	String team;
 	int angle;
 	double targeted_velocity;
 	double current_velocity = 0;
@@ -43,11 +44,12 @@ public class Starship {
 	int y_max;
 	
 	Starship(StarshipArena mygame, int spawnx, int spawny){
-		this(mygame, spawnx, spawny, 0, 10);
+		this(mygame, "none", spawnx, spawny, 0, 10);
 	}
 	
-	Starship(StarshipArena mygame, int spawnx, int spawny, int spawnangle, int spawnhealth){
+	Starship(StarshipArena mygame, String newteam, int spawnx, int spawny, int spawnangle, int spawnhealth){
 		game = mygame;
+		team = newteam;
 		setScreenBounds(game.getScreenBounds());
 		if(!onScreen(spawnx, spawny)){
 			try {
@@ -267,16 +269,12 @@ public class Starship {
 		}
 	}
 	
-	public double getX() {
-		return center.X();
-	}
-	
-	public double getY() {
-		return center.Y();
-	}
-	
 	public Point[] getPoints(){
 		return points;
+	}
+	
+	public String getTeam(){
+		return team;
 	}
 	
 	public void setX(int newx) {
@@ -285,6 +283,14 @@ public class Starship {
 	
 	public void setY(int newy) {
 		center.setY(newy);
+	}
+	
+	public double getX() {
+		return center.X();
+	}
+	
+	public double getY() {
+		return center.Y();
 	}
 	
 	public int getAngle() {
