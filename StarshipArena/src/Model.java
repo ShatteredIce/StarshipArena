@@ -40,7 +40,6 @@ public class Model {
 	}
 	
 	protected void finalize() throws Throwable{
-		System.out.println("died");
 		glDeleteBuffers(v_id);
 		glDeleteBuffers(t_id);
 		glDeleteBuffers(i_id);
