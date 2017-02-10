@@ -7,6 +7,10 @@ public class Fighter extends Starship{
 	public Fighter(StarshipArena mygame, int spawnx, int spawny){
 		super(mygame, spawnx, spawny);
 	}
+	
+	public Fighter(StarshipArena mygame, int spawnx, int spawny, int spawnangle, int spawnhealth) {
+		super(mygame, "none", spawnx, spawny, spawnangle, spawnhealth);
+	}
 
 	public Fighter(StarshipArena mygame, String newteam, int spawnx, int spawny, int spawnangle, int spawnhealth) {
 		super(mygame, newteam, spawnx, spawny, spawnangle, spawnhealth);
@@ -18,13 +22,14 @@ public class Fighter extends Starship{
 		max_velocity = 5;
 		max_reverse_velocity = -2;
 		min_turn_velocity = 2;
-		max_turn_speed = 5;
+		max_turn_speed = 3;
 		//weaponry
 		primary_cooldown = 50;
 		primary_current_cooldown = 0;
 		primary_speed = 7.5;
 		primary_lifetime = 450/primary_speed;
 		primary_accuracy = 95;
+		scan_range = 300;
 	}
 	
 	public void setTexture(){
@@ -50,15 +55,8 @@ public class Fighter extends Starship{
 			target = null;
 		}
 		//get a new target if possible
+		getClosestEnemy();
 		if(target == null){
-			ArrayList<Starship> scanned = scan();
-			if(scanned.size() != 0){
-				for (int i = 0; i < scanned.size(); i++) {
-					if(!scanned.get(i).getTeam().equals(this.getTeam())){
-						target = scanned.get(i);
-					}
-				}
-			}
 			//random movement if fighter has no target
 			int t = random.nextInt(4);
 			targeted_velocity = max_velocity / 2;
@@ -74,8 +72,9 @@ public class Fighter extends Starship{
 		}
 		else{
 			int relativeAngle = game.angleToPoint(center.X(), center.Y(), target.getX(), target.getY());
+			targeted_velocity = max_velocity;
 			if(game.distance(center.X(), center.Y(), target.getX(), target.getY()) > 100){
-				targeted_velocity = max_velocity;
+				//targeted_velocity = max_velocity;
 				int leftBearing = 0;
 				int rightBearing = 0;
 				//don't turn if angle is already pointed toward target
@@ -114,6 +113,21 @@ public class Fighter extends Starship{
 			targeted_velocity = min_turn_velocity;
 		}
 		
+	}
+	
+	//gets the closest enemy and changes target accordingly
+	public void getClosestEnemy(){
+		ArrayList<Starship> scanned = scan();
+		if(scanned.size() != 0){
+			for (int i = 0; i < scanned.size(); i++) {
+				Starship s = scanned.get(i);
+				//if fighter has no team, or scanned enemy is on another team or closer than current target
+				if((team.equals("none") || !s.getTeam().equals(team)) && (target == null ||
+					game.distance(center.X(), center.Y(), s.getX(), s.getY()) < game.distance(center.X(), center.Y(), target.getX(), target.getY()))){
+					 target = scanned.get(i);
+				}
+			}
+		}
 	}
 
 }

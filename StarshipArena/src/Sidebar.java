@@ -21,6 +21,8 @@ public class Sidebar {
 		setIndices();
 		setTexture();
 		setPoints();
+		model = new Model(vertices, textureCoords, indices);
+
 	}
 	
 	public void setPoints(){
@@ -57,9 +59,8 @@ public class Sidebar {
 	}
 	
 	public void display(){
-		model = new Model(vertices, textureCoords, indices);
 		tex.bind();
-		model.render();
+		model.render(vertices);
 	}
 	
 	public double getX() {

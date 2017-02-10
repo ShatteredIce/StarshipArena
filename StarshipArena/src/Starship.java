@@ -36,6 +36,7 @@ public class Starship {
 	double primary_speed;
 	double primary_lifetime;
 	int primary_accuracy;
+	int scan_range;
 	
 	//Screen bounds
 	int x_min;
@@ -45,6 +46,10 @@ public class Starship {
 	
 	Starship(StarshipArena mygame, int spawnx, int spawny){
 		this(mygame, "none", spawnx, spawny, 0, 10);
+	}
+	
+	Starship(StarshipArena mygame, int spawnx, int spawny, int spawnangle, int spawnhealth){
+		this(mygame, "none", spawnx, spawny, spawnangle, spawnhealth);
 	}
 	
 	Starship(StarshipArena mygame, String newteam, int spawnx, int spawny, int spawnangle, int spawnhealth){
@@ -70,6 +75,7 @@ public class Starship {
 		setIndices();
 		setTexture();
 		setPoints();
+		model = new Model(vertices, textureCoords, indices);
 		game.addShip(this);
 	}
 	
@@ -86,8 +92,7 @@ public class Starship {
 			targeted_velocity = 0;
 			current_velocity = 0;
 		}
-		angle += current_turn_speed;
-		normalizeAngle();
+		updateCurrentAngle();
 		//Set points for ship facing upward, then rotate points to player angle
 		int v_index = 0;
 		for (int i = 0; i < points.length; i++) {
@@ -131,9 +136,8 @@ public class Starship {
 			destroy();
 		}
 		else{
-			model = new Model(vertices, textureCoords, indices);
 			tex.bind();
-			model.render();
+			model.render(vertices);
 		}
 	}
 
@@ -205,7 +209,7 @@ public class Starship {
 		ArrayList<Starship> shipsList = game.getAllShips();
 		ArrayList<Starship> scanned = new ArrayList<Starship>();
 		for(int i = 0; i < shipsList.size(); i++){
-			if(!shipsList.get(i).equals(this) && (game.distance(center.X(), center.Y(), shipsList.get(i).getX(), shipsList.get(i).getY()) <= 200)){
+			if(!shipsList.get(i).equals(this) && (game.distance(center.X(), center.Y(), shipsList.get(i).getX(), shipsList.get(i).getY()) <= scan_range)){
 				scanned.add(shipsList.get(i));
 			}
 		}
@@ -225,6 +229,7 @@ public class Starship {
 		primary_speed = 5.5;
 		primary_lifetime = 450/primary_speed;
 		primary_accuracy = 95;
+		scan_range = 200;
 	}
 	
 	public void setScreenBounds(int[] bounds){
@@ -258,6 +263,11 @@ public class Starship {
 				current_velocity = targeted_velocity;
 			}
 		}
+	}
+	
+	public void updateCurrentAngle(){
+		angle += current_turn_speed;
+		normalizeAngle();
 	}
 	
 	public void normalizeAngle(){
