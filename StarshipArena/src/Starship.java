@@ -70,6 +70,7 @@ public class Starship {
 		setIndices();
 		setTexture();
 		setPoints();
+		model = new Model(vertices, textureCoords, indices);
 		game.addShip(this);
 	}
 	
@@ -131,9 +132,8 @@ public class Starship {
 			destroy();
 		}
 		else{
-			model = new Model(vertices, textureCoords, indices);
 			tex.bind();
-			model.render();
+			model.render(vertices);
 		}
 	}
 

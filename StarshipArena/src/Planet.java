@@ -23,6 +23,7 @@ public class Planet {
 		setIndices();
 		setTexture();
 		setPoints();
+		model = new Model(vertices, textureCoords, indices);
 		game.addPlanet(this);
 	}
 	
@@ -60,9 +61,8 @@ public class Planet {
 	}
 	
 	public void display(){
-		model = new Model(vertices, textureCoords, indices);
 		tex.bind();
-		model.render();
+		model.render(vertices);
 	}
 	
 	public int getSize(){

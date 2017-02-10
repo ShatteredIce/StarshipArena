@@ -122,7 +122,7 @@ public class StarshipArena {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
-		createShips(50);
+		createShips(1000);
 		
 		new Planet(this, 500, 500);
 		sidebar = new Sidebar(this, 1175, 450);

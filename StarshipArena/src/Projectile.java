@@ -35,6 +35,7 @@ public class Projectile {
 		setIndices();
 		setTexture();
 		setPoints();
+		model = new Model(vertices, textureCoords, indices);
 		game.addProjectile(this);
 	}
 	
@@ -96,9 +97,8 @@ public class Projectile {
 	}
 	
 	public void display(){
-		model = new Model(vertices, textureCoords, indices);
 		tex.bind();
-		model.render();
+		model.render(vertices);
 	}
 	
 	public Starship getOwner(){

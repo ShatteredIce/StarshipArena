@@ -39,7 +39,20 @@ public class Model {
 
 	}
 	
-	public void render() {
+	protected void finalize() throws Throwable{
+		System.out.println("died");
+		glDeleteBuffers(v_id);
+		glDeleteBuffers(t_id);
+		glDeleteBuffers(i_id);
+		super.finalize();
+		
+	}
+	
+	public void render(double[] vertices) {
+		
+		glBindBuffer(GL_ARRAY_BUFFER, v_id);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
+		
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		
