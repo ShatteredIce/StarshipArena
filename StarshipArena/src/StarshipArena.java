@@ -122,7 +122,7 @@ public class StarshipArena {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
-		createShips(1000);
+		createShips(20);
 		
 		new Planet(this, 500, 500);
 		sidebar = new Sidebar(this, 1175, 450);
@@ -199,9 +199,9 @@ public class StarshipArena {
 			startx = random.nextInt(WIDTH - 100) + 50;
 			starty = random.nextInt(HEIGHT - 100) + 50;
 			angle = random.nextInt(360);
-			new Fighter(this, "red", startx, starty, angle, 5);
+			new Starship(this, startx, starty, angle, 1);
 		}
-		//new Fighter(this, 300, 300, 0, 10);
+		new Fighter(this, "none", 300, 300, 0, 10);
 	}
 	
 	//check projectile collisions
