@@ -53,14 +53,16 @@ public class Projectile {
 			vertices[v_index] = points[i].X();
 			vertices[v_index+1] = points[i].Y();	
 		}
-		updateLifetime();
 	}
 	
-	public void updateLifetime(){
+	//returns false if projectile is destroyed
+	public boolean updateLifetime(){
 		current_lifetime += 1;
 		if(current_lifetime >= lifetime){
 			game.removeProjectile(this);
+			return false;
 		}
+		return true;
 	}
 	
 	public void setAccuracy(int accuracy){
@@ -97,8 +99,10 @@ public class Projectile {
 	}
 	
 	public void display(){
-		tex.bind();
-		model.render(vertices);
+		if(updateLifetime()){
+			tex.bind();
+			model.render(vertices);
+		}	
 	}
 	
 	public Starship getOwner(){

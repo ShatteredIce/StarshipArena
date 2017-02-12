@@ -199,9 +199,10 @@ public class StarshipArena {
 			startx = random.nextInt(WIDTH - 100) + 50;
 			starty = random.nextInt(HEIGHT - 100) + 50;
 			angle = random.nextInt(360);
-			new Starship(this, startx, starty, angle, 1);
+			new Fighter(this, "none", startx, starty, angle, 2);
 		}
-		new Fighter(this, "none", 300, 300, 0, 10);
+//		new Fighter(this, "red", 500, 300, 0, 10);
+//		new Fighter(this, "blue", 600, 400, 310, 10);
 	}
 	
 	//check projectile collisions

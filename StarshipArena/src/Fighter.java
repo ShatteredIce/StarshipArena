@@ -3,16 +3,18 @@ import java.util.ArrayList;
 public class Fighter extends Starship{
 	
 	Starship target = null;
+	int changeDirection = 0;
+	int changeDirectionCooldown = 0;
 	
 	public Fighter(StarshipArena mygame, int spawnx, int spawny){
 		super(mygame, spawnx, spawny);
 	}
 	
-	public Fighter(StarshipArena mygame, int spawnx, int spawny, int spawnangle, int spawnhealth) {
+	public Fighter(StarshipArena mygame, int spawnx, int spawny, int spawnangle, int spawnhealth){
 		super(mygame, "none", spawnx, spawny, spawnangle, spawnhealth);
 	}
 
-	public Fighter(StarshipArena mygame, String newteam, int spawnx, int spawny, int spawnangle, int spawnhealth) {
+	public Fighter(StarshipArena mygame, String newteam, int spawnx, int spawny, int spawnangle, int spawnhealth){
 		super(mygame, newteam, spawnx, spawny, spawnangle, spawnhealth);
 	}
 	
@@ -21,7 +23,7 @@ public class Fighter extends Starship{
 		acceleration = 1;
 		max_velocity = 5;
 		max_reverse_velocity = -2;
-		min_turn_velocity = 2;
+		min_turn_velocity = 3;
 		max_turn_speed = 3;
 		//weaponry
 		primary_cooldown = 50;
@@ -50,6 +52,7 @@ public class Fighter extends Starship{
 	}
 	
 	public void doRandomMovement(){
+		changeDirection++;
 		//check if the target is already dead
 		if(target != null && target.getHealth() <= 0){
 			target = null;
@@ -71,27 +74,27 @@ public class Fighter extends Starship{
 			primary_fire = false;
 		}
 		else{
-			int relativeAngle = game.angleToPoint(center.X(), center.Y(), target.getX(), target.getY());
 			targeted_velocity = max_velocity;
+			int relativeAngle = game.angleToPoint(center.X(), center.Y(), target.getX(), target.getY());
 			if(game.distance(center.X(), center.Y(), target.getX(), target.getY()) > 100){
-				//targeted_velocity = max_velocity;
-				int leftBearing = 0;
-				int rightBearing = 0;
 				//don't turn if angle is already pointed toward target
 				if(angle > relativeAngle - 5 && angle < relativeAngle + 5){
 					current_turn_speed = 0;
 				}
 				else{
-					//find which direction to turn is shortest to target
-					if(angle >= relativeAngle){
-						rightBearing = angle - relativeAngle;
-						leftBearing = 360 - angle + relativeAngle;
+					int leftBearing = getTurnDistance(relativeAngle, true);
+					int rightBearing = getTurnDistance(relativeAngle, false);
+					//System.out.println(team + " " +relativeAngle + " " + leftBearing + " " + rightBearing);
+					if(changeDirection > primary_cooldown * 4){
+						if(changeDirectionCooldown == 0){
+							current_turn_speed *= -1;
+							changeDirectionCooldown = 100;
+						}
+						else{
+							changeDirectionCooldown--;
+						}
 					}
-					else if(angle < relativeAngle){
-						leftBearing = relativeAngle - angle;
-						rightBearing = angle + 360 - relativeAngle;
-					}
-					if(leftBearing <= rightBearing){
+					else if(leftBearing <= rightBearing){
 						current_turn_speed = max_turn_speed;
 					}
 					else{
@@ -99,9 +102,10 @@ public class Fighter extends Starship{
 					}
 				}
 			}
-			relativeAngle = game.angleToPoint(center.X(), center.Y(), target.getX(), target.getY());
 			if(angle > relativeAngle - 5 && angle < relativeAngle + 5){
-				//if pointed toward target and gun cooldown is zero, fire
+				//if pointed toward target, fire
+				changeDirection = 0;
+				changeDirectionCooldown = 0;
 				primary_fire = true;
 			}
 			else{
@@ -123,10 +127,53 @@ public class Fighter extends Starship{
 				Starship s = scanned.get(i);
 				//if fighter has no team, or scanned enemy is on another team or closer than current target
 				if((team.equals("none") || !s.getTeam().equals(team)) && (target == null ||
-					game.distance(center.X(), center.Y(), s.getX(), s.getY()) < game.distance(center.X(), center.Y(), target.getX(), target.getY()))){
+					game.distance(center.X(), center.Y(), s.getX(), s.getY()) - getClosestBearing(s) < 
+					game.distance(center.X(), center.Y(), target.getX(), target.getY()) - getClosestBearing(target))){
 					 target = scanned.get(i);
 				}
 			}
+		}
+	}
+	
+	//get turn distance to angle depending on which direction to turn, 
+	public int getTurnDistance(int relativeAngle, boolean toLeft){
+		//find which direction to turn is shortest to target
+		if(angle >= relativeAngle){
+			if(toLeft){
+				return 360 - angle + relativeAngle; //left bearing
+			}
+			else{
+				return angle - relativeAngle; //right bearing
+			}
+		}
+		else if(angle < relativeAngle){
+			if(toLeft){
+				return relativeAngle - angle; //left bearing
+			}
+			else{
+				 return angle + 360 - relativeAngle; //right bearing
+			}
+		}
+		else{
+			try {
+				throw new GameException("error in function Fighter.getTurnDistance");
+			} catch (GameException e) {
+				e.printStackTrace();
+			}
+			return 0;
+		}
+	}
+	
+	//finds the closest angle to turn to be facing starship s
+	public int getClosestBearing(Starship s){
+		int relativeAngle = game.angleToPoint(center.X(), center.Y(), s.getX(), s.getY());
+		int leftBearing = getTurnDistance(relativeAngle, true);
+		int rightBearing = getTurnDistance(relativeAngle, false);
+		if(leftBearing <= rightBearing){
+			return leftBearing;
+		}
+		else{
+			return rightBearing;
 		}
 	}
 
