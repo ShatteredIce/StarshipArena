@@ -199,10 +199,13 @@ public class StarshipArena {
 			startx = random.nextInt(WIDTH - 100) + 50;
 			starty = random.nextInt(HEIGHT - 100) + 50;
 			angle = random.nextInt(360);
-			new Fighter(this, "none", startx, starty, angle, 2);
+			//new Fighter(this, "none", startx, starty, angle, 2);
 		}
-//		new Fighter(this, "red", 500, 300, 0, 10);
-//		new Fighter(this, "blue", 600, 400, 310, 10);
+		new Fighter(this, "red", 400, 300, 270, 1);
+		new Fighter(this, "red", 400, 400, 270, 1);
+		new Fighter(this, "red", 400, 500, 270, 1);
+		new Fighter(this, "red", 400, 600, 270, 1);
+		new Starship(this, "blue", 600, 450, 310, 10);
 	}
 	
 	//check projectile collisions
@@ -211,7 +214,7 @@ public class StarshipArena {
     		Projectile p = projectiles.get(i);
 			for (int j = 0; j < ships.size(); j++) {
 				Starship s = ships.get(j);
-				if(!p.getOwner().equals(s) && polygon_intersection(p.getPoints(), s.getPoints())){
+				if(!p.getOwner().getTeam().equals(s.getTeam()) && polygon_intersection(p.getPoints(), s.getPoints())){
 	    			s.setHealth(s.getHealth()-p.getDamage());
 	    			projectiles.remove(p);
 	    		}
