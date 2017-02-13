@@ -22,14 +22,14 @@ public class StarshipArena {
 
 	//The window handle and size
 	private long window;
-	int WIDTH = 1300;
-    int HEIGHT = 900;
+	int WIDTH = 2600;
+    int HEIGHT = 1800;
 
     int CURR_X = 0;
 	int CURR_Y = 0;
 	int CAMERA_SPEED = 5;
-	int CAMERA_WIDTH = 650;
-	int CAMERA_HEIGHT = 450;
+	int CAMERA_WIDTH = 1300;
+	int CAMERA_HEIGHT = 900;
     
     
     boolean panLeft = false;
@@ -75,7 +75,7 @@ public class StarshipArena {
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 		
 		// Create the window
-		window = glfwCreateWindow(WIDTH, HEIGHT, "Starship Arena [WIP]", NULL, NULL);
+		window = glfwCreateWindow(CAMERA_WIDTH, CAMERA_HEIGHT, "Starship Arena [WIP]", NULL, NULL);
 		if ( window == NULL )
 			throw new RuntimeException("Failed to create the GLFW window");
 
@@ -157,7 +157,7 @@ public class StarshipArena {
 		
 		createShips(20);
 		
-		new Planet(this, 500, 500);
+		new Planet(this, 1300, 900);
 		sidebar = new Sidebar(this, 1175, 450);
 
 		// Run the rendering loop until the user has attempted to close
@@ -195,6 +195,7 @@ public class StarshipArena {
 			//Display sidebar
 			for(int p = 0; p < planets.size(); p++){
 				if(planets.get(p).getSelected() == true){
+					sidebar.setPoints();
 					sidebar.display();
 				}
 			}
@@ -277,7 +278,8 @@ public class StarshipArena {
 			DoubleBuffer ypos = BufferUtils.createDoubleBuffer(1);
 			glfwGetCursorPos(window, xpos, ypos);
 			//convert the glfw coordinate to our coordinate system
-			ypos.put(0, HEIGHT - ypos.get(0));
+			xpos.put(0, xpos.get(0) + CURR_X);
+			ypos.put(0, CAMERA_HEIGHT - ypos.get(0) + CURR_Y);
 			//System.out.println(xpos.get(0) + " " +ypos.get(0));
 
 			for (int i = 0; i < planets.size(); i++) {
@@ -401,5 +403,13 @@ public class StarshipArena {
 	    
 	public void removePlanet(Planet p){
 		planets.remove(p);
+	}
+	
+	public int getCameraX(){
+		return CURR_X;
+	}
+	
+	public int getCameraY(){
+		return CURR_Y;
 	}
 }
