@@ -24,8 +24,12 @@ public class StarshipArena {
 	private long window;
 	int WIDTH = 1300;
     int HEIGHT = 900;
-	int CURR_X = WIDTH / 4;
-	int CURR_Y = HEIGHT / 4;
+
+    int CURR_X = 0;
+	int CURR_Y = 0;
+	int CAMERA_SPEED = 5;
+	int CAMERA_WIDTH = 650;
+	int CAMERA_HEIGHT = 450;
     
     
     boolean panLeft = false;
@@ -81,24 +85,24 @@ public class StarshipArena {
 				glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
 			
 			//Figure out which arrow keys, if any, are depressed and tell the loop to pan the camera
-			if ( key == GLFW_KEY_LEFT && action == GLFW_PRESS )
+			if ( key == GLFW_KEY_A && action == GLFW_PRESS )
 				panLeft = true;
-			if ( key == GLFW_KEY_LEFT && action == GLFW_RELEASE )
+			if ( key == GLFW_KEY_A && action == GLFW_RELEASE )
 				panLeft = false;
 			
-			if ( key == GLFW_KEY_RIGHT && action == GLFW_PRESS )
+			if ( key == GLFW_KEY_D && action == GLFW_PRESS )
 				panRight = true;
-			if ( key == GLFW_KEY_RIGHT && action == GLFW_RELEASE )
+			if ( key == GLFW_KEY_D && action == GLFW_RELEASE )
 				panRight = false;
 			
-			if ( key == GLFW_KEY_UP && action == GLFW_PRESS )
+			if ( key == GLFW_KEY_W && action == GLFW_PRESS )
 				panUp = true;
-			if ( key == GLFW_KEY_UP && action == GLFW_RELEASE )
+			if ( key == GLFW_KEY_W && action == GLFW_RELEASE )
 				panUp = false;
 			
-			if ( key == GLFW_KEY_DOWN && action == GLFW_PRESS )
+			if ( key == GLFW_KEY_S && action == GLFW_PRESS )
 				panDown = true;
-			if ( key == GLFW_KEY_DOWN && action == GLFW_RELEASE )
+			if ( key == GLFW_KEY_S && action == GLFW_RELEASE )
 				panDown = false;
 		
 		});
@@ -141,7 +145,7 @@ public class StarshipArena {
 		
 		glMatrixMode(GL_PROJECTION);
         glLoadIdentity(); // Resets any previous projection matrices
-        glOrtho(CURR_X, CURR_X + WIDTH / 2, CURR_Y, CURR_Y + HEIGHT / 2, 1, -1);
+        glOrtho(CURR_X, CURR_X + CAMERA_WIDTH, CURR_Y, CURR_Y + CAMERA_HEIGHT, 1, -1);
         glMatrixMode(GL_MODELVIEW);
 
 		// Set the clear color
@@ -203,18 +207,18 @@ public class StarshipArena {
 			
 			//Check which direction the camera should move, and move accordingly
 			if (panLeft)
-				CURR_X = Math.max(0, CURR_X - 3);
+				CURR_X = Math.max(0, CURR_X - CAMERA_SPEED);
 			if (panRight)
-				CURR_X = Math.min(WIDTH / 2, CURR_X + 3);
+				CURR_X = Math.min(WIDTH - CAMERA_WIDTH, CURR_X + CAMERA_SPEED);
 			if (panDown)
-				CURR_Y = Math.max(0, CURR_Y - 3);
+				CURR_Y = Math.max(0, CURR_Y - CAMERA_SPEED);
 			if (panUp)
-				CURR_Y = Math.min(HEIGHT / 2, CURR_Y + 3);
+				CURR_Y = Math.min(HEIGHT - CAMERA_HEIGHT, CURR_Y + CAMERA_SPEED);
 			
 			glfwSwapBuffers(window); // swap the color buffers
 			glMatrixMode(GL_PROJECTION);
 	        glLoadIdentity(); // Resets any previous projection matrices
-	        glOrtho(CURR_X, CURR_X + WIDTH / 2, CURR_Y, CURR_Y + HEIGHT / 2, 1, -1);
+	        glOrtho(CURR_X, CURR_X + CAMERA_WIDTH, CURR_Y, CURR_Y + CAMERA_HEIGHT, 1, -1);
 	        glMatrixMode(GL_MODELVIEW);
 		}
 	}
