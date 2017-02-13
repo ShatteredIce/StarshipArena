@@ -24,7 +24,15 @@ public class StarshipArena {
 	private long window;
 	int WIDTH = 1300;
     int HEIGHT = 900;
-	
+	int CURR_X = WIDTH / 4;
+	int CURR_Y = HEIGHT / 4;
+    
+    
+    boolean panLeft = false;
+    boolean panRight = false;
+    boolean panUp = false;
+    boolean panDown = false;
+    
 	Random random = new Random();
 	
 	ArrayList<Projectile> projectiles = new ArrayList<>();
@@ -71,6 +79,26 @@ public class StarshipArena {
 		glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
 			if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
 				glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
+			
+			if ( key == GLFW_KEY_LEFT && action == GLFW_PRESS )
+				panLeft = true;
+			if ( key == GLFW_KEY_LEFT && action == GLFW_RELEASE )
+				panLeft = false;
+			
+			if ( key == GLFW_KEY_RIGHT && action == GLFW_PRESS )
+				panRight = true;
+			if ( key == GLFW_KEY_RIGHT && action == GLFW_RELEASE )
+				panRight = false;
+			
+			if ( key == GLFW_KEY_UP && action == GLFW_PRESS )
+				panUp = true;
+			if ( key == GLFW_KEY_UP && action == GLFW_RELEASE )
+				panUp = false;
+			
+			if ( key == GLFW_KEY_DOWN && action == GLFW_PRESS )
+				panDown = true;
+			if ( key == GLFW_KEY_DOWN && action == GLFW_RELEASE )
+				panDown = false;
 		
 		});
 		
@@ -112,7 +140,7 @@ public class StarshipArena {
 		
 		glMatrixMode(GL_PROJECTION);
         glLoadIdentity(); // Resets any previous projection matrices
-        glOrtho(0, WIDTH, 0, HEIGHT, 1, -1);
+        glOrtho(CURR_X, CURR_X + WIDTH / 2, CURR_Y, CURR_Y + HEIGHT / 2, 1, -1);
         glMatrixMode(GL_MODELVIEW);
 
 		// Set the clear color
@@ -172,7 +200,20 @@ public class StarshipArena {
 			
 			glDisable(GL_TEXTURE_2D);
 			
+			if (panLeft)
+				CURR_X = Math.max(0, CURR_X - 3);
+			if (panRight)
+				CURR_X = Math.min(WIDTH / 2, CURR_X + 3);
+			if (panDown)
+				CURR_Y = Math.max(0, CURR_Y - 3);
+			if (panUp)
+				CURR_Y = Math.min(HEIGHT / 2, CURR_Y + 3);
+			
 			glfwSwapBuffers(window); // swap the color buffers
+			glMatrixMode(GL_PROJECTION);
+	        glLoadIdentity(); // Resets any previous projection matrices
+	        glOrtho(CURR_X, CURR_X + WIDTH / 2, CURR_Y, CURR_Y + HEIGHT / 2, 1, -1);
+	        glMatrixMode(GL_MODELVIEW);
 		}
 	}
 
