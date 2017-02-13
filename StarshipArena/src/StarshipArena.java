@@ -80,6 +80,7 @@ public class StarshipArena {
 			if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
 				glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
 			
+			//Figure out which arrow keys, if any, are depressed and tell the loop to pan the camera
 			if ( key == GLFW_KEY_LEFT && action == GLFW_PRESS )
 				panLeft = true;
 			if ( key == GLFW_KEY_LEFT && action == GLFW_RELEASE )
@@ -200,6 +201,7 @@ public class StarshipArena {
 			
 			glDisable(GL_TEXTURE_2D);
 			
+			//Check which direction the camera should move, and move accordingly
 			if (panLeft)
 				CURR_X = Math.max(0, CURR_X - 3);
 			if (panRight)
