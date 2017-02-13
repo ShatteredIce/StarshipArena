@@ -57,8 +57,11 @@ public class Fighter extends Starship{
 		if(target != null && target.getHealth() <= 0){
 			target = null;
 		}
-		//get a new target if possible
-		getClosestEnemy();
+		//get a new target if fighter has no target or target is far away
+		if(target == null || game.distance(center.X(), center.Y(), target.getX(), target.getY()) >= scan_range / 3){
+			getClosestEnemy();
+		}
+		//getClosestEnemy();
 		if(target == null){
 			//random movement if fighter has no target
 			int t = random.nextInt(4);

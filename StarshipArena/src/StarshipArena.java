@@ -155,7 +155,7 @@ public class StarshipArena {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
-		createShips(20);
+		createShips(100);
 		
 		new Planet(this, 1300, 900);
 		sidebar = new Sidebar(this, 1175, 450);
@@ -182,6 +182,7 @@ public class StarshipArena {
 		    	ships.get(s).setPoints();
 		    	ships.get(s).display();
 			}
+			//System.out.println(ships.size());
 			
 			//display projectiles
 			for(int p = 0; p < projectiles.size(); p++){
@@ -247,13 +248,13 @@ public class StarshipArena {
 			startx = random.nextInt(WIDTH - 100) + 50;
 			starty = random.nextInt(HEIGHT - 100) + 50;
 			angle = random.nextInt(360);
-			//new Fighter(this, "none", startx, starty, angle, 2);
+			new Fighter(this, "none", startx, starty, angle, 1);
 		}
-		new Fighter(this, "red", 400, 300, 270, 1);
-		new Fighter(this, "red", 400, 400, 270, 1);
-		new Fighter(this, "red", 400, 500, 270, 1);
-		new Fighter(this, "red", 400, 600, 270, 1);
-		new Starship(this, "blue", 600, 450, 310, 10);
+		//new Fighter(this, "red", 400, 300, 270, 1);
+		//new Fighter(this, "red", 400, 400, 270, 1);
+		//new Fighter(this, "red", 400, 500, 270, 1);
+		//new Fighter(this, "red", 400, 600, 270, 1);
+//		new Starship(this, "blue", 600, 450, 310, 10);
 	}
 	
 	//check projectile collisions
@@ -262,7 +263,8 @@ public class StarshipArena {
     		Projectile p = projectiles.get(i);
 			for (int j = 0; j < ships.size(); j++) {
 				Starship s = ships.get(j);
-				if(!p.getOwner().getTeam().equals(s.getTeam()) && polygon_intersection(p.getPoints(), s.getPoints())){
+				if((!p.getOwner().getTeam().equals(s.getTeam()) || p.getOwner().getTeam().equals("none")) && 
+					!p.getOwner().equals(s) && polygon_intersection(p.getPoints(), s.getPoints())){
 	    			s.setHealth(s.getHealth()-p.getDamage());
 	    			projectiles.remove(p);
 	    		}
