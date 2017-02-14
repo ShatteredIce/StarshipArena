@@ -22,14 +22,18 @@ public class StarshipArena {
 
 	//The window handle and size
 	private long window;
-	int WIDTH = 1300;
-    int HEIGHT = 900;
+	
+	int WINDOW_WIDTH = 1300;
+	int WINDOW_HEIGHT = 900;
+	
+	int WORLD_WIDTH = 2600;
+    int WORLD_HEIGHT = 1800;
 
     int CURR_X = 0;
 	int CURR_Y = 0;
-	int CAMERA_SPEED = 5;
-	int CAMERA_WIDTH = 650;
-	int CAMERA_HEIGHT = 450;
+	int CAMERA_SPEED = 10;
+	int CAMERA_WIDTH = 2600;
+	int CAMERA_HEIGHT = 1800;
     
     
     boolean panLeft = false;
@@ -75,7 +79,7 @@ public class StarshipArena {
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
 		
 		// Create the window
-		window = glfwCreateWindow(WIDTH, HEIGHT, "Starship Arena [WIP]", NULL, NULL);
+		window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Starship Arena [WIP]", NULL, NULL);
 		if ( window == NULL )
 			throw new RuntimeException("Failed to create the GLFW window");
 
@@ -155,9 +159,9 @@ public class StarshipArena {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
-		createShips(20);
+		createShips(50);
 		
-		new Planet(this, 500, 500);
+		new Planet(this, 1300, 900);
 		sidebar = new Sidebar(this, 1175, 450);
 
 		// Run the rendering loop until the user has attempted to close
@@ -182,6 +186,7 @@ public class StarshipArena {
 		    	ships.get(s).setPoints();
 		    	ships.get(s).display();
 			}
+			//System.out.println(ships.size());
 			
 			//display projectiles
 			for(int p = 0; p < projectiles.size(); p++){
@@ -195,6 +200,7 @@ public class StarshipArena {
 			//Display sidebar
 			for(int p = 0; p < planets.size(); p++){
 				if(planets.get(p).getSelected() == true){
+					sidebar.setPoints();
 					sidebar.display();
 				}
 			}
@@ -209,11 +215,11 @@ public class StarshipArena {
 			if (panLeft)
 				CURR_X = Math.max(0, CURR_X - CAMERA_SPEED);
 			if (panRight)
-				CURR_X = Math.min(WIDTH - CAMERA_WIDTH, CURR_X + CAMERA_SPEED);
+				CURR_X = Math.min(WORLD_WIDTH - CAMERA_WIDTH, CURR_X + CAMERA_SPEED);
 			if (panDown)
 				CURR_Y = Math.max(0, CURR_Y - CAMERA_SPEED);
 			if (panUp)
-				CURR_Y = Math.min(HEIGHT - CAMERA_HEIGHT, CURR_Y + CAMERA_SPEED);
+				CURR_Y = Math.min(WORLD_HEIGHT - CAMERA_HEIGHT, CURR_Y + CAMERA_SPEED);
 			
 			glfwSwapBuffers(window); // swap the color buffers
 			glMatrixMode(GL_PROJECTION);
@@ -230,9 +236,9 @@ public class StarshipArena {
 	public int[] getScreenBounds(){
     	int[] bounds = new int[4];
     	bounds[0] = 0;
-    	bounds[1] = WIDTH;
+    	bounds[1] = WORLD_WIDTH;
     	bounds[2] = 0;
-    	bounds[3] = HEIGHT;
+    	bounds[3] = WORLD_HEIGHT;
     	return bounds;
     }
 	
@@ -243,16 +249,18 @@ public class StarshipArena {
 		int starty;
 		int angle;
 		for(int i = 0; i < num; i++){
-			startx = random.nextInt(WIDTH - 100) + 50;
-			starty = random.nextInt(HEIGHT - 100) + 50;
+			startx = random.nextInt(WORLD_WIDTH - 100) + 50;
+			starty = random.nextInt(WORLD_HEIGHT - 100) + 50;
 			angle = random.nextInt(360);
-			//new Fighter(this, "none", startx, starty, angle, 2);
+			new Fighter(this, "1", startx, starty, angle, 5);
+			new Interceptor(this, "2", startx, starty, angle, 5);
 		}
-		new Fighter(this, "red", 400, 300, 270, 1);
-		new Fighter(this, "red", 400, 400, 270, 1);
-		new Fighter(this, "red", 400, 500, 270, 1);
-		new Fighter(this, "red", 400, 600, 270, 1);
-		new Starship(this, "blue", 600, 450, 310, 10);
+		//new Fighter(this, "red", 400, 300, 270, 1);
+		//new Fighter(this, "red", 400, 400, 270, 1);
+		//new Fighter(this, "red", 400, 500, 270, 1);
+		//new Starship(this, "red", 400, 600, 270, 10);
+//		new Fighter(this, "blue", 200, 500, 270, 1);
+//		new Interceptor(this, 350, 500, 270, 1);
 	}
 	
 	//check projectile collisions
@@ -261,7 +269,8 @@ public class StarshipArena {
     		Projectile p = projectiles.get(i);
 			for (int j = 0; j < ships.size(); j++) {
 				Starship s = ships.get(j);
-				if(!p.getOwner().getTeam().equals(s.getTeam()) && polygon_intersection(p.getPoints(), s.getPoints())){
+				if((!p.getOwner().getTeam().equals(s.getTeam()) || p.getOwner().getTeam().equals("none")) && 
+					!p.getOwner().equals(s) && polygon_intersection(p.getPoints(), s.getPoints())){
 	    			s.setHealth(s.getHealth()-p.getDamage());
 	    			projectiles.remove(p);
 	    		}
@@ -277,7 +286,8 @@ public class StarshipArena {
 			DoubleBuffer ypos = BufferUtils.createDoubleBuffer(1);
 			glfwGetCursorPos(window, xpos, ypos);
 			//convert the glfw coordinate to our coordinate system
-			ypos.put(0, HEIGHT - ypos.get(0));
+			xpos.put(0, xpos.get(0) + CURR_X);
+			ypos.put(0, CAMERA_HEIGHT - ypos.get(0) + CURR_Y);
 			//System.out.println(xpos.get(0) + " " +ypos.get(0));
 
 			for (int i = 0; i < planets.size(); i++) {
@@ -301,6 +311,7 @@ public class StarshipArena {
 		}
 	}
 	
+	//returns an int from 0 to 359
 	public int angleToPoint(double center_x, double center_y, double target_x, double target_y){
     	//first quadrant
     	if(target_x >= center_x && target_y >= center_y){
@@ -401,5 +412,13 @@ public class StarshipArena {
 	    
 	public void removePlanet(Planet p){
 		planets.remove(p);
+	}
+	
+	public int getCameraX(){
+		return CURR_X;
+	}
+	
+	public int getCameraY(){
+		return CURR_Y;
 	}
 }

@@ -57,8 +57,11 @@ public class Fighter extends Starship{
 		if(target != null && target.getHealth() <= 0){
 			target = null;
 		}
-		//get a new target if possible
-		getClosestEnemy();
+		//get a new target if fighter has no target or target is far away
+		if(target == null || game.distance(center.X(), center.Y(), target.getX(), target.getY()) >= scan_range / 3){
+			getClosestEnemy();
+		}
+		//getClosestEnemy();
 		if(target == null){
 			//random movement if fighter has no target
 			int t = random.nextInt(4);
@@ -135,46 +138,5 @@ public class Fighter extends Starship{
 		}
 	}
 	
-	//get turn distance to angle depending on which direction to turn, 
-	public int getTurnDistance(int relativeAngle, boolean toLeft){
-		//find which direction to turn is shortest to target
-		if(angle >= relativeAngle){
-			if(toLeft){
-				return 360 - angle + relativeAngle; //left bearing
-			}
-			else{
-				return angle - relativeAngle; //right bearing
-			}
-		}
-		else if(angle < relativeAngle){
-			if(toLeft){
-				return relativeAngle - angle; //left bearing
-			}
-			else{
-				 return angle + 360 - relativeAngle; //right bearing
-			}
-		}
-		else{
-			try {
-				throw new GameException("error in function Fighter.getTurnDistance");
-			} catch (GameException e) {
-				e.printStackTrace();
-			}
-			return 0;
-		}
-	}
-	
-	//finds the closest angle to turn to be facing starship s
-	public int getClosestBearing(Starship s){
-		int relativeAngle = game.angleToPoint(center.X(), center.Y(), s.getX(), s.getY());
-		int leftBearing = getTurnDistance(relativeAngle, true);
-		int rightBearing = getTurnDistance(relativeAngle, false);
-		if(leftBearing <= rightBearing){
-			return leftBearing;
-		}
-		else{
-			return rightBearing;
-		}
-	}
 
 }
