@@ -137,8 +137,8 @@ public class Interceptor extends Starship{
 					current_turn_speed = 0;
 				}
 				else{
-					//targeted_velocity = max_velocity / 2;
-					targeted_velocity = Math.min(max_velocity, Math.max(max_velocity / 2, distanceToTarget * Math.PI / (2 * 270 / max_turn_speed)));
+					targeted_velocity = max_velocity / 2;
+					//targeted_velocity = Math.min(max_velocity, Math.max(max_velocity / 2, distanceToTarget * Math.PI / (2 * 270 / max_turn_speed)));
 					if(leftBearing <= rightBearing){ //turn left
 						current_turn_speed = max_turn_speed;
 					}
