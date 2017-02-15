@@ -24,11 +24,11 @@ public class Interceptor extends Starship{
 		max_velocity = 8;
 		max_reverse_velocity = -2;
 		min_turn_velocity = 3;
-		max_turn_speed = 4;
+		max_turn_speed = 6;
 		//weaponry
 		primary_cooldown = 50;
 		primary_current_cooldown = 0;
-		primary_speed = 10;
+		primary_speed = 20;
 		primary_lifetime = 450/primary_speed;
 		primary_accuracy = 95;
 		scan_range = 500;
@@ -97,7 +97,7 @@ public class Interceptor extends Starship{
 				}
 			}
 			//turn away from target if too close
-			else if(distanceToTarget <= 200){
+			else if(distanceToTarget <= 50){
 				//System.out.println("point a");
 				targeted_velocity = max_velocity;
 				if(angle > target.getAngle() - 80 && angle < target.getAngle() + 80){
@@ -110,7 +110,7 @@ public class Interceptor extends Starship{
 				}
 			}
 			//if target is behind
-			else if(distanceToTarget < 500 && getClosestBearing(target) > 140 &&
+			else if(distanceToTarget < 150 && getClosestBearing(target) > 140 &&
 					Math.abs(relativeAngle - target.getAngle()) > 160 && Math.abs(relativeAngle - target.getAngle()) < 200){
 				//System.out.println("point b");
 				targeted_velocity = max_velocity;
@@ -132,7 +132,7 @@ public class Interceptor extends Starship{
 			//if target is far away and not pointed at target, point at target
 			else if(!(angle > relativeAngle - 5 && angle < relativeAngle + 5)){
 				//System.out.println("point c");
-				if(distanceToTarget < 300){
+				if(distanceToTarget < 100){
 					targeted_velocity = max_velocity;
 					current_turn_speed = 0;
 				}
