@@ -34,6 +34,8 @@ public class StarshipArena {
 	int CAMERA_SPEED = 10;
 	int CAMERA_WIDTH = 2600;
 	int CAMERA_HEIGHT = 1800;
+	
+	int SLOW = 1;
     
     
     boolean panLeft = false;
@@ -108,6 +110,19 @@ public class StarshipArena {
 				panDown = true;
 			if ( key == GLFW_KEY_S && action == GLFW_RELEASE )
 				panDown = false;
+			
+			if ( key == GLFW_KEY_DOWN && action == GLFW_PRESS )
+				SLOW = 10000000;
+//			if ( key == GLFW_KEY_DOWN && action == GLFW_REPEAT)
+//				SLOW = 150;
+			if ( key == GLFW_KEY_DOWN && action == GLFW_RELEASE )
+				SLOW = 1;
+			if ( key == GLFW_KEY_UP && action == GLFW_PRESS )
+				SLOW = 5000000;
+//			if ( key == GLFW_KEY_UP && action == GLFW_REPEAT)
+//				SLOW = 50;
+			if ( key == GLFW_KEY_UP && action == GLFW_RELEASE )
+				SLOW = 1;
 		
 		});
 		
@@ -166,66 +181,72 @@ public class StarshipArena {
 
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
+		int slowCounter = 0;
 		while ( !glfwWindowShouldClose(window) ) {
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-			
-			// Poll for window events. The key callback above will only be
-			// invoked during this call.
-			glfwPollEvents();
-			
-			glEnable(GL_TEXTURE_2D);
-			
-			//Display planets
-			for(int p = 0; p < planets.size(); p++){
-				planets.get(p).display();
-			}
-			
-			//display ships
-			for(int s = 0; s < ships.size(); s++){
-				ships.get(s).doRandomMovement();
-		    	ships.get(s).setPoints();
-		    	ships.get(s).display();
-			}
-			//System.out.println(ships.size());
-			
-			//display projectiles
-			for(int p = 0; p < projectiles.size(); p++){
-		    	projectiles.get(p).setPoints();
-		    	if(projectiles.size() == 0){
-		    		break;
-		    	}
-				projectiles.get(p).display();
-			}
-			
-			//Display sidebar
-			for(int p = 0; p < planets.size(); p++){
-				if(planets.get(p).getSelected() == true){
-					sidebar.setPoints();
-					sidebar.display();
+			slowCounter++;
+			if (slowCounter >= SLOW) {
+				slowCounter = 0;
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+				
+				// Poll for window events. The key callback above will only be
+				// invoked during this call.
+				glfwPollEvents();
+				
+				glEnable(GL_TEXTURE_2D);
+				
+				//Display planets
+				for(int p = 0; p < planets.size(); p++){
+					planets.get(p).display();
 				}
+				
+				//display ships
+				for(int s = 0; s < ships.size(); s++){
+					ships.get(s).doRandomMovement();
+			    	ships.get(s).setPoints();
+			    	ships.get(s).display();
+				}
+				//System.out.println(ships.size());
+				
+				//display projectiles
+				for(int p = 0; p < projectiles.size(); p++){
+			    	projectiles.get(p).setPoints();
+			    	if(projectiles.size() == 0){
+			    		break;
+			    	}
+					projectiles.get(p).display();
+				}
+				
+				//Display sidebar
+				for(int p = 0; p < planets.size(); p++){
+					if(planets.get(p).getSelected() == true){
+						sidebar.setPoints();
+						sidebar.display();
+					}
+				}
+			
+				checkProjectiles();
+				
+				onMouseEvent();
+				
+				glDisable(GL_TEXTURE_2D);
+				
+				//Check which direction the camera should move, and move accordingly
+				if (panLeft)
+					CURR_X = Math.max(0, CURR_X - CAMERA_SPEED);
+				if (panRight)
+					CURR_X = Math.min(WORLD_WIDTH - CAMERA_WIDTH, CURR_X + CAMERA_SPEED);
+				if (panDown)
+					CURR_Y = Math.max(0, CURR_Y - CAMERA_SPEED);
+				if (panUp)
+					CURR_Y = Math.min(WORLD_HEIGHT - CAMERA_HEIGHT, CURR_Y + CAMERA_SPEED);
+				
+				glfwSwapBuffers(window); // swap the color buffers
+				glMatrixMode(GL_PROJECTION);
+		        glLoadIdentity(); // Resets any previous projection matrices
+		        glOrtho(CURR_X, CURR_X + CAMERA_WIDTH, CURR_Y, CURR_Y + CAMERA_HEIGHT, 1, -1);
+		        glMatrixMode(GL_MODELVIEW);
+	        
 			}
-		
-			checkProjectiles();
-			
-			onMouseEvent();
-			
-			glDisable(GL_TEXTURE_2D);
-			
-			//Check which direction the camera should move, and move accordingly
-			if (panLeft)
-				CURR_X = Math.max(0, CURR_X - CAMERA_SPEED);
-			if (panRight)
-				CURR_X = Math.min(WORLD_WIDTH - CAMERA_WIDTH, CURR_X + CAMERA_SPEED);
-			if (panDown)
-				CURR_Y = Math.max(0, CURR_Y - CAMERA_SPEED);
-			if (panUp)
-				CURR_Y = Math.min(WORLD_HEIGHT - CAMERA_HEIGHT, CURR_Y + CAMERA_SPEED);
-			
-			glfwSwapBuffers(window); // swap the color buffers
-			glMatrixMode(GL_PROJECTION);
-	        glLoadIdentity(); // Resets any previous projection matrices
-	        glOrtho(CURR_X, CURR_X + CAMERA_WIDTH, CURR_Y, CURR_Y + CAMERA_HEIGHT, 1, -1);
-	        glMatrixMode(GL_MODELVIEW);
 		}
 	}
 
