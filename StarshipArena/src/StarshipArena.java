@@ -177,7 +177,7 @@ public class StarshipArena {
 		createShips(50);
 		
 		new Planet(this, 1300, 900);
-		sidebar = new Sidebar(this, 1175, 450);
+		sidebar = new Sidebar(this, WINDOW_WIDTH - 125, WINDOW_HEIGHT / 2);
 
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
@@ -274,7 +274,9 @@ public class StarshipArena {
 			starty = random.nextInt(WORLD_HEIGHT - 100) + 50;
 			angle = random.nextInt(360);
 			new Fighter(this, "1", startx, starty, angle, 5);
-			new Interceptor(this, "2", startx, starty, angle, 5);
+			if(i % 2 == 0){
+				new Interceptor(this, "2", startx, starty, angle, 5);
+			}
 		}
 		//new Fighter(this, "red", 400, 300, 270, 1);
 		//new Fighter(this, "red", 400, 400, 270, 1);
@@ -307,8 +309,8 @@ public class StarshipArena {
 			DoubleBuffer ypos = BufferUtils.createDoubleBuffer(1);
 			glfwGetCursorPos(window, xpos, ypos);
 			//convert the glfw coordinate to our coordinate system
-			xpos.put(0, xpos.get(0) + CURR_X);
-			ypos.put(0, CAMERA_HEIGHT - ypos.get(0) + CURR_Y);
+			xpos.put(0, getWidthScalar() * xpos.get(0) + CURR_X);
+			ypos.put(0, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0)) + CURR_Y));
 			//System.out.println(xpos.get(0) + " " +ypos.get(0));
 
 			for (int i = 0; i < planets.size(); i++) {
@@ -441,5 +443,29 @@ public class StarshipArena {
 	
 	public int getCameraY(){
 		return CURR_Y;
+	}
+	
+	public int getCameraWidth(){
+		return CAMERA_WIDTH;
+	}
+	
+	public int getCameraHeight(){
+		return CAMERA_HEIGHT;
+	}
+	
+	public int getWindowWidth(){
+		return WINDOW_WIDTH;
+	}
+	
+	public int getWindowHeight(){
+		return WINDOW_HEIGHT;
+	}
+	
+	public double getWidthScalar(){
+		return(double) CAMERA_WIDTH / (double) WINDOW_WIDTH;
+	}
+	
+	public double getHeightScalar(){
+		return(double) CAMERA_HEIGHT / (double) WINDOW_HEIGHT;
 	}
 }

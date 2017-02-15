@@ -31,11 +31,11 @@ public class Sidebar {
 	
 	public void setPoints(){
 		int v_index = 0;
-		center.setX(true_X + game.getCameraX());
-		center.setY(true_Y + game.getCameraY());
+		center.setX(game.getWidthScalar()*true_X + game.getCameraX());
+		center.setY(game.getHeightScalar()*true_Y + game.getCameraY());
 		for (int i = 0; i < points.length; i++) {
-			points[i].setX(center.X() + points[i].getXOffset());
-			points[i].setY(center.Y() + points[i].getYOffset());
+			points[i].setX(center.X() + (points[i].getXOffset()*game.getWidthScalar()));
+			points[i].setY(center.Y() + (points[i].getYOffset()*game.getHeightScalar()));
 			v_index = 2*i;
 			vertices[v_index] = points[i].X();
 			vertices[v_index+1] = points[i].Y();	
