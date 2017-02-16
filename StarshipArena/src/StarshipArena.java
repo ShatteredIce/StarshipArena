@@ -174,7 +174,7 @@ public class StarshipArena {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
-		createShips(50);
+		createShips(250);
 		
 		new Planet(this, 1300, 900);
 		sidebar = new Sidebar(this, WINDOW_WIDTH - 125, WINDOW_HEIGHT / 2);
@@ -203,7 +203,9 @@ public class StarshipArena {
 				for(int s = 0; s < ships.size(); s++){
 					ships.get(s).doRandomMovement();
 			    	ships.get(s).setPoints();
-			    	ships.get(s).display();
+			    	if(ships.get(s).display() == false){
+			    		s--;
+			    	}
 				}
 				//System.out.println(ships.size());
 				
@@ -213,7 +215,9 @@ public class StarshipArena {
 			    	if(projectiles.size() == 0){
 			    		break;
 			    	}
-					projectiles.get(p).display();
+					if(projectiles.get(p).display() == false){
+						p--;
+					}
 				}
 				
 				//Display sidebar

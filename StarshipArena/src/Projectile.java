@@ -98,11 +98,13 @@ public class Projectile {
 		indices = new int[]{0, 1, 2, 2, 3, 0};
 	}
 	
-	public void display(){
+	public boolean display(){
 		if(updateLifetime()){
 			tex.bind();
 			model.render(vertices);
+			return true;
 		}	
+		return false;
 	}
 	
 	public Starship getOwner(){

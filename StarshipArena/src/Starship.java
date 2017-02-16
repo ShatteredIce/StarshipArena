@@ -131,13 +131,15 @@ public class Starship {
 		indices = new int[]{0, 1, 2};
 	}
 	
-	public void display(){
+	public boolean display(){
 		if(current_health <= 0){
 			destroy();
+			return false;
 		}
 		else{
 			tex.bind();
 			model.render(vertices);
+			return true;
 		}
 	}
 
