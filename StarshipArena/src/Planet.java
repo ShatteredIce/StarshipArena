@@ -49,7 +49,7 @@ public class Planet {
 	}
 	
 	public void setTexture(){
-		tex = new Texture("testplanet.png");
+		tex = new Texture("planet.png");
 	}
 	
 	public void setTextureCoords(){

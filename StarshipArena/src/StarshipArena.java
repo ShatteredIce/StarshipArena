@@ -48,6 +48,7 @@ public class StarshipArena {
 	ArrayList<Projectile> projectiles = new ArrayList<>();
 	ArrayList<Starship> ships = new ArrayList<>();
 	ArrayList<Planet> planets = new ArrayList<>();
+	ArrayList<Tile> backgroundTiles = new ArrayList<>();
 	
 	Planet selectedPlanet = null;
 	Sidebar sidebar;
@@ -178,6 +179,8 @@ public class StarshipArena {
 		
 		new Planet(this, 1300, 900);
 		sidebar = new Sidebar(this, WINDOW_WIDTH - 125, WINDOW_HEIGHT / 2);
+		
+		genTiles();
 
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
@@ -193,6 +196,11 @@ public class StarshipArena {
 				glfwPollEvents();
 				
 				glEnable(GL_TEXTURE_2D);
+				
+				//Display background
+				for (int t = 0; t < backgroundTiles.size(); t++) {
+					backgroundTiles.get(t).display();
+				}
 				
 				//Display planets
 				for(int p = 0; p < planets.size(); p++){
@@ -413,6 +421,15 @@ public class StarshipArena {
         return false;
     }
     
+    public void genTiles(){
+    	for (int x = 360; x <= WORLD_WIDTH + 720; x+=720) {
+			for (int y = 360; y <= WORLD_HEIGHT + 720; y+=720) {
+				new Tile(this, x, y);
+			}
+		}
+    	
+    }
+    
     public ArrayList<Starship> getAllShips(){
     	return ships;
     }
@@ -439,6 +456,14 @@ public class StarshipArena {
 	    
 	public void removePlanet(Planet p){
 		planets.remove(p);
+	}
+	
+	public void addTile(Tile t){
+    	backgroundTiles.add(t);
+	}
+	    
+	public void removeTile(Tile t){
+		backgroundTiles.remove(t);
 	}
 	
 	public int getCameraX(){
