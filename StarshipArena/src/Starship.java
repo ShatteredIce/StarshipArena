@@ -132,14 +132,14 @@ public class Starship {
 	}
 	
 	public boolean display(){
-		if(current_health <= 0){
-			destroy();
-			return false;
-		}
-		else{
+		if(current_health > 0){
 			tex.bind();
 			model.render(vertices);
 			return true;
+		}
+		else {
+			destroy();
+			return false;
 		}
 	}
 

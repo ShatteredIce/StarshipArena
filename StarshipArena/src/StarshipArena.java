@@ -175,7 +175,7 @@ public class StarshipArena {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
-		createShips(250);
+		createShips(500);
 		
 		new Planet(this, 1300, 900);
 		sidebar = new Sidebar(this, WINDOW_WIDTH - 125, WINDOW_HEIGHT / 2);
@@ -185,10 +185,13 @@ public class StarshipArena {
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
 		int slowCounter = 0;
+		int counter = 0;
 		while ( !glfwWindowShouldClose(window) ) {
 			slowCounter++;
 			if (slowCounter >= SLOW) {
 				slowCounter = 0;
+				System.out.println(counter);
+				counter++;
 				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 				
 				// Poll for window events. The key callback above will only be
