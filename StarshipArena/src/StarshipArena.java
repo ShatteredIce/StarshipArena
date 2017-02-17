@@ -180,6 +180,8 @@ public class StarshipArena {
 		new Planet(this, 1300, 900);
 		sidebar = new Sidebar(this, WINDOW_WIDTH - 125, WINDOW_HEIGHT / 2);
 		
+		Texture backgroundTexture = new Texture("background.png");
+		
 		genTiles();
 
 		// Run the rendering loop until the user has attempted to close
@@ -201,6 +203,7 @@ public class StarshipArena {
 				glEnable(GL_TEXTURE_2D);
 				
 				//Display background
+				backgroundTexture.bind();
 				for (int t = 0; t < backgroundTiles.size(); t++) {
 					backgroundTiles.get(t).display();
 				}

@@ -3,7 +3,6 @@ public class Tile {
 	
 	StarshipArena game;
 	Model model;
-	Texture tex;
 	
 	double[] vertices;
 	double[] textureCoords; 
@@ -19,7 +18,6 @@ public class Tile {
 		vertices = new double[points.length * 2];
 		setTextureCoords();
 		setIndices();
-		setTexture();
 		setPoints();
 		model = new Model(vertices, textureCoords, indices);
 		game.addTile(this);
@@ -46,10 +44,6 @@ public class Tile {
 		return points;
 	}
 	
-	public void setTexture(){
-		tex = new Texture("background.png");
-	}
-	
 	public void setTextureCoords(){
 		textureCoords = new double[]{0, 1, 0, 0, 1, 0, 1, 1};
 	}
@@ -59,7 +53,6 @@ public class Tile {
 	}
 	
 	public void display(){
-		tex.bind();
 		model.render(vertices);
 	}
 	
