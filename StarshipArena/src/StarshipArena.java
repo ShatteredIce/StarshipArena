@@ -175,12 +175,13 @@ public class StarshipArena {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
-		createShips(250);
+		createShips(1000);
 		
 		new Planet(this, 1300, 900);
 		sidebar = new Sidebar(this, WINDOW_WIDTH - 125, WINDOW_HEIGHT / 2);
 		
 		Texture backgroundTexture = new Texture("background.png");
+		Texture projectileTexture = new Texture("torpedo.png");
 		
 		genTiles();
 
@@ -221,11 +222,9 @@ public class StarshipArena {
 				//System.out.println(ships.size());
 				
 				//display projectiles
+				projectileTexture.bind();
 				for(int p = 0; p < projectiles.size(); p++){
 			    	projectiles.get(p).setPoints();
-			    	if(projectiles.size() == 0){
-			    		break;
-			    	}
 					if(projectiles.get(p).display() == false){
 						p--;
 					}

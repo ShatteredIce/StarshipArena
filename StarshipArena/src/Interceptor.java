@@ -74,7 +74,7 @@ public class Interceptor extends Starship{
 			else if(t == 1){
 				current_turn_speed = -max_turn_speed;
 			}
-			primary_fire = false;
+			primary_fire = true;
 		}
 		else{
 			int relativeAngle = game.angleToPoint(center.X(), center.Y(), target.getX(), target.getY());

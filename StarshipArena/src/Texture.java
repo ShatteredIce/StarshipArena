@@ -29,9 +29,13 @@ public class Texture {
 		stbi_image_free(data);
 	}
 	
-	protected void finalize() throws Throwable{
+//	protected void finalize() throws Throwable{
+//		glDeleteTextures(id);
+//		super.finalize();
+//	}
+	
+	public void destroy(){
 		glDeleteTextures(id);
-		super.finalize();
 	}
 	
 	public void bind(){
