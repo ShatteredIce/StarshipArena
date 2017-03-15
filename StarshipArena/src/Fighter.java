@@ -35,18 +35,51 @@ public class Fighter extends Starship{
 	}
 	
 	public void setTexture(){
-		tex = new Texture("fighter_spaceship.png");
+		tex = new Texture("fighter1.png");
 	}
 	
 	public void setTextureCoords(){
-		textureCoords = new double[]{0, 1, 0.5, 0, 1, 1};
+		textureCoords = new double[]{0.1094, 0.5313, 0.1094, 0.6406, 0.375, 0.2188,
+		0.375, 0.3906, 0.375, 0.5313, 0.375, 0.6406, 0.4063, 0.2188, 0.4063, 0.6406,
+		0.4063, 0.7188, 0.4531, 0.125, 0.4531, 0.2188, 0.5469, 0.125, 0.5469, 0.2188,
+		0.5938, 0.2188, 0.5938, 0.6406, 0.5938, 0.7188, 0.625, 0.2188, 0.625, 0.3906, 
+		0.625, 0.5313, 0.625, 0.6406, 0.8906, 0.5313, 0.8906, 0.6406};
 	}
+	
+	public void setIndices(){
+		indices = new int[]{0, 1, 4, 1, 4, 5, 0, 3, 4, 2, 5, 19, 2, 16, 19, 
+				6, 9, 10, 9, 10, 12, 9, 11, 12, 11, 12, 13, 5, 7, 8, 7, 8, 15,
+				7, 14, 15, 14, 15, 19, 17, 18, 20, 18, 19, 21, 18, 20, 21};
+	}
+	
+//	public void setIndices(){
+//		indices = new int[]{2, 5, 19, 19, 2, 16, 6, 9, 10, 9, 10, 12};
+//	}
 	
 	public Point[] generatePoints(){
 		Point[] points = new Point[]{
-			new Point(-30, -30, true),
-			new Point(0, 30, true),
-			new Point(30, -30, true),
+			new Point(-50, -4, true),
+			new Point(-50, -18, true),
+			new Point(-16, 36, true),
+			new Point(-16, 14, true),
+			new Point(-16, -4, true),
+			new Point(-16, -18, true),
+			new Point(-12, 36, true),
+			new Point(-12, -18, true),
+			new Point(-12, -28, true),
+			new Point(-6, 48, true),
+			new Point(-6, 36, true),
+			new Point(6, 48, true),
+			new Point(6, 36, true),
+			new Point(12, 36, true),
+			new Point(12, -18, true),
+			new Point(12, -28, true),
+			new Point(16, 36, true),
+			new Point(16, 14, true),
+			new Point(16, -4, true),
+			new Point(16, -18, true),
+			new Point(50, -4, true),
+			new Point(50, -18, true)
 		};
 		return points;
 	}
@@ -119,7 +152,6 @@ public class Fighter extends Starship{
 		if(current_turn_speed != 0 && targeted_velocity < min_turn_velocity){
 			targeted_velocity = min_turn_velocity;
 		}
-		
 	}
 	
 	//gets the closest enemy and changes target accordingly

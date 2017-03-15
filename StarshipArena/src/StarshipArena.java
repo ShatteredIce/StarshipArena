@@ -175,7 +175,7 @@ public class StarshipArena {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
-		createShips(1000);
+		createShips(20);
 		
 		new Planet(this, 1300, 900);
 		sidebar = new Sidebar(this, WINDOW_WIDTH - 125, WINDOW_HEIGHT / 2);
@@ -287,17 +287,17 @@ public class StarshipArena {
 			startx = random.nextInt(WORLD_WIDTH - 100) + 50;
 			starty = random.nextInt(WORLD_HEIGHT - 100) + 50;
 			angle = random.nextInt(360);
-			new Fighter(this, "1", startx, starty, angle, 5);
+			new Fighter(this, "1", startx, starty, angle, 10);
 			if(i % 2 == 0){
-				new Interceptor(this, "2", startx, starty, angle, 5);
+				new Interceptor(this, "2", startx, starty, angle, 10);
 			}
 		}
-		//new Fighter(this, "red", 400, 300, 270, 1);
+//		new Fighter(this, "red", 1500, 700, 0, 1);
 		//new Fighter(this, "red", 400, 400, 270, 1);
 		//new Fighter(this, "red", 400, 500, 270, 1);
 		//new Starship(this, "red", 400, 600, 270, 10);
 //		new Fighter(this, "blue", 200, 500, 270, 1);
-//		new Interceptor(this, 350, 500, 270, 1);
+//		new Interceptor(this, 500, 700, 0, 1);
 	}
 	
 	//check projectile collisions
