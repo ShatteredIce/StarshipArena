@@ -6,7 +6,6 @@ public class Projectile {
 	StarshipArena game;
 	Starship owner;
 	Model model;
-	Texture tex;
 	
 	double[] vertices;
 	double[] textureCoords;
@@ -33,7 +32,6 @@ public class Projectile {
 		vertices = new double[points.length * 2];
 		setTextureCoords();
 		setIndices();
-		setTexture();
 		setPoints();
 		model = new Model(vertices, textureCoords, indices);
 		game.addProjectile(this);
@@ -59,7 +57,6 @@ public class Projectile {
 	public boolean updateLifetime(){
 		current_lifetime += 1;
 		if(current_lifetime >= lifetime){
-			game.removeProjectile(this);
 			return false;
 		}
 		return true;
@@ -86,10 +83,6 @@ public class Projectile {
 		return points;
 	}
 	
-	public void setTexture(){
-		tex = new Texture("torpedo.png");
-	}
-	
 	public void setTextureCoords(){
 		textureCoords = new double[]{1, 1, 0, 1, 0, 0, 1, 0};
 	}
@@ -100,11 +93,14 @@ public class Projectile {
 	
 	public boolean display(){
 		if(updateLifetime()){
-			tex.bind();
 			model.render(vertices);
 			return true;
-		}	
-		return false;
+		}
+		else{
+			model.destroy();
+			game.removeProjectile(this);
+			return false;
+		}
 	}
 	
 	public Starship getOwner(){

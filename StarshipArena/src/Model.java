@@ -38,12 +38,18 @@ public class Model {
 
 	}
 	
-	protected void finalize() throws Throwable{
+//	protected void finalize() throws Throwable{
+//		glDeleteBuffers(v_id);
+//		glDeleteBuffers(t_id);
+//		glDeleteBuffers(i_id);
+//		super.finalize();
+//		
+//	}
+	
+	public void destroy(){
 		glDeleteBuffers(v_id);
 		glDeleteBuffers(t_id);
 		glDeleteBuffers(i_id);
-		super.finalize();
-		
 	}
 	
 	public void render(double[] vertices) {
