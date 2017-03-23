@@ -37,6 +37,9 @@ public class Starship {
 	double primary_lifetime;
 	int primary_accuracy;
 	int scan_range;
+	int radius;
+	
+	boolean selected = false;
 	
 	//Screen bounds
 	int x_min;
@@ -401,6 +404,13 @@ public class Starship {
 	
 	public int getMaxHealth(){
 		return max_health;
+	}
+	
+	public boolean getSelected() {
+		return selected;
+	}
+	public void setSelected(boolean newSelected) {
+		selected = newSelected;
 	}
 
 }

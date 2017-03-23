@@ -51,6 +51,7 @@ public class StarshipArena {
 	ArrayList<Tile> backgroundTiles = new ArrayList<>();
 	
 	Planet selectedPlanet = null;
+	//ArrayList<Starship> selectedShips = new ArrayList<>();
 	Sidebar sidebar;
     
 	public void run() {
@@ -175,7 +176,7 @@ public class StarshipArena {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
-		createShips(500);
+		createShips(20);
 		
 		new Planet(this, 1300, 900);
 		sidebar = new Sidebar(this, WINDOW_WIDTH - 125, WINDOW_HEIGHT / 2);
@@ -235,7 +236,13 @@ public class StarshipArena {
 				
 				//Display sidebar
 				for(int p = 0; p < planets.size(); p++){
-					if(planets.get(p).getSelected() == true){
+					if(planets.get(p).getSelected()){
+						sidebar.setPoints();
+						sidebar.display();
+					}
+				}
+				for (int s = 0; s < ships.size(); s++) {
+					if (ships.get(s).getSelected()) {
 						sidebar.setPoints();
 						sidebar.display();
 					}
@@ -347,6 +354,13 @@ public class StarshipArena {
 					selectedPlanet.setSelected(false);
 					selectedPlanet = null;
 				}
+			}
+			for (int i = 0; i < ships.size(); i++) {
+				Starship s = ships.get(i);
+				if(distance(s.getX(), s.getY(), xpos.get(0), ypos.get(0)) <= s.radius) {
+					s.setSelected(true);
+				}
+				else s.setSelected(false);
 			}
 		}
 	}

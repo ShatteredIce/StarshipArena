@@ -25,6 +25,7 @@ public class Interceptor extends Starship{
 		max_reverse_velocity = -2;
 		min_turn_velocity = 3;
 		max_turn_speed = 6;
+		radius = 40;
 		//weaponry
 		primary_cooldown = 50;
 		primary_current_cooldown = 0;
@@ -61,39 +62,40 @@ public class Interceptor extends Starship{
 //	}
 	
 	public Point[] generatePoints(){
+		int xOff = 0; int yOff = -15;
 		Point[] points = new Point[]{
-			new Point(-40, 38, true),
-			new Point(-40, 26, true),
-			new Point(-40, 2, true),
-			new Point(-34, 22, true),
-			new Point(-26, 32, true),
-			new Point(-26, 14, true),
-			new Point(-22, 32, true),
-			new Point(-22, 24, true),
-			new Point(-12, 10, true),
-			new Point(-12, -14, true),
-			new Point(-12, -20, true),
-			new Point(-8, 40, true),
-			new Point(-8, 10, true),
-			new Point(-4, 52, true),
-			new Point(-4, 40, true),
-			new Point(4, 52, true),
-			new Point(4, 40, true),
-			new Point(8, 40, true),
-			new Point(8, 10, true),
-			new Point(12, 10, true),
-			new Point(12, -14, true),
-			new Point(12, -20, true),
-			new Point(22, 32, true),
-			new Point(22, 24, true),
-			new Point(26, 32, true),
-			new Point(26, 14, true),
-			new Point(34, 22, true),
-			new Point(40, 38, true),
-			new Point(40, 26, true),
-			new Point(40, 2, true),
-			new Point(-36, 34, true),
-			new Point(36, 34, true)
+			new Point(-40 + xOff, 38 + yOff, true),
+			new Point(-40 + xOff, 26 + yOff, true),
+			new Point(-40 + xOff, 2 + yOff, true),
+			new Point(-34 + xOff, 22 + yOff, true),
+			new Point(-26 + xOff, 32 + yOff, true),
+			new Point(-26 + xOff, 14 + yOff, true),
+			new Point(-22 + xOff, 32 + yOff, true),
+			new Point(-22 + xOff, 24 + yOff, true),
+			new Point(-12 + xOff, 10 + yOff, true),
+			new Point(-12 + xOff, -14 + yOff, true),
+			new Point(-12 + xOff, -20 + yOff, true),
+			new Point(-8 + xOff, 40 + yOff, true),
+			new Point(-8 + xOff, 10 + yOff, true),
+			new Point(-4 + xOff, 52 + yOff, true),
+			new Point(-4 + xOff, 40 + yOff, true),
+			new Point(4 + xOff, 52 + yOff, true),
+			new Point(4 + xOff, 40 + yOff, true),
+			new Point(8 + xOff, 40 + yOff, true),
+			new Point(8 + xOff, 10 + yOff, true),
+			new Point(12 + xOff, 10 + yOff, true),
+			new Point(12 + xOff, -14 + yOff, true),
+			new Point(12 + xOff, -20 + yOff, true),
+			new Point(22 + xOff, 32 + yOff, true),
+			new Point(22 + xOff, 24 + yOff, true),
+			new Point(26 + xOff, 32 + yOff, true),
+			new Point(26 + xOff, 14 + yOff, true),
+			new Point(34 + xOff, 22 + yOff, true),
+			new Point(40 + xOff, 38 + yOff, true),
+			new Point(40 + xOff, 26 + yOff, true),
+			new Point(40 + xOff, 2 + yOff, true),
+			new Point(-36 + xOff, 34 + yOff, true),
+			new Point(36 + xOff, 34 + yOff, true)
 			
 		};
 		return points;
@@ -202,6 +204,16 @@ public class Interceptor extends Starship{
 		if(current_turn_speed != 0 && targeted_velocity < min_turn_velocity){
 			targeted_velocity = min_turn_velocity;
 		}
+		
+		
+		
+		
+		//TODO remove this code after testing
+//		if (angle != 0) {
+//			current_turn_speed = Math.min(max_turn_speed, 360 - angle);
+//		}
+//		else current_turn_speed = 0;
+//		current_turn_speed = max_turn_speed;
 	}
 	
 	//gets the closest enemy and changes target accordingly
