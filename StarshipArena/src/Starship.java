@@ -38,6 +38,7 @@ public class Starship {
 	int primary_accuracy;
 	int scan_range;
 	int radius;
+	Point target;
 	
 	boolean selected = false;
 	
@@ -411,6 +412,10 @@ public class Starship {
 	}
 	public void setSelected(boolean newSelected) {
 		selected = newSelected;
+	}
+	
+	public void setTarget(Point newTarget) {
+		target = newTarget;
 	}
 
 }

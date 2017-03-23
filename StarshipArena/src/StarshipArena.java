@@ -363,6 +363,18 @@ public class StarshipArena {
 				else s.setSelected(false);
 			}
 		}
+		else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == 1) {
+			DoubleBuffer xpos = BufferUtils.createDoubleBuffer(1);
+			DoubleBuffer ypos = BufferUtils.createDoubleBuffer(1);
+			glfwGetCursorPos(window, xpos, ypos);
+			//convert the glfw coordinate to our coordinate system
+			xpos.put(0, getWidthScalar() * xpos.get(0) + CURR_X);
+			ypos.put(0, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0)) + CURR_Y));
+			for (int i = 0; i < ships.size(); i++) {
+				Starship s = ships.get(i);
+				if (s.getSelected()) s.setTarget(new Point(xpos.get(0), ypos.get(0)));
+			}
+		}
 	}
 	
 	//returns an int from 0 to 359

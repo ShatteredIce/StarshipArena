@@ -114,16 +114,18 @@ public class Interceptor extends Starship{
 		//getClosestEnemy();
 		if(target == null){
 			//random movement if fighter has no target
-			int t = random.nextInt(4);
-			targeted_velocity = max_velocity / 2;
-			//turn left
-			if(t == 0){
-				current_turn_speed = max_turn_speed;
-			}
-			//turn right
-			else if(t == 1){
-				current_turn_speed = -max_turn_speed;
-			}
+//			int t = random.nextInt(4);
+//			targeted_velocity = max_velocity / 2;
+//			//turn left
+//			if(t == 0){
+//				current_turn_speed = max_turn_speed;
+//			}
+//			//turn right
+//			else if(t == 1){
+//				current_turn_speed = -max_turn_speed;
+//			}
+			current_turn_speed = 0;
+			targeted_velocity = 0;
 			primary_fire = false;
 		}
 		else{
