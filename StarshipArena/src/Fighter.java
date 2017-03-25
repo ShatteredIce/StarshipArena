@@ -25,6 +25,7 @@ public class Fighter extends Starship{
 		max_reverse_velocity = -2;
 		min_turn_velocity = 3;
 		max_turn_speed = 3;
+		radius = 50;
 		//weaponry
 		primary_cooldown = 50;
 		primary_current_cooldown = 0;
@@ -55,31 +56,32 @@ public class Fighter extends Starship{
 //	public void setIndices(){
 //		indices = new int[]{2, 5, 19, 19, 2, 16, 6, 9, 10, 9, 10, 12};
 //	}
-	
+	//TODO subtracted 10 from each
 	public Point[] generatePoints(){
+		int xOff = 0; int yOff = -10;
 		Point[] points = new Point[]{
-			new Point(-50, -4, true),
-			new Point(-50, -18, true),
-			new Point(-16, 36, true),
-			new Point(-16, 14, true),
-			new Point(-16, -4, true),
-			new Point(-16, -18, true),
-			new Point(-12, 36, true),
-			new Point(-12, -18, true),
-			new Point(-12, -28, true),
-			new Point(-6, 48, true),
-			new Point(-6, 36, true),
-			new Point(6, 48, true),
-			new Point(6, 36, true),
-			new Point(12, 36, true),
-			new Point(12, -18, true),
-			new Point(12, -28, true),
-			new Point(16, 36, true),
-			new Point(16, 14, true),
-			new Point(16, -4, true),
-			new Point(16, -18, true),
-			new Point(50, -4, true),
-			new Point(50, -18, true)
+			new Point(-50 + xOff, -4 + yOff, true),
+			new Point(-50 + xOff, -18 + yOff, true),
+			new Point(-16 + xOff, 36 + yOff, true),
+			new Point(-16 + xOff, 14 + yOff, true),
+			new Point(-16 + xOff, -4 + yOff, true),
+			new Point(-16 + xOff, -18 + yOff, true),
+			new Point(-12 + xOff, 36 + yOff, true),
+			new Point(-12 + xOff, -18 + yOff, true),
+			new Point(-12 + xOff, -28 + yOff, true),
+			new Point(-6 + xOff, 48 + yOff, true),
+			new Point(-6 + xOff, 36 + yOff, true),
+			new Point(6 + xOff, 48 + yOff, true),
+			new Point(6 + xOff, 36 + yOff, true),
+			new Point(12 + xOff, 36 + yOff, true),
+			new Point(12 + xOff, -18 + yOff, true),
+			new Point(12 + xOff, -28 + yOff, true),
+			new Point(16 + xOff, 36 + yOff, true),
+			new Point(16 + xOff, 14 + yOff, true),
+			new Point(16 + xOff, -4 + yOff, true),
+			new Point(16 + xOff, -18 + yOff, true),
+			new Point(50 + xOff, -4 + yOff, true),
+			new Point(50 + xOff, -18 + yOff, true)
 		};
 		return points;
 	}
@@ -96,17 +98,19 @@ public class Fighter extends Starship{
 		}
 		//getClosestEnemy();
 		if(target == null){
-			//random movement if fighter has no target
-			int t = random.nextInt(4);
-			targeted_velocity = max_velocity / 2;
-			//turn left
-			if(t == 0){
-				current_turn_speed = max_turn_speed;
-			}
-			//turn right
-			else if(t == 1){
-				current_turn_speed = -max_turn_speed;
-			}
+//			//random movement if fighter has no target
+//			int t = random.nextInt(4);
+//			targeted_velocity = max_velocity / 2;
+//			//turn left
+//			if(t == 0){
+//				current_turn_speed = max_turn_speed;
+//			}
+//			//turn right
+//			else if(t == 1){
+//				current_turn_speed = -max_turn_speed;
+//			}
+			current_turn_speed = 0;
+			targeted_velocity = 0;
 			primary_fire = false;
 		}
 		else{
@@ -152,6 +156,15 @@ public class Fighter extends Starship{
 		if(current_turn_speed != 0 && targeted_velocity < min_turn_velocity){
 			targeted_velocity = min_turn_velocity;
 		}
+		
+		
+		
+		//TODO remove this code after testing
+//		if (angle != 0) {
+//			current_turn_speed = Math.min(max_turn_speed, 360 - angle);
+//		}
+//		else current_turn_speed = 0;
+//		current_turn_speed = max_turn_speed;
 	}
 	
 	//gets the closest enemy and changes target accordingly

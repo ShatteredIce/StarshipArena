@@ -37,6 +37,10 @@ public class Starship {
 	double primary_lifetime;
 	int primary_accuracy;
 	int scan_range;
+	int radius;
+	Point target;
+	
+	boolean selected = false;
 	
 	//Screen bounds
 	int x_min;
@@ -134,14 +138,14 @@ public class Starship {
 	}
 	
 	public boolean display(){
-		if(current_health <= 0){
-			destroy();
-			return false;
-		}
-		else{
+		if(current_health > 0){
 			tex.bind();
 			model.render(vertices);
 			return true;
+		}
+		else {
+			destroy();
+			return false;
 		}
 	}
 
@@ -401,6 +405,17 @@ public class Starship {
 	
 	public int getMaxHealth(){
 		return max_health;
+	}
+	
+	public boolean getSelected() {
+		return selected;
+	}
+	public void setSelected(boolean newSelected) {
+		selected = newSelected;
+	}
+	
+	public void setTarget(Point newTarget) {
+		target = newTarget;
 	}
 
 }

@@ -51,6 +51,7 @@ public class StarshipArena {
 	ArrayList<Tile> backgroundTiles = new ArrayList<>();
 	
 	Planet selectedPlanet = null;
+	//ArrayList<Starship> selectedShips = new ArrayList<>();
 	Sidebar sidebar;
     
 	public void run() {
@@ -188,10 +189,13 @@ public class StarshipArena {
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
 		int slowCounter = 0;
+		int counter = 0;
 		while ( !glfwWindowShouldClose(window) ) {
 			slowCounter++;
 			if (slowCounter >= SLOW) {
 				slowCounter = 0;
+				System.out.println(counter);
+				counter++;
 				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 				
 				// Poll for window events. The key callback above will only be
@@ -232,7 +236,13 @@ public class StarshipArena {
 				
 				//Display sidebar
 				for(int p = 0; p < planets.size(); p++){
-					if(planets.get(p).getSelected() == true){
+					if(planets.get(p).getSelected()){
+						sidebar.setPoints();
+						sidebar.display();
+					}
+				}
+				for (int s = 0; s < ships.size(); s++) {
+					if (ships.get(s).getSelected()) {
 						sidebar.setPoints();
 						sidebar.display();
 					}
@@ -344,6 +354,25 @@ public class StarshipArena {
 					selectedPlanet.setSelected(false);
 					selectedPlanet = null;
 				}
+			}
+			for (int i = 0; i < ships.size(); i++) {
+				Starship s = ships.get(i);
+				if(distance(s.getX(), s.getY(), xpos.get(0), ypos.get(0)) <= s.radius) {
+					s.setSelected(true);
+				}
+				else s.setSelected(false);
+			}
+		}
+		else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == 1) {
+			DoubleBuffer xpos = BufferUtils.createDoubleBuffer(1);
+			DoubleBuffer ypos = BufferUtils.createDoubleBuffer(1);
+			glfwGetCursorPos(window, xpos, ypos);
+			//convert the glfw coordinate to our coordinate system
+			xpos.put(0, getWidthScalar() * xpos.get(0) + CURR_X);
+			ypos.put(0, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0)) + CURR_Y));
+			for (int i = 0; i < ships.size(); i++) {
+				Starship s = ships.get(i);
+				if (s.getSelected()) s.setTarget(new Point(xpos.get(0), ypos.get(0)));
 			}
 		}
 	}
