@@ -35,7 +35,7 @@ public class Fighter extends Starship{
 		primary_speed = 15;
 		primary_lifetime = 450/primary_speed;
 		primary_accuracy = 95;
-		scan_range = 300;
+		scan_range = 400;
 		//other
 		clickRadius = 45;
 		xOff = 0;
@@ -246,6 +246,9 @@ public class Fighter extends Starship{
 	
 	//gets the closest enemy and changes target accordingly
 	public void getClosestEnemy(){
+		if(target != null && game.distance(center.X(), center.Y(), target.getX(), target.getY()) > scan_range){
+			target = null;
+		}
 		ArrayList<Starship> scanned = scan();
 		if(scanned.size() != 0){
 			for (int i = 0; i < scanned.size(); i++) {

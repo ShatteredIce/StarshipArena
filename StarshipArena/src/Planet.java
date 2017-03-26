@@ -1,30 +1,134 @@
+import java.util.ArrayList;
 
 public class Planet {
 	
 	StarshipArena game;
+	//planet rendering variables
 	Model model;
-	Texture tex;
-	
 	double[] vertices;
 	double[] textureCoords; 
 	int[] indices;
 	Point center;
 	Point[] points;
-	int size = 200;
+	int planetSize = 200;
 	boolean selected = false;
+	Texture tex = new Texture("planet.png");
+	//halo rendering variables
+	Model haloModel;
+	double[] haloVertices;
+	Point[] haloPoints;
+	int haloSize = 400;
+	Texture blueHalo = new Texture("blue_halo.png");
+	Texture redHalo = new Texture("red_halo.png");
+	Texture whiteHalo = new Texture("white_halo.png");
+	//planet capturing variables
+	String team = "none";
+	String capturingTeam = "none";
+	int captureStrength = 0;
+	int captureTime = 500;
+	int maxCaptureTime = 500;
+	
 	
 	Planet(StarshipArena mygame, int spawnx, int spawny){
 		game = mygame;
 
 		center = new Point(spawnx, spawny);
-		points = generatePoints();
+		points = generatePoints(planetSize);
 		vertices = new double[points.length * 2];
 		setTextureCoords();
 		setIndices();
-		setTexture();
 		setPoints();
 		model = new Model(vertices, textureCoords, indices);
+		//set up halo around the planet
+		haloPoints = generatePoints(haloSize);
+		haloVertices = new double[haloPoints.length * 2];
+		setHaloPoints();
+		haloModel = new Model(haloVertices, textureCoords, indices);
 		game.addPlanet(this);
+	}
+	
+	public ArrayList<Starship> getShips(){
+		ArrayList<Starship> shipsList = game.getAllShips();
+		ArrayList<Starship> orbitingShips = new ArrayList<Starship>();
+		for(int i = 0; i < shipsList.size(); i++){
+			if(game.distance(center.X(), center.Y(), shipsList.get(i).getX(), shipsList.get(i).getY()) <= haloSize){
+				orbitingShips.add(shipsList.get(i));
+			}
+		}
+		return orbitingShips;
+	}
+	
+	public void checkCapturePoint(){
+		capturingTeam = "none";
+		ArrayList<String> teamsInOrbit = new ArrayList<String>();
+		ArrayList<Integer> teamCaptureStrength = new ArrayList<Integer>();
+		Boolean foundTeam;
+		int largestTeamStrength = 0;
+		ArrayList<Starship> orbitingShips = getShips();
+		if(orbitingShips.size() != 0){
+			//iterate through all the orbiting ships
+			for (int i = 0; i < orbitingShips.size(); i++) {
+				foundTeam = false;
+				Starship s = orbitingShips.get(i);
+				//rogue ships cannot capture
+				if(s.getTeam().equals("none")){
+					break;
+				}
+				//check to see if team is already in array
+				for(int j = 0; j < teamsInOrbit.size(); j++){
+					//if team is in array, increment capture strength for that team
+					if(teamsInOrbit.get(j).equals(s.getTeam())){
+						teamCaptureStrength.set(j, teamCaptureStrength.get(j) + 1);
+						foundTeam = true;
+					}
+				}
+				//if team is not in array, add it
+				if(foundTeam == false){
+					teamsInOrbit.add(s.getTeam());
+					teamCaptureStrength.add(1);
+				}
+			}
+			//set largest team strength and capturing team
+			for(int t = 0; t < teamCaptureStrength.size(); t++){
+				if(largestTeamStrength < teamCaptureStrength.get(t)){
+					largestTeamStrength = teamCaptureStrength.get(t);
+					capturingTeam = teamsInOrbit.get(t);
+				}
+			}
+			//set capture strength
+			captureStrength = largestTeamStrength * 2 - orbitingShips.size();
+			if(captureStrength < 0){
+				capturingTeam = "none";
+				captureStrength *= -1;
+			}
+			//if capturing team owns the planet
+			if(capturingTeam.equals(team)){
+				captureTime += Math.round(Math.sqrt(captureStrength));
+				if(captureTime > maxCaptureTime){
+					captureTime = maxCaptureTime;
+				}
+			}
+			//if capturing team doesn't own the planet
+			else{
+				captureTime -= Math.round(Math.sqrt(captureStrength));
+				if(captureTime <= 0){
+					captureTime = 0;
+					if(team.equals("none")){
+						team = capturingTeam;
+					}
+					else{
+						team = "none";
+						captureTime = maxCaptureTime;
+					}
+				}
+			}
+		}
+		//no orbiting ships
+		else{
+			if(captureTime < maxCaptureTime){
+				captureTime++;
+			}
+		}
 	}
 	
 	public void setPoints(){
@@ -38,7 +142,18 @@ public class Planet {
 		}
 	}
 	
-	public Point[] generatePoints(){
+	public void setHaloPoints(){
+		int v_index = 0;
+		for (int i = 0; i < haloPoints.length; i++) {
+			haloPoints[i].setX(center.X() + haloPoints[i].getXOffset());
+			haloPoints[i].setY(center.Y() + haloPoints[i].getYOffset());
+			v_index = 2*i;
+			haloVertices[v_index] = haloPoints[i].X();
+			haloVertices[v_index+1] = haloPoints[i].Y();	
+		}
+	}
+	
+	public Point[] generatePoints(int size){
 		Point[] points = new Point[]{
 			new Point(-size, -size, true),
 			new Point(-size, size, true),
@@ -49,7 +164,19 @@ public class Planet {
 	}
 	
 	public void setTexture(){
-		tex = new Texture("planet.png");
+		tex.bind();
+	}
+	
+	public void setHaloTexture(){
+		if(team.equals("blue")){
+			blueHalo.bind();
+		}
+		else if(team.equals("red")){
+			redHalo.bind();
+		}
+		else{
+			whiteHalo.bind();
+		}
 	}
 	
 	public void setTextureCoords(){
@@ -61,12 +188,14 @@ public class Planet {
 	}
 	
 	public void display(){
-		tex.bind();
+		setTexture();
 		model.render(vertices);
+		setHaloTexture();
+		haloModel.render(haloVertices);
 	}
 	
 	public int getSize(){
-		return size;
+		return planetSize;
 	}
 	
 	public void setSelected(boolean state){

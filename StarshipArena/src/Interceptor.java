@@ -311,6 +311,9 @@ public class Interceptor extends Starship{
 	
 	//gets the closest enemy and changes target accordingly
 	public void getClosestEnemy(){
+		if(target != null && game.distance(center.X(), center.Y(), target.getX(), target.getY()) > scan_range){
+			target = null;
+		}
 		ArrayList<Starship> scanned = scan();
 		if(scanned.size() != 0){
 			for (int i = 0; i < scanned.size(); i++) {

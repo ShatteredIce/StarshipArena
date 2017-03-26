@@ -124,24 +124,32 @@ public class Transport extends Starship{
 	
 	
 	public void doRandomMovement(){
-		int v = random.nextInt(4);
-		int t = random.nextInt(3);
-		if(v == 0){
-			targeted_velocity = max_velocity;
+		if (locationTarget != null) {
+			double distance = distance(this.getX(), this.getY(), locationTarget.x, locationTarget.y);
+			primary_fire = false;
+			if (distance > 50) {
+				boolean positiveY = false;
+				if (locationTarget.y >=  this.getY()) positiveY = true;
+				double angle = Math.acos((locationTarget.x - this.getX()) / distance) * 180 / Math.PI;
+				double targetAngle;
+				if (positiveY) targetAngle = (270 + angle) % 360;
+				else targetAngle = 270 - angle;
+				//System.out.println(targetAngle);
+				targeted_velocity = max_velocity / 2;
+				if (Math.abs(this.angle - Math.round(targetAngle)) < 2) {
+					current_turn_speed = 0;
+					targeted_velocity = max_velocity;
+				}
+				else if ((Math.round(targetAngle) - this.angle + 360) % 360 < 180) current_turn_speed = (int) Math.min(max_turn_speed, (Math.round(targetAngle) - this.angle + 360) % 360);
+				else current_turn_speed = (int) Math.max(-max_turn_speed, -((this.angle - Math.round(targetAngle) + 360) % 360));
+			}
+			else locationTarget = null;
 		}
-		else if(v == 1){
+		else{
+			current_turn_speed = 0;
 			targeted_velocity = 0;
+			primary_fire = false;
 		}
-		if(t == 0){
-			current_turn_speed = max_turn_speed;
-		}
-		else if(t == 1){
-			current_turn_speed = -max_turn_speed;
-		}
-		if(current_turn_speed != 0 && targeted_velocity < min_turn_velocity){
-			targeted_velocity = min_turn_velocity;
-		}
-		edgeGuard();
 	}
 	
 	//gets the closest enemy and changes target accordingly
