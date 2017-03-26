@@ -170,76 +170,79 @@ public class Interceptor extends Starship{
 	}
 	
 	public void doRandomMovement(){
-		changeDirection++;
-		//check if the target is already dead
-		if(target != null && target.getHealth() <= 0){
-			target = null;
-		}
-		//get a new target if fighter has no target or target is far away
-		if(target == null || game.distance(center.X(), center.Y(), target.getX(), target.getY()) >= scan_range / 2){
-			getClosestEnemy();
-		}
-		//getClosestEnemy();
-		if(target == null){
-			//random movement if fighter has no target
-//			int t = random.nextInt(4);
-//			targeted_velocity = max_velocity / 2;
-//			//turn left
-//			if(t == 0){
-//				current_turn_speed = max_turn_speed;
-//			}
-//			//turn right
-//			else if(t == 1){
-//				current_turn_speed = -max_turn_speed;
-//			}
-			current_turn_speed = 0;
-			targeted_velocity = 0;
+		if (locationTarget != null) {
+			double distance = distance(this.getX(), this.getY(), locationTarget.x, locationTarget.y);
 			primary_fire = false;
-		}
-		else{
-			int relativeAngle = game.angleToPoint(center.X(), center.Y(), target.getX(), target.getY());
-			double distanceToTarget = game.distance(center.X(), center.Y(), target.getX(), target.getY());
-			int leftBearing = getTurnDistance(relativeAngle, true);
-			int rightBearing = getTurnDistance(relativeAngle, false);
-			primary_fire = false;
-			//if interceptor is facing target
-			if(angle > (relativeAngle - distanceToTarget / 5) && angle < (relativeAngle + distanceToTarget / 5)){
-				targeted_velocity = max_velocity;
-				if(distanceToTarget <= 400 && angle > relativeAngle - 5 && angle < relativeAngle + 5){
-					primary_fire = true;
+			if (distance > 50) {
+				boolean positiveY = false;
+				if (locationTarget.y >=  this.getY()) positiveY = true;
+				double angle = Math.acos((locationTarget.x - this.getX()) / distance) * 180 / Math.PI;
+				double targetAngle;
+				if (positiveY) targetAngle = (270 + angle) % 360;
+				else targetAngle = 270 - angle;
+				//System.out.println(targetAngle);
+				targeted_velocity = max_velocity / 2;
+				if (this.angle == Math.round(targetAngle)) {
+					current_turn_speed = 0;
+					targeted_velocity = max_velocity;
 				}
-				//adjust course
-				if(leftBearing <= rightBearing){ //turn left
-					current_turn_speed = max_turn_speed;
-				}
-				else{ //turn right
-					current_turn_speed = -max_turn_speed;
-				}
+				else if ((Math.round(targetAngle) - this.angle + 360) % 360 < 180) current_turn_speed = (int) Math.min(max_turn_speed, (Math.round(targetAngle) - this.angle + 360) % 360);
+				else current_turn_speed = (int) Math.max(-max_turn_speed, -((this.angle - Math.round(targetAngle) + 360) % 360));
 			}
-			//turn away from target if too close
-			else if(distanceToTarget <= 50){
-				//System.out.println("point a");
-				targeted_velocity = max_velocity;
-				if(angle > target.getAngle() - 80 && angle < target.getAngle() + 80){
-					if(leftBearing <= rightBearing){ //turn right
-						current_turn_speed = -max_turn_speed;
+			else locationTarget = null;
+		}
+		else {
+			changeDirection++;
+			//check if the target is already dead
+			if(target != null && target.getHealth() <= 0){
+				target = null;
+			}
+			//get a new target if fighter has no target or target is far away
+			if(target == null || game.distance(center.X(), center.Y(), target.getX(), target.getY()) >= scan_range / 2){
+				getClosestEnemy();
+			}
+			//getClosestEnemy();
+			if(target == null){
+				//random movement if fighter has no target
+	//			int t = random.nextInt(4);
+	//			targeted_velocity = max_velocity / 2;
+	//			//turn left
+	//			if(t == 0){
+	//				current_turn_speed = max_turn_speed;
+	//			}
+	//			//turn right
+	//			else if(t == 1){
+	//				current_turn_speed = -max_turn_speed;
+	//			}
+				current_turn_speed = 0;
+				targeted_velocity = 0;
+				primary_fire = false;
+			}
+			else{
+				int relativeAngle = game.angleToPoint(center.X(), center.Y(), target.getX(), target.getY());
+				double distanceToTarget = game.distance(center.X(), center.Y(), target.getX(), target.getY());
+				int leftBearing = getTurnDistance(relativeAngle, true);
+				int rightBearing = getTurnDistance(relativeAngle, false);
+				primary_fire = false;
+				//if interceptor is facing target
+				if(angle > (relativeAngle - distanceToTarget / 5) && angle < (relativeAngle + distanceToTarget / 5)){
+					targeted_velocity = max_velocity;
+					if(distanceToTarget <= 400 && angle > relativeAngle - 5 && angle < relativeAngle + 5){
+						primary_fire = true;
 					}
-					else{ //turn left
+					//adjust course
+					if(leftBearing <= rightBearing){ //turn left
 						current_turn_speed = max_turn_speed;
 					}
+					else{ //turn right
+						current_turn_speed = -max_turn_speed;
+					}
 				}
-			}
-			//if target is behind
-			else if(distanceToTarget < 150 && getClosestBearing(target) > 140 &&
-					Math.abs(relativeAngle - target.getAngle()) > 160 && Math.abs(relativeAngle - target.getAngle()) < 200){
-				//System.out.println("point b");
-				targeted_velocity = max_velocity;
-				//if inteceptor can outrun
-				if(max_velocity > target.getMVelocity()){
-					current_turn_speed = 0;
-				}
-				else{
-					if(angle > target.getAngle() - 90 && angle < target.getAngle() + 90){
+				//turn away from target if too close
+				else if(distanceToTarget <= 50){
+					//System.out.println("point a");
+					targeted_velocity = max_velocity;
+					if(angle > target.getAngle() - 80 && angle < target.getAngle() + 80){
 						if(leftBearing <= rightBearing){ //turn right
 							current_turn_speed = -max_turn_speed;
 						}
@@ -248,31 +251,51 @@ public class Interceptor extends Starship{
 						}
 					}
 				}
-			}
-			//if target is far away and not pointed at target, point at target
-			else if(!(angle > relativeAngle - 5 && angle < relativeAngle + 5)){
-				//System.out.println("point c");
-				if(distanceToTarget < 100){
+				//if target is behind
+				else if(distanceToTarget < 150 && getClosestBearing(target) > 140 &&
+						Math.abs(relativeAngle - target.getAngle()) > 160 && Math.abs(relativeAngle - target.getAngle()) < 200){
+					//System.out.println("point b");
 					targeted_velocity = max_velocity;
-					current_turn_speed = 0;
-				}
-				else{
-					targeted_velocity = max_velocity / 2;
-					//targeted_velocity = Math.min(max_velocity, Math.max(max_velocity / 2, distanceToTarget * Math.PI / (2 * 270 / max_turn_speed)));
-					if(leftBearing <= rightBearing){ //turn left
-						current_turn_speed = max_turn_speed;
+					//if inteceptor can outrun
+					if(max_velocity > target.getMVelocity()){
+						current_turn_speed = 0;
 					}
-					else{ //turn right
-						current_turn_speed = -max_turn_speed;
+					else{
+						if(angle > target.getAngle() - 90 && angle < target.getAngle() + 90){
+							if(leftBearing <= rightBearing){ //turn right
+								current_turn_speed = -max_turn_speed;
+							}
+							else{ //turn left
+								current_turn_speed = max_turn_speed;
+							}
+						}
 					}
 				}
+				//if target is far away and not pointed at target, point at target
+				else if(!(angle > relativeAngle - 5 && angle < relativeAngle + 5)){
+					//System.out.println("point c");
+					if(distanceToTarget < 100){
+						targeted_velocity = max_velocity;
+						current_turn_speed = 0;
+					}
+					else{
+						targeted_velocity = max_velocity / 2;
+						//targeted_velocity = Math.min(max_velocity, Math.max(max_velocity / 2, distanceToTarget * Math.PI / (2 * 270 / max_turn_speed)));
+						if(leftBearing <= rightBearing){ //turn left
+							current_turn_speed = max_turn_speed;
+						}
+						else{ //turn right
+							current_turn_speed = -max_turn_speed;
+						}
+					}
+				}
+	
+			//System.out.println(team + " " +relativeAngle + " " + leftBearing + " " + rightBearing);
 			}
-
-		//System.out.println(team + " " +relativeAngle + " " + leftBearing + " " + rightBearing);
-		}
-		edgeGuard();
-		if(current_turn_speed != 0 && targeted_velocity < min_turn_velocity){
-			targeted_velocity = min_turn_velocity;
+			edgeGuard();
+			if(current_turn_speed != 0 && targeted_velocity < min_turn_velocity){
+				targeted_velocity = min_turn_velocity;
+			}
 		}
 		
 		
