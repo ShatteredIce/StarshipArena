@@ -293,17 +293,17 @@ public class StarshipArena {
 		int starty;
 		int angle;
 		for(int i = 0; i < num; i++){
-			startx = random.nextInt(WORLD_WIDTH - 100) + 50;
+//			startx = random.nextInt(WORLD_WIDTH - 100) + 50;
 			starty = random.nextInt(WORLD_HEIGHT - 100) + 50;
 			angle = random.nextInt(360);
-			new Fighter(this, "1", startx, starty, angle, 10);
+			new Fighter(this, "1", random.nextInt(100) + WORLD_WIDTH - 150, starty, angle, 10);
 			if(i % 2 == 0){
-				new Interceptor(this, "2", startx, starty, angle, 10);
+				new Interceptor(this, "2", random.nextInt(100) + 50, starty, angle, 10);
 			}
 		}
 //		new Fighter(this, "red", 1500, 400, 270, 5);
 //		new Interceptor(this, "red", 1250, 400, 0, 5);
-		new Transport(this, "red", 1000, 400, 90, 100);
+		//new Transport(this, "red", 1000, 400, 90, 100);
 		//new Starship(this, "red", 400, 600, 270, 10);
 //		new Fighter(this, "blue", 200, 500, 270, 1);
 //		new Interceptor(this, 500, 700, 0, 1);
@@ -373,7 +373,10 @@ public class StarshipArena {
 			ypos.put(0, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0)) + CURR_Y));
 			for (int i = 0; i < ships.size(); i++) {
 				Starship s = ships.get(i);
-				if (s.getSelected()) s.setTarget(new Point(xpos.get(0), ypos.get(0)));
+				if (s.getSelected()) {
+					s.setLocationTarget(new Point(xpos.get(0), ypos.get(0)));
+					System.out.println(xpos.get(0) + ", " + ypos.get(0));
+				}
 			}
 		}
 	}

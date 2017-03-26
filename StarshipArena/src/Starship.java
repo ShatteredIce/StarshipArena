@@ -41,7 +41,7 @@ public class Starship {
 	int clickRadius;
 	int xOff = 0;
 	int yOff = 0;
-	Point target;
+	Point locationTarget;
 	
 	boolean selected = false;
 	
@@ -75,6 +75,7 @@ public class Starship {
 		current_health = spawnhealth;
 		angle = spawnangle;
 		shipStats();
+		locationTarget = null;
 		center = new Point(spawnx, spawny);
 		points = generatePoints();
 		hitbox = generateHitbox();
@@ -435,8 +436,8 @@ public class Starship {
 		selected = newSelected;
 	}
 	
-	public void setTarget(Point newTarget) {
-		target = newTarget;
+	public void setLocationTarget(Point newLocationTarget) {
+		locationTarget = newLocationTarget;
 	}
 	
 	public int getClickRadius(){
@@ -450,4 +451,8 @@ public class Starship {
 	public int getYOff(){
 		return yOff;
 	}
+	
+    public double distance(double x1, double y1, double x2, double y2){
+    	return Math.sqrt(Math.pow((x2-x1),2) + Math.pow((y2-y1),2));
+    }
 }
