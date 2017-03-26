@@ -6,13 +6,14 @@ public class Starship {
 	Random random = new Random();
 	StarshipArena game;
 	Model model;
-	Texture tex;
+	Texture tex = new Texture("triangle_spaceship.jpg");
 	
 	double[] vertices;
 	double[] textureCoords; 
 	int[] indices;
 	Point center;
 	Point[] points;
+	Point[] hitbox;
 	
 	String team;
 	int angle;
@@ -37,7 +38,9 @@ public class Starship {
 	double primary_lifetime;
 	int primary_accuracy;
 	int scan_range;
-	int radius;
+	int clickRadius;
+	int xOff = 0;
+	int yOff = 0;
 	Point target;
 	
 	boolean selected = false;
@@ -74,10 +77,10 @@ public class Starship {
 		shipStats();
 		center = new Point(spawnx, spawny);
 		points = generatePoints();
+		hitbox = generateHitbox();
 		vertices = new double[points.length * 2];
 		setTextureCoords();
 		setIndices();
-		setTexture();
 		setPoints();
 		model = new Model(vertices, textureCoords, indices);
 		game.addShip(this);
@@ -107,6 +110,15 @@ public class Starship {
 			vertices[v_index] = points[i].X();
 			vertices[v_index+1] = points[i].Y();	
 		}
+		for (int i = 0; i < hitbox.length; i++) {
+			hitbox[i].setX(center.X() + hitbox[i].getXOffset());
+			hitbox[i].setY(center.Y() + hitbox[i].getYOffset());
+			hitbox[i].rotatePoint(center.X(), center.Y(), angle);
+		}
+		fireProjectile();
+	}
+	
+	public void fireProjectile(){
 		if(primary_fire == true && primary_current_cooldown == 0){
 			primary_current_cooldown = primary_cooldown;
 			new Projectile(this, game,center.X(),center.Y(),1,angle,primary_accuracy,primary_speed,primary_lifetime);
@@ -126,7 +138,7 @@ public class Starship {
 	}
 	
 	public void setTexture(){
-		tex = new Texture("triangle_spaceship.jpg");
+		tex.bind();
 	}
 	
 	public void setTextureCoords(){
@@ -139,7 +151,7 @@ public class Starship {
 	
 	public boolean display(){
 		if(current_health > 0){
-			tex.bind();
+			setTexture();
 			model.render(vertices);
 			return true;
 		}
@@ -211,6 +223,15 @@ public class Starship {
 			new Point(10, -20, true),
 		};
 		return points;
+	}
+	
+	public Point[] generateHitbox(){
+		Point[] hitbox = new Point[]{
+			new Point(-10, -20, true),
+			new Point(0, 20, true),
+			new Point(10, -20, true),
+		};
+		return hitbox;
 	}
 	
 	public ArrayList<Starship> scan(){
@@ -340,7 +361,7 @@ public class Starship {
 	}
 	
 	public Point[] getPoints(){
-		return points;
+		return hitbox;
 	}
 	
 	public String getTeam(){
@@ -417,5 +438,16 @@ public class Starship {
 	public void setTarget(Point newTarget) {
 		target = newTarget;
 	}
+	
+	public int getClickRadius(){
+		return clickRadius;
+	}
+	
+	public int getXOff(){
+		return xOff;
+	}
 
+	public int getYOff(){
+		return yOff;
+	}
 }

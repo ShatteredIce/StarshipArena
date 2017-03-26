@@ -37,7 +37,6 @@ public class StarshipArena {
 	
 	int SLOW = 1;
     
-    
     boolean panLeft = false;
     boolean panRight = false;
     boolean panUp = false;
@@ -194,7 +193,7 @@ public class StarshipArena {
 			slowCounter++;
 			if (slowCounter >= SLOW) {
 				slowCounter = 0;
-				System.out.println(counter);
+				//System.out.println(counter);
 				counter++;
 				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 				
@@ -302,9 +301,9 @@ public class StarshipArena {
 				new Interceptor(this, "2", startx, starty, angle, 10);
 			}
 		}
-//		new Fighter(this, "red", 1500, 700, 0, 1);
-		//new Fighter(this, "red", 400, 400, 270, 1);
-		//new Fighter(this, "red", 400, 500, 270, 1);
+//		new Fighter(this, "red", 1500, 400, 270, 5);
+//		new Interceptor(this, "red", 1250, 400, 0, 5);
+		new Transport(this, "red", 1000, 400, 90, 100);
 		//new Starship(this, "red", 400, 600, 270, 10);
 //		new Fighter(this, "blue", 200, 500, 270, 1);
 //		new Interceptor(this, 500, 700, 0, 1);
@@ -357,7 +356,9 @@ public class StarshipArena {
 			}
 			for (int i = 0; i < ships.size(); i++) {
 				Starship s = ships.get(i);
-				if(distance(s.getX(), s.getY(), xpos.get(0), ypos.get(0)) <= s.radius) {
+				Point clickCenter = new Point(s.getX() + s.getXOff(), s.getY() + s.getYOff());
+				clickCenter.rotatePoint(s.getX(), s.getY(), s.getAngle());
+				if(distance(clickCenter.X(), clickCenter.Y(), xpos.get(0), ypos.get(0)) <= s.getClickRadius()) {
 					s.setSelected(true);
 				}
 				else s.setSelected(false);
@@ -528,4 +529,5 @@ public class StarshipArena {
 	public double getHeightScalar(){
 		return(double) CAMERA_HEIGHT / (double) WINDOW_HEIGHT;
 	}
+	
 }

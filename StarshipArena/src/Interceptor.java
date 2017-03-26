@@ -5,6 +5,11 @@ public class Interceptor extends Starship{
 	Starship target = null;
 	int changeDirection = 0;
 	int changeDirectionCooldown = 0;
+	Texture tex1 = new Texture("interceptor1.png");
+	Texture tex2 = new Texture("interceptor2.png");
+	Texture tex3 = new Texture("interceptor3.png");
+	Texture tex4 = new Texture("interceptor4.png");
+
 	
 	public Interceptor(StarshipArena mygame, int spawnx, int spawny){
 		super(mygame, spawnx, spawny);
@@ -20,12 +25,11 @@ public class Interceptor extends Starship{
 	
 	public void shipStats(){
 		//movement
-		acceleration = 1;
+		acceleration = 0.5;
 		max_velocity = 8;
 		max_reverse_velocity = -2;
 		min_turn_velocity = 3;
 		max_turn_speed = 6;
-		radius = 40;
 		//weaponry
 		primary_cooldown = 50;
 		primary_current_cooldown = 0;
@@ -33,72 +37,136 @@ public class Interceptor extends Starship{
 		primary_lifetime = 450/primary_speed;
 		primary_accuracy = 95;
 		scan_range = 500;
+		//other
+		clickRadius = 40;
+		xOff = 0;
+		yOff = 15;
 	}
 	
 	public void setTexture(){
-		tex = new Texture("interceptor1.png");
+		if(current_velocity > 7){
+			tex4.bind();
+		}
+		else if(current_velocity > 4){
+			tex3.bind();
+		}
+		else if(current_velocity > 0){
+			tex2.bind();
+		}
+		else{
+			tex1.bind();
+		}
 	}
 	
+//	public void setTextureCoords(){
+//		textureCoords = new double[]{0.1875, 0.2031, 0.1875, 0.2968, 0.1875, 0.4843, 
+//		0.2343, 0.3281, 0.2968, 0.25, 0.2968, 0.3906, 0.3281, 0.25, 0.3281, 0.3125,
+//		0.4062, 0.4218, 0.4062, 0.6093, 0.4062, 0.6562, 0.4375, 0.1875, 0.4375, 0.4218,
+//		0.4687, 0.0781, 0.4687, 0.1875, 0.5312, 0.0781, 0.5312, 0.1875, 0.5625, 0.1875, 
+//		0.5625, 0.4218, 0.5937, 0.4218, 0.5937, 0.6093, 0.5937, 0.6562, 0.6718, 0.25, 
+//		0.6718, 0.3125, 0.7031, 0.25, 0.7031, 0.3906, 0.7656, 0.3281, 0.8125, 0.2031, 
+//		0.8125, 0.2968, 0.8125, 0.4843, 0.2188, 0.2344, 0.7813, 0.2344};
+//	}
+//	
+//	public void setIndices(){
+//		indices = new int[]{1, 2, 8, 2, 8, 9, 11, 12, 17, 12, 17, 18, 11, 13, 14, 
+//		13, 14, 15, 14, 15, 16, 15, 16, 17, 8, 9, 19, 9, 19, 20, 9, 10, 20,
+//		10, 20, 21, 19, 28, 29, 19, 20, 29, 4, 5, 7, 4, 6, 7, 5, 7, 8,
+//		19, 23, 25, 22, 23, 24, 23, 24, 25, 0, 1, 30, 1, 3, 30, 26, 31, 28,
+//		31, 27, 28};
+//	}
+	
 	public void setTextureCoords(){
-		textureCoords = new double[]{0.1875, 0.2031, 0.1875, 0.2968, 0.1875, 0.4843, 
-		0.2343, 0.3281, 0.2968, 0.25, 0.2968, 0.3906, 0.3281, 0.25, 0.3281, 0.3125,
-		0.4062, 0.4218, 0.4062, 0.6093, 0.4062, 0.6562, 0.4375, 0.1875, 0.4375, 0.4218,
-		0.4687, 0.0781, 0.4687, 0.1875, 0.5312, 0.0781, 0.5312, 0.1875, 0.5625, 0.1875, 
-		0.5625, 0.4218, 0.5937, 0.4218, 0.5937, 0.6093, 0.5937, 0.6562, 0.6718, 0.25, 
-		0.6718, 0.3125, 0.7031, 0.25, 0.7031, 0.3906, 0.7656, 0.3281, 0.8125, 0.2031, 
-		0.8125, 0.2968, 0.8125, 0.4843, 0.2188, 0.2344, 0.7813, 0.2344};
+		textureCoords = new double[]{0, 0, 0, 1, 1, 0, 1, 1};
 	}
 	
 	public void setIndices(){
-		indices = new int[]{1, 2, 8, 2, 8, 9, 11, 12, 17, 12, 17, 18, 11, 13, 14, 
-				13, 14, 15, 14, 15, 16, 15, 16, 17, 8, 9, 19, 9, 19, 20, 9, 10, 20,
-				10, 20, 21, 19, 28, 29, 19, 20, 29, 4, 5, 7, 4, 6, 7, 5, 7, 8,
-				19, 23, 25, 22, 23, 24, 23, 24, 25, 0, 1, 30, 1, 3, 30, 26, 31, 28,
-				31, 27, 28};
+		indices = new int[]{0, 1, 2, 2, 1, 3};
 	}
 	
-//	public void setIndices(){
-//		indices = new int[]{11, 13, 14, 13, 14, 15, 14, 15, 16};
-//	}
-	
 	public Point[] generatePoints(){
-		int xOff = 0; int yOff = -15;
 		Point[] points = new Point[]{
-			new Point(-40 + xOff, 38 + yOff, true),
-			new Point(-40 + xOff, 26 + yOff, true),
-			new Point(-40 + xOff, 2 + yOff, true),
-			new Point(-34 + xOff, 22 + yOff, true),
-			new Point(-26 + xOff, 32 + yOff, true),
-			new Point(-26 + xOff, 14 + yOff, true),
-			new Point(-22 + xOff, 32 + yOff, true),
-			new Point(-22 + xOff, 24 + yOff, true),
-			new Point(-12 + xOff, 10 + yOff, true),
-			new Point(-12 + xOff, -14 + yOff, true),
-			new Point(-12 + xOff, -20 + yOff, true),
-			new Point(-8 + xOff, 40 + yOff, true),
-			new Point(-8 + xOff, 10 + yOff, true),
-			new Point(-4 + xOff, 52 + yOff, true),
-			new Point(-4 + xOff, 40 + yOff, true),
-			new Point(4 + xOff, 52 + yOff, true),
-			new Point(4 + xOff, 40 + yOff, true),
-			new Point(8 + xOff, 40 + yOff, true),
-			new Point(8 + xOff, 10 + yOff, true),
-			new Point(12 + xOff, 10 + yOff, true),
-			new Point(12 + xOff, -14 + yOff, true),
-			new Point(12 + xOff, -20 + yOff, true),
-			new Point(22 + xOff, 32 + yOff, true),
-			new Point(22 + xOff, 24 + yOff, true),
-			new Point(26 + xOff, 32 + yOff, true),
-			new Point(26 + xOff, 14 + yOff, true),
-			new Point(34 + xOff, 22 + yOff, true),
-			new Point(40 + xOff, 38 + yOff, true),
-			new Point(40 + xOff, 26 + yOff, true),
-			new Point(40 + xOff, 2 + yOff, true),
-			new Point(-36 + xOff, 34 + yOff, true),
-			new Point(36 + xOff, 34 + yOff, true)
-			
+			new Point(-64, 64, true),
+			new Point(-64, -64, true),
+			new Point(64, 64, true),
+			new Point(64, -64, true)
 		};
 		return points;
+	}
+	
+//	public Point[] generateHitbox(){
+//		Point[] hitbox = new Point[]{
+//			new Point(-40, 38, true),
+//			new Point(-40, 26, true),
+//			new Point(-40, 2, true),
+//			new Point(-34, 22, true),
+//			new Point(-26, 32, true),
+//			new Point(-26, 14, true),
+//			new Point(-22, 32, true),
+//			new Point(-22, 24, true),
+//			new Point(-12, 10, true),
+//			new Point(-12, -14, true),
+//			new Point(-12, -20, true),
+//			new Point(-8, 40, true),
+//			new Point(-8, 10, true),
+//			new Point(-4, 52, true),
+//			new Point(-4, 40, true),
+//			new Point(4, 52, true),
+//			new Point(4, 40, true),
+//			new Point(8, 40, true),
+//			new Point(8, 10, true),
+//			new Point(12, 10, true), 
+//			new Point(12, -14, true),
+//			new Point(12, -20, true),
+//			new Point(22, 32, true),
+//			new Point(22, 24, true),
+//			new Point(26, 32, true),
+//			new Point(26, 14, true),
+//			new Point(34, 22, true),
+//			new Point(40, 38, true),
+//			new Point(40, 26, true),
+//			new Point(40, 2, true),
+//			new Point(-36, 34, true),
+//			new Point(36, 34, true)
+//			
+//		};
+//		return hitbox;
+//	}
+	
+	public Point[] generateHitbox(){
+		Point[] hitbox = new Point[]{
+			new Point(-40, 38, true),
+			new Point(-40, 2, true),
+			new Point(-12, -14, true),
+			new Point(-12, -20, true),
+			new Point(12, -20, true),
+			new Point(12, -14, true),
+			new Point(40, 2, true),
+			new Point(40, 38, true),
+			new Point(36, 34, true),
+			new Point(34, 22, true),
+			new Point(26, 14, true),
+			new Point(26, 32, true),
+			new Point(22, 32, true),
+			new Point(22, 24, true),
+			new Point(12, 10, true),
+			new Point(8, 40, true),
+			new Point(4, 40, true),
+			new Point(4, 52, true),
+			new Point(-4, 52, true),
+			new Point(-4, 40, true),
+			new Point(-8, 40, true),
+			new Point(-12, 10, true),
+			new Point(-22, 24, true),
+			new Point(-22, 32, true),
+			new Point(-26, 32, true),
+			new Point(-26, 14, true),
+			new Point(-34, 22, true),
+			new Point(-36, 34, true),
+			
+			
+		};
+		return hitbox;
 	}
 	
 	public void doRandomMovement(){
