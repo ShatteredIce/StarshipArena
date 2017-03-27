@@ -5,10 +5,14 @@ public class Interceptor extends Starship{
 	Starship target = null;
 	int changeDirection = 0;
 	int changeDirectionCooldown = 0;
-	Texture tex1 = new Texture("interceptor1.png");
-	Texture tex2 = new Texture("interceptor2.png");
-	Texture tex3 = new Texture("interceptor3.png");
-	Texture tex4 = new Texture("interceptor4.png");
+	Texture blue_tex1 = new Texture("blue_interceptor1.png");
+	Texture blue_tex2 = new Texture("blue_interceptor2.png");
+	Texture blue_tex3 = new Texture("blue_interceptor3.png");
+	Texture blue_tex4 = new Texture("blue_interceptor4.png");
+	Texture red_tex1 = new Texture("red_interceptor1.png");
+	Texture red_tex2 = new Texture("red_interceptor2.png");
+	Texture red_tex3 = new Texture("red_interceptor3.png");
+	Texture red_tex4 = new Texture("red_interceptor4.png");
 
 	
 	public Interceptor(StarshipArena mygame, int spawnx, int spawny){
@@ -44,17 +48,33 @@ public class Interceptor extends Starship{
 	}
 	
 	public void setTexture(){
-		if(current_velocity > 7){
-			tex4.bind();
-		}
-		else if(current_velocity > 4){
-			tex3.bind();
-		}
-		else if(current_velocity > 0){
-			tex2.bind();
+		if(team.equals("red")){
+			if(current_velocity > 7){
+				red_tex4.bind();
+			}
+			else if(current_velocity > 4){
+				red_tex3.bind();
+			}
+			else if(current_velocity > 0){
+				red_tex2.bind();
+			}
+			else{
+				red_tex1.bind();
+			}
 		}
 		else{
-			tex1.bind();
+			if(current_velocity > 7){
+				blue_tex4.bind();
+			}
+			else if(current_velocity > 4){
+				blue_tex3.bind();
+			}
+			else if(current_velocity > 0){
+				blue_tex2.bind();
+			}
+			else{
+				blue_tex1.bind();
+			}
 		}
 	}
 	

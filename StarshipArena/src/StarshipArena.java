@@ -297,9 +297,9 @@ public class StarshipArena {
 //			startx = random.nextInt(WORLD_WIDTH - 100) + 50;
 			starty = random.nextInt(WORLD_HEIGHT - 100) + 50;
 			angle = random.nextInt(360);
-			new Transport(this, "blue", random.nextInt(100) + WORLD_WIDTH - 150, starty, angle, 10);
+			new Fighter(this, "blue", random.nextInt(100) + WORLD_WIDTH - 150, starty, angle, 10);
 			if(i % 2 == 0){
-				new Transport(this, "red", random.nextInt(100) + 50, starty, angle, 10);
+				new Interceptor(this, "red", random.nextInt(100) + 50, starty, angle, 10);
 			}
 		}
 //		new Fighter(this, "red", 1500, 400, 270, 5);

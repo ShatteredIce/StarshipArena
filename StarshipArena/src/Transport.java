@@ -5,10 +5,14 @@ public class Transport extends Starship{
 	Starship target = null;
 	int changeDirection = 0;
 	int changeDirectionCooldown = 0;
-	Texture tex1 = new Texture("transport1.png");
-	Texture tex2 = new Texture("transport2.png");
-	Texture tex3 = new Texture("transport3.png");
-	Texture tex4 = new Texture("transport4.png");
+	Texture blue_tex1 = new Texture("blue_transport1.png");
+	Texture blue_tex2 = new Texture("blue_transport2.png");
+	Texture blue_tex3 = new Texture("blue_transport3.png");
+	Texture blue_tex4 = new Texture("blue_transport4.png");
+	Texture red_tex1 = new Texture("red_transport1.png");
+	Texture red_tex2 = new Texture("red_transport2.png");
+	Texture red_tex3 = new Texture("red_transport3.png");
+	Texture red_tex4 = new Texture("red_transport4.png");
 	
 	public Transport(StarshipArena mygame, int spawnx, int spawny){
 		super(mygame, spawnx, spawny);
@@ -43,17 +47,33 @@ public class Transport extends Starship{
 	}
 	
 	public void setTexture(){
-		if(current_velocity > 2){
-			tex4.bind();
-		}
-		else if(current_velocity > 1){
-			tex3.bind();
-		}
-		else if(current_velocity > 0){
-			tex2.bind();
+		if(team.equals("red")){
+			if(current_velocity > 2){
+				red_tex4.bind();
+			}
+			else if(current_velocity > 1){
+				red_tex3.bind();
+			}
+			else if(current_velocity > 0){
+				red_tex2.bind();
+			}
+			else{
+				red_tex1.bind();
+			}
 		}
 		else{
-			tex1.bind();
+			if(current_velocity > 2){
+				blue_tex4.bind();
+			}
+			else if(current_velocity > 1){
+				blue_tex3.bind();
+			}
+			else if(current_velocity > 0){
+				blue_tex2.bind();
+			}
+			else{
+				blue_tex1.bind();
+			}
 		}
 	}
 	
