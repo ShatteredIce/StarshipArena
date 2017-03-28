@@ -247,6 +247,31 @@ public class StarshipArena {
 						sidebar.display();
 					}
 				}
+				//Make ships drift apart if they're too close
+				for (int s = 0; s < ships.size(); s++) {
+					Starship first = ships.get(s);
+					for (int s1 = s + 1; s1 < ships.size(); s1++) {
+						Starship second = ships.get(s1);
+						if (distance(first.getX(), first.getY(), second.getX(), second.getY()) < first.getClickRadius() + second.getClickRadius()) {
+							double angle = Math.acos((second.getX() - first.getX()) / distance(first.getX(), first.getY(), second.getX(), second.getY()));
+							double newFirstX, newFirstY, newSecondX, newSecondY;
+							if (second.getY() > first.getY()) {
+								newFirstX = Math.min(Math.max(first.center.x - Math.cos(angle), first.getClickRadius()), WORLD_WIDTH - first.getClickRadius());
+								newFirstY = Math.min(Math.max(first.center.y - Math.sin(angle), first.getClickRadius()), WORLD_HEIGHT - first.getClickRadius());
+								newSecondX = Math.min(Math.max(second.center.x + Math.cos(angle), second.getClickRadius()), WORLD_WIDTH - second.getClickRadius());
+								newSecondY = Math.min(Math.max(second.center.y + Math.sin(angle), second.getClickRadius()), WORLD_HEIGHT - second.getClickRadius());
+							}
+							else {
+								newFirstX = Math.min(Math.max(first.center.x + Math.cos(angle), first.getClickRadius()), WORLD_WIDTH - first.getClickRadius());
+								newFirstY = Math.min(Math.max(first.center.y + Math.sin(angle), first.getClickRadius()), WORLD_HEIGHT - first.getClickRadius());
+								newSecondX = Math.min(Math.max(second.center.x - Math.cos(angle), second.getClickRadius()), WORLD_WIDTH - second.getClickRadius());
+								newSecondY = Math.min(Math.max(second.center.y - Math.sin(angle), second.getClickRadius()), WORLD_HEIGHT - second.getClickRadius());
+							}
+							first.center = new Point(newFirstX, newFirstY);
+							second.center = new Point(newSecondX, newSecondY);
+						}
+					}
+				}
 			
 				checkProjectiles();
 				
