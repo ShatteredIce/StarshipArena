@@ -42,16 +42,21 @@ public class StarshipArena {
     boolean panUp = false;
     boolean panDown = false;
     
+    int FIGHTER_COST = 5;
+    int INTERCEPTOR_COST = 20;
+    int TRANSPORT_COST = 10;
+    
 	Random random = new Random();
 	
 	ArrayList<Projectile> projectiles = new ArrayList<>();
 	ArrayList<Starship> ships = new ArrayList<>();
 	ArrayList<Planet> planets = new ArrayList<>();
 	ArrayList<Tile> backgroundTiles = new ArrayList<>();
-	
-	Planet selectedPlanet = null;
-	//ArrayList<Starship> selectedShips = new ArrayList<>();
+	ArrayList<Player> playerList = new ArrayList<>(); 
+
 	Sidebar sidebar;
+	
+	Player player = new Player(this, "red");
     
 	public void run() {
 
@@ -124,6 +129,12 @@ public class StarshipArena {
 //				SLOW = 50;
 			if ( key == GLFW_KEY_UP && action == GLFW_RELEASE )
 				SLOW = 1;
+			if ( key == GLFW_KEY_1 && action == GLFW_PRESS)
+				buyShips(player, 1);
+			if ( key == GLFW_KEY_2 && action == GLFW_PRESS)
+				buyShips(player, 2);
+			if ( key == GLFW_KEY_3 && action == GLFW_PRESS)
+				buyShips(player, 3);
 		
 		});
 		
@@ -175,12 +186,13 @@ public class StarshipArena {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
+		playerList.add(player);
+		
 		createShips(20);
 		
 		new Planet(this, 1300, 900);
-		sidebar = new Sidebar(this, WINDOW_WIDTH - 125, WINDOW_HEIGHT / 2);
+		sidebar = new Sidebar(this, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 18);
 		
-		Texture backgroundTexture = new Texture("background.png");
 		Texture projectileTexture = new Texture("torpedo.png");
 		
 		genTiles();
@@ -204,7 +216,6 @@ public class StarshipArena {
 				glEnable(GL_TEXTURE_2D);
 				
 				//Display background
-				backgroundTexture.bind();
 				for (int t = 0; t < backgroundTiles.size(); t++) {
 					backgroundTiles.get(t).display();
 				}
@@ -212,6 +223,8 @@ public class StarshipArena {
 				//Display planets
 				for(int p = 0; p < planets.size(); p++){
 					planets.get(p).checkCapturePoint();
+					planets.get(p).getResources();
+					System.out.println(player.getResources());
 					planets.get(p).display();
 				}
 				
@@ -299,15 +312,42 @@ public class StarshipArena {
 			angle = random.nextInt(360);
 			new Fighter(this, "blue", random.nextInt(100) + WORLD_WIDTH - 150, starty, angle, 10);
 			if(i % 2 == 0){
-				new Interceptor(this, "red", random.nextInt(100) + 50, starty, angle, 10);
+				//new Interceptor(this, "red", random.nextInt(100) + 50, starty, angle, 10);
 			}
 		}
 //		new Fighter(this, "red", 1500, 400, 270, 5);
-//		new Interceptor(this, "red", 1250, 400, 0, 5);
+		new Interceptor(this, "red", 200, 400, 0, 5);
 		//new Transport(this, "1", 1000, 400, 90, 100);
 		//new Starship(this, "red", 400, 600, 270, 10);
 //		new Fighter(this, "blue", 200, 500, 270, 1);
 //		new Interceptor(this, 500, 700, 0, 1);
+	}
+	
+	public void buyShips(Player p, int type){
+		//if player has selected an allied planet
+		if(p.getSelectedPlanet() != null && p.getSelectedPlanet().getTeam().equals(p.getTeam())){
+			int planetSize = p.getSelectedPlanet().getSize();
+			//attempt to buy fighter
+			if(type == 1 && p.getResources() >= FIGHTER_COST){
+				p.setResources(p.getResources() - FIGHTER_COST);
+				new Fighter(this, p.getTeam(), (int) p.getSelectedPlanet().getX() + random.nextInt(planetSize * 2) - planetSize, 
+						(int) p.getSelectedPlanet().getY() + random.nextInt(planetSize * 2) - planetSize, 0, 10);
+			}
+			//attempt to buy interceptor
+			else if(type == 2 && p.getResources() >= INTERCEPTOR_COST){
+				p.setResources(p.getResources() - INTERCEPTOR_COST);
+				new Interceptor(this, p.getTeam(), (int) p.getSelectedPlanet().getX() + random.nextInt(planetSize * 2) - planetSize, 
+						(int) p.getSelectedPlanet().getY() + random.nextInt(planetSize * 2) - planetSize, 0, 10);
+				
+			}
+			//attempt to buy transport
+			else if(type == 3 && p.getResources() >= TRANSPORT_COST){
+				p.setResources(p.getResources() - TRANSPORT_COST);
+				new Transport(this, p.getTeam(), (int) p.getSelectedPlanet().getX() + random.nextInt(planetSize * 2) - planetSize, 
+						(int) p.getSelectedPlanet().getY() + random.nextInt(planetSize * 2) - planetSize, 0, 10);
+				
+			}
+		}
 	}
 	
 	//check projectile collisions
@@ -340,19 +380,19 @@ public class StarshipArena {
 			for (int i = 0; i < planets.size(); i++) {
 				Planet p = planets.get(i);
 				if(distance(p.getX(), p.getY(), xpos.get(0), ypos.get(0)) <= p.getSize() - 30){
-					if(selectedPlanet != null){
-						selectedPlanet.setSelected(false);
+					if(player.getSelectedPlanet() != null){
+						player.getSelectedPlanet().setSelected(false);
 					}
-					selectedPlanet = p;
+					player.setSelectedPlanet(p);
 					p.setSelected(true);
 					clickedOnSprite = true;
 					break;
 				}
 			}
 			if(clickedOnSprite == false){
-				if(selectedPlanet != null){
-					selectedPlanet.setSelected(false);
-					selectedPlanet = null;
+				if(player.getSelectedPlanet() != null){
+					player.getSelectedPlanet().setSelected(false);
+					player.setSelectedPlanet(null);
 				}
 			}
 			for (int i = 0; i < ships.size(); i++) {
@@ -372,9 +412,10 @@ public class StarshipArena {
 			//convert the glfw coordinate to our coordinate system
 			xpos.put(0, getWidthScalar() * xpos.get(0) + CURR_X);
 			ypos.put(0, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0)) + CURR_Y));
+			
 			for (int i = 0; i < ships.size(); i++) {
 				Starship s = ships.get(i);
-				if (s.getSelected()) {
+				if (s.getSelected() && s.getTeam().equals(player.getTeam())) {
 					s.setLocationTarget(new Point(xpos.get(0), ypos.get(0)));
 					//System.out.println(xpos.get(0) + ", " + ypos.get(0));
 				}
@@ -468,6 +509,10 @@ public class StarshipArena {
     
     public ArrayList<Starship> getAllShips(){
     	return ships;
+    }
+    
+    public ArrayList<Player> getPlayers(){
+    	return playerList;
     }
 	
     public void addShip(Starship s){

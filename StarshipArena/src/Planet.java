@@ -12,21 +12,25 @@ public class Planet {
 	Point[] points;
 	int planetSize = 200;
 	boolean selected = false;
-	Texture tex = new Texture("planet.png");
+	static Texture tex = new Texture("planet.png");
 	//halo rendering variables
 	Model haloModel;
 	double[] haloVertices;
 	Point[] haloPoints;
 	int haloSize = 400;
-	Texture blueHalo = new Texture("blue_halo.png");
-	Texture redHalo = new Texture("red_halo.png");
-	Texture whiteHalo = new Texture("white_halo.png");
-	//planet capturing variables
+	static Texture blueHalo = new Texture("blue_halo.png");
+	static Texture redHalo = new Texture("red_halo.png");
+	static Texture whiteHalo = new Texture("white_halo.png");
+	//planet ingame variables
 	String team = "none";
 	String capturingTeam = "none";
 	int captureStrength = 0;
 	int captureTime = 500;
 	int maxCaptureTime = 500;
+	int resourcesPerTick = 1;
+	int resourcesCooldown = 50;
+	int currentCooldown = 50;
+	
 	
 	
 	Planet(StarshipArena mygame, int spawnx, int spawny){
@@ -179,6 +183,26 @@ public class Planet {
 		}
 	}
 	
+	public void getResources() {
+		if(team.equals("none")){
+			return;
+		}
+		//if team is not none and cooldown for resources is over, distribute resources
+		else if(currentCooldown == 0){
+			ArrayList<Player> players = game.getPlayers();
+			for (int i = 0; i < players.size(); i++) {
+				if(players.get(i).getTeam().equals(team)){
+					players.get(i).setResources(players.get(i).getResources() + resourcesPerTick);
+				}
+			}
+			currentCooldown = resourcesCooldown;
+		}
+		else{
+			currentCooldown--;
+		}
+		
+	}
+	
 	public void setTextureCoords(){
 		textureCoords = new double[]{0, 1, 0, 0, 1, 0, 1, 1};
 	}
@@ -204,6 +228,10 @@ public class Planet {
 	
 	public boolean getSelected(){
 		return selected;
+	}
+	
+	public String getTeam(){
+		return team;
 	}
 	
 	public double getX() {

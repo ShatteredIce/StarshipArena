@@ -5,14 +5,14 @@ public class Interceptor extends Starship{
 	Starship target = null;
 	int changeDirection = 0;
 	int changeDirectionCooldown = 0;
-	Texture blue_tex1 = new Texture("blue_interceptor1.png");
-	Texture blue_tex2 = new Texture("blue_interceptor2.png");
-	Texture blue_tex3 = new Texture("blue_interceptor3.png");
-	Texture blue_tex4 = new Texture("blue_interceptor4.png");
-	Texture red_tex1 = new Texture("red_interceptor1.png");
-	Texture red_tex2 = new Texture("red_interceptor2.png");
-	Texture red_tex3 = new Texture("red_interceptor3.png");
-	Texture red_tex4 = new Texture("red_interceptor4.png");
+	static Texture blue_tex1 = new Texture("blue_interceptor1.png");
+	static Texture blue_tex2 = new Texture("blue_interceptor2.png");
+	static Texture blue_tex3 = new Texture("blue_interceptor3.png");
+	static Texture blue_tex4 = new Texture("blue_interceptor4.png");
+	static Texture red_tex1 = new Texture("red_interceptor1.png");
+	static Texture red_tex2 = new Texture("red_interceptor2.png");
+	static Texture red_tex3 = new Texture("red_interceptor3.png");
+	static Texture red_tex4 = new Texture("red_interceptor4.png");
 
 	
 	public Interceptor(StarshipArena mygame, int spawnx, int spawny){

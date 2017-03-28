@@ -3,6 +3,7 @@ public class Tile {
 	
 	StarshipArena game;
 	Model model;
+	static Texture backgroundTexture = new Texture("background.png");
 	
 	double[] vertices;
 	double[] textureCoords; 
@@ -53,6 +54,7 @@ public class Tile {
 	}
 	
 	public void display(){
+		backgroundTexture.bind();
 		model.render(vertices);
 	}
 	

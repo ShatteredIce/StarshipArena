@@ -3,7 +3,7 @@ public class Sidebar {
 	
 	StarshipArena game;
 	Model model;
-	Texture tex;
+	static Texture tex = new Texture("main_bar.png");
 	
 	double[] vertices;
 	double[] textureCoords; 
@@ -23,7 +23,6 @@ public class Sidebar {
 		vertices = new double[points.length * 2];
 		setTextureCoords();
 		setIndices();
-		setTexture();
 		setPoints();
 		model = new Model(vertices, textureCoords, indices);
 
@@ -44,24 +43,21 @@ public class Sidebar {
 	
 	public Point[] generatePoints(){
 		Point[] points = new Point[]{
-			new Point(-125, -450, true),
-			new Point(-125, 450, true),
-			new Point(125, 450, true),
-			new Point(125, -450, true),
+			new Point(-game.getWindowWidth() / 2, game.getWindowHeight() / 9, true),
+			new Point(-game.getWindowWidth() / 2, -game.getWindowHeight() / 9, true),
+			new Point(game.getWindowWidth() / 2, game.getWindowHeight() / 9, true),
+			new Point(game.getWindowWidth() / 2, -game.getWindowHeight() / 9, true),
 		};
 		return points;
 	}
 	
-	public void setTexture(){
-		tex = new Texture("planet_sidebar.png");
-	}
 	
 	public void setTextureCoords(){
-		textureCoords = new double[]{0, 1, 0, 0, 1, 0, 1, 1};
+		textureCoords = new double[]{0, 0, 0, 1, 1, 0, 1, 1};
 	}
 	
 	public void setIndices(){
-		indices = new int[]{0, 1, 2, 2, 3, 0};
+		indices = new int[]{0, 1, 2, 2, 1, 3};
 	}
 	
 	public void display(){
