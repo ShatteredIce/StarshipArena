@@ -265,7 +265,7 @@ public class StarshipArena {
 					Starship first = ships.get(s);
 					for (int s1 = s + 1; s1 < ships.size(); s1++) {
 						Starship second = ships.get(s1);
-						if (distance(first.getX(), first.getY(), second.getX(), second.getY()) < first.getClickRadius() + second.getClickRadius()) {
+						if (first.getMVelocity() == 0 && second.getMVelocity() == 0 && first.getTeam().equals(second.getTeam()) && distance(first.getX(), first.getY(), second.getX(), second.getY()) < first.getClickRadius() + second.getClickRadius()) {
 							double angle = Math.acos((second.getX() - first.getX()) / distance(first.getX(), first.getY(), second.getX(), second.getY()));
 							double newFirstX, newFirstY, newSecondX, newSecondY;
 							if (second.getY() > first.getY()) {
@@ -335,15 +335,15 @@ public class StarshipArena {
 //			startx = random.nextInt(WORLD_WIDTH - 100) + 50;
 			starty = random.nextInt(WORLD_HEIGHT - 100) + 50;
 			angle = random.nextInt(360);
-			new Fighter(this, "blue", random.nextInt(100) + WORLD_WIDTH - 150, starty, angle, 10);
+			new Transport(this, "blue", random.nextInt(100) + WORLD_WIDTH - 1150, starty, angle, 1);
 			if(i % 2 == 0){
-				//new Interceptor(this, "red", random.nextInt(100) + 50, starty, angle, 10);
+				//new Fighter(this, "red", random.nextInt(100) + 50, starty, angle, 10);
 			}
 		}
 //		new Fighter(this, "red", 1500, 400, 270, 5);
-		new Interceptor(this, "red", 200, 400, 0, 5);
-		//new Transport(this, "1", 1000, 400, 90, 100);
-		//new Starship(this, "red", 400, 600, 270, 10);
+		new Fighter(this, "red", 200, 400, 0, 5);
+		new Fighter(this, "red", 210, 500, 0, 5);
+		new Interceptor(this, "red", 190, 900, 330, 5);
 //		new Fighter(this, "blue", 200, 500, 270, 1);
 //		new Interceptor(this, 500, 700, 0, 1);
 	}
@@ -392,7 +392,7 @@ public class StarshipArena {
 	
 	//responds to mouse clicks
 	public void onMouseEvent(){
-		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == 1){
+		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){
 			boolean clickedOnSprite = false;
 			DoubleBuffer xpos = BufferUtils.createDoubleBuffer(1);
 			DoubleBuffer ypos = BufferUtils.createDoubleBuffer(1);
@@ -430,7 +430,7 @@ public class StarshipArena {
 				else s.setSelected(false);
 			}
 		}
-		else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == 1) {
+		else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
 			DoubleBuffer xpos = BufferUtils.createDoubleBuffer(1);
 			DoubleBuffer ypos = BufferUtils.createDoubleBuffer(1);
 			glfwGetCursorPos(window, xpos, ypos);
