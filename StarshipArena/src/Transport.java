@@ -5,14 +5,14 @@ public class Transport extends Starship{
 	Starship target = null;
 	int changeDirection = 0;
 	int changeDirectionCooldown = 0;
-	Texture blue_tex1 = new Texture("blue_transport1.png");
-	Texture blue_tex2 = new Texture("blue_transport2.png");
-	Texture blue_tex3 = new Texture("blue_transport3.png");
-	Texture blue_tex4 = new Texture("blue_transport4.png");
-	Texture red_tex1 = new Texture("red_transport1.png");
-	Texture red_tex2 = new Texture("red_transport2.png");
-	Texture red_tex3 = new Texture("red_transport3.png");
-	Texture red_tex4 = new Texture("red_transport4.png");
+	static Texture blue_tex1 = new Texture("blue_transport1.png");
+	static Texture blue_tex2 = new Texture("blue_transport2.png");
+	static Texture blue_tex3 = new Texture("blue_transport3.png");
+	static Texture blue_tex4 = new Texture("blue_transport4.png");
+	static Texture red_tex1 = new Texture("red_transport1.png");
+	static Texture red_tex2 = new Texture("red_transport2.png");
+	static Texture red_tex3 = new Texture("red_transport3.png");
+	static Texture red_tex4 = new Texture("red_transport4.png");
 	
 	public Transport(StarshipArena mygame, int spawnx, int spawny){
 		super(mygame, spawnx, spawny);

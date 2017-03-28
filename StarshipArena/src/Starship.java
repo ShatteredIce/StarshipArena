@@ -6,7 +6,7 @@ public class Starship {
 	Random random = new Random();
 	StarshipArena game;
 	Model model;
-	Texture tex = new Texture("planet_sidebar.png");
+	static Texture tex = new Texture("WIP.png");
 	
 	double[] vertices;
 	double[] textureCoords; 

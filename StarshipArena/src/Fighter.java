@@ -5,14 +5,14 @@ public class Fighter extends Starship{
 	Starship target = null;
 	int changeDirection = 0;
 	int changeDirectionCooldown = 0;
-	Texture blue_tex1 = new Texture("blue_fighter1.png");
-	Texture blue_tex2 = new Texture("blue_fighter2.png");
-	Texture blue_tex3 = new Texture("blue_fighter3.png");
-	Texture blue_tex4 = new Texture("blue_fighter4.png");
-	Texture red_tex1 = new Texture("red_fighter1.png");
-	Texture red_tex2 = new Texture("red_fighter2.png");
-	Texture red_tex3 = new Texture("red_fighter3.png");
-	Texture red_tex4 = new Texture("red_fighter4.png");
+	static Texture blue_tex1 = new Texture("blue_fighter1.png");
+	static Texture blue_tex2 = new Texture("blue_fighter2.png");
+	static Texture blue_tex3 = new Texture("blue_fighter3.png");
+	static Texture blue_tex4 = new Texture("blue_fighter4.png");
+	static Texture red_tex1 = new Texture("red_fighter1.png");
+	static Texture red_tex2 = new Texture("red_fighter2.png");
+	static Texture red_tex3 = new Texture("red_fighter3.png");
+	static Texture red_tex4 = new Texture("red_fighter4.png");
 	
 	public Fighter(StarshipArena mygame, int spawnx, int spawny){
 		super(mygame, spawnx, spawny);
