@@ -275,9 +275,9 @@ public class StarshipArena {
 								newSecondY = Math.min(Math.max(second.center.y + Math.sin(angle), second.getClickRadius()), WORLD_HEIGHT - second.getClickRadius());
 							}
 							else {
-								newFirstX = Math.min(Math.max(first.center.x + Math.cos(angle), first.getClickRadius()), WORLD_WIDTH - first.getClickRadius());
+								newFirstX = Math.min(Math.max(first.center.x - Math.cos(angle), first.getClickRadius()), WORLD_WIDTH - first.getClickRadius());
 								newFirstY = Math.min(Math.max(first.center.y + Math.sin(angle), first.getClickRadius()), WORLD_HEIGHT - first.getClickRadius());
-								newSecondX = Math.min(Math.max(second.center.x - Math.cos(angle), second.getClickRadius()), WORLD_WIDTH - second.getClickRadius());
+								newSecondX = Math.min(Math.max(second.center.x + Math.cos(angle), second.getClickRadius()), WORLD_WIDTH - second.getClickRadius());
 								newSecondY = Math.min(Math.max(second.center.y - Math.sin(angle), second.getClickRadius()), WORLD_HEIGHT - second.getClickRadius());
 							}
 							first.center = new Point(newFirstX, newFirstY);
