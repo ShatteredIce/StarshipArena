@@ -39,8 +39,11 @@ public class Starship {
 	int primary_accuracy;
 	int scan_range;
 	int clickRadius;
+	
+	
 	int xOff = 0;
 	int yOff = 0;
+	Point spawnPoint;
 	Point locationTarget;
 	
 	boolean selected = false;
@@ -76,6 +79,7 @@ public class Starship {
 		angle = spawnangle;
 		shipStats();
 		locationTarget = null;
+		spawnPoint = new Point(spawnx, spawny);
 		center = new Point(spawnx, spawny);
 		points = generatePoints();
 		hitbox = generateHitbox();
@@ -455,4 +459,8 @@ public class Starship {
     public double distance(double x1, double y1, double x2, double y2){
     	return Math.sqrt(Math.pow((x2-x1),2) + Math.pow((y2-y1),2));
     }
+
+	public Point getSpawnPoint() {
+		return spawnPoint;
+	}
 }

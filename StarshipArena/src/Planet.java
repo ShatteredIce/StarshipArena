@@ -34,6 +34,7 @@ public class Planet {
 	int captureStrength = 0;
 	int captureTime = 500;
 	int maxCaptureTime = 500;
+	int storedResources = 0;
 	int resourcesPerTick = 1;
 	int resourcesCooldown = 50;
 	int currentCooldown = 50;
@@ -210,18 +211,13 @@ public class Planet {
 		}
 	}
 	
-	public void getResources() {
+	public void updateResources() {
 		if(team.equals("none")){
 			return;
 		}
-		//if team is not none and cooldown for resources is over, distribute resources
+		//if team is not none and cooldown for resources is over, get resources
 		else if(currentCooldown == 0){
-			ArrayList<Player> players = game.getPlayers();
-			for (int i = 0; i < players.size(); i++) {
-				if(players.get(i).getTeam().equals(team)){
-					players.get(i).setResources(players.get(i).getResources() + resourcesPerTick);
-				}
-			}
+			storedResources += resourcesPerTick;
 			currentCooldown = resourcesCooldown;
 		}
 		else{
@@ -247,6 +243,14 @@ public class Planet {
 	
 	public int getSize(){
 		return planetSize;
+	}
+	
+	public void setResources(int resources){
+		storedResources = resources;
+	}
+	
+	public int getResources(){
+		return storedResources;
 	}
 	
 	public void setSelected(boolean state){

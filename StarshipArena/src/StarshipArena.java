@@ -58,6 +58,7 @@ public class StarshipArena {
 	Sidebar sidebar;
 	
 	Player player = new Player(this, "blue");
+	Enemy enemy = new Enemy(this, new Player(this, "red"));
     
 	public void run() {
 
@@ -230,7 +231,7 @@ public class StarshipArena {
 				//Display planets
 				for(int p = 0; p < planets.size(); p++){
 					planets.get(p).checkCapturePoint();
-					planets.get(p).getResources();
+					planets.get(p).updateResources();
 					//System.out.println(player.getResources());
 					planets.get(p).display();
 				}
@@ -295,6 +296,9 @@ public class StarshipArena {
 			
 				checkProjectiles();
 				
+				enemy.buyShips();
+				enemy.move();
+				
 				onMouseEvent();
 				
 				glDisable(GL_TEXTURE_2D);
@@ -355,28 +359,28 @@ public class StarshipArena {
 //		new Interceptor(this, 500, 700, 0, 1);
 	}
 	
-	public void buyShips(Player p, int type){
+	public void buyShips(Player player, int type){
+		Planet p = player.getSelectedPlanet();
 		//if player has selected an allied planet
-		if(p.getSelectedPlanet() != null && p.getSelectedPlanet().getTeam().equals(p.getTeam())){
-			int planetSize = p.getSelectedPlanet().getSize();
+		if(p != null && p.getTeam().equals(player.getTeam())){
 			//attempt to buy fighter
 			if(type == 1 && p.getResources() >= FIGHTER_COST){
 				p.setResources(p.getResources() - FIGHTER_COST);
-				new Fighter(this, p.getTeam(), (int) p.getSelectedPlanet().getX() + random.nextInt(planetSize * 2) - planetSize, 
-						(int) p.getSelectedPlanet().getY() + random.nextInt(planetSize * 2) - planetSize, 0, 10);
+				new Fighter(this, p.getTeam(), (int) p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(), 
+						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), 0, 10);
 			}
 			//attempt to buy interceptor
 			else if(type == 2 && p.getResources() >= INTERCEPTOR_COST){
 				p.setResources(p.getResources() - INTERCEPTOR_COST);
-				new Interceptor(this, p.getTeam(), (int) p.getSelectedPlanet().getX() + random.nextInt(planetSize * 2) - planetSize, 
-						(int) p.getSelectedPlanet().getY() + random.nextInt(planetSize * 2) - planetSize, 0, 10);
+				new Interceptor(this, p.getTeam(), (int) p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(), 
+						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), 0, 10);
 				
 			}
 			//attempt to buy transport
 			else if(type == 3 && p.getResources() >= TRANSPORT_COST){
 				p.setResources(p.getResources() - TRANSPORT_COST);
-				new Transport(this, p.getTeam(), (int) p.getSelectedPlanet().getX() + random.nextInt(planetSize * 2) - planetSize, 
-						(int) p.getSelectedPlanet().getY() + random.nextInt(planetSize * 2) - planetSize, 0, 10);
+				new Transport(this, p.getTeam(), (int) p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(), 
+						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), 0, 10);
 				
 			}
 		}
@@ -429,6 +433,7 @@ public class StarshipArena {
 		    WORLD_HEIGHT = 2700;
 		    CURR_X = 0;
 			CURR_Y = 0;
+			//enemy = new AdvancedEnemy(this, new Player(this, "red"));
 			new Planet(this, 1350, 1000, 1);
 			new Planet(this, 3000, 1500, 2);
 			new Fighter(this, "blue", 500, 400, 0, 5);
@@ -604,6 +609,10 @@ public class StarshipArena {
     
     public ArrayList<Starship> getAllShips(){
     	return ships;
+    }
+    
+    public ArrayList<Planet> getAllPlanets(){
+    	return planets;
     }
     
     public ArrayList<Player> getPlayers(){
