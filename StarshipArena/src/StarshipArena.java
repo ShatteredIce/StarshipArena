@@ -47,7 +47,6 @@ public class StarshipArena {
     DoubleBuffer oldMouseY;
     DoubleBuffer newMouseX;
     DoubleBuffer newMouseY;
-    boolean firstSelect = true;
     
     int FIGHTER_COST = 5;
     int INTERCEPTOR_COST = 20;
@@ -62,6 +61,8 @@ public class StarshipArena {
 	ArrayList<Player> playerList = new ArrayList<>(); 
 
 	Sidebar sidebar;
+	Layer boxSelect;
+	boolean boxSelectCurrent = false;
 	
 	Player player = new Player(this, "blue");
 	Enemy enemy = new Enemy(this, new Player(this, "red"));
@@ -213,34 +214,22 @@ public class StarshipArena {
 			xpos.put(1, getWidthScalar() * xpos.get(0) + CURR_X);
 			ypos.put(1, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0)) + CURR_Y));
 			if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-				System.out.println(xpos.get(0) + " " +ypos.get(0));
-				if (firstSelect) {
-					oldMouseX = xpos;
-					oldMouseY = ypos;
-					firstSelect = false;
-				}
-				else {
-					newMouseX = xpos;
-					newMouseY = ypos;
-					glLineWidth((float)2.5); 
-					glColor3f(255, 255, 255);
-					glBegin(GL_LINES);
-					glVertex2f((float)oldMouseX.get(0), (float)oldMouseY.get(0));
-					glVertex2f((float)newMouseX.get(0), (float)newMouseY.get(0));
-					glEnd();
-				}
+				boxSelect.setTopLeft(xpos.get(1), ypos.get(1));
+				//boxSelect.setBottomRight(xpos.get(0), ypos.get(0));
+				oldMouseX = xpos;
+				oldMouseY = ypos;
+				boxSelectCurrent = true;
 			}
 			if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
-				System.out.println("Mouse left released");
 				newMouseX = xpos;
 				newMouseY = ypos;
-				firstSelect = true;
-				glLineWidth((float)2.5); 
-				glColor3f(255, 255, 255);
-				glBegin(GL_LINES);
-				glVertex2f((float)oldMouseX.get(0), (float)oldMouseY.get(0));
-				glVertex2f((float)newMouseX.get(0), (float)newMouseY.get(0));
-				glEnd();
+				boxSelectCurrent = false;
+//				glLineWidth((float)2.5); 
+//				glColor3f(255, 255, 255);
+//				glBegin(GL_LINES);
+//				glVertex2f((float)oldMouseX.get(0), (float)oldMouseY.get(0));
+//				glVertex2f((float)newMouseX.get(0), (float)newMouseY.get(0));
+//				glEnd();
 				for (int i = 0; i < planets.size(); i++) {
 					Planet p = planets.get(i);
 					if (p.getX() < Math.max(newMouseX.get(1), oldMouseX.get(1)) + p.getSize() - 30
@@ -359,6 +348,7 @@ public class StarshipArena {
 		
 		new Planet(this, 1300, 900, 1);
 		sidebar = new Sidebar(this, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 18);
+		boxSelect = new Layer();
 		
 		Texture projectileTexture = new Texture("torpedo.png");
 		
@@ -427,6 +417,20 @@ public class StarshipArena {
 						sidebar.display();
 					}
 				}
+				
+				//display box select
+				if(boxSelectCurrent){
+					DoubleBuffer xpos = BufferUtils.createDoubleBuffer(2);
+					DoubleBuffer ypos = BufferUtils.createDoubleBuffer(2);
+					glfwGetCursorPos(window, xpos, ypos);
+					//convert the glfw coordinate to our coordinate system
+					xpos.put(1, getWidthScalar() * xpos.get(0) + CURR_X);
+					ypos.put(1, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0)) + CURR_Y));
+					boxSelect.setBottomRight(xpos.get(1), ypos.get(1));
+					boxSelect.setPoints();
+					boxSelect.display();
+				}
+				
 				//Make ships drift apart if they're too close
 				for (int s = 0; s < ships.size(); s++) {
 					Starship first = ships.get(s);
@@ -458,7 +462,7 @@ public class StarshipArena {
 				enemy.buyShips();
 				enemy.move();
 				
-				onMouseEvent();
+				//onMouseEvent();
 				
 				glDisable(GL_TEXTURE_2D);
 				
