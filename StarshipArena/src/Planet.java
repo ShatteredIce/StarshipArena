@@ -11,8 +11,15 @@ public class Planet {
 	Point center;
 	Point[] points;
 	int planetSize = 200;
+	int texId = 0;
 	boolean selected = false;
-	static Texture tex = new Texture("planet.png");
+	static Texture tex0 = new Texture("planet0.png");
+	static Texture tex1 = new Texture("planet1.png");
+	static Texture tex2 = new Texture("planet2.png");
+	static Texture tex3 = new Texture("planet3.png");
+	static Texture tex4 = new Texture("planet4.png");
+	static Texture tex5 = new Texture("planet5.png");
+	static Texture tex6 = new Texture("planet6.png");
 	//halo rendering variables
 	Model haloModel;
 	double[] haloVertices;
@@ -27,15 +34,16 @@ public class Planet {
 	int captureStrength = 0;
 	int captureTime = 500;
 	int maxCaptureTime = 500;
+	int storedResources = 0;
 	int resourcesPerTick = 1;
 	int resourcesCooldown = 50;
 	int currentCooldown = 50;
 	
 	
 	
-	Planet(StarshipArena mygame, int spawnx, int spawny){
+	Planet(StarshipArena mygame, int spawnx, int spawny, int newTexId){
 		game = mygame;
-
+		texId = newTexId;
 		center = new Point(spawnx, spawny);
 		points = generatePoints(planetSize);
 		vertices = new double[points.length * 2];
@@ -168,7 +176,27 @@ public class Planet {
 	}
 	
 	public void setTexture(){
-		tex.bind();
+		if(texId == 1){
+			tex1.bind();
+		}
+		else if(texId == 2){
+			tex2.bind();
+		}
+		else if(texId == 3){
+			tex3.bind();
+		}
+		else if(texId == 4){
+			tex4.bind();
+		}
+		else if(texId == 5){
+			tex5.bind();
+		}
+		else if(texId == 6){
+			tex6.bind();
+		}
+		else{
+			tex0.bind();
+		}
 	}
 	
 	public void setHaloTexture(){
@@ -183,18 +211,13 @@ public class Planet {
 		}
 	}
 	
-	public void getResources() {
+	public void updateResources() {
 		if(team.equals("none")){
 			return;
 		}
-		//if team is not none and cooldown for resources is over, distribute resources
+		//if team is not none and cooldown for resources is over, get resources
 		else if(currentCooldown == 0){
-			ArrayList<Player> players = game.getPlayers();
-			for (int i = 0; i < players.size(); i++) {
-				if(players.get(i).getTeam().equals(team)){
-					players.get(i).setResources(players.get(i).getResources() + resourcesPerTick);
-				}
-			}
+			storedResources += resourcesPerTick;
 			currentCooldown = resourcesCooldown;
 		}
 		else{
@@ -220,6 +243,14 @@ public class Planet {
 	
 	public int getSize(){
 		return planetSize;
+	}
+	
+	public void setResources(int resources){
+		storedResources = resources;
+	}
+	
+	public int getResources(){
+		return storedResources;
 	}
 	
 	public void setSelected(boolean state){

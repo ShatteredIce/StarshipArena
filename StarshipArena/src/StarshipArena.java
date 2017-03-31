@@ -34,6 +34,7 @@ public class StarshipArena {
 	int CAMERA_SPEED = 10;
 	int CAMERA_WIDTH = 2600;
 	int CAMERA_HEIGHT = 1800;
+	int zoomLevel = 3;
 	
 	int SLOW = 1;
     
@@ -62,7 +63,8 @@ public class StarshipArena {
 
 	Sidebar sidebar;
 	
-	Player player = new Player(this, "red");
+	Player player = new Player(this, "blue");
+	Enemy enemy = new Enemy(this, new Player(this, "red"));
     
 	public void run() {
 
@@ -178,6 +180,10 @@ public class StarshipArena {
 				panDown = true;
 			if ( key == GLFW_KEY_S && action == GLFW_RELEASE )
 				panDown = false;
+			if ( key == GLFW_KEY_MINUS && action == GLFW_PRESS )
+				updateZoomLevel(true);
+			if ( key == GLFW_KEY_EQUAL && action == GLFW_PRESS )
+				updateZoomLevel(false);
 			
 			if ( key == GLFW_KEY_DOWN && action == GLFW_PRESS )
 				SLOW = 10000000;
@@ -193,6 +199,8 @@ public class StarshipArena {
 				buyShips(player, 2);
 			if ( key == GLFW_KEY_3 && action == GLFW_PRESS)
 				buyShips(player, 3);
+			if ( key == GLFW_KEY_ENTER && action == GLFW_PRESS)
+				loadLevel(1);
 		
 		});
 		
@@ -349,7 +357,7 @@ public class StarshipArena {
 		
 		createShips(20);
 		
-		new Planet(this, 1300, 900);
+		new Planet(this, 1300, 900, 1);
 		sidebar = new Sidebar(this, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 18);
 		
 		Texture projectileTexture = new Texture("torpedo.png");
@@ -382,7 +390,7 @@ public class StarshipArena {
 				//Display planets
 				for(int p = 0; p < planets.size(); p++){
 					planets.get(p).checkCapturePoint();
-					planets.get(p).getResources();
+					planets.get(p).updateResources();
 					//System.out.println(player.getResources());
 					planets.get(p).display();
 				}
@@ -447,7 +455,10 @@ public class StarshipArena {
 			
 				checkProjectiles();
 				
-				//onMouseEvent();
+				enemy.buyShips();
+				enemy.move();
+				
+				onMouseEvent();
 				
 				glDisable(GL_TEXTURE_2D);
 				
@@ -507,30 +518,93 @@ public class StarshipArena {
 //		new Interceptor(this, 500, 700, 0, 1);
 	}
 	
-	public void buyShips(Player p, int type){
+	public void buyShips(Player player, int type){
+		Planet p = player.getSelectedPlanet();
 		//if player has selected an allied planet
-		if(p.getSelectedPlanet() != null && p.getSelectedPlanet().getTeam().equals(p.getTeam())){
-			int planetSize = p.getSelectedPlanet().getSize();
+		if(p != null && p.getTeam().equals(player.getTeam())){
 			//attempt to buy fighter
 			if(type == 1 && p.getResources() >= FIGHTER_COST){
 				p.setResources(p.getResources() - FIGHTER_COST);
-				new Fighter(this, p.getTeam(), (int) p.getSelectedPlanet().getX() + random.nextInt(planetSize * 2) - planetSize, 
-						(int) p.getSelectedPlanet().getY() + random.nextInt(planetSize * 2) - planetSize, 0, 10);
+				new Fighter(this, p.getTeam(), (int) p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(), 
+						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), 0, 10);
 			}
 			//attempt to buy interceptor
 			else if(type == 2 && p.getResources() >= INTERCEPTOR_COST){
 				p.setResources(p.getResources() - INTERCEPTOR_COST);
-				new Interceptor(this, p.getTeam(), (int) p.getSelectedPlanet().getX() + random.nextInt(planetSize * 2) - planetSize, 
-						(int) p.getSelectedPlanet().getY() + random.nextInt(planetSize * 2) - planetSize, 0, 10);
+				new Interceptor(this, p.getTeam(), (int) p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(), 
+						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), 0, 10);
 				
 			}
 			//attempt to buy transport
 			else if(type == 3 && p.getResources() >= TRANSPORT_COST){
 				p.setResources(p.getResources() - TRANSPORT_COST);
-				new Transport(this, p.getTeam(), (int) p.getSelectedPlanet().getX() + random.nextInt(planetSize * 2) - planetSize, 
-						(int) p.getSelectedPlanet().getY() + random.nextInt(planetSize * 2) - planetSize, 0, 10);
+				new Transport(this, p.getTeam(), (int) p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(), 
+						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), 0, 10);
 				
 			}
+		}
+	}
+	
+	public void updateZoomLevel(boolean zoomOut){
+		int ZOOM_WIDTH = 650;
+		int ZOOM_HEIGHT = 450;
+		if(zoomOut){
+			if(zoomLevel < 5 && WORLD_WIDTH >= CAMERA_WIDTH + ZOOM_WIDTH && WORLD_HEIGHT >= CAMERA_HEIGHT + ZOOM_HEIGHT){
+				zoomLevel++;
+				CAMERA_WIDTH += ZOOM_WIDTH;
+				CAMERA_HEIGHT += ZOOM_HEIGHT;
+				CURR_X -= ZOOM_WIDTH / 2;
+				CURR_Y -= ZOOM_HEIGHT / 2;
+				if(CURR_X + CAMERA_WIDTH > WORLD_WIDTH){
+					CURR_X = WORLD_WIDTH - CAMERA_WIDTH;
+				}
+				if(CURR_Y + CAMERA_HEIGHT > WORLD_HEIGHT){
+					CURR_Y = WORLD_HEIGHT - CAMERA_HEIGHT;
+				}
+				if(CURR_X < 0){
+					CURR_X = 0;
+				}
+				if(CURR_Y < 0){
+					CURR_Y = 0;
+				}
+			}
+		}
+		else{
+			if(zoomLevel > 1){
+				zoomLevel--;
+				CAMERA_WIDTH -= ZOOM_WIDTH;
+				CAMERA_HEIGHT -= ZOOM_HEIGHT;
+				CURR_X += ZOOM_WIDTH / 2;
+				CURR_Y += ZOOM_HEIGHT / 2;
+			}
+		}
+	}
+	
+	public void loadLevel(int level){
+		ships.clear();
+		planets.clear();
+		projectiles.clear();
+		zoomLevel = 3;
+		CAMERA_WIDTH = 2600;
+		CAMERA_HEIGHT = 1800;
+		if(level == 1){
+			WORLD_WIDTH = 3900;
+		    WORLD_HEIGHT = 2700;
+		    CURR_X = 0;
+			CURR_Y = 0;
+			//enemy = new AdvancedEnemy(this, new Player(this, "red"));
+			new Planet(this, 1350, 1000, 1);
+			new Planet(this, 3000, 1500, 2);
+			new Fighter(this, "blue", 500, 400, 0, 5);
+			new Fighter(this, "blue", 600, 350, 0, 5);
+			new Fighter(this, "blue", 400, 350, 0, 5);
+			
+			new Fighter(this, "red", 2800, 1500, 135, 5);
+			new Fighter(this, "red", 3000, 1500, 90, 5);
+			new Fighter(this, "red", 3000, 1700, 80, 5);
+			new Fighter(this, "red", 3200, 1500, 150, 5);
+			new Fighter(this, "red", 3200, 1300, 160, 5);
+			new Fighter(this, "red", 3000, 1300, 150, 5);
 		}
 	}
 	
@@ -634,9 +708,14 @@ public class StarshipArena {
 		}
     	
     }
+ 
     
     public ArrayList<Starship> getAllShips(){
     	return ships;
+    }
+    
+    public ArrayList<Planet> getAllPlanets(){
+    	return planets;
     }
     
     public ArrayList<Player> getPlayers(){

@@ -39,7 +39,7 @@ public class Fighter extends Starship{
 		primary_speed = 15;
 		primary_lifetime = 450/primary_speed;
 		primary_accuracy = 95;
-		scan_range = 400;
+		scan_range = 600;
 		//other
 		clickRadius = 45;
 		xOff = 0;
@@ -158,8 +158,6 @@ public class Fighter extends Starship{
 		return hitbox;
 	}
 	
-	
-	
 	public void doRandomMovement(){
 		changeDirection++;
 		//check if the target is already dead
@@ -167,7 +165,7 @@ public class Fighter extends Starship{
 			target = null;
 		}
 		//get a new target if fighter has no target or target is far away
-		if(target == null || game.distance(center.X(), center.Y(), target.getX(), target.getY()) >= scan_range / 3){
+		if(target == null || game.distance(center.X(), center.Y(), target.getX(), target.getY()) >= scan_range / 2){
 			getClosestEnemy();
 		}
 		//getClosestEnemy();
@@ -200,58 +198,85 @@ public class Fighter extends Starship{
 			}
 		}
 		else{
-			targeted_velocity = max_velocity;
 			int relativeAngle = game.angleToPoint(center.X(), center.Y(), target.getX(), target.getY());
-			if(game.distance(center.X(), center.Y(), target.getX(), target.getY()) > 100){
-				//don't turn if angle is already pointed toward target
-				if(angle > relativeAngle - 5 && angle < relativeAngle + 5){
+			double distanceToTarget = game.distance(center.X(), center.Y(), target.getX(), target.getY());
+			int leftBearing = getTurnDistance(relativeAngle, true);
+			int rightBearing = getTurnDistance(relativeAngle, false);
+			primary_fire = false;
+			//if interceptor is facing target
+			if(angle > (relativeAngle - distanceToTarget / 5) && angle < (relativeAngle + distanceToTarget / 5)){
+				targeted_velocity = max_velocity;
+				if(distanceToTarget <= 400 && angle > relativeAngle - 5 && angle < relativeAngle + 5){
+					primary_fire = true;
+				}
+				//adjust course
+				if(leftBearing <= rightBearing){ //turn left
+					current_turn_speed = max_turn_speed;
+				}
+				else{ //turn right
+					current_turn_speed = -max_turn_speed;
+				}
+			}
+			//turn away from target if too close
+			else if(distanceToTarget <= 50){
+				//System.out.println("point a");
+				targeted_velocity = max_velocity;
+				if(angle > target.getAngle() - 80 && angle < target.getAngle() + 80){
+					if(leftBearing <= rightBearing){ //turn right
+						current_turn_speed = -max_turn_speed;
+					}
+					else{ //turn left
+						current_turn_speed = max_turn_speed;
+					}
+				}
+			}
+			//if target is behind
+			else if(distanceToTarget < 150 && getClosestBearing(target) > 140 &&
+					Math.abs(relativeAngle - target.getAngle()) > 160 && Math.abs(relativeAngle - target.getAngle()) < 200){
+				//System.out.println("point b");
+				targeted_velocity = max_velocity;
+				//if fighter can outrun
+				if(max_velocity > target.getMVelocity()){
 					current_turn_speed = 0;
 				}
 				else{
-					int leftBearing = getTurnDistance(relativeAngle, true);
-					int rightBearing = getTurnDistance(relativeAngle, false);
-					//System.out.println(team + " " +relativeAngle + " " + leftBearing + " " + rightBearing);
-					if(changeDirection > primary_cooldown * 4){
-						if(changeDirectionCooldown == 0){
-							current_turn_speed *= -1;
-							changeDirectionCooldown = 100;
+					if(angle > target.getAngle() - 90 && angle < target.getAngle() + 90){
+						if(leftBearing <= rightBearing){ //turn right
+							current_turn_speed = -max_turn_speed;
 						}
-						else{
-							changeDirectionCooldown--;
+						else{ //turn left
+							current_turn_speed = max_turn_speed;
 						}
 					}
-					else if(leftBearing <= rightBearing){
+				}
+			}
+			//if target is far away and not pointed at target, point at target
+			else if(!(angle > relativeAngle - 5 && angle < relativeAngle + 5)){
+				//System.out.println("point c");
+				if(distanceToTarget < 100){
+					targeted_velocity = max_velocity;
+					current_turn_speed = 0;
+				}
+				else{
+					targeted_velocity = max_velocity / 2;
+					//targeted_velocity = Math.min(max_velocity, Math.max(max_velocity / 2, distanceToTarget * Math.PI / (2 * 270 / max_turn_speed)));
+					if(leftBearing <= rightBearing){ //turn left
 						current_turn_speed = max_turn_speed;
 					}
-					else{
+					else{ //turn right
 						current_turn_speed = -max_turn_speed;
 					}
 				}
 			}
-			if(angle > relativeAngle - 5 && angle < relativeAngle + 5){
-				//if pointed toward target, fire
-				changeDirection = 0;
-				changeDirectionCooldown = 0;
-				primary_fire = true;
-			}
-			else{
-				primary_fire = false;
-			}
+
+		//System.out.println(team + " " +relativeAngle + " " + leftBearing + " " + rightBearing);
 		}
 		edgeGuard();
 		if(current_turn_speed != 0 && targeted_velocity < min_turn_velocity){
 			targeted_velocity = min_turn_velocity;
 		}
-		
-		
-		
-		//TODO remove this code after testing
-//			if (angle != 0) {
-//				current_turn_speed = Math.min(max_turn_speed, 360 - angle);
-//			}
-//			else current_turn_speed = 0;
-		//current_turn_speed = max_turn_speed;
 	}
+	
 	
 	//gets the closest enemy and changes target accordingly
 	public void getClosestEnemy(){
