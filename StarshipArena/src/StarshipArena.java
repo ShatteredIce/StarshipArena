@@ -234,6 +234,10 @@ public class StarshipArena {
 					Planet p = planets.get(i);
 					if (p.getX() < Math.max(newMouseX.get(1), oldMouseX.get(1)) + p.getSize() - 30
 							&& p.getX() > Math.min(oldMouseX.get(1), newMouseX.get(1)) - p.getSize() + 30
+							&& p.getY() < Math.max(newMouseY.get(1), oldMouseY.get(1))- 30
+							&& p.getY() > Math.min(oldMouseY.get(1), newMouseY.get(1))+ 30
+							|| p.getX() < Math.max(newMouseX.get(1), oldMouseX.get(1))- 30
+							&& p.getX() > Math.min(oldMouseX.get(1), newMouseX.get(1))+ 30
 							&& p.getY() < Math.max(newMouseY.get(1), oldMouseY.get(1)) + p.getSize() - 30
 							&& p.getY() > Math.min(oldMouseY.get(1), newMouseY.get(1)) - p.getSize() + 30) {
 						if(player.getSelectedPlanet() != null){
@@ -269,6 +273,10 @@ public class StarshipArena {
 					clickCenter.rotatePoint(s.getX(), s.getY(), s.getAngle());
 					if (clickCenter.X() < Math.max(newMouseX.get(1), oldMouseX.get(1)) + s.getClickRadius()
 							&& clickCenter.X() > Math.min(oldMouseX.get(1), newMouseX.get(1)) - s.getClickRadius()
+							&& clickCenter.Y() < Math.max(newMouseY.get(1), oldMouseY.get(1))
+							&& clickCenter.Y() > Math.min(oldMouseY.get(1), newMouseY.get(1))
+							|| clickCenter.X() < Math.max(newMouseX.get(1), oldMouseX.get(1))
+							&& clickCenter.X() > Math.min(oldMouseX.get(1), newMouseX.get(1))
 							&& clickCenter.Y() < Math.max(newMouseY.get(1), oldMouseY.get(1)) + s.getClickRadius()
 							&& clickCenter.Y() > Math.min(oldMouseY.get(1), newMouseY.get(1)) - s.getClickRadius()) {
 						s.setSelected(true);
