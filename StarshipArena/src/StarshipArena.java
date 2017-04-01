@@ -444,7 +444,7 @@ public class StarshipArena {
 					Starship first = ships.get(s);
 					for (int s1 = s + 1; s1 < ships.size(); s1++) {
 						Starship second = ships.get(s1);
-						if (first.getMVelocity() == 0 && second.getMVelocity() == 0 && first.getTeam().equals(second.getTeam()) && distance(first.getX(), first.getY(), second.getX(), second.getY()) < first.getClickRadius() + second.getClickRadius()) {
+						if (first.getTeam().equals(second.getTeam()) && distance(first.getX(), first.getY(), second.getX(), second.getY()) < first.getClickRadius() + second.getClickRadius()) {
 							double angle = Math.acos((second.getX() - first.getX()) / distance(first.getX(), first.getY(), second.getX(), second.getY()));
 							double newFirstX, newFirstY, newSecondX, newSecondY;
 							if (second.getY() > first.getY()) {
@@ -461,6 +461,28 @@ public class StarshipArena {
 							}
 							first.center = new Point(newFirstX, newFirstY);
 							second.center = new Point(newSecondX, newSecondY);
+//							if (first.locationTarget != null) {
+//								if (second.locationTarget != null) {
+//									first.setLocationTarget(new Point(first.locationTarget.x + newFirstX - first.center.x
+//											, first.locationTarget.y + newFirstY - first.center.y));
+//									second.setLocationTarget(new Point(second.locationTarget.x + newSecondX - second.center.x
+//											, second.locationTarget.y + newSecondY - second.center.y));
+//								}
+////								else first.setLocationTarget(new Point(second.center.x + newFirstX - first.center.x
+////											, second.center.y + newFirstY - first.center.y));
+//							}
+//							else {
+//								if (second.locationTarget != null)
+//									second.setLocationTarget(new Point(first.center.x + newSecondX - second.center.x
+//										, first.center.y + newSecondY - second.center.y));
+//							}
+							
+							if (first.locationTarget != null 
+									&& distance(first.center.x, first.center.y, first.locationTarget.x, first.locationTarget.y) < first.getClickRadius() * 6)
+								first.locationTarget = null;
+							if (second.locationTarget != null 
+									&& distance(second.center.x, second.center.y, second.locationTarget.x, second.locationTarget.y) < second.getClickRadius() * 6)
+								second.locationTarget = null;
 						}
 					}
 				}
@@ -470,7 +492,6 @@ public class StarshipArena {
 				enemy.buyShips();
 				enemy.move();
 				
-				//onMouseEvent();
 				
 				glDisable(GL_TEXTURE_2D);
 				
