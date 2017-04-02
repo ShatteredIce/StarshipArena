@@ -153,7 +153,7 @@ public class Starship {
 	public void fireProjectile(){
 		if(primary_fire == true && primary_current_cooldown == 0){
 			primary_current_cooldown = primary_cooldown;
-			new Projectile(this, game,center.X(),center.Y(),1,angle,primary_accuracy,primary_speed,primary_lifetime);
+			new Projectile(game, team,center.X(),center.Y(),1,angle,primary_accuracy,primary_speed,primary_lifetime);
 		}
 		else if(primary_current_cooldown > 0){
 			primary_current_cooldown -= 1;
@@ -385,17 +385,9 @@ public class Starship {
 	
 	public void updateCurrentAngle(){
 		angle += current_turn_speed;
-		normalizeAngle();
+		angle = game.normalizeAngle(angle);
 	}
 	
-	public void normalizeAngle(){
-		while(angle < 0){
-			angle += 360;
-		}
-		while(angle >= 360){
-			angle -= 360;
-		}
-	}
 	
 	public int normalizeValue(int i){
 		while(i < 0){
