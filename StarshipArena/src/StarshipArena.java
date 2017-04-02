@@ -54,8 +54,9 @@ public class StarshipArena {
     
 	Random random = new Random();
 	
-	ArrayList<Projectile> projectiles = new ArrayList<>();
 	ArrayList<Starship> ships = new ArrayList<>();
+	ArrayList<Turret> turrets = new ArrayList<>();
+	ArrayList<Projectile> projectiles = new ArrayList<>();
 	ArrayList<Planet> planets = new ArrayList<>();
 	ArrayList<Tile> backgroundTiles = new ArrayList<>();
 	ArrayList<Player> playerList = new ArrayList<>(); 
@@ -80,63 +81,7 @@ public class StarshipArena {
 		glfwTerminate();
 		glfwSetErrorCallback(null).free();
 	}
-	//responds to mouse clicks
-//	public void onMouseEvent(){
-//		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS){
-//			boolean clickedOnSprite = false;
-//			DoubleBuffer xpos = BufferUtils.createDoubleBuffer(1);
-//			DoubleBuffer ypos = BufferUtils.createDoubleBuffer(1);
-//			glfwGetCursorPos(window, xpos, ypos);
-//			//convert the glfw coordinate to our coordinate system
-//			xpos.put(0, getWidthScalar() * xpos.get(0) + CURR_X);
-//			ypos.put(0, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0)) + CURR_Y));
-//			//System.out.println(xpos.get(0) + " " +ypos.get(0));
-//
-//			for (int i = 0; i < planets.size(); i++) {
-//				Planet p = planets.get(i);
-//				if(distance(p.getX(), p.getY(), xpos.get(0), ypos.get(0)) <= p.getSize() - 30){
-//					if(player.getSelectedPlanet() != null){
-//						player.getSelectedPlanet().setSelected(false);
-//					}
-//					player.setSelectedPlanet(p);
-//					p.setSelected(true);
-//					clickedOnSprite = true;
-//					break;
-//				}
-//			}
-//			if(clickedOnSprite == false){
-//				if(player.getSelectedPlanet() != null){
-//					player.getSelectedPlanet().setSelected(false);
-//					player.setSelectedPlanet(null);
-//				}
-//			}
-//			for (int i = 0; i < ships.size(); i++) {
-//				Starship s = ships.get(i);
-//				Point clickCenter = new Point(s.getX() + s.getXOff(), s.getY() + s.getYOff());
-//				clickCenter.rotatePoint(s.getX(), s.getY(), s.getAngle());
-//				if(distance(clickCenter.X(), clickCenter.Y(), xpos.get(0), ypos.get(0)) <= s.getClickRadius()) {
-//					s.setSelected(true);
-//				}
-//				else s.setSelected(false);
-//			}
-//		}
-//		else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS) {
-//			DoubleBuffer xpos = BufferUtils.createDoubleBuffer(1);
-//			DoubleBuffer ypos = BufferUtils.createDoubleBuffer(1);
-//			glfwGetCursorPos(window, xpos, ypos);
-//			//convert the glfw coordinate to our coordinate system
-//			xpos.put(0, getWidthScalar() * xpos.get(0) + CURR_X);
-//			ypos.put(0, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0)) + CURR_Y));
-//			
-//			for (int i = 0; i < ships.size(); i++) {
-//				Starship s = ships.get(i);
-//				if (s.getSelected() && s.getTeam().equals(player.getTeam())) {
-//					s.setLocationTarget(new Point(xpos.get(0), ypos.get(0)));
-//					//System.out.println(xpos.get(0) + ", " + ypos.get(0));
-//				}
-//			}
-//		}
-//	}
+
 	private void init() {
 		// Setup an error callback. The default implementation
 		// will print the error message in System.err.
@@ -357,6 +302,12 @@ public class StarshipArena {
 		new Planet(this, 1300, 900, 1);
 		sidebar = new Sidebar(this, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 18);
 		boxSelect = new Layer();
+		Turret testTurret1 = new Turret(this, "none", 1200, 900, 20, 1, 50, 10, 95, 600, 10, 500, 1);
+		turrets.add(testTurret1);
+		Turret testTurret2 = new Turret(this, "none", 1300, 900, 0, 1, 50, 10, 95, 600, 10, 500, 1);
+		turrets.add(testTurret2);
+		Turret testTurret3 = new Turret(this, "none", 1400, 900, 340, 1, 50, 10, 95, 600, 10, 500, 1);
+		turrets.add(testTurret3);
 		
 		Texture projectileTexture = new Texture("torpedo.png");
 		
@@ -402,6 +353,11 @@ public class StarshipArena {
 			    	}
 				}
 				//System.out.println(ships.size());
+				
+				//fire turrets
+				for (int t = 0; t < turrets.size(); t++) {
+					turrets.get(t).update();
+				}
 				
 				//display projectiles
 				projectileTexture.bind();
@@ -538,7 +494,7 @@ public class StarshipArena {
 //			startx = random.nextInt(WORLD_WIDTH - 100) + 50;
 			starty = random.nextInt(WORLD_HEIGHT - 100) + 50;
 			angle = random.nextInt(360);
-			new Transport(this, "blue", random.nextInt(100) + WORLD_WIDTH - 1150, starty, angle, 1);
+			new Fighter(this, "blue", random.nextInt(100) + WORLD_WIDTH - 250, starty, angle, 1);
 			if(i % 2 == 0){
 				//new Fighter(this, "red", random.nextInt(100) + 50, starty, angle, 10);
 			}
@@ -647,8 +603,8 @@ public class StarshipArena {
     		Projectile p = projectiles.get(i);
 			for (int j = 0; j < ships.size(); j++) {
 				Starship s = ships.get(j);
-				if((!p.getOwner().getTeam().equals(s.getTeam()) || p.getOwner().getTeam().equals("none")) && 
-					!p.getOwner().equals(s) && polygon_intersection(p.getPoints(), s.getPoints())){
+				if((!p.getTeam().equals(s.getTeam()) || p.getTeam().equals("none")) && 
+						polygon_intersection(p.getPoints(), s.getPoints())){
 	    			s.setHealth(s.getHealth()-p.getDamage());
 	    			projectiles.remove(p);
 	    		}
@@ -680,6 +636,16 @@ public class StarshipArena {
     		return 0;
     	}
     }
+	
+	public int normalizeAngle(int angle){
+		while(angle < 0){
+			angle += 360;
+		}
+		while(angle >= 360){
+			angle -= 360;
+		}
+		return angle;
+	}
     
     public double distance(double x1, double y1, double x2, double y2){
     	return Math.sqrt(Math.pow((x2-x1),2) + Math.pow((y2-y1),2));

@@ -4,7 +4,7 @@ public class Projectile {
 	
 	Random random = new Random();
 	StarshipArena game;
-	Starship owner;
+	String team;
 	Model model;
 	
 	double[] vertices;
@@ -19,8 +19,8 @@ public class Projectile {
 	double lifetime;
 	double current_lifetime = 0;
 	
-	Projectile(Starship newowner, StarshipArena mygame, double spawnx, double spawny, int newdamage, int spawnangle, int accuracy, double newspeed, double newlifetime){
-		owner = newowner;
+	Projectile(StarshipArena mygame, String myteam, double spawnx, double spawny, int newdamage, int spawnangle, int accuracy, double newspeed, double newlifetime){
+		team = myteam;
 		game = mygame;
 		damage = newdamage;
 		angle = spawnangle;
@@ -103,8 +103,8 @@ public class Projectile {
 		}
 	}
 	
-	public Starship getOwner(){
-		return owner;
+	public String getTeam(){
+		return team;
 	}
 	
 	public Point[] getPoints(){
