@@ -7,6 +7,12 @@ public class Starship {
 	StarshipArena game;
 	Model model;
 	static Texture tex = new Texture("WIP.png");
+	//halo rendering variables
+	Model haloModel;
+	double[] haloVertices;
+	Point[] haloPoints;
+	int haloSize = 80;
+	static Texture haloTexture = new Texture("ships_halo.png");
 	
 	double[] vertices;
 	double[] textureCoords; 
@@ -20,7 +26,6 @@ public class Starship {
 	double targeted_velocity;
 	double current_velocity = 0;
 	int current_turn_speed;
-
 	
 	//Customizable variables
 	//Ship specifications
@@ -82,12 +87,15 @@ public class Starship {
 		spawnPoint = new Point(spawnx, spawny);
 		center = new Point(spawnx, spawny);
 		points = generatePoints();
+		haloPoints = generateHaloPoints();
 		hitbox = generateHitbox();
 		vertices = new double[points.length * 2];
+		haloVertices = new double[haloPoints.length * 2];
 		setTextureCoords();
 		setIndices();
 		setPoints();
 		model = new Model(vertices, textureCoords, indices);
+		haloModel = new Model(haloVertices, textureCoords, indices);
 		game.addShip(this);
 	}
 	
@@ -121,6 +129,25 @@ public class Starship {
 			hitbox[i].rotatePoint(center.X(), center.Y(), angle);
 		}
 		fireProjectile();
+	}
+	
+	public void setHaloPoints(){
+		Point trueCenter = new Point(center.X() + xOff, center.Y() + yOff);
+		trueCenter.rotatePoint(center.X(), center.Y(), angle);
+		haloPoints[0].setX(trueCenter.X() - haloSize);
+		haloPoints[0].setY(trueCenter.Y() + haloSize);
+		haloPoints[1].setX(trueCenter.X() - haloSize);
+		haloPoints[1].setY(trueCenter.Y() - haloSize);
+		haloPoints[2].setX(trueCenter.X() + haloSize);
+		haloPoints[2].setY(trueCenter.Y() + haloSize);
+		haloPoints[3].setX(trueCenter.X() + haloSize);
+		haloPoints[3].setY(trueCenter.Y() - haloSize);
+		int v_index = 0;
+		for (int i = 0; i < haloPoints.length; i++) {
+			v_index = 2*i;
+			haloVertices[v_index] = haloPoints[i].X();
+			haloVertices[v_index+1] = haloPoints[i].Y();	
+		}
 	}
 	
 	public void fireProjectile(){
@@ -158,6 +185,11 @@ public class Starship {
 		if(current_health > 0){
 			setTexture();
 			model.render(vertices);
+			if(selected){
+				setHaloPoints();
+				haloTexture.bind();
+				haloModel.render(haloVertices);
+			}
 			return true;
 		}
 		else {
@@ -226,6 +258,16 @@ public class Starship {
 			new Point(-10, -20, true),
 			new Point(0, 20, true),
 			new Point(10, -20, true),
+		};
+		return points;
+	}
+	
+	public Point[] generateHaloPoints(){
+		Point[] points = new Point[]{
+			new Point(),
+			new Point(),
+			new Point(),
+			new Point()
 		};
 		return points;
 	}
