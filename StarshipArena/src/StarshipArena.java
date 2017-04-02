@@ -230,7 +230,7 @@ public class StarshipArena {
 							|| distance(newMouseX.get(1), oldMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
 							|| distance(oldMouseX.get(1), newMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
 							|| distance(oldMouseX.get(1), oldMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()) {
-						
+						s.setSelected(true);
 					}
 					else s.setSelected(false);
 				}
@@ -434,10 +434,10 @@ public class StarshipArena {
 //							}
 							
 							if (first.locationTarget != null 
-									&& distance(first.center.x, first.center.y, first.locationTarget.x, first.locationTarget.y) < first.getClickRadius() * 6)
+									&& distance(first.center.x, first.center.y, first.locationTarget.x, first.locationTarget.y) < first.getClickRadius() * 4)
 								first.locationTarget = null;
 							if (second.locationTarget != null 
-									&& distance(second.center.x, second.center.y, second.locationTarget.x, second.locationTarget.y) < second.getClickRadius() * 6)
+									&& distance(second.center.x, second.center.y, second.locationTarget.x, second.locationTarget.y) < second.getClickRadius() * 4)
 								second.locationTarget = null;
 						}
 					}

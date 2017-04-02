@@ -53,6 +53,10 @@ public class Starship {
 	
 	boolean selected = false;
 	
+	static Texture blueHalo = new Texture("blue_halo.png");
+	static Texture redHalo = new Texture("red_halo.png");
+	static Texture whiteHalo = new Texture("white_halo.png");
+	
 	//Screen bounds
 	int x_min;
 	int x_max;
@@ -150,6 +154,18 @@ public class Starship {
 		}
 	}
 	
+	public void setHaloTexture(){
+		if(team.equals("blue")){
+			blueHalo.bind();
+		}
+		else if(team.equals("red")){
+			redHalo.bind();
+		}
+		else{
+			whiteHalo.bind();
+		}
+	}
+	
 	public void fireProjectile(){
 		if(primary_fire == true && primary_current_cooldown == 0){
 			primary_current_cooldown = primary_cooldown;
@@ -188,6 +204,7 @@ public class Starship {
 			if(selected){
 				setHaloPoints();
 				haloTexture.bind();
+//				setHaloTexture();
 				haloModel.render(haloVertices);
 			}
 			return true;
