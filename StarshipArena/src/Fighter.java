@@ -15,30 +15,31 @@ public class Fighter extends Starship{
 	static Texture red_tex4 = new Texture("red_fighter4.png");
 	
 	//weaponry
-	int primary_damage = 1;
-	int primary_cooldown = 50;
-	int primary_spread = 5;
-	int primary_accuracy = 95;
-	int primary_range = 300;
-	int primary_speed = 15;
-	int primary_lifetime = 450;
-	int primary_id = 1;
-	int primary_xoffset;
-	int primary_yoffset;
+	static int primary_damage = 1;
+	static int primary_cooldown = 100;
+	static int primary_spread = 5;
+	static int primary_accuracy = 95;
+	static int primary_range = 300;
+	static int primary_speed = 15;
+	static int primary_lifetime = 450;
+	static int primary_id = 1;
+	static int primary_xoffset;
+	static int primary_yoffset;
 	
 	public Fighter(StarshipArena mygame, int spawnx, int spawny){
 		super(mygame, spawnx, spawny);
 	}
 	
-	public Fighter(StarshipArena mygame, int spawnx, int spawny, int spawnangle, int spawnhealth){
-		super(mygame, "none", spawnx, spawny, spawnangle, spawnhealth);
+	public Fighter(StarshipArena mygame, int spawnx, int spawny, int spawnangle){
+		super(mygame, "none", spawnx, spawny, spawnangle);
 	}
 
-	public Fighter(StarshipArena mygame, String newteam, int spawnx, int spawny, int spawnangle, int spawnhealth){
-		super(mygame, newteam, spawnx, spawny, spawnangle, spawnhealth);
+	public Fighter(StarshipArena mygame, String newteam, int spawnx, int spawny, int spawnangle){
+		super(mygame, newteam, spawnx, spawny, spawnangle);
 	}
 	
 	public void shipStats(){
+		max_health = 10;
 		//movement
 		acceleration = 0.5;
 		max_velocity = 5;
@@ -65,7 +66,9 @@ public class Fighter extends Starship{
 			p.setX(turrets.get(i).getXOffset() + center.X());
 			p.setY(turrets.get(i).getYOffset() + center.Y());
 			p.rotatePoint(center.X(), center.Y(), angle);
+			turrets.get(i).setCenter(p);
 			turrets.get(i).setAngle(angle);
+			turrets.get(i).update();
 		}
 	}
 	
@@ -291,6 +294,7 @@ public class Fighter extends Starship{
 
 		//System.out.println(team + " " +relativeAngle + " " + leftBearing + " " + rightBearing);
 		}
+		moveTurrets();
 		edgeGuard();
 		if(current_turn_speed != 0 && targeted_velocity < min_turn_velocity){
 			targeted_velocity = min_turn_velocity;

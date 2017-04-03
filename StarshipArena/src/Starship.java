@@ -59,14 +59,14 @@ public class Starship {
 	int y_max;
 	
 	Starship(StarshipArena mygame, int spawnx, int spawny){
-		this(mygame, "none", spawnx, spawny, 0, 10);
+		this(mygame, "none", spawnx, spawny, 0);
 	}
 	
-	Starship(StarshipArena mygame, int spawnx, int spawny, int spawnangle, int spawnhealth){
-		this(mygame, "none", spawnx, spawny, spawnangle, spawnhealth);
+	Starship(StarshipArena mygame, int spawnx, int spawny, int spawnangle){
+		this(mygame, "none", spawnx, spawny, spawnangle);
 	}
 	
-	Starship(StarshipArena mygame, String newteam, int spawnx, int spawny, int spawnangle, int spawnhealth){
+	Starship(StarshipArena mygame, String newteam, int spawnx, int spawny, int spawnangle){
 		game = mygame;
 		team = newteam;
 		setScreenBounds(game.getScreenBounds());
@@ -78,11 +78,10 @@ public class Starship {
 				e.printStackTrace();
 			}
 		}
-		max_health = spawnhealth;
-		current_health = spawnhealth;
 		angle = spawnangle;
 		shipStats();
 		shipTurrets();
+		current_health = max_health;
 		locationTarget = null;
 		spawnPoint = new Point(spawnx, spawny);
 		center = new Point(spawnx, spawny);
@@ -304,6 +303,7 @@ public class Starship {
 	}
 	
 	public void shipStats(){
+		max_health = 1;
 		//movement
 		acceleration = 0.1;
 		max_velocity = 5;

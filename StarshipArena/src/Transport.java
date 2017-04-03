@@ -18,15 +18,16 @@ public class Transport extends Starship{
 		super(mygame, spawnx, spawny);
 	}
 	
-	public Transport(StarshipArena mygame, int spawnx, int spawny, int spawnangle, int spawnhealth){
-		super(mygame, "none", spawnx, spawny, spawnangle, spawnhealth);
+	public Transport(StarshipArena mygame, int spawnx, int spawny, int spawnangle){
+		super(mygame, "none", spawnx, spawny, spawnangle);
 	}
 
-	public Transport(StarshipArena mygame, String newteam, int spawnx, int spawny, int spawnangle, int spawnhealth){
-		super(mygame, newteam, spawnx, spawny, spawnangle, spawnhealth);
+	public Transport(StarshipArena mygame, String newteam, int spawnx, int spawny, int spawnangle){
+		super(mygame, newteam, spawnx, spawny, spawnangle);
 	}
 	
 	public void shipStats(){
+		max_health = 20;
 		//movement
 		acceleration = 0.1;
 		max_velocity = 3;
@@ -141,7 +142,6 @@ public class Transport extends Starship{
 	public void doRandomMovement(){
 		if (locationTarget != null) {
 			double distance = distance(this.getX(), this.getY(), locationTarget.x, locationTarget.y);
-			primary_fire = false;
 			if (distance > 50) {
 				boolean positiveY = false;
 				if (locationTarget.y >=  this.getY()) positiveY = true;
@@ -163,7 +163,6 @@ public class Transport extends Starship{
 		else{
 			current_turn_speed = 0;
 			targeted_velocity = 0;
-			primary_fire = false;
 		}
 	}
 	

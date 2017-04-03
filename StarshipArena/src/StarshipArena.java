@@ -506,15 +506,15 @@ public class StarshipArena {
 //			startx = random.nextInt(WORLD_WIDTH - 100) + 50;
 			starty = random.nextInt(WORLD_HEIGHT - 100) + 50;
 			angle = random.nextInt(360);
-			new Fighter(this, "blue", random.nextInt(100) + WORLD_WIDTH - 250, starty, angle, 1);
+			new Fighter(this, "blue", random.nextInt(100) + WORLD_WIDTH - 250, starty, angle);
 			if(i % 2 == 0){
 				//new Fighter(this, "red", random.nextInt(100) + 50, starty, angle, 10);
 			}
 		}
 //		new Fighter(this, "red", 1500, 400, 270, 5);
-		new Fighter(this, "red", 200, 400, 0, 5);
-		new Fighter(this, "red", 210, 500, 0, 5);
-		new Interceptor(this, "red", 190, 900, 330, 5);
+		new Fighter(this, "red", 200, 400, 0);
+		new Fighter(this, "red", 210, 500, 0);
+		new Interceptor(this, "red", 190, 900, 330);
 //		new Fighter(this, "blue", 200, 500, 270, 1);
 //		new Interceptor(this, 500, 700, 0, 1);
 	}
@@ -527,20 +527,20 @@ public class StarshipArena {
 			if(type == 1 && p.getResources() >= FIGHTER_COST){
 				p.setResources(p.getResources() - FIGHTER_COST);
 				new Fighter(this, p.getTeam(), (int) p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(), 
-						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), 0, 10);
+						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), 0);
 			}
 			//attempt to buy interceptor
 			else if(type == 2 && p.getResources() >= INTERCEPTOR_COST){
 				p.setResources(p.getResources() - INTERCEPTOR_COST);
 				new Interceptor(this, p.getTeam(), (int) p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(), 
-						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), 0, 10);
+						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), 0);
 				
 			}
 			//attempt to buy transport
 			else if(type == 3 && p.getResources() >= TRANSPORT_COST){
 				p.setResources(p.getResources() - TRANSPORT_COST);
 				new Transport(this, p.getTeam(), (int) p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(), 
-						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), 0, 10);
+						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), 0);
 				
 			}
 		}
@@ -596,16 +596,16 @@ public class StarshipArena {
 			//enemy = new AdvancedEnemy(this, new Player(this, "red"));
 			new Planet(this, 1350, 1000, 1);
 			new Planet(this, 3000, 1500, 2);
-			new Fighter(this, "blue", 500, 400, 0, 5);
-			new Fighter(this, "blue", 600, 350, 0, 5);
-			new Fighter(this, "blue", 400, 350, 0, 5);
+			new Fighter(this, "blue", 500, 400, 0);
+			new Fighter(this, "blue", 600, 350, 0);
+			new Fighter(this, "blue", 400, 350, 0);
 			
-			new Fighter(this, "red", 2800, 1500, 135, 5);
-			new Fighter(this, "red", 3000, 1500, 90, 5);
-			new Fighter(this, "red", 3000, 1700, 80, 5);
-			new Fighter(this, "red", 3200, 1500, 150, 5);
-			new Fighter(this, "red", 3200, 1300, 160, 5);
-			new Fighter(this, "red", 3000, 1300, 150, 5);
+			new Fighter(this, "red", 2800, 1500, 135);
+			new Fighter(this, "red", 3000, 1500, 90);
+			new Fighter(this, "red", 3000, 1700, 80);
+			new Fighter(this, "red", 3200, 1500, 150);
+			new Fighter(this, "red", 3200, 1300, 160);
+			new Fighter(this, "red", 3000, 1300, 150);
 		}
 	}
 	

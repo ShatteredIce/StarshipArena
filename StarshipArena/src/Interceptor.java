@@ -13,21 +13,34 @@ public class Interceptor extends Starship{
 	static Texture red_tex2 = new Texture("red_interceptor2.png");
 	static Texture red_tex3 = new Texture("red_interceptor3.png");
 	static Texture red_tex4 = new Texture("red_interceptor4.png");
+	
+	//weaponry
+	static int primary_damage = 1;
+	static int primary_cooldown = 50;
+	static int primary_spread = 5;
+	static int primary_accuracy = 95;
+	static int primary_range = 300;
+	static int primary_speed = 20;
+	static int primary_lifetime = 450;
+	static int primary_id = 1;
+	static int primary_xoffset;
+	static int primary_yoffset;
 
 	
 	public Interceptor(StarshipArena mygame, int spawnx, int spawny){
 		super(mygame, spawnx, spawny);
 	}
 	
-	public Interceptor(StarshipArena mygame, int spawnx, int spawny, int spawnangle, int spawnhealth){
-		super(mygame, "none", spawnx, spawny, spawnangle, spawnhealth);
+	public Interceptor(StarshipArena mygame, int spawnx, int spawny, int spawnangle){
+		super(mygame, "none", spawnx, spawny, spawnangle);
 	}
 
-	public Interceptor(StarshipArena mygame, String newteam, int spawnx, int spawny, int spawnangle, int spawnhealth){
-		super(mygame, newteam, spawnx, spawny, spawnangle, spawnhealth);
+	public Interceptor(StarshipArena mygame, String newteam, int spawnx, int spawny, int spawnangle){
+		super(mygame, newteam, spawnx, spawny, spawnangle);
 	}
 	
 	public void shipStats(){
+		max_health = 20;
 		//movement
 		acceleration = 0.5;
 		max_velocity = 8;
@@ -35,16 +48,30 @@ public class Interceptor extends Starship{
 		min_turn_velocity = 3;
 		max_turn_speed = 6;
 		//weaponry
-		primary_cooldown = 50;
-		primary_current_cooldown = 0;
-		primary_speed = 20;
-		primary_lifetime = 450/primary_speed;
-		primary_accuracy = 95;
 		scan_range = 500;
 		//other
 		clickRadius = 40;
 		xOff = 0;
 		yOff = 15;
+	}
+	
+	public void shipTurrets(){
+		Turret primaryTurret = new Turret(game, team, 0, 0, angle, primary_damage, primary_cooldown, 
+				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id);
+		primaryTurret.setOffset(primary_xoffset, primary_yoffset);
+		turrets.add(primaryTurret);
+	}
+	
+	public void moveTurrets(){
+		Point p = new Point();
+		for (int i = 0; i < turrets.size(); i++) {
+			p.setX(turrets.get(i).getXOffset() + center.X());
+			p.setY(turrets.get(i).getYOffset() + center.Y());
+			p.rotatePoint(center.X(), center.Y(), angle);
+			turrets.get(i).setCenter(p);
+			turrets.get(i).setAngle(angle);
+			turrets.get(i).update();
+		}
 	}
 	
 	public void setTexture(){
@@ -203,7 +230,6 @@ public class Interceptor extends Starship{
 		if(target == null){
 			if (locationTarget != null) {
 				double distance = distance(this.getX(), this.getY(), locationTarget.x, locationTarget.y);
-				primary_fire = false;
 				if (distance > 50) {
 					boolean positiveY = false;
 					if (locationTarget.y >=  this.getY()) positiveY = true;
@@ -225,7 +251,6 @@ public class Interceptor extends Starship{
 			else{
 				current_turn_speed = 0;
 				targeted_velocity = 0;
-				primary_fire = false;
 			}
 		}
 		else{
@@ -236,13 +261,9 @@ public class Interceptor extends Starship{
 			double distanceToTarget = game.distance(center.X(), center.Y(), target.getX(), target.getY());
 			int leftBearing = getTurnDistance(relativeAngle, true);
 			int rightBearing = getTurnDistance(relativeAngle, false);
-			primary_fire = false;
 			//if interceptor is facing target
 			if(angle > (relativeAngle - distanceToTarget / 5) && angle < (relativeAngle + distanceToTarget / 5)){
 				targeted_velocity = max_velocity;
-				if(distanceToTarget <= 400 && angle > relativeAngle - 5 && angle < relativeAngle + 5){
-					primary_fire = true;
-				}
 				//adjust course
 				if(leftBearing <= rightBearing){ //turn left
 					current_turn_speed = max_turn_speed;
