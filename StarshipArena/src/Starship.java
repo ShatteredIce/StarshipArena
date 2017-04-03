@@ -36,15 +36,10 @@ public class Starship {
 	double max_reverse_velocity;
 	double min_turn_velocity;
 	int max_turn_speed;
-	boolean primary_fire = false;
-	int primary_cooldown;
-	int primary_current_cooldown;
-	double primary_speed;
-	double primary_lifetime;
-	int primary_accuracy;
 	int scan_range;
 	int clickRadius;
 	
+	ArrayList<Turret> turrets = new ArrayList<>();
 	
 	int xOff = 0;
 	int yOff = 0;
@@ -87,6 +82,7 @@ public class Starship {
 		current_health = spawnhealth;
 		angle = spawnangle;
 		shipStats();
+		shipTurrets();
 		locationTarget = null;
 		spawnPoint = new Point(spawnx, spawny);
 		center = new Point(spawnx, spawny);
@@ -132,7 +128,8 @@ public class Starship {
 			hitbox[i].setY(center.Y() + hitbox[i].getYOffset());
 			hitbox[i].rotatePoint(center.X(), center.Y(), angle);
 		}
-		fireProjectile();
+		moveTurrets();
+		fireTurrets();
 	}
 	
 	public void setHaloPoints(){
@@ -166,16 +163,13 @@ public class Starship {
 		}
 	}
 	
-	public void fireProjectile(){
-		if(primary_fire == true && primary_current_cooldown == 0){
-			primary_current_cooldown = primary_cooldown;
-			new Projectile(game, team,center.X(),center.Y(),1,angle,primary_accuracy,primary_speed,primary_lifetime);
-		}
-		else if(primary_current_cooldown > 0){
-			primary_current_cooldown -= 1;
-			if(primary_current_cooldown < 0){
-				primary_current_cooldown = 0;
-			}
+	public void moveTurrets(){
+		
+	}
+	
+	public void fireTurrets(){
+		for (int i = 0; i < turrets.size(); i++) {
+			turrets.get(i).update();
 		}
 	}
 	
@@ -316,13 +310,11 @@ public class Starship {
 		max_reverse_velocity = -2;
 		min_turn_velocity = 2;
 		max_turn_speed = 2;
-		//weaponry
-		primary_cooldown = 20;
-		primary_current_cooldown = 0;
-		primary_speed = 5.5;
-		primary_lifetime = 450/primary_speed;
-		primary_accuracy = 95;
 		scan_range = 200;
+	}
+	
+	public void shipTurrets(){
+		
 	}
 	
 	public void setScreenBounds(int[] bounds){
@@ -470,14 +462,6 @@ public class Starship {
 	
 	public void setTVelocity(int newvelocity){
 		current_turn_speed = newvelocity;
-	}
-	
-	public void setPrimaryFired(boolean state){
-		primary_fire = state;
-	}
-	
-	public boolean getPrimaryState(){
-		return primary_fire;
 	}
 	
 	public int getMaxHealth(){

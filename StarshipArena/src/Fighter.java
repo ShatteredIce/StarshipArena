@@ -14,6 +14,18 @@ public class Fighter extends Starship{
 	static Texture red_tex3 = new Texture("red_fighter3.png");
 	static Texture red_tex4 = new Texture("red_fighter4.png");
 	
+	//weaponry
+	int primary_damage = 1;
+	int primary_cooldown = 50;
+	int primary_spread = 5;
+	int primary_accuracy = 95;
+	int primary_range = 300;
+	int primary_speed = 15;
+	int primary_lifetime = 450;
+	int primary_id = 1;
+	int primary_xoffset;
+	int primary_yoffset;
+	
 	public Fighter(StarshipArena mygame, int spawnx, int spawny){
 		super(mygame, spawnx, spawny);
 	}
@@ -33,17 +45,28 @@ public class Fighter extends Starship{
 		max_reverse_velocity = -2;
 		min_turn_velocity = 3;
 		max_turn_speed = 3;
-		//weaponry
-		primary_cooldown = 50;
-		primary_current_cooldown = 0;
-		primary_speed = 15;
-		primary_lifetime = 450/primary_speed;
-		primary_accuracy = 95;
 		scan_range = 600;
 		//other
 		clickRadius = 45;
 		xOff = 0;
 		yOff = 10;
+	}
+	
+	public void shipTurrets(){
+		Turret primaryTurret = new Turret(game, team, 0, 0, angle, primary_damage, primary_cooldown, 
+				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id);
+		primaryTurret.setOffset(primary_xoffset, primary_yoffset);
+		turrets.add(primaryTurret);
+	}
+	
+	public void moveTurrets(){
+		Point p = new Point();
+		for (int i = 0; i < turrets.size(); i++) {
+			p.setX(turrets.get(i).getXOffset() + center.X());
+			p.setY(turrets.get(i).getYOffset() + center.Y());
+			p.rotatePoint(center.X(), center.Y(), angle);
+			turrets.get(i).setAngle(angle);
+		}
 	}
 	
 	public void setTexture(){
@@ -172,7 +195,6 @@ public class Fighter extends Starship{
 		if(target == null){
 			if (locationTarget != null) {
 				double distance = distance(this.getX(), this.getY(), locationTarget.x, locationTarget.y);
-				primary_fire = false;
 				if (distance > 50) {
 					boolean positiveY = false;
 					if (locationTarget.y >=  this.getY()) positiveY = true;
@@ -194,7 +216,6 @@ public class Fighter extends Starship{
 			else{
 				current_turn_speed = 0;
 				targeted_velocity = 0;
-				primary_fire = false;
 			}
 		}
 		else{
@@ -205,13 +226,9 @@ public class Fighter extends Starship{
 			double distanceToTarget = game.distance(center.X(), center.Y(), target.getX(), target.getY());
 			int leftBearing = getTurnDistance(relativeAngle, true);
 			int rightBearing = getTurnDistance(relativeAngle, false);
-			primary_fire = false;
 			//if interceptor is facing target
 			if(angle > (relativeAngle - distanceToTarget / 5) && angle < (relativeAngle + distanceToTarget / 5)){
 				targeted_velocity = max_velocity;
-				if(distanceToTarget <= 400 && angle > relativeAngle - 5 && angle < relativeAngle + 5){
-					primary_fire = true;
-				}
 				//adjust course
 				if(leftBearing <= rightBearing){ //turn left
 					current_turn_speed = max_turn_speed;

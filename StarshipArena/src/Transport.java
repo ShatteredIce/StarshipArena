@@ -34,11 +34,6 @@ public class Transport extends Starship{
 		min_turn_velocity = 1;
 		max_turn_speed = 1;
 		//weaponry
-		primary_cooldown = 50;
-		primary_current_cooldown = 0;
-		primary_speed = 15;
-		primary_lifetime = 450/primary_speed;
-		primary_accuracy = 95;
 		scan_range = 300;
 		//other
 		clickRadius = 55;

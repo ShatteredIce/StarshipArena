@@ -19,6 +19,8 @@ public class Turret {
 	//turret turning variables
 	int turn_speed;
 	int angle;
+	double xOff = 0;
+	double yOff = 0;
 	
 	Turret(StarshipArena mygame, String myteam, double spawnx, double spawny, int newangle, int newdamage, int newcooldown, int newspread, int newaccuracy, int newscanrange, int newspeed, int newlifetime, int newid){
 		game = mygame;
@@ -33,6 +35,11 @@ public class Turret {
 		projectile_speed = newspeed;
 		projectile_lifetime = newlifetime / projectile_speed;
 		projectile_textureId = newid;
+	}
+	
+	public void setOffset(double newx, double newy){
+		xOff = newx;
+		yOff = newy;
 	}
 	
 	public void update(){
@@ -79,5 +86,16 @@ public class Turret {
 		angle = newangle;
 	}
 	
+	public void setCenter(Point p){
+		center = p;
+	}
+	
+	public double getXOffset(){
+		return xOff;
+	}
+	
+	public double getYOffset(){
+		return yOff;
+	}
 
 }

@@ -56,7 +56,6 @@ public class StarshipArena {
 	Random random = new Random();
 	
 	ArrayList<Starship> ships = new ArrayList<>();
-	ArrayList<Turret> turrets = new ArrayList<>();
 	ArrayList<Projectile> projectiles = new ArrayList<>();
 	ArrayList<Planet> planets = new ArrayList<>();
 	ArrayList<Tile> backgroundTiles = new ArrayList<>();
@@ -135,11 +134,11 @@ public class StarshipArena {
 				updateZoomLevel(false);
 			
 			if ( key == GLFW_KEY_DOWN && action == GLFW_PRESS )
-				SLOW = 10000000;
+				SLOW = 100000;
 			if ( key == GLFW_KEY_DOWN && action == GLFW_RELEASE )
 				SLOW = 1;
 			if ( key == GLFW_KEY_UP && action == GLFW_PRESS )
-				SLOW = 5000000;
+				SLOW = 5000;
 			if ( key == GLFW_KEY_UP && action == GLFW_RELEASE )
 				SLOW = 1;
 			if ( key == GLFW_KEY_1 && action == GLFW_PRESS)
@@ -315,12 +314,6 @@ public class StarshipArena {
 		sidebar = new Sidebar(this, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 18);
 		titlePage = new Layer(1);
 		boxSelect = new Layer(2);
-		Turret testTurret1 = new Turret(this, "none", 1200, 900, 20, 1, 50, 10, 95, 600, 10, 500, 1);
-		turrets.add(testTurret1);
-		Turret testTurret2 = new Turret(this, "none", 1300, 900, 0, 1, 50, 10, 95, 600, 10, 500, 1);
-		turrets.add(testTurret2);
-		Turret testTurret3 = new Turret(this, "none", 1400, 900, 340, 1, 50, 10, 95, 600, 10, 500, 1);
-		turrets.add(testTurret3);
 		
 		Texture projectileTexture = new Texture("torpedo.png");
 		
@@ -344,6 +337,7 @@ public class StarshipArena {
 				titlePage.setBottomRight(CAMERA_WIDTH - 500, 300);
 				titlePage.setPoints();
 				titlePage.display();
+				glfwSwapBuffers(window); // swap the color buffers
 			}
 			else if(gameState == 2){
 				slowCounter++;
@@ -372,11 +366,6 @@ public class StarshipArena {
 				    	if(ships.get(s).display() == false){
 				    		s--;
 				    	}
-					}
-					
-					//fire turrets
-					for (int t = 0; t < turrets.size(); t++) {
-						turrets.get(t).update();
 					}
 					
 					//display projectiles
@@ -483,6 +472,7 @@ public class StarshipArena {
 					if (panUp)
 						CURR_Y = Math.min(WORLD_HEIGHT - CAMERA_HEIGHT, CURR_Y + CAMERA_SPEED);
 					
+					glfwSwapBuffers(window); // swap the color buffers
 					glMatrixMode(GL_PROJECTION);
 			        glLoadIdentity(); // Resets any previous projection matrices
 			        glOrtho(CURR_X, CURR_X + CAMERA_WIDTH, CURR_Y, CURR_Y + CAMERA_HEIGHT, 1, -1);
@@ -490,7 +480,6 @@ public class StarshipArena {
 		        
 				}
 			}
-			glfwSwapBuffers(window); // swap the color buffers
 		}
 	}
 
