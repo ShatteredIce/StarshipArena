@@ -191,6 +191,10 @@ public class StarshipArena {
 						Planet p = planets.get(i);
 						if (p.getX() < Math.max(newMouseX.get(1), oldMouseX.get(1)) + p.getSize() - 30
 								&& p.getX() > Math.min(oldMouseX.get(1), newMouseX.get(1)) - p.getSize() + 30
+								&& p.getY() < Math.max(newMouseY.get(1), oldMouseY.get(1))- 30
+								&& p.getY() > Math.min(oldMouseY.get(1), newMouseY.get(1))+ 30
+								|| p.getX() < Math.max(newMouseX.get(1), oldMouseX.get(1))- 30
+								&& p.getX() > Math.min(oldMouseX.get(1), newMouseX.get(1))+ 30
 								&& p.getY() < Math.max(newMouseY.get(1), oldMouseY.get(1)) + p.getSize() - 30
 								&& p.getY() > Math.min(oldMouseY.get(1), newMouseY.get(1)) - p.getSize() + 30) {
 							if(player.getSelectedPlanet() != null){
@@ -226,6 +230,10 @@ public class StarshipArena {
 						clickCenter.rotatePoint(s.getX(), s.getY(), s.getAngle());
 						if (clickCenter.X() < Math.max(newMouseX.get(1), oldMouseX.get(1)) + s.getClickRadius()
 								&& clickCenter.X() > Math.min(oldMouseX.get(1), newMouseX.get(1)) - s.getClickRadius()
+								&& clickCenter.Y() < Math.max(newMouseY.get(1), oldMouseY.get(1))
+								&& clickCenter.Y() > Math.min(oldMouseY.get(1), newMouseY.get(1))
+								|| clickCenter.X() < Math.max(newMouseX.get(1), oldMouseX.get(1))
+								&& clickCenter.X() > Math.min(oldMouseX.get(1), newMouseX.get(1))
 								&& clickCenter.Y() < Math.max(newMouseY.get(1), oldMouseY.get(1)) + s.getClickRadius()
 								&& clickCenter.Y() > Math.min(oldMouseY.get(1), newMouseY.get(1)) - s.getClickRadius()) {
 							s.setSelected(true);
@@ -234,11 +242,10 @@ public class StarshipArena {
 								|| distance(newMouseX.get(1), oldMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
 								|| distance(oldMouseX.get(1), newMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
 								|| distance(oldMouseX.get(1), oldMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()) {
-							
+							s.setSelected(true);
 						}
 						else s.setSelected(false);
 					}
-					
 				}
 				if ( button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
 					for (int i = 0; i < ships.size(); i++) {
@@ -366,7 +373,6 @@ public class StarshipArena {
 				    		s--;
 				    	}
 					}
-					//System.out.println(ships.size());
 					
 					//fire turrets
 					for (int t = 0; t < turrets.size(); t++) {
@@ -395,46 +401,69 @@ public class StarshipArena {
 							sidebar.display();
 						}
 					}
-					
-					//display box select
-					if(boxSelectCurrent){
-						DoubleBuffer xpos = BufferUtils.createDoubleBuffer(2);
-						DoubleBuffer ypos = BufferUtils.createDoubleBuffer(2);
-						glfwGetCursorPos(window, xpos, ypos);
-						//convert the glfw coordinate to our coordinate system
-						xpos.put(1, getWidthScalar() * xpos.get(0) + CURR_X);
-						ypos.put(1, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0)) + CURR_Y));
-						boxSelect.setBottomRight(xpos.get(1), ypos.get(1));
-						boxSelect.setPoints();
-						boxSelect.display();
-					}
-					
-					//Make ships drift apart if they're too close
-					for (int s = 0; s < ships.size(); s++) {
-						Starship first = ships.get(s);
-						for (int s1 = s + 1; s1 < ships.size(); s1++) {
-							Starship second = ships.get(s1);
-							if (first.getMVelocity() == 0 && second.getMVelocity() == 0 && first.getTeam().equals(second.getTeam()) && distance(first.getX(), first.getY(), second.getX(), second.getY()) < first.getClickRadius() + second.getClickRadius()) {
-								double angle = Math.acos((second.getX() - first.getX()) / distance(first.getX(), first.getY(), second.getX(), second.getY()));
-								double newFirstX, newFirstY, newSecondX, newSecondY;
-								if (second.getY() > first.getY()) {
-									newFirstX = Math.min(Math.max(first.center.x - Math.cos(angle), first.getClickRadius()), WORLD_WIDTH - first.getClickRadius());
-									newFirstY = Math.min(Math.max(first.center.y - Math.sin(angle), first.getClickRadius()), WORLD_HEIGHT - first.getClickRadius());
-									newSecondX = Math.min(Math.max(second.center.x + Math.cos(angle), second.getClickRadius()), WORLD_WIDTH - second.getClickRadius());
-									newSecondY = Math.min(Math.max(second.center.y + Math.sin(angle), second.getClickRadius()), WORLD_HEIGHT - second.getClickRadius());
-								}
-								else {
-									newFirstX = Math.min(Math.max(first.center.x - Math.cos(angle), first.getClickRadius()), WORLD_WIDTH - first.getClickRadius());
-									newFirstY = Math.min(Math.max(first.center.y + Math.sin(angle), first.getClickRadius()), WORLD_HEIGHT - first.getClickRadius());
-									newSecondX = Math.min(Math.max(second.center.x + Math.cos(angle), second.getClickRadius()), WORLD_WIDTH - second.getClickRadius());
-									newSecondY = Math.min(Math.max(second.center.y - Math.sin(angle), second.getClickRadius()), WORLD_HEIGHT - second.getClickRadius());
-								}
-								first.center = new Point(newFirstX, newFirstY);
-								second.center = new Point(newSecondX, newSecondY);
+//<<<<<<< HEAD
+//				}
+				
+				//display box select
+				if(boxSelectCurrent){
+					DoubleBuffer xpos = BufferUtils.createDoubleBuffer(2);
+					DoubleBuffer ypos = BufferUtils.createDoubleBuffer(2);
+					glfwGetCursorPos(window, xpos, ypos);
+					//convert the glfw coordinate to our coordinate system
+					xpos.put(1, getWidthScalar() * xpos.get(0) + CURR_X);
+					ypos.put(1, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0)) + CURR_Y));
+					boxSelect.setBottomRight(xpos.get(1), ypos.get(1));
+					boxSelect.setPoints();
+					boxSelect.display();
+				}
+				
+				//Make ships drift apart if they're too close
+				for (int s = 0; s < ships.size(); s++) {
+					Starship first = ships.get(s);
+					for (int s1 = s + 1; s1 < ships.size(); s1++) {
+						Starship second = ships.get(s1);
+						if (first.getTeam().equals(second.getTeam()) && distance(first.getX(), first.getY(), second.getX(), second.getY()) < first.getClickRadius() + second.getClickRadius()) {
+							double angle = Math.acos((second.getX() - first.getX()) / distance(first.getX(), first.getY(), second.getX(), second.getY()));
+							double newFirstX, newFirstY, newSecondX, newSecondY;
+							if (second.getY() > first.getY()) {
+								newFirstX = Math.min(Math.max(first.center.x - Math.cos(angle), first.getClickRadius()), WORLD_WIDTH - first.getClickRadius());
+								newFirstY = Math.min(Math.max(first.center.y - Math.sin(angle), first.getClickRadius()), WORLD_HEIGHT - first.getClickRadius());
+								newSecondX = Math.min(Math.max(second.center.x + Math.cos(angle), second.getClickRadius()), WORLD_WIDTH - second.getClickRadius());
+								newSecondY = Math.min(Math.max(second.center.y + Math.sin(angle), second.getClickRadius()), WORLD_HEIGHT - second.getClickRadius());
+							}
+							else {
+								newFirstX = Math.min(Math.max(first.center.x - Math.cos(angle), first.getClickRadius()), WORLD_WIDTH - first.getClickRadius());
+								newFirstY = Math.min(Math.max(first.center.y + Math.sin(angle), first.getClickRadius()), WORLD_HEIGHT - first.getClickRadius());
+								newSecondX = Math.min(Math.max(second.center.x + Math.cos(angle), second.getClickRadius()), WORLD_WIDTH - second.getClickRadius());
+								newSecondY = Math.min(Math.max(second.center.y - Math.sin(angle), second.getClickRadius()), WORLD_HEIGHT - second.getClickRadius());
+							}
+							first.center = new Point(newFirstX, newFirstY);
+							second.center = new Point(newSecondX, newSecondY);
+//							if (first.locationTarget != null) {
+//								if (second.locationTarget != null) {
+//									first.setLocationTarget(new Point(first.locationTarget.x + newFirstX - first.center.x
+//											, first.locationTarget.y + newFirstY - first.center.y));
+//									second.setLocationTarget(new Point(second.locationTarget.x + newSecondX - second.center.x
+//											, second.locationTarget.y + newSecondY - second.center.y));
+//								}
+////								else first.setLocationTarget(new Point(second.center.x + newFirstX - first.center.x
+////											, second.center.y + newFirstY - first.center.y));
+//							}
+//							else {
+//								if (second.locationTarget != null)
+//									second.setLocationTarget(new Point(first.center.x + newSecondX - second.center.x
+//										, first.center.y + newSecondY - second.center.y));
+//							}
+							
+							if (first.locationTarget != null 
+									&& distance(first.center.x, first.center.y, first.locationTarget.x, first.locationTarget.y) < first.getClickRadius() * 4)
+								first.locationTarget = null;
+							if (second.locationTarget != null 
+									&& distance(second.center.x, second.center.y, second.locationTarget.x, second.locationTarget.y) < second.getClickRadius() * 4)
+								second.locationTarget = null;
 							}
 						}
 					}
-				
 					checkProjectiles();
 					
 					enemy.buyShips();
@@ -454,7 +483,6 @@ public class StarshipArena {
 					if (panUp)
 						CURR_Y = Math.min(WORLD_HEIGHT - CAMERA_HEIGHT, CURR_Y + CAMERA_SPEED);
 					
-					glfwSwapBuffers(window); // swap the color buffers
 					glMatrixMode(GL_PROJECTION);
 			        glLoadIdentity(); // Resets any previous projection matrices
 			        glOrtho(CURR_X, CURR_X + CAMERA_WIDTH, CURR_Y, CURR_Y + CAMERA_HEIGHT, 1, -1);
@@ -462,9 +490,7 @@ public class StarshipArena {
 		        
 				}
 			}
-			
 			glfwSwapBuffers(window); // swap the color buffers
-			
 		}
 	}
 

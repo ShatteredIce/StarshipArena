@@ -229,6 +229,9 @@ public class Interceptor extends Starship{
 			}
 		}
 		else{
+			//If ship has no location target and it locks onto an enemy,
+			//give it a location target so it returns to where it was before it was attacked (so defensive line is unbroken)
+			if (locationTarget == null) locationTarget = new Point(center.x, center.y);
 			int relativeAngle = game.angleToPoint(center.X(), center.Y(), target.getX(), target.getY());
 			double distanceToTarget = game.distance(center.X(), center.Y(), target.getX(), target.getY());
 			int leftBearing = getTurnDistance(relativeAngle, true);
