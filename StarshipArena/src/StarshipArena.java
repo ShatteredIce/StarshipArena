@@ -483,7 +483,6 @@ public class StarshipArena {
 					if (panUp)
 						CURR_Y = Math.min(WORLD_HEIGHT - CAMERA_HEIGHT, CURR_Y + CAMERA_SPEED);
 					
-					glfwSwapBuffers(window); // swap the color buffers
 					glMatrixMode(GL_PROJECTION);
 			        glLoadIdentity(); // Resets any previous projection matrices
 			        glOrtho(CURR_X, CURR_X + CAMERA_WIDTH, CURR_Y, CURR_Y + CAMERA_HEIGHT, 1, -1);
@@ -491,6 +490,7 @@ public class StarshipArena {
 		        
 				}
 			}
+			glfwSwapBuffers(window); // swap the color buffers
 		}
 	}
 
