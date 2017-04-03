@@ -36,6 +36,7 @@ public class StarshipArena {
 	int CAMERA_HEIGHT = 1800;
 	int zoomLevel = 3;
 	
+	int gameState = 1;
 	int SLOW = 1;
     
     boolean panLeft = false;
@@ -62,6 +63,8 @@ public class StarshipArena {
 	ArrayList<Player> playerList = new ArrayList<>(); 
 
 	Sidebar sidebar;
+	Layer titlePage;
+	Button levelSelectButton = new Button(1100, 1110, 1620, 930);
 	Layer boxSelect;
 	boolean boxSelectCurrent = false;
 	
@@ -151,97 +154,106 @@ public class StarshipArena {
 		});
 		
 		glfwSetMouseButtonCallback (window, (window, button, action, mods) -> {
-			boolean clickedOnSprite = false;
 			DoubleBuffer xpos = BufferUtils.createDoubleBuffer(2);
 			DoubleBuffer ypos = BufferUtils.createDoubleBuffer(2);
 			glfwGetCursorPos(window, xpos, ypos);
 			//convert the glfw coordinate to our coordinate system
 			xpos.put(1, getWidthScalar() * xpos.get(0) + CURR_X);
 			ypos.put(1, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0)) + CURR_Y));
-			if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-				boxSelect.setTopLeft(xpos.get(1), ypos.get(1));
-				//boxSelect.setBottomRight(xpos.get(0), ypos.get(0));
-				oldMouseX = xpos;
-				oldMouseY = ypos;
-				boxSelectCurrent = true;
-			}
-			if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
-				newMouseX = xpos;
-				newMouseY = ypos;
-				boxSelectCurrent = false;
-//				glLineWidth((float)2.5); 
-//				glColor3f(255, 255, 255);
-//				glBegin(GL_LINES);
-//				glVertex2f((float)oldMouseX.get(0), (float)oldMouseY.get(0));
-//				glVertex2f((float)newMouseX.get(0), (float)newMouseY.get(0));
-//				glEnd();
-				for (int i = 0; i < planets.size(); i++) {
-					Planet p = planets.get(i);
-					if (p.getX() < Math.max(newMouseX.get(1), oldMouseX.get(1)) + p.getSize() - 30
-							&& p.getX() > Math.min(oldMouseX.get(1), newMouseX.get(1)) - p.getSize() + 30
-							&& p.getY() < Math.max(newMouseY.get(1), oldMouseY.get(1))- 30
-							&& p.getY() > Math.min(oldMouseY.get(1), newMouseY.get(1))+ 30
-							|| p.getX() < Math.max(newMouseX.get(1), oldMouseX.get(1))- 30
-							&& p.getX() > Math.min(oldMouseX.get(1), newMouseX.get(1))+ 30
-							&& p.getY() < Math.max(newMouseY.get(1), oldMouseY.get(1)) + p.getSize() - 30
-							&& p.getY() > Math.min(oldMouseY.get(1), newMouseY.get(1)) - p.getSize() + 30) {
-						if(player.getSelectedPlanet() != null){
-							player.getSelectedPlanet().setSelected(false);
-						}
-						player.setSelectedPlanet(p);
-						p.setSelected(true);
-						clickedOnSprite = true;
-						break;
-					}
-					else if (distance(newMouseX.get(1), newMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30
-							|| distance(newMouseX.get(1), oldMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30
-							|| distance(oldMouseX.get(1), newMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30
-							|| distance(oldMouseX.get(1), oldMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30) {
-						if(player.getSelectedPlanet() != null){
-							player.getSelectedPlanet().setSelected(false);
-						}
-						player.setSelectedPlanet(p);
-						p.setSelected(true);
-						clickedOnSprite = true;
-						break;
-					}
-					if(clickedOnSprite == false){
-						if(player.getSelectedPlanet() != null){
-							player.getSelectedPlanet().setSelected(false);
-							player.setSelectedPlanet(null);
-						}
+			if(gameState == 1){
+				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
+				//System.out.println(xpos.get(1) + " " + ypos.get(1));
+					if(levelSelectButton.isClicked(xpos.get(1), ypos.get(1))){
+						gameState = 2;
 					}
 				}
-				for (int i = 0; i < ships.size(); i++) {
-					Starship s = ships.get(i);
-					Point clickCenter = new Point(s.getX() + s.getXOff(), s.getY() + s.getYOff());
-					clickCenter.rotatePoint(s.getX(), s.getY(), s.getAngle());
-					if (clickCenter.X() < Math.max(newMouseX.get(1), oldMouseX.get(1)) + s.getClickRadius()
-							&& clickCenter.X() > Math.min(oldMouseX.get(1), newMouseX.get(1)) - s.getClickRadius()
-							&& clickCenter.Y() < Math.max(newMouseY.get(1), oldMouseY.get(1))
-							&& clickCenter.Y() > Math.min(oldMouseY.get(1), newMouseY.get(1))
-							|| clickCenter.X() < Math.max(newMouseX.get(1), oldMouseX.get(1))
-							&& clickCenter.X() > Math.min(oldMouseX.get(1), newMouseX.get(1))
-							&& clickCenter.Y() < Math.max(newMouseY.get(1), oldMouseY.get(1)) + s.getClickRadius()
-							&& clickCenter.Y() > Math.min(oldMouseY.get(1), newMouseY.get(1)) - s.getClickRadius()) {
-						s.setSelected(true);
-					}
-					else if (distance(newMouseX.get(1), newMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
-							|| distance(newMouseX.get(1), oldMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
-							|| distance(oldMouseX.get(1), newMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
-							|| distance(oldMouseX.get(1), oldMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()) {
-						s.setSelected(true);
-					}
-					else s.setSelected(false);
-				}
-				
 			}
-			if ( button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
-				for (int i = 0; i < ships.size(); i++) {
-					Starship s = ships.get(i);
-					if (s.getSelected() && s.getTeam().equals(player.getTeam())) {
-						s.setLocationTarget(new Point(xpos.get(1), ypos.get(1)));
-						//System.out.println(xpos.get(0) + ", " + ypos.get(0));
+			else if(gameState == 2){
+				boolean clickedOnSprite = false;
+				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+					boxSelect.setTopLeft(xpos.get(1), ypos.get(1));
+					//boxSelect.setBottomRight(xpos.get(0), ypos.get(0));
+					oldMouseX = xpos;
+					oldMouseY = ypos;
+					boxSelectCurrent = true;
+				}
+				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
+					newMouseX = xpos;
+					newMouseY = ypos;
+					boxSelectCurrent = false;
+	//				glLineWidth((float)2.5); 
+	//				glColor3f(255, 255, 255);
+	//				glBegin(GL_LINES);
+	//				glVertex2f((float)oldMouseX.get(0), (float)oldMouseY.get(0));
+	//				glVertex2f((float)newMouseX.get(0), (float)newMouseY.get(0));
+	//				glEnd();
+					for (int i = 0; i < planets.size(); i++) {
+						Planet p = planets.get(i);
+						if (p.getX() < Math.max(newMouseX.get(1), oldMouseX.get(1)) + p.getSize() - 30
+								&& p.getX() > Math.min(oldMouseX.get(1), newMouseX.get(1)) - p.getSize() + 30
+								&& p.getY() < Math.max(newMouseY.get(1), oldMouseY.get(1))- 30
+								&& p.getY() > Math.min(oldMouseY.get(1), newMouseY.get(1))+ 30
+								|| p.getX() < Math.max(newMouseX.get(1), oldMouseX.get(1))- 30
+								&& p.getX() > Math.min(oldMouseX.get(1), newMouseX.get(1))+ 30
+								&& p.getY() < Math.max(newMouseY.get(1), oldMouseY.get(1)) + p.getSize() - 30
+								&& p.getY() > Math.min(oldMouseY.get(1), newMouseY.get(1)) - p.getSize() + 30) {
+							if(player.getSelectedPlanet() != null){
+								player.getSelectedPlanet().setSelected(false);
+							}
+							player.setSelectedPlanet(p);
+							p.setSelected(true);
+							clickedOnSprite = true;
+							break;
+						}
+						else if (distance(newMouseX.get(1), newMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30
+								|| distance(newMouseX.get(1), oldMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30
+								|| distance(oldMouseX.get(1), newMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30
+								|| distance(oldMouseX.get(1), oldMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30) {
+							if(player.getSelectedPlanet() != null){
+								player.getSelectedPlanet().setSelected(false);
+							}
+							player.setSelectedPlanet(p);
+							p.setSelected(true);
+							clickedOnSprite = true;
+							break;
+						}
+						if(clickedOnSprite == false){
+							if(player.getSelectedPlanet() != null){
+								player.getSelectedPlanet().setSelected(false);
+								player.setSelectedPlanet(null);
+							}
+						}
+					}
+					for (int i = 0; i < ships.size(); i++) {
+						Starship s = ships.get(i);
+						Point clickCenter = new Point(s.getX() + s.getXOff(), s.getY() + s.getYOff());
+						clickCenter.rotatePoint(s.getX(), s.getY(), s.getAngle());
+						if (clickCenter.X() < Math.max(newMouseX.get(1), oldMouseX.get(1)) + s.getClickRadius()
+								&& clickCenter.X() > Math.min(oldMouseX.get(1), newMouseX.get(1)) - s.getClickRadius()
+								&& clickCenter.Y() < Math.max(newMouseY.get(1), oldMouseY.get(1))
+								&& clickCenter.Y() > Math.min(oldMouseY.get(1), newMouseY.get(1))
+								|| clickCenter.X() < Math.max(newMouseX.get(1), oldMouseX.get(1))
+								&& clickCenter.X() > Math.min(oldMouseX.get(1), newMouseX.get(1))
+								&& clickCenter.Y() < Math.max(newMouseY.get(1), oldMouseY.get(1)) + s.getClickRadius()
+								&& clickCenter.Y() > Math.min(oldMouseY.get(1), newMouseY.get(1)) - s.getClickRadius()) {
+							s.setSelected(true);
+						}
+						else if (distance(newMouseX.get(1), newMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
+								|| distance(newMouseX.get(1), oldMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
+								|| distance(oldMouseX.get(1), newMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
+								|| distance(oldMouseX.get(1), oldMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()) {
+							s.setSelected(true);
+						}
+						else s.setSelected(false);
+					}
+				}
+				if ( button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+					for (int i = 0; i < ships.size(); i++) {
+						Starship s = ships.get(i);
+						if (s.getSelected() && s.getTeam().equals(player.getTeam())) {
+							s.setLocationTarget(new Point(xpos.get(1), ypos.get(1)));
+							//System.out.println(xpos.get(0) + ", " + ypos.get(0));
+						}
 					}
 				}
 			}
@@ -301,7 +313,8 @@ public class StarshipArena {
 		
 		new Planet(this, 1300, 900, 1);
 		sidebar = new Sidebar(this, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 18);
-		boxSelect = new Layer();
+		titlePage = new Layer(1);
+		boxSelect = new Layer(2);
 		Turret testTurret1 = new Turret(this, "none", 1200, 900, 20, 1, 50, 10, 95, 600, 10, 500, 1);
 		turrets.add(testTurret1);
 		Turret testTurret2 = new Turret(this, "none", 1300, 900, 0, 1, 50, 10, 95, 600, 10, 500, 1);
@@ -318,69 +331,78 @@ public class StarshipArena {
 		int slowCounter = 0;
 		int counter = 0;
 		while ( !glfwWindowShouldClose(window) ) {
-			slowCounter++;
-			if (slowCounter >= SLOW) {
-				slowCounter = 0;
-				//System.out.println(counter);
-				counter++;
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-				
-				// Poll for window events. The key callback above will only be
-				// invoked during this call.
-				glfwPollEvents();
-				
-				glEnable(GL_TEXTURE_2D);
-				
-				//Display background
-				for (int t = 0; t < backgroundTiles.size(); t++) {
-					backgroundTiles.get(t).display();
-				}
-				
-				//Display planets
-				for(int p = 0; p < planets.size(); p++){
-					planets.get(p).checkCapturePoint();
-					planets.get(p).updateResources();
-					//System.out.println(player.getResources());
-					planets.get(p).display();
-				}
-				
-				//display ships
-				for(int s = 0; s < ships.size(); s++){
-					ships.get(s).doRandomMovement();
-			    	ships.get(s).setPoints();
-			    	if(ships.get(s).display() == false){
-			    		s--;
-			    	}
-				}
-				//System.out.println(ships.size());
-				
-				//fire turrets
-				for (int t = 0; t < turrets.size(); t++) {
-					turrets.get(t).update();
-				}
-				
-				//display projectiles
-				projectileTexture.bind();
-				for(int p = 0; p < projectiles.size(); p++){
-			    	projectiles.get(p).setPoints();
-					if(projectiles.get(p).display() == false){
-						p--;
+			
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+			// Poll for window events. The key callback above will only be
+			// invoked during this call.
+			glfwPollEvents();
+			glEnable(GL_TEXTURE_2D);
+			
+			//display the title
+			if(gameState == 1){
+				titlePage.setTopLeft(500, CAMERA_HEIGHT - 300);
+				titlePage.setBottomRight(CAMERA_WIDTH - 500, 300);
+				titlePage.setPoints();
+				titlePage.display();
+			}
+			else if(gameState == 2){
+				slowCounter++;
+				if (slowCounter >= SLOW) {
+					slowCounter = 0;
+					//System.out.println(counter);
+					counter++;
+					
+					//Display background
+					for (int t = 0; t < backgroundTiles.size(); t++) {
+						backgroundTiles.get(t).display();
 					}
-				}
-				
-				//Display sidebar
-				for(int p = 0; p < planets.size(); p++){
-					if(planets.get(p).getSelected()){
-						sidebar.setPoints();
-						sidebar.display();
+					
+					//Display planets
+					for(int p = 0; p < planets.size(); p++){
+						planets.get(p).checkCapturePoint();
+						planets.get(p).updateResources();
+						//System.out.println(player.getResources());
+						planets.get(p).display();
 					}
-				}
-				for (int s = 0; s < ships.size(); s++) {
-					if (ships.get(s).getSelected()) {
-						sidebar.setPoints();
-						sidebar.display();
+					
+					//display ships
+					for(int s = 0; s < ships.size(); s++){
+						ships.get(s).doRandomMovement();
+				    	ships.get(s).setPoints();
+				    	if(ships.get(s).display() == false){
+				    		s--;
+				    	}
 					}
-				}
+					
+					//fire turrets
+					for (int t = 0; t < turrets.size(); t++) {
+						turrets.get(t).update();
+					}
+					
+					//display projectiles
+					projectileTexture.bind();
+					for(int p = 0; p < projectiles.size(); p++){
+				    	projectiles.get(p).setPoints();
+						if(projectiles.get(p).display() == false){
+							p--;
+						}
+					}
+					
+					//Display sidebar
+					for(int p = 0; p < planets.size(); p++){
+						if(planets.get(p).getSelected()){
+							sidebar.setPoints();
+							sidebar.display();
+						}
+					}
+					for (int s = 0; s < ships.size(); s++) {
+						if (ships.get(s).getSelected()) {
+							sidebar.setPoints();
+							sidebar.display();
+						}
+					}
+//<<<<<<< HEAD
+//				}
 				
 				//display box select
 				if(boxSelectCurrent){
@@ -439,34 +461,35 @@ public class StarshipArena {
 							if (second.locationTarget != null 
 									&& distance(second.center.x, second.center.y, second.locationTarget.x, second.locationTarget.y) < second.getClickRadius() * 4)
 								second.locationTarget = null;
+							}
 						}
 					}
+					checkProjectiles();
+					
+					enemy.buyShips();
+					enemy.move();
+					
+					//onMouseEvent();
+					
+					glDisable(GL_TEXTURE_2D);
+					
+					//Check which direction the camera should move, and move accordingly
+					if (panLeft)
+						CURR_X = Math.max(0, CURR_X - CAMERA_SPEED);
+					if (panRight)
+						CURR_X = Math.min(WORLD_WIDTH - CAMERA_WIDTH, CURR_X + CAMERA_SPEED);
+					if (panDown)
+						CURR_Y = Math.max(0, CURR_Y - CAMERA_SPEED);
+					if (panUp)
+						CURR_Y = Math.min(WORLD_HEIGHT - CAMERA_HEIGHT, CURR_Y + CAMERA_SPEED);
+					
+					glfwSwapBuffers(window); // swap the color buffers
+					glMatrixMode(GL_PROJECTION);
+			        glLoadIdentity(); // Resets any previous projection matrices
+			        glOrtho(CURR_X, CURR_X + CAMERA_WIDTH, CURR_Y, CURR_Y + CAMERA_HEIGHT, 1, -1);
+			        glMatrixMode(GL_MODELVIEW);
+		        
 				}
-			
-				checkProjectiles();
-				
-				enemy.buyShips();
-				enemy.move();
-				
-				
-				glDisable(GL_TEXTURE_2D);
-				
-				//Check which direction the camera should move, and move accordingly
-				if (panLeft)
-					CURR_X = Math.max(0, CURR_X - CAMERA_SPEED);
-				if (panRight)
-					CURR_X = Math.min(WORLD_WIDTH - CAMERA_WIDTH, CURR_X + CAMERA_SPEED);
-				if (panDown)
-					CURR_Y = Math.max(0, CURR_Y - CAMERA_SPEED);
-				if (panUp)
-					CURR_Y = Math.min(WORLD_HEIGHT - CAMERA_HEIGHT, CURR_Y + CAMERA_SPEED);
-				
-				glfwSwapBuffers(window); // swap the color buffers
-				glMatrixMode(GL_PROJECTION);
-		        glLoadIdentity(); // Resets any previous projection matrices
-		        glOrtho(CURR_X, CURR_X + CAMERA_WIDTH, CURR_Y, CURR_Y + CAMERA_HEIGHT, 1, -1);
-		        glMatrixMode(GL_MODELVIEW);
-	        
 			}
 		}
 	}

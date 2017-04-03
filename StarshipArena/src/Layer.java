@@ -2,7 +2,8 @@
 public class Layer {
 	
 	Model model;
-	static Texture tex = new Texture("box_select.png");
+	static Texture tex1 = new Texture("title_page.png");
+	static Texture tex2 = new Texture("box_select.png");
 	
 	double[] vertices;
 	double[] textureCoords; 
@@ -10,9 +11,11 @@ public class Layer {
 	Point topLeft;
 	Point bottomRight;
 	Point[] points;
+	int id;
 	
 	
-	Layer(){
+	Layer(int layerId){
+		id = layerId;
 		topLeft = new Point();
 		bottomRight = new Point();
 		points = generatePoints();
@@ -50,6 +53,15 @@ public class Layer {
 		return points;
 	}
 	
+	public void setTexture(){
+		if(id == 1){
+			tex1.bind();
+		}
+		else if(id == 2){
+			tex2.bind();
+		}
+	}
+	
 	
 	public void setTextureCoords(){
 		textureCoords = new double[]{0, 0, 0, 1, 1, 0, 1, 1};
@@ -60,7 +72,7 @@ public class Layer {
 	}
 	
 	public void display(){
-		tex.bind();
+		setTexture();
 		model.render(vertices);
 	}
 	
