@@ -70,6 +70,9 @@ public class StarshipArena {
 	Layer boxSelect;
 	boolean boxSelectCurrent = false;
 	
+	Layer settingsIcon;
+	Button settingsButton = new Button(2500, 1796, 2596, 1700);
+	
 	Player player = new Player(this, "blue");
 	Enemy enemy = new Enemy(this, new Player(this, "red"));
     
@@ -132,9 +135,13 @@ public class StarshipArena {
 			if ( key == GLFW_KEY_S && action == GLFW_RELEASE )
 				panDown = false;
 			if ( key == GLFW_KEY_MINUS && action == GLFW_PRESS )
-				updateZoomLevel(true);
+				if(gameState == 3){
+					updateZoomLevel(true);
+				}
 			if ( key == GLFW_KEY_EQUAL && action == GLFW_PRESS )
-				updateZoomLevel(false);
+				if(gameState == 3){
+					updateZoomLevel(false);
+				}
 			
 			if ( key == GLFW_KEY_DOWN && action == GLFW_PRESS )
 				SLOW = 100000;
@@ -327,6 +334,11 @@ public class StarshipArena {
 		titlePage = new Layer(1);
 		levelSelect = new Layer(2);
 		boxSelect = new Layer(3);
+		//static layer on top of game
+		settingsIcon = new Layer(4);
+		settingsIcon.setTopLeft(WINDOW_WIDTH - 50, WINDOW_HEIGHT - 2);
+		settingsIcon.setBottomRight(WINDOW_WIDTH - 2, WINDOW_HEIGHT - 50);
+		settingsIcon.setPoints();
 		
 		Texture projectileTexture = new Texture("torpedo.png");
 		
@@ -394,20 +406,6 @@ public class StarshipArena {
 				    	projectiles.get(p).setPoints();
 						if(projectiles.get(p).display() == false){
 							p--;
-						}
-					}
-					
-					//Display sidebar
-					for(int p = 0; p < planets.size(); p++){
-						if(planets.get(p).getSelected()){
-							sidebar.setPoints();
-							sidebar.display();
-						}
-					}
-					for (int s = 0; s < ships.size(); s++) {
-						if (ships.get(s).getSelected()) {
-							sidebar.setPoints();
-							sidebar.display();
 						}
 					}
 //<<<<<<< HEAD
@@ -479,6 +477,27 @@ public class StarshipArena {
 					enemy.move();
 					
 					//onMouseEvent();
+					
+					glMatrixMode(GL_PROJECTION);
+			        glLoadIdentity(); // Resets any previous projection matrices
+			        glOrtho(0, WINDOW_WIDTH, 0, WINDOW_HEIGHT, 1, -1);
+			        glMatrixMode(GL_MODELVIEW);
+					
+					//display settings icon
+					settingsIcon.display();
+					
+					//Display sidebar
+					for(int p = 0; p < planets.size(); p++){
+						if(planets.get(p).getSelected()){
+							sidebar.display();
+						}
+					}
+					for (int s = 0; s < ships.size(); s++) {
+						if (ships.get(s).getSelected()) {
+							sidebar.display();
+						}
+					}
+					
 					
 					glDisable(GL_TEXTURE_2D);
 					

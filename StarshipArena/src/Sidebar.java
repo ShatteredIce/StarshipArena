@@ -28,25 +28,44 @@ public class Sidebar {
 
 	}
 	
+//	public void setPoints(){
+//		int v_index = 0;
+//		center.setX(game.getWidthScalar()*true_X + game.getCameraX());
+//		center.setY(game.getHeightScalar()*true_Y + game.getCameraY());
+//		for (int i = 0; i < points.length; i++) {
+//			points[i].setX(center.X() + (points[i].getXOffset()*game.getWidthScalar()));
+//			points[i].setY(center.Y() + (points[i].getYOffset()*game.getHeightScalar()));
+//			v_index = 2*i;
+//			vertices[v_index] = points[i].X();
+//			vertices[v_index+1] = points[i].Y();	
+//		}
+//	}
+	
 	public void setPoints(){
 		int v_index = 0;
-		center.setX(game.getWidthScalar()*true_X + game.getCameraX());
-		center.setY(game.getHeightScalar()*true_Y + game.getCameraY());
 		for (int i = 0; i < points.length; i++) {
-			points[i].setX(center.X() + (points[i].getXOffset()*game.getWidthScalar()));
-			points[i].setY(center.Y() + (points[i].getYOffset()*game.getHeightScalar()));
 			v_index = 2*i;
 			vertices[v_index] = points[i].X();
 			vertices[v_index+1] = points[i].Y();	
 		}
 	}
 	
+//	public Point[] generatePoints(){
+//		Point[] points = new Point[]{
+//			new Point(-game.getWindowWidth() / 2, game.getWindowHeight() / 9, true),
+//			new Point(-game.getWindowWidth() / 2, -game.getWindowHeight() / 9, true),
+//			new Point(game.getWindowWidth() / 2, game.getWindowHeight() / 9, true),
+//			new Point(game.getWindowWidth() / 2, -game.getWindowHeight() / 9, true),
+//		};
+//		return points;
+//	}
+	
 	public Point[] generatePoints(){
 		Point[] points = new Point[]{
-			new Point(-game.getWindowWidth() / 2, game.getWindowHeight() / 9, true),
-			new Point(-game.getWindowWidth() / 2, -game.getWindowHeight() / 9, true),
-			new Point(game.getWindowWidth() / 2, game.getWindowHeight() / 9, true),
-			new Point(game.getWindowWidth() / 2, -game.getWindowHeight() / 9, true),
+			new Point(0, 150),
+			new Point(0, -50),
+			new Point(game.getWindowWidth(), 150),
+			new Point(game.getWindowWidth(), -50),
 		};
 		return points;
 	}
