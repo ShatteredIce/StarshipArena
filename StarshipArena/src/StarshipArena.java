@@ -60,6 +60,7 @@ public class StarshipArena {
 	ArrayList<Planet> planets = new ArrayList<>();
 	ArrayList<Tile> backgroundTiles = new ArrayList<>();
 	ArrayList<Player> playerList = new ArrayList<>(); 
+	ArrayList<BitmapFontLetter> text = new ArrayList<>();
 
 	Sidebar sidebar;
 	Layer titlePage;
@@ -109,7 +110,8 @@ public class StarshipArena {
 		// Setup a key callback. It will be called every time a key is pressed, repeated or released.
 		glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
 			if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
-				glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
+//				glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
+				gameState = 1;
 			
 			//Figure out which arrow keys, if any, are depressed and tell the loop to pan the camera
 			if ( key == GLFW_KEY_A && action == GLFW_PRESS )
@@ -410,8 +412,6 @@ public class StarshipArena {
 							sidebar.display();
 						}
 					}
-//<<<<<<< HEAD
-//				}
 				
 				//display box select
 				if(boxSelectCurrent){
@@ -424,6 +424,13 @@ public class StarshipArena {
 					boxSelect.setBottomRight(xpos.get(1), ypos.get(1));
 					boxSelect.setPoints();
 					boxSelect.display();
+				}
+				
+				//Display bitmap font letters
+				writeText("Resources: " + planets.get(0).storedResources, 20, 20, true);
+				for (int i = 0; i < text.size(); i++) {
+					text.get(i).setPoints();
+					text.get(i).display();
 				}
 				
 				//Make ships drift apart if they're too close
@@ -626,6 +633,8 @@ public class StarshipArena {
 			new Fighter(this, "red", 3200, 1500, 150);
 			new Fighter(this, "red", 3200, 1300, 160);
 			new Fighter(this, "red", 3000, 1300, 150);
+			//Test if bitmapfont works
+			new BitmapFontLetter(this, 'Q', 500, 500);
 		}
 	}
 	
@@ -815,6 +824,13 @@ public class StarshipArena {
 	
 	public double getHeightScalar(){
 		return(double) CAMERA_HEIGHT / (double) WINDOW_HEIGHT;
+	}
+	
+	public void writeText(String newText, int startx, int starty, boolean eraseOld) {
+		if (eraseOld) text.clear();
+		for (int i = 0; i < newText.length(); i++) {
+			new BitmapFontLetter(this, newText.charAt(i), startx + i * BitmapFontLetter.size, starty);
+		}
 	}
 	
 }
