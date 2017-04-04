@@ -173,7 +173,6 @@ public class Starship {
 	}
 	
 	public void destroy(){
-		tex.destroy();
 		model.destroy();
 		game.removeShip(this);
 	}

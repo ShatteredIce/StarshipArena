@@ -71,6 +71,9 @@ public class StarshipArena {
 	Layer boxSelect;
 	boolean boxSelectCurrent = false;
 	
+	Layer settingsIcon;
+	Button settingsButton = new Button(2500, 1796, 2596, 1700);
+	
 	Player player = new Player(this, "blue");
 	Enemy enemy = new Enemy(this, new Player(this, "red"));
     
@@ -134,9 +137,13 @@ public class StarshipArena {
 			if ( key == GLFW_KEY_S && action == GLFW_RELEASE )
 				panDown = false;
 			if ( key == GLFW_KEY_MINUS && action == GLFW_PRESS )
-				updateZoomLevel(true);
+				if(gameState == 3){
+					updateZoomLevel(true);
+				}
 			if ( key == GLFW_KEY_EQUAL && action == GLFW_PRESS )
-				updateZoomLevel(false);
+				if(gameState == 3){
+					updateZoomLevel(false);
+				}
 			
 			if ( key == GLFW_KEY_DOWN && action == GLFW_PRESS )
 				SLOW = 100000;
@@ -329,6 +336,11 @@ public class StarshipArena {
 		titlePage = new Layer(1);
 		levelSelect = new Layer(2);
 		boxSelect = new Layer(3);
+		//static layer on top of game
+		settingsIcon = new Layer(4);
+		settingsIcon.setTopLeft(WINDOW_WIDTH - 50, WINDOW_HEIGHT - 2);
+		settingsIcon.setBottomRight(WINDOW_WIDTH - 2, WINDOW_HEIGHT - 50);
+		settingsIcon.setPoints();
 		
 		Texture projectileTexture = new Texture("torpedo.png");
 		
@@ -396,20 +408,6 @@ public class StarshipArena {
 				    	projectiles.get(p).setPoints();
 						if(projectiles.get(p).display() == false){
 							p--;
-						}
-					}
-					
-					//Display sidebar
-					for(int p = 0; p < planets.size(); p++){
-						if(planets.get(p).getSelected()){
-							sidebar.setPoints();
-							sidebar.display();
-						}
-					}
-					for (int s = 0; s < ships.size(); s++) {
-						if (ships.get(s).getSelected()) {
-							sidebar.setPoints();
-							sidebar.display();
 						}
 					}
 				
@@ -486,6 +484,27 @@ public class StarshipArena {
 					enemy.move();
 					
 					//onMouseEvent();
+					
+					glMatrixMode(GL_PROJECTION);
+			        glLoadIdentity(); // Resets any previous projection matrices
+			        glOrtho(0, WINDOW_WIDTH, 0, WINDOW_HEIGHT, 1, -1);
+			        glMatrixMode(GL_MODELVIEW);
+					
+					//display settings icon
+					settingsIcon.display();
+					
+					//Display sidebar
+					for(int p = 0; p < planets.size(); p++){
+						if(planets.get(p).getSelected()){
+							sidebar.display();
+						}
+					}
+					for (int s = 0; s < ships.size(); s++) {
+						if (ships.get(s).getSelected()) {
+							sidebar.display();
+						}
+					}
+					
 					
 					glDisable(GL_TEXTURE_2D);
 					
@@ -609,9 +628,10 @@ public class StarshipArena {
 	}
 	
 	public void loadLevel(int level){
-		ships.clear();
-		planets.clear();
-		projectiles.clear();
+		destroyAllShips();
+		destroyAllPlanets();
+		destroyAllProjectiles();
+		destroyAllTiles();
 		zoomLevel = 3;
 		CAMERA_WIDTH = 2600;
 		CAMERA_HEIGHT = 1800;
@@ -636,6 +656,7 @@ public class StarshipArena {
 			//Test if bitmapfont works
 			new BitmapFontLetter(this, 'Q', 500, 500);
 		}
+		genTiles();
 	}
 	
 	//check projectile collisions
@@ -748,6 +769,36 @@ public class StarshipArena {
 		}
     	
     }
+    
+    public void destroyAllShips(){
+    	for (int i = ships.size()-1; i >= 0; i--) {
+			ships.get(i).destroy();
+		}
+    }
+    
+    public void destroyAllPlanets(){
+    	for (int i = planets.size()-1; i >= 0; i--) {
+			planets.get(i).destroy();
+		}
+    }
+    
+    public void destroyAllProjectiles(){
+    	for (int i = projectiles.size()-1; i >= 0; i--) {
+			projectiles.get(i).destroy();
+		}
+    }
+    
+    public void destroyAllTiles(){
+    	for (int i = backgroundTiles.size()-1; i >= 0; i--) {
+			backgroundTiles.get(i).destroy();
+		}
+    }
+    
+//    public void destroyAllText(){
+//    	for (int i = text.size(); i >= 0; i--) {
+//			text.get(i).destroy();
+//		}
+//    }
  
     
     public ArrayList<Starship> getAllShips(){
