@@ -3,7 +3,8 @@ public class Layer {
 	
 	Model model;
 	static Texture tex1 = new Texture("title_page.png");
-	static Texture tex2 = new Texture("box_select.png");
+	static Texture tex2 = new Texture("level_select.png");
+	static Texture tex3 = new Texture("box_select.png");
 	
 	double[] vertices;
 	double[] textureCoords; 
@@ -59,6 +60,9 @@ public class Layer {
 		}
 		else if(id == 2){
 			tex2.bind();
+		}
+		else if(id == 3){
+			tex3.bind();
 		}
 	}
 	

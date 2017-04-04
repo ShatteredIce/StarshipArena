@@ -63,7 +63,10 @@ public class StarshipArena {
 
 	Sidebar sidebar;
 	Layer titlePage;
+	Layer levelSelect;
 	Button levelSelectButton = new Button(1100, 1110, 1620, 930);
+	Button level1Button = new Button(600, 1300, 800, 1100);
+	Button controlsButton = new Button(1100, 1185, 1620, 1095);
 	Layer boxSelect;
 	boolean boxSelectCurrent = false;
 	
@@ -148,7 +151,7 @@ public class StarshipArena {
 			if ( key == GLFW_KEY_3 && action == GLFW_PRESS)
 				buyShips(player, 3);
 			if ( key == GLFW_KEY_ENTER && action == GLFW_PRESS)
-				loadLevel(1);
+				gameState = 3;
 		
 		});
 		
@@ -168,6 +171,15 @@ public class StarshipArena {
 				}
 			}
 			else if(gameState == 2){
+				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
+					//System.out.println(xpos.get(1) + " " + ypos.get(1));
+					if(level1Button.isClicked(xpos.get(1), ypos.get(1))){
+						gameState = 3;
+						loadLevel(1);
+					}
+				}
+			}
+			else if(gameState == 3){
 				boolean clickedOnSprite = false;
 				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 					boxSelect.setTopLeft(xpos.get(1), ypos.get(1));
@@ -313,7 +325,8 @@ public class StarshipArena {
 		new Planet(this, 1300, 900, 1);
 		sidebar = new Sidebar(this, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 18);
 		titlePage = new Layer(1);
-		boxSelect = new Layer(2);
+		levelSelect = new Layer(2);
+		boxSelect = new Layer(3);
 		
 		Texture projectileTexture = new Texture("torpedo.png");
 		
@@ -339,7 +352,14 @@ public class StarshipArena {
 				titlePage.display();
 				glfwSwapBuffers(window); // swap the color buffers
 			}
-			else if(gameState == 2){
+			if(gameState == 2){
+				levelSelect.setTopLeft(400, CAMERA_HEIGHT - 100);
+				levelSelect.setBottomRight(CAMERA_WIDTH - 400, 100);
+				levelSelect.setPoints();
+				levelSelect.display();
+				glfwSwapBuffers(window); // swap the color buffers
+			}
+			else if(gameState == 3){
 				slowCounter++;
 				if (slowCounter >= SLOW) {
 					slowCounter = 0;
