@@ -86,4 +86,9 @@ public class BitmapFontLetter {
 		setTexture();
 		model.render(vertices);
 	}
+	
+	public void destroy(){
+		model.destroy();
+		game.removeLetter(this);
+	}
 }

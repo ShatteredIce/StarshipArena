@@ -424,13 +424,6 @@ public class StarshipArena {
 					boxSelect.display();
 				}
 				
-				//Display bitmap font letters
-				writeText("Resources: " + planets.get(0).storedResources, 20, 20, true);
-				for (int i = 0; i < text.size(); i++) {
-					text.get(i).setPoints();
-					text.get(i).display();
-				}
-				
 				//Make ships drift apart if they're too close
 				for (int s = 0; s < ships.size(); s++) {
 					Starship first = ships.get(s);
@@ -505,6 +498,12 @@ public class StarshipArena {
 						}
 					}
 					
+					//Display bitmap font letters
+//					writeText("Resources: " + planets.get(0).storedResources, 20, 20, true);
+//					for (int i = 0; i < text.size(); i++) {
+//						text.get(i).setPoints();
+//						text.get(i).display();
+//					}
 					
 					glDisable(GL_TEXTURE_2D);
 					
@@ -632,6 +631,7 @@ public class StarshipArena {
 		destroyAllPlanets();
 		destroyAllProjectiles();
 		destroyAllTiles();
+		
 		zoomLevel = 3;
 		CAMERA_WIDTH = 2600;
 		CAMERA_HEIGHT = 1800;
@@ -794,11 +794,11 @@ public class StarshipArena {
 		}
     }
     
-//    public void destroyAllText(){
-//    	for (int i = text.size(); i >= 0; i--) {
-//			text.get(i).destroy();
-//		}
-//    }
+    public void destroyAllText(){
+    	for (int i = text.size()-1; i >= 0; i--) {
+			text.get(i).destroy();
+		}
+    }
  
     
     public ArrayList<Starship> getAllShips(){
@@ -845,6 +845,14 @@ public class StarshipArena {
 		backgroundTiles.remove(t);
 	}
 	
+	public void addLetter(BitmapFontLetter l){
+		text.add(l);
+	}
+	
+	public void removeLetter(BitmapFontLetter l){
+		text.remove(l);
+	}
+	
 	public int getCameraX(){
 		return CURR_X;
 	}
@@ -878,9 +886,10 @@ public class StarshipArena {
 	}
 	
 	public void writeText(String newText, int startx, int starty, boolean eraseOld) {
-		if (eraseOld) text.clear();
+		if (eraseOld) destroyAllText();
 		for (int i = 0; i < newText.length(); i++) {
-			new BitmapFontLetter(this, newText.charAt(i), startx + i * BitmapFontLetter.size, starty);
+			BitmapFontLetter newLetter = new BitmapFontLetter(this, newText.charAt(i), startx + i * BitmapFontLetter.size, starty);
+			addLetter(newLetter);
 		}
 	}
 	
