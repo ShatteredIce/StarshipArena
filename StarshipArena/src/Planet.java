@@ -241,6 +241,11 @@ public class Planet {
 		haloModel.render(haloVertices);
 	}
 	
+	public void destroy(){
+		model.destroy();
+		game.removePlanet(this);
+	}
+	
 	public int getSize(){
 		return planetSize;
 	}

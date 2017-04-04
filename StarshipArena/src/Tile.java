@@ -58,6 +58,11 @@ public class Tile {
 		model.render(vertices);
 	}
 	
+	public void destroy(){
+		model.destroy();
+		game.removeTile(this);
+	}
+	
 	public int getSize(){
 		return size;
 	}

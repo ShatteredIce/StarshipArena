@@ -621,9 +621,10 @@ public class StarshipArena {
 	}
 	
 	public void loadLevel(int level){
-		ships.clear();
-		planets.clear();
-		projectiles.clear();
+		destroyAllShips();
+		destroyAllPlanets();
+		destroyAllProjectiles();
+		destroyAllTiles();
 		zoomLevel = 3;
 		CAMERA_WIDTH = 2600;
 		CAMERA_HEIGHT = 1800;
@@ -646,6 +647,7 @@ public class StarshipArena {
 			new Fighter(this, "red", 3200, 1300, 160);
 			new Fighter(this, "red", 3000, 1300, 150);
 		}
+		genTiles();
 	}
 	
 	//check projectile collisions
@@ -758,6 +760,36 @@ public class StarshipArena {
 		}
     	
     }
+    
+    public void destroyAllShips(){
+    	for (int i = ships.size()-1; i >= 0; i--) {
+			ships.get(i).destroy();
+		}
+    }
+    
+    public void destroyAllPlanets(){
+    	for (int i = planets.size()-1; i >= 0; i--) {
+			planets.get(i).destroy();
+		}
+    }
+    
+    public void destroyAllProjectiles(){
+    	for (int i = projectiles.size()-1; i >= 0; i--) {
+			projectiles.get(i).destroy();
+		}
+    }
+    
+    public void destroyAllTiles(){
+    	for (int i = backgroundTiles.size()-1; i >= 0; i--) {
+			backgroundTiles.get(i).destroy();
+		}
+    }
+    
+//    public void destroyAllText(){
+//    	for (int i = text.size(); i >= 0; i--) {
+//			text.get(i).destroy();
+//		}
+//    }
  
     
     public ArrayList<Starship> getAllShips(){

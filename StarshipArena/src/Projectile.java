@@ -97,10 +97,14 @@ public class Projectile {
 			return true;
 		}
 		else{
-			model.destroy();
-			game.removeProjectile(this);
+			destroy();
 			return false;
 		}
+	}
+	
+	public void destroy(){
+		model.destroy();
+		game.removeProjectile(this);
 	}
 	
 	public String getTeam(){
