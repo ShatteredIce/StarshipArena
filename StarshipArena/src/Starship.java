@@ -3,6 +3,8 @@ import java.util.Random;
 
 public class Starship {
 	
+	int damageDisplayDelay = 0;
+	Starship target = null;
 	Random random = new Random();
 	StarshipArena game;
 	Model model;
@@ -74,7 +76,6 @@ public class Starship {
 			try {
 				throw new GameException("Ship spawned off screen");
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
