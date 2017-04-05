@@ -329,7 +329,7 @@ public class StarshipArena {
 		
 		playerList.add(player);
 		
-		createShips(20);
+		createShips(1000);
 		
 		new Planet(this, 1300, 900, 1);
 		sidebar = new Sidebar(this, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 18);
@@ -548,12 +548,12 @@ public class StarshipArena {
 		int starty;
 		int angle;
 		for(int i = 0; i < num; i++){
-//			startx = random.nextInt(WORLD_WIDTH - 100) + 50;
+			startx = random.nextInt(WORLD_WIDTH - 100) + 50;
 			starty = random.nextInt(WORLD_HEIGHT - 100) + 50;
 			angle = random.nextInt(360);
-			new Fighter(this, "blue", random.nextInt(100) + WORLD_WIDTH - 250, starty, angle);
+			new Fighter(this, "none", startx, starty, angle);
 			if(i % 2 == 0){
-				//new Fighter(this, "red", random.nextInt(100) + 50, starty, angle, 10);
+				new Interceptor(this, "none", startx , starty, angle);
 			}
 		}
 //		new Fighter(this, "red", 1500, 400, 270, 5);
