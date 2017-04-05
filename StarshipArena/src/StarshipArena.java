@@ -217,6 +217,7 @@ public class StarshipArena {
 						player.getSelectedPlanet().setSelected(false);
 						player.setSelectedPlanet(null);
 					}
+					String shipsControllingTeam = "";
 					for (int i = 0; i < ships.size(); i++) {
 						Starship s = ships.get(i);
 						Point clickCenter = new Point(s.getX() + s.getXOff(), s.getY() + s.getYOff());
@@ -229,14 +230,21 @@ public class StarshipArena {
 								&& clickCenter.X() > Math.min(oldMouseX.get(1), newMouseX.get(1))
 								&& clickCenter.Y() < Math.max(newMouseY.get(1), oldMouseY.get(1)) + s.getClickRadius()
 								&& clickCenter.Y() > Math.min(oldMouseY.get(1), newMouseY.get(1)) - s.getClickRadius()) {
-							s.setSelected(true);
+							if (shipsControllingTeam.equals("") || s.getTeam().equals(shipsControllingTeam)) {
+								s.setSelected(true);
+								shipsControllingTeam = s.getTeam();
+								clickedOnSprite = true;
+							}
 						}
 						else if (distance(newMouseX.get(1), newMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
 								|| distance(newMouseX.get(1), oldMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
 								|| distance(oldMouseX.get(1), newMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
 								|| distance(oldMouseX.get(1), oldMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()) {
-							s.setSelected(true);
-							clickedOnSprite = true;
+							if (shipsControllingTeam.equals("") || s.getTeam().equals(shipsControllingTeam)) {
+								s.setSelected(true);
+								shipsControllingTeam = s.getTeam();
+								clickedOnSprite = true;
+							}
 						}
 						else s.setSelected(false);
 					}
@@ -262,11 +270,10 @@ public class StarshipArena {
 	//							clickedOnSprite = true;
 	//							break;
 	//						}
-							if (distance(newMouseX.get(1), newMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30
+							if (Math.abs(newMouseX.get(2) - oldMouseX.get(2)) < 5 && Math.abs(newMouseY.get(2) - oldMouseY.get(2)) < 5 && (distance(newMouseX.get(1), newMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30
 									|| distance(newMouseX.get(1), oldMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30
 									|| distance(oldMouseX.get(1), newMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30
-									|| distance(oldMouseX.get(1), oldMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30) {
-								System.out.println("check2");
+									|| distance(oldMouseX.get(1), oldMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30)) {
 								if(player.getSelectedPlanet() != null){
 									player.getSelectedPlanet().setSelected(false);
 								}
@@ -506,11 +513,14 @@ public class StarshipArena {
 					int numInterceptorsSelected = 0;
 					int numTransportsSelected = 0;
 					int selectedPlanetResources = Integer.MIN_VALUE;
+					String planetControllingTeam = "none";
+					String shipsControllingTeam = "none";
 					for(int p = 0; p < planets.size(); p++){
 						if(planets.get(p).getSelected()){
 							sidebar.display();
 							sidebarIsDisplayed = true;
 							selectedPlanetResources = planets.get(p).getResources();
+							planetControllingTeam = planets.get(p).getTeam();
 						}
 					}
 					for (int s = 0; s < ships.size(); s++) {
@@ -519,6 +529,7 @@ public class StarshipArena {
 							sidebarIsDisplayed = true;
 							sumCurrentHP += ships.get(s).current_health;
 							sumMaxHP += ships.get(s).max_health;
+							shipsControllingTeam = ships.get(s).getTeam();
 							if (ships.get(s) instanceof Fighter) numFightersSelected++;
 							else if (ships.get(s) instanceof Interceptor) numInterceptorsSelected++;
 							else if (ships.get(s) instanceof Transport) numTransportsSelected++; 
@@ -531,20 +542,36 @@ public class StarshipArena {
 //						writeText("Resources: " + planets.get(0).storedResources, 100, 100, true);
 						if (selectedPlanetResources > Integer.MIN_VALUE) {
 							writeText("Planet resources:", 20, 40);
-							writeText("" + selectedPlanetResources, 20, 20);
+							if (planetControllingTeam.equals(player.getTeam()))
+								writeText("" + selectedPlanetResources, 20, 20);
+							else
+								writeText("??", 20, 20);
+							
+							writeText("Controlled by:", 20, 100);
+							writeText(planetControllingTeam, 20, 80);
 						}
-						if (numFightersSelected + numInterceptorsSelected + numTransportsSelected == 1) {
+						else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected == 1) {
 							if (numFightersSelected == 1) writeText("Fighter", 400, 15, 30);
 							else if (numInterceptorsSelected == 1) writeText("Interceptor", 400, 15, 30);
 							else if (numTransportsSelected == 1) writeText("Transport", 400, 15, 30);
-							writeText("Armor:" + sumCurrentHP + "/" + sumMaxHP, 800, 20);
+							if(shipsControllingTeam.equals(player.getTeam()))
+								writeText("Armor:" + sumCurrentHP + "/" + sumMaxHP, 800, 20);
+							else
+								writeText("Armor:??/??", 800, 20);
+							writeText("Faction:", 20, 100);
+							writeText(shipsControllingTeam, 20, 80);
 						}
 						else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected > 1) {
 							writeText("Starfleet(" + (numFightersSelected + numInterceptorsSelected + numTransportsSelected) + ")", 400, 15, 30);
 							writeText("Fighters:" + numFightersSelected, 1000, 100);
 							writeText("Interceptors:" + numInterceptorsSelected, 1000, 80);
 							writeText("Transports:" + numTransportsSelected, 1000, 60);
-							writeText("Fleet armor:" + sumCurrentHP + "/" + sumMaxHP, 800, 20);
+							if (shipsControllingTeam.equals(player.getTeam()))
+								writeText("Fleet armor:" + sumCurrentHP + "/" + sumMaxHP, 800, 20);
+							else
+								writeText("Fleet armor:??/??", 800, 20);
+							writeText("Faction:", 20, 100);
+							writeText(shipsControllingTeam, 20, 80);
 						}
 						
 						for (int i = 0; i < text.size(); i++) {
