@@ -419,6 +419,7 @@ public class StarshipArena {
 					for(int s = 0; s < ships.size(); s++){
 						ships.get(s).doRandomMovement();
 				    	ships.get(s).setPoints();
+				    	ships.get(s).damageDisplayDelay--;
 				    	if(ships.get(s).display() == false){
 				    		s--;
 				    	}
@@ -512,6 +513,7 @@ public class StarshipArena {
 					int numFightersSelected = 0;
 					int numInterceptorsSelected = 0;
 					int numTransportsSelected = 0;
+					String shipStatus = "Idle";
 					int selectedPlanetResources = Integer.MIN_VALUE;
 					String planetControllingTeam = "none";
 					String shipsControllingTeam = "none";
@@ -530,6 +532,9 @@ public class StarshipArena {
 							sumCurrentHP += ships.get(s).current_health;
 							sumMaxHP += ships.get(s).max_health;
 							shipsControllingTeam = ships.get(s).getTeam();
+							if (ships.get(s).locationTarget != null && shipStatus.equals("Idle"))shipStatus = "Moving";
+							if (ships.get(s).target != null && !shipStatus.equals("Taking damage")) shipStatus = "Engaging enemy";
+							if (ships.get(s).damageDisplayDelay > 0) shipStatus = "Taking damage";
 							if (ships.get(s) instanceof Fighter) numFightersSelected++;
 							else if (ships.get(s) instanceof Interceptor) numInterceptorsSelected++;
 							else if (ships.get(s) instanceof Transport) numTransportsSelected++; 
@@ -539,7 +544,6 @@ public class StarshipArena {
 					//Display bitmap font letters
 					destroyAllText();
 					if (sidebarIsDisplayed) {
-//						writeText("Resources: " + planets.get(0).storedResources, 100, 100, true);
 						if (selectedPlanetResources > Integer.MIN_VALUE) {
 							writeText("Planet resources:", 20, 40);
 							if (planetControllingTeam.equals(player.getTeam()))
@@ -560,6 +564,8 @@ public class StarshipArena {
 								writeText("Armor:??/??", 800, 20);
 							writeText("Faction:", 20, 100);
 							writeText(shipsControllingTeam, 20, 80);
+							writeText("Ship status:", 20, 40);
+							writeText(shipStatus, 20, 20);
 						}
 						else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected > 1) {
 							writeText("Starfleet(" + (numFightersSelected + numInterceptorsSelected + numTransportsSelected) + ")", 400, 15, 30);
@@ -572,6 +578,8 @@ public class StarshipArena {
 								writeText("Fleet armor:??/??", 800, 20);
 							writeText("Faction:", 20, 100);
 							writeText(shipsControllingTeam, 20, 80);
+							writeText("Fleet status:", 20, 40);
+							writeText(shipStatus, 20, 20);
 						}
 						
 						for (int i = 0; i < text.size(); i++) {
@@ -751,6 +759,7 @@ public class StarshipArena {
 				if((!p.getTeam().equals(s.getTeam()) || p.getTeam().equals("none")) && 
 						polygon_intersection(p.getPoints(), s.getPoints())){
 	    			s.setHealth(s.getHealth()-p.getDamage());
+	    			s.damageDisplayDelay = 100;
 	    			projectiles.remove(p);
 	    		}
 			}

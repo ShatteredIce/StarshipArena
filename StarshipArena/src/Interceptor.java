@@ -2,7 +2,6 @@ import java.util.ArrayList;
 
 public class Interceptor extends Starship{
 	
-	Starship target = null;
 	int changeDirection = 0;
 	int changeDirectionCooldown = 0;
 	static Texture blue_tex1 = new Texture("blue_interceptor1.png");
