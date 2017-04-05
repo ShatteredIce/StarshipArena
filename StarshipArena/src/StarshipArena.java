@@ -60,6 +60,7 @@ public class StarshipArena {
 	ArrayList<Planet> planets = new ArrayList<>();
 	ArrayList<Tile> backgroundTiles = new ArrayList<>();
 	ArrayList<Player> playerList = new ArrayList<>(); 
+	ArrayList<BitmapFontLetter> text = new ArrayList<>();
 
 	Sidebar sidebar;
 	Layer titlePage;
@@ -75,6 +76,7 @@ public class StarshipArena {
 	
 	Player player = new Player(this, "blue");
 	Enemy enemy = new Enemy(this, new Player(this, "red"));
+	
     
 	public void run() {
 
@@ -112,7 +114,8 @@ public class StarshipArena {
 		// Setup a key callback. It will be called every time a key is pressed, repeated or released.
 		glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
 			if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
-				glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
+//				glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
+				gameState = 1;
 			
 			//Figure out which arrow keys, if any, are depressed and tell the loop to pan the camera
 			if ( key == GLFW_KEY_A && action == GLFW_PRESS )
@@ -408,8 +411,6 @@ public class StarshipArena {
 							p--;
 						}
 					}
-//<<<<<<< HEAD
-//				}
 				
 				//display box select
 				if(boxSelectCurrent){
@@ -486,18 +487,60 @@ public class StarshipArena {
 					//display settings icon
 					settingsIcon.display();
 					
-					//Display sidebar
+					//Display sidebar and figure out what has been selected
+					boolean sidebarIsDisplayed = false;
+					int sumCurrentHP = 0;
+					int sumMaxHP = 0;
+					int numFightersSelected = 0;
+					int numInterceptorsSelected = 0;
+					int numTransportsSelected = 0;
+					int selectedPlanetResources = Integer.MIN_VALUE;
 					for(int p = 0; p < planets.size(); p++){
 						if(planets.get(p).getSelected()){
 							sidebar.display();
+							sidebarIsDisplayed = true;
+							selectedPlanetResources = planets.get(p).getResources();
 						}
 					}
 					for (int s = 0; s < ships.size(); s++) {
 						if (ships.get(s).getSelected()) {
 							sidebar.display();
+							sidebarIsDisplayed = true;
+							sumCurrentHP += ships.get(s).current_health;
+							sumMaxHP += ships.get(s).max_health;
+							if (ships.get(s) instanceof Fighter) numFightersSelected++;
+							else if (ships.get(s) instanceof Interceptor) numInterceptorsSelected++;
+							else if (ships.get(s) instanceof Transport) numTransportsSelected++; 
 						}
 					}
 					
+					//Display bitmap font letters
+					destroyAllText();
+					if (sidebarIsDisplayed) {
+//						writeText("Resources: " + planets.get(0).storedResources, 100, 100, true);
+						if (selectedPlanetResources > Integer.MIN_VALUE) {
+							writeText("Planet resources:", 20, 40);
+							writeText("" + selectedPlanetResources, 20, 20);
+						}
+						if (numFightersSelected + numInterceptorsSelected + numTransportsSelected == 1) {
+							if (numFightersSelected == 1) writeText("Fighter", 400, 15, 30);
+							else if (numInterceptorsSelected == 1) writeText("Interceptor", 400, 15, 30);
+							else if (numTransportsSelected == 1) writeText("Transport", 400, 15, 30);
+							writeText("Armor:" + sumCurrentHP + "/" + sumMaxHP, 800, 20);
+						}
+						else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected > 1) {
+							writeText("Starfleet(" + (numFightersSelected + numInterceptorsSelected + numTransportsSelected) + ")", 400, 15, 30);
+							writeText("Fighters:" + numFightersSelected, 1000, 100);
+							writeText("Interceptors:" + numInterceptorsSelected, 1000, 80);
+							writeText("Transports:" + numTransportsSelected, 1000, 60);
+							writeText("Fleet armor:" + sumCurrentHP + "/" + sumMaxHP, 800, 20);
+						}
+						
+						for (int i = 0; i < text.size(); i++) {
+	//						text.get(i).setPoints();
+							text.get(i).display();
+						}
+					}
 					
 					glDisable(GL_TEXTURE_2D);
 					
@@ -625,6 +668,7 @@ public class StarshipArena {
 		destroyAllPlanets();
 		destroyAllProjectiles();
 		destroyAllTiles();
+		
 		zoomLevel = 3;
 		CAMERA_WIDTH = 2600;
 		CAMERA_HEIGHT = 1800;
@@ -785,11 +829,11 @@ public class StarshipArena {
 		}
     }
     
-//    public void destroyAllText(){
-//    	for (int i = text.size(); i >= 0; i--) {
-//			text.get(i).destroy();
-//		}
-//    }
+    public void destroyAllText(){
+    	for (int i = text.size()-1; i >= 0; i--) {
+			text.get(i).destroy();
+		}
+    }
  
     
     public ArrayList<Starship> getAllShips(){
@@ -836,6 +880,14 @@ public class StarshipArena {
 		backgroundTiles.remove(t);
 	}
 	
+	public void addLetter(BitmapFontLetter l){
+		text.add(l);
+	}
+	
+	public void removeLetter(BitmapFontLetter l){
+		text.remove(l);
+	}
+	
 	public int getCameraX(){
 		return CURR_X;
 	}
@@ -866,6 +918,17 @@ public class StarshipArena {
 	
 	public double getHeightScalar(){
 		return(double) CAMERA_HEIGHT / (double) WINDOW_HEIGHT;
+	}
+	
+	//Text is written such that the first letter of the text has center at startx, starty
+	public void writeText(String newText, int startx, int starty) {
+		writeText(newText, startx, starty, 20);
+	}
+	
+	public void writeText(String newText, int startx, int starty, int textSize) {
+		for (int i = 0; i < newText.length(); i++) {
+			BitmapFontLetter newLetter = new BitmapFontLetter(this, newText.charAt(i), startx + i * textSize, starty, textSize);
+		}
 	}
 	
 }
