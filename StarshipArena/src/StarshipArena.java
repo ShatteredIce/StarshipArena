@@ -65,9 +65,9 @@ public class StarshipArena {
 	Sidebar sidebar;
 	Layer titlePage;
 	Layer levelSelect;
-	Button levelSelectButton = new Button(1100, 1110, 1620, 930);
-	Button level1Button = new Button(600, 1300, 800, 1100);
-	Button controlsButton = new Button(1100, 1185, 1620, 1095);
+	Button levelSelectButton = new Button(550, 555, 760, 465);
+	Button level1Button = new Button(300, 650, 400, 550);
+	Button controlsButton = new Button(550, 435, 760, 345);
 	Layer boxSelect;
 	boolean boxSelectCurrent = false;
 	
@@ -113,10 +113,15 @@ public class StarshipArena {
 
 		// Setup a key callback. It will be called every time a key is pressed, repeated or released.
 		glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-			if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE )
+			if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE ){
 //				glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
+				CAMERA_WIDTH = 2600;
+				CAMERA_HEIGHT = 1800;
+				zoomLevel = 3;
+				CURR_X = 0;
+				CURR_Y = 0;
 				gameState = 1;
-			
+			}
 			//Figure out which arrow keys, if any, are depressed and tell the loop to pan the camera
 			if ( key == GLFW_KEY_A && action == GLFW_PRESS )
 				panLeft = true;
@@ -165,17 +170,22 @@ public class StarshipArena {
 		
 		});
 		
+		//Mouse clicks
 		glfwSetMouseButtonCallback (window, (window, button, action, mods) -> {
-			DoubleBuffer xpos = BufferUtils.createDoubleBuffer(2);
-			DoubleBuffer ypos = BufferUtils.createDoubleBuffer(2);
+			DoubleBuffer xpos = BufferUtils.createDoubleBuffer(3);
+			DoubleBuffer ypos = BufferUtils.createDoubleBuffer(3);
 			glfwGetCursorPos(window, xpos, ypos);
 			//convert the glfw coordinate to our coordinate system
+			//relative camera coordinates
 			xpos.put(1, getWidthScalar() * xpos.get(0) + CURR_X);
 			ypos.put(1, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0)) + CURR_Y));
+			//true window coordinates
+			xpos.put(2, xpos.get(0));
+			ypos.put(2, (WINDOW_HEIGHT - ypos.get(0)));
 			if(gameState == 1){
 				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
 				//System.out.println(xpos.get(1) + " " + ypos.get(1));
-					if(levelSelectButton.isClicked(xpos.get(1), ypos.get(1))){
+					if(levelSelectButton.isClicked(xpos.get(2), ypos.get(2))){
 						gameState = 2;
 					}
 				}
@@ -183,7 +193,7 @@ public class StarshipArena {
 			else if(gameState == 2){
 				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
 					//System.out.println(xpos.get(1) + " " + ypos.get(1));
-					if(level1Button.isClicked(xpos.get(1), ypos.get(1))){
+					if(level1Button.isClicked(xpos.get(2), ypos.get(2))){
 						gameState = 3;
 						loadLevel(1);
 					}
@@ -202,48 +212,10 @@ public class StarshipArena {
 					newMouseX = xpos;
 					newMouseY = ypos;
 					boxSelectCurrent = false;
-	//				glLineWidth((float)2.5); 
-	//				glColor3f(255, 255, 255);
-	//				glBegin(GL_LINES);
-	//				glVertex2f((float)oldMouseX.get(0), (float)oldMouseY.get(0));
-	//				glVertex2f((float)newMouseX.get(0), (float)newMouseY.get(0));
-	//				glEnd();
-					for (int i = 0; i < planets.size(); i++) {
-						Planet p = planets.get(i);
-						if (p.getX() < Math.max(newMouseX.get(1), oldMouseX.get(1)) + p.getSize() - 30
-								&& p.getX() > Math.min(oldMouseX.get(1), newMouseX.get(1)) - p.getSize() + 30
-								&& p.getY() < Math.max(newMouseY.get(1), oldMouseY.get(1))- 30
-								&& p.getY() > Math.min(oldMouseY.get(1), newMouseY.get(1))+ 30
-								|| p.getX() < Math.max(newMouseX.get(1), oldMouseX.get(1))- 30
-								&& p.getX() > Math.min(oldMouseX.get(1), newMouseX.get(1))+ 30
-								&& p.getY() < Math.max(newMouseY.get(1), oldMouseY.get(1)) + p.getSize() - 30
-								&& p.getY() > Math.min(oldMouseY.get(1), newMouseY.get(1)) - p.getSize() + 30) {
-							if(player.getSelectedPlanet() != null){
-								player.getSelectedPlanet().setSelected(false);
-							}
-							player.setSelectedPlanet(p);
-							p.setSelected(true);
-							clickedOnSprite = true;
-							break;
-						}
-						else if (distance(newMouseX.get(1), newMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30
-								|| distance(newMouseX.get(1), oldMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30
-								|| distance(oldMouseX.get(1), newMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30
-								|| distance(oldMouseX.get(1), oldMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30) {
-							if(player.getSelectedPlanet() != null){
-								player.getSelectedPlanet().setSelected(false);
-							}
-							player.setSelectedPlanet(p);
-							p.setSelected(true);
-							clickedOnSprite = true;
-							break;
-						}
-						if(clickedOnSprite == false){
-							if(player.getSelectedPlanet() != null){
-								player.getSelectedPlanet().setSelected(false);
-								player.setSelectedPlanet(null);
-							}
-						}
+					//remove selected planet
+					if(player.getSelectedPlanet() != null){
+						player.getSelectedPlanet().setSelected(false);
+						player.setSelectedPlanet(null);
 					}
 					for (int i = 0; i < ships.size(); i++) {
 						Starship s = ships.get(i);
@@ -264,8 +236,46 @@ public class StarshipArena {
 								|| distance(oldMouseX.get(1), newMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
 								|| distance(oldMouseX.get(1), oldMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()) {
 							s.setSelected(true);
+							clickedOnSprite = true;
 						}
 						else s.setSelected(false);
+					}
+					//if we haven't clicked on a ship, check if we clicked on a planet
+					if(!clickedOnSprite){
+						for (int i = 0; i < planets.size(); i++) {
+							Planet p = planets.get(i);
+							//allows box select of planet
+	//						if (p.getX() < Math.max(newMouseX.get(1), oldMouseX.get(1)) + p.getSize() - 30
+	//								&& p.getX() > Math.min(oldMouseX.get(1), newMouseX.get(1)) - p.getSize() + 30
+	//								&& p.getY() < Math.max(newMouseY.get(1), oldMouseY.get(1))- 30
+	//								&& p.getY() > Math.min(oldMouseY.get(1), newMouseY.get(1))+ 30
+	//								|| p.getX() < Math.max(newMouseX.get(1), oldMouseX.get(1))- 30
+	//								&& p.getX() > Math.min(oldMouseX.get(1), newMouseX.get(1))+ 30
+	//								&& p.getY() < Math.max(newMouseY.get(1), oldMouseY.get(1)) + p.getSize() - 30
+	//								&& p.getY() > Math.min(oldMouseY.get(1), newMouseY.get(1)) - p.getSize() + 30) {
+	//							System.out.println("check1");
+	//							if(player.getSelectedPlanet() != null){
+	//								player.getSelectedPlanet().setSelected(false);
+	//							}
+	//							player.setSelectedPlanet(p);
+	//							p.setSelected(true);
+	//							clickedOnSprite = true;
+	//							break;
+	//						}
+							if (distance(newMouseX.get(1), newMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30
+									|| distance(newMouseX.get(1), oldMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30
+									|| distance(oldMouseX.get(1), newMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30
+									|| distance(oldMouseX.get(1), oldMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30) {
+								System.out.println("check2");
+								if(player.getSelectedPlanet() != null){
+									player.getSelectedPlanet().setSelected(false);
+								}
+								player.setSelectedPlanet(p);
+								p.setSelected(true);
+								clickedOnSprite = true;
+								break;
+							}
+						}
 					}
 				}
 				if ( button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
@@ -361,15 +371,17 @@ public class StarshipArena {
 			
 			//display the title
 			if(gameState == 1){
-				titlePage.setTopLeft(500, CAMERA_HEIGHT - 300);
-				titlePage.setBottomRight(CAMERA_WIDTH - 500, 300);
+				projectTrueWindowCoordinates();
+				titlePage.setTopLeft(250, WINDOW_HEIGHT - 150);
+				titlePage.setBottomRight(WINDOW_WIDTH - 250, 150);
 				titlePage.setPoints();
 				titlePage.display();
 				glfwSwapBuffers(window); // swap the color buffers
 			}
 			if(gameState == 2){
-				levelSelect.setTopLeft(400, CAMERA_HEIGHT - 100);
-				levelSelect.setBottomRight(CAMERA_WIDTH - 400, 100);
+				projectTrueWindowCoordinates();
+				levelSelect.setTopLeft(200, WINDOW_HEIGHT - 50);
+				levelSelect.setBottomRight(WINDOW_WIDTH - 200, 50);
 				levelSelect.setPoints();
 				levelSelect.display();
 				glfwSwapBuffers(window); // swap the color buffers
@@ -380,6 +392,8 @@ public class StarshipArena {
 					slowCounter = 0;
 					//System.out.println(counter);
 					counter++;
+					
+					projectRelativeCameraCoordinates();
 					
 					//Display background
 					for (int t = 0; t < backgroundTiles.size(); t++) {
@@ -479,10 +493,7 @@ public class StarshipArena {
 					
 					//onMouseEvent();
 					
-					glMatrixMode(GL_PROJECTION);
-			        glLoadIdentity(); // Resets any previous projection matrices
-			        glOrtho(0, WINDOW_WIDTH, 0, WINDOW_HEIGHT, 1, -1);
-			        glMatrixMode(GL_MODELVIEW);
+					projectTrueWindowCoordinates();
 					
 					//display settings icon
 					settingsIcon.display();
@@ -555,10 +566,6 @@ public class StarshipArena {
 						CURR_Y = Math.min(WORLD_HEIGHT - CAMERA_HEIGHT, CURR_Y + CAMERA_SPEED);
 					
 					glfwSwapBuffers(window); // swap the color buffers
-					glMatrixMode(GL_PROJECTION);
-			        glLoadIdentity(); // Resets any previous projection matrices
-			        glOrtho(CURR_X, CURR_X + CAMERA_WIDTH, CURR_Y, CURR_Y + CAMERA_HEIGHT, 1, -1);
-			        glMatrixMode(GL_MODELVIEW);
 		        
 				}
 			}
@@ -567,6 +574,20 @@ public class StarshipArena {
 
 	public static void main(String[] args) {
 		new StarshipArena().run();
+	}
+	
+	public void projectRelativeCameraCoordinates(){
+		glMatrixMode(GL_PROJECTION);
+        glLoadIdentity(); // Resets any previous projection matrices
+        glOrtho(CURR_X, CURR_X + CAMERA_WIDTH, CURR_Y, CURR_Y + CAMERA_HEIGHT, 1, -1);
+        glMatrixMode(GL_MODELVIEW);
+	}
+	
+	public void projectTrueWindowCoordinates(){
+		glMatrixMode(GL_PROJECTION);
+        glLoadIdentity(); // Resets any previous projection matrices
+        glOrtho(0, WINDOW_WIDTH, 0, WINDOW_HEIGHT, 1, -1);
+        glMatrixMode(GL_MODELVIEW);
 	}
 	
 	public int[] getScreenBounds(){
