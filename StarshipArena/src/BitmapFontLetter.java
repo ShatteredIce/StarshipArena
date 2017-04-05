@@ -13,7 +13,7 @@ public class BitmapFontLetter {
 	Point center;
 	int trueX;
 	int trueY;
-	static int size = 30;
+	static int size = 20;
 	Point[] points;
 	//Spawnx and spawny represent the distance from the left bottom corner of the window that the text should appear
 	public BitmapFontLetter(StarshipArena myGame, int spawnx, int spawny) {
@@ -52,32 +52,34 @@ public class BitmapFontLetter {
 	
 	//TODO change this from the Sidebar copy paste into something else that works
 	public void setPoints(){
+//		int v_index = 0;
+//		center.setX(game.getWidthScalar() * trueX + game.getCameraX());
+//		center.setY(game.getHeightScalar() * trueY + game.getCameraY());
+//		for (int i = 0; i < points.length; i++) {
+//			points[i].setX(center.X() + (points[i].getXOffset() * game.getWidthScalar()));
+//			points[i].setY(center.Y() + (points[i].getYOffset() * game.getHeightScalar()));
+//			v_index = 2*i;
+//			vertices[v_index] = points[i].X();
+//			vertices[v_index+1] = points[i].Y();	
+//		}
 		int v_index = 0;
-		center.setX(game.getWidthScalar() * trueX + game.getCameraX());
-		center.setY(game.getHeightScalar() * trueY + game.getCameraY());
 		for (int i = 0; i < points.length; i++) {
-			points[i].setX(center.X() + (points[i].getXOffset() * game.getWidthScalar()));
-			points[i].setY(center.Y() + (points[i].getYOffset() * game.getHeightScalar()));
 			v_index = 2*i;
 			vertices[v_index] = points[i].X();
 			vertices[v_index+1] = points[i].Y();	
 		}
-//		for (int i = 0; i < points.length; i++) {
-//			points[i].setX(center.X() + points[i].getXOffset());
-//			points[i].setY(center.Y() + points[i].getYOffset());
-//			points[i].rotatePoint(center.X(), center.Y(), 0);
-//			v_index = 2*i;
-//			vertices[v_index] = points[i].X();
-//			vertices[v_index+1] = points[i].Y();
-//		}
 	}
 	
 	public Point[] generatePoints(){
 		Point[] points = new Point[]{
-			new Point(-size / 2, size / 2, true),
-			new Point(-size / 2, -size / 2, true),
-			new Point(size / 2, size / 2, true),
-			new Point(size / 2, -size / 2, true),
+			new Point(-size / 2 + center.x, size / 2 + center.y),
+			new Point(-size / 2 + center.x, -size / 2 + center.y),
+			new Point(size / 2 + center.x, size / 2 + center.y),
+			new Point(size / 2 + center.x, -size / 2 + center.y)
+//			new Point(100, 100),
+//			new Point(100, 90),
+//			new Point(110, 100),
+//			new Point(110, 90)
 		};
 		return points;
 	}

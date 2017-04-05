@@ -499,11 +499,11 @@ public class StarshipArena {
 					}
 					
 					//Display bitmap font letters
-//					writeText("Resources: " + planets.get(0).storedResources, 20, 20, true);
-//					for (int i = 0; i < text.size(); i++) {
+					writeText("Resources: " + planets.get(0).storedResources, 100, 100, true);
+					for (int i = 0; i < text.size(); i++) {
 //						text.get(i).setPoints();
-//						text.get(i).display();
-//					}
+						text.get(i).display();
+					}
 					
 					glDisable(GL_TEXTURE_2D);
 					
