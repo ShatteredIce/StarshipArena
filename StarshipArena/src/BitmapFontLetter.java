@@ -6,14 +6,15 @@ public class BitmapFontLetter {
 	
 	
 	//Bitmap is 16 by 16
-	static Texture bitmap_font = new Texture("bitmap_font.png");
+	static Texture bitmap_font = new Texture("bitmap_font_larger.png");
 	double[] vertices;
 	double[] textureCoords; 
 	int[] indices;
 	Point center;
 	int trueX;
 	int trueY;
-	static int size = 20;
+	//Default text size. Can be changed by constructor
+	int size = 20;
 	Point[] points;
 	//Spawnx and spawny represent the distance from the left bottom corner of the window that the text should appear
 	public BitmapFontLetter(StarshipArena myGame, int spawnx, int spawny) {
@@ -21,9 +22,14 @@ public class BitmapFontLetter {
 	}
 	
 	public BitmapFontLetter(StarshipArena myGame, char letter, int spawnx, int spawny) {
+		this(myGame, letter, spawnx, spawny, 20);
+	}
+	
+	public BitmapFontLetter(StarshipArena myGame, char letter, int spawnx, int spawny, int newSize) {
 		game = myGame;
 		trueX = spawnx;
 		trueY = spawny;
+		size = newSize;
 		center = new Point(spawnx, spawny);
 		points = generatePoints();
 		vertices = new double[points.length * 2];
