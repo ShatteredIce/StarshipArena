@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 
 public class Player {
 	
@@ -20,6 +22,39 @@ public class Player {
 	
 	public String getTeam(){
 		return team;
+	}
+	
+	public ArrayList<Starship> getControlledShips(){
+		ArrayList<Starship> myShips = new ArrayList<>();
+		ArrayList<Starship> allShips = game.getAllShips();
+		for (int i = 0; i < allShips.size(); i++) {
+			if(allShips.get(i).getTeam().equals(getTeam())){
+				myShips.add(allShips.get(i));
+			}
+		}
+		return myShips;
+	}
+	
+	public ArrayList<Planet> getControlledPlanets(){
+		ArrayList<Planet> myPlanets = new ArrayList<>();
+		ArrayList<Planet> allPlanets = game.getAllPlanets();
+		for (int i = 0; i < allPlanets.size(); i++) {
+			if(allPlanets.get(i).getTeam().equals(getTeam())){
+				myPlanets.add(allPlanets.get(i));
+			}
+		}
+		return myPlanets;
+	}
+	
+	public int costOfIdleShips() {
+		int costOfShips = 1;
+		ArrayList<Starship> myShips = getControlledShips();
+		for (int i = 0; i < myShips.size(); i++) {
+			if (myShips.get(i) instanceof Fighter && myShips.get(i).locationTarget == null) costOfShips += 5;
+			if (myShips.get(i) instanceof Interceptor && myShips.get(i).locationTarget == null) costOfShips += 20;
+			//TODO Add costof call for the counter of Fighter
+		}
+		return costOfShips;
 	}
 
 }

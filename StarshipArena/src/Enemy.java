@@ -5,6 +5,7 @@ public class Enemy {
 	StarshipArena game;
 	Player enemyPlayer;
 	
+	
 	Enemy(StarshipArena mygame, Player newEnemyPlayer){
 		game = mygame;
 		enemyPlayer = newEnemyPlayer;
@@ -19,8 +20,9 @@ public class Enemy {
 	}
 	
 	public void move(){
-		ArrayList<Starship> myShips = getControlledShips();
-		ArrayList<Planet> myPlanets = getControlledPlanets();
+		ArrayList<Starship> myShips = enemyPlayer.getControlledShips();
+		ArrayList<Planet> myPlanets = enemyPlayer.getControlledPlanets();
+		buyShips();
 		for (int i = 0; i < myPlanets.size(); i++) {
 			Planet p = myPlanets.get(i);
 			for (int j = 0; j < myShips.size(); j++) {
@@ -39,26 +41,5 @@ public class Enemy {
 		}
 	}
 	
-	public ArrayList<Starship> getControlledShips(){
-		ArrayList<Starship> myShips = new ArrayList<>();
-		ArrayList<Starship> allShips = game.getAllShips();
-		for (int i = 0; i < allShips.size(); i++) {
-			if(allShips.get(i).getTeam().equals(enemyPlayer.getTeam())){
-				myShips.add(allShips.get(i));
-			}
-		}
-		return myShips;
-	}
-	
-	public ArrayList<Planet> getControlledPlanets(){
-		ArrayList<Planet> myPlanets = new ArrayList<>();
-		ArrayList<Planet> allPlanets = game.getAllPlanets();
-		for (int i = 0; i < allPlanets.size(); i++) {
-			if(allPlanets.get(i).getTeam().equals(enemyPlayer.getTeam())){
-				myPlanets.add(allPlanets.get(i));
-			}
-		}
-		return myPlanets;
-	}
 
 }
