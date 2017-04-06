@@ -718,7 +718,7 @@ public class StarshipArena {
 			}
 		}
 	}
-	
+	//TODO Maybe make consecutive levels related to each other (i.e. level 2 involves you starting with the two planets you controlled from level 1)
 	public void loadLevel(int level){
 		destroyAllShips();
 		destroyAllPlanets();
@@ -739,12 +739,12 @@ public class StarshipArena {
 			new Fighter(this, "blue", 500, 400, 0);
 			new Fighter(this, "blue", 600, 350, 0);
 			new Fighter(this, "blue", 400, 350, 0);
-			new Fighter(this, "blue", 700, 600, 0);
-			new Fighter(this, "blue", 800, 550, 0);
-			new Fighter(this, "blue", 600, 550, 0);
-			new Fighter(this, "blue", 900, 400, 0);
-			new Fighter(this, "blue", 1000, 350, 0);
-			new Fighter(this, "blue", 800, 350, 0);
+//			new Fighter(this, "blue", 700, 600, 0);
+//			new Fighter(this, "blue", 800, 550, 0);
+//			new Fighter(this, "blue", 600, 550, 0);
+//			new Fighter(this, "blue", 900, 400, 0);
+//			new Fighter(this, "blue", 1000, 350, 0);
+//			new Fighter(this, "blue", 800, 350, 0);
 			
 			new Fighter(this, "red", 2800, 1500, 135);
 			new Fighter(this, "red", 3000, 1500, 90);
