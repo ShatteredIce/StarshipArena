@@ -101,6 +101,7 @@ public class Fighter extends Starship{
 			}
 			else if(current_velocity > 0){
 				blue_tex2.bind();
+				
 			}
 			else{
 				blue_tex1.bind();
@@ -239,10 +240,10 @@ public class Fighter extends Starship{
 				targeted_velocity = max_velocity;
 				//adjust course
 				if(leftBearing <= rightBearing){ //turn left
-					current_turn_speed = max_turn_speed;
+					current_turn_speed = Math.min((relativeAngle - angle + 360) % 360, max_turn_speed);
 				}
 				else{ //turn right
-					current_turn_speed = -max_turn_speed;
+					current_turn_speed = Math.max(-((angle - relativeAngle + 360) % 360), -max_turn_speed);
 				}
 			}
 			//turn away from target if too close
