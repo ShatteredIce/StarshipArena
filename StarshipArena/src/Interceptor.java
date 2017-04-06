@@ -32,11 +32,11 @@ public class Interceptor extends Starship{
 	static int secondary_spread = 10;
 	static int secondary_accuracy = 90;
 //	static int secondary_range = 200;
-	static int secondary_range = 2000;
+	static int secondary_range = 800;
 //	static int secondary_speed = 15;
 	static int secondary_speed = 30; 
 //	static int secondary_lifetime = 200;
-	static int secondary_lifetime = 4000;
+	static int secondary_lifetime = 1000;
 	static int secondary_xoffset = 30;
 	static int secondary_yoffset = 0;
 	static int secondary_id = 3;
@@ -296,10 +296,10 @@ public class Interceptor extends Starship{
 				targeted_velocity = max_velocity;
 				//adjust course
 				if(leftBearing <= rightBearing){ //turn left
-					current_turn_speed = max_turn_speed;
+					current_turn_speed = Math.min((relativeAngle - angle + 360) % 360, max_turn_speed);
 				}
 				else{ //turn right
-					current_turn_speed = -max_turn_speed;
+					current_turn_speed = Math.max(-((angle - relativeAngle + 360) % 360), -max_turn_speed);
 				}
 			}
 			//turn away from target if too close
@@ -316,7 +316,7 @@ public class Interceptor extends Starship{
 				}
 			}
 			//if target is behind
-			else if(distanceToTarget < 150 && getClosestBearing(target) > 140 &&
+			else if(distanceToTarget < 300 && getClosestBearing(target) > 140 &&
 					Math.abs(relativeAngle - target.getAngle()) > 160 && Math.abs(relativeAngle - target.getAngle()) < 200){
 				//System.out.println("point b");
 				targeted_velocity = max_velocity;
@@ -338,7 +338,7 @@ public class Interceptor extends Starship{
 			//if target is far away and not pointed at target, point at target
 			else if(!(angle > relativeAngle - 5 && angle < relativeAngle + 5)){
 				//System.out.println("point c");
-				if(distanceToTarget < 100){
+				if(distanceToTarget < 150){
 					targeted_velocity = max_velocity;
 					current_turn_speed = 0;
 				}

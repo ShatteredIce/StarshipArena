@@ -240,6 +240,7 @@ public class StarshipArena {
 								shipsControllingTeam = s.getTeam();
 								clickedOnSprite = true;
 							}
+							else s.setSelected(false);
 						}
 						else if (distance(newMouseX.get(1), newMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
 								|| distance(newMouseX.get(1), oldMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
@@ -250,6 +251,7 @@ public class StarshipArena {
 								shipsControllingTeam = s.getTeam();
 								clickedOnSprite = true;
 							}
+							else s.setSelected(false);
 						}
 						else s.setSelected(false);
 					}
