@@ -48,6 +48,7 @@ public class AdvancedEnemy extends Enemy{
 	}
 	
 	public void move() {
+		//TODO Maybe make the enemy purchase upgrades to the planet once they are implemented
 		counter++;
 		//If AI has delayed long enough, attempt an attack and buy ships. Then decide a random new attack delay
 		if (counter > attackDelay) {
