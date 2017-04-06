@@ -277,5 +277,10 @@ public class Planet {
 	public double getY() {
 		return center.Y();
 	}
+	
+	public void setTeam(String newTeam) {
+		team = newTeam;
+		captureTime = maxCaptureTime;
+	}
 
 }

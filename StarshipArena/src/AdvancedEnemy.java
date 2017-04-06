@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class AdvancedEnemy extends Enemy{
-	int attackDelay = 0;
+	int attackDelay = 1000;
 	int counter = 0;
 	Random random = new Random();
 
