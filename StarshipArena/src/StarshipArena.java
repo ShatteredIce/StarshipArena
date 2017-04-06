@@ -66,15 +66,27 @@ public class StarshipArena {
 	Layer titlePage;
 	Layer levelSelect;
 	Button levelSelectButton = new Button(550, 555, 760, 465);
-	Button level1Button = new Button(300, 650, 400, 550);
-	Button level2Button = new Button(500, 650, 600, 550);
-	Button level3Button = new Button(700, 650, 800, 550);
+	Button[] levelButtons = {
+		new Button(300, 650, 400, 550),
+		new Button(500, 650, 600, 550),
+		new Button(700, 650, 800, 550),
+		new Button(900, 650, 1000, 550),
+		new Button(300, 450, 400, 350),
+		new Button(500, 450, 600, 350),
+		new Button(700, 450, 800, 350),
+		new Button(900, 450, 1000, 350),
+		new Button(300, 250, 400, 150),
+		new Button(500, 250, 600, 150),
+		new Button(700, 250, 800, 150),
+		new Button(900, 250, 1000, 150),
+	};
 	Button controlsButton = new Button(550, 435, 760, 345);
+	
 	Layer boxSelect;
 	boolean boxSelectCurrent = false;
 	
 	Layer settingsIcon;
-	Button settingsButton = new Button(2500, 1796, 2596, 1700);
+	Button settingsButton = new Button(1250, 898, 1298, 850);
 	
 	Player player = new Player(this, "blue");
 	Enemy enemy = new Enemy(this, new Player(this, "red"));
@@ -222,7 +234,12 @@ public class StarshipArena {
 			xpos.put(2, xpos.get(0));
 			ypos.put(2, (WINDOW_HEIGHT - ypos.get(0)));
 			if(gameState == 1){
-				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
+				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+					if(settingsButton.isClicked(xpos.get(2), ypos.get(2))){
+						System.exit(1);
+					}
+				}
+				else if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
 				//System.out.println(xpos.get(1) + " " + ypos.get(1));
 					if(levelSelectButton.isClicked(xpos.get(2), ypos.get(2))){
 						gameState = 2;
@@ -230,25 +247,28 @@ public class StarshipArena {
 				}
 			}
 			else if(gameState == 2){
-				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
+				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+					if(settingsButton.isClicked(xpos.get(2), ypos.get(2))){
+						gameState = 1;
+					}
+				}
+				else if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
 					//System.out.println(xpos.get(1) + " " + ypos.get(1));
-					if(level1Button.isClicked(xpos.get(2), ypos.get(2))){
-						gameState = 3;
-						loadLevel(1);
-					}
-					else if(level2Button.isClicked(xpos.get(2), ypos.get(2))){
-						gameState = 3;
-						loadLevel(2);
-					}
-					else if(level3Button.isClicked(xpos.get(2), ypos.get(2))){
-						gameState = 3;
-						loadLevel(3);
+					for (int i = 0; i < levelButtons.length; i++) {
+						if(levelButtons[i].isClicked(xpos.get(2), ypos.get(2))){
+							gameState = 3;
+							loadLevel(i+1);
+						}
 					}
 				}
 			}
 			else if(gameState == 3){
 				boolean clickedOnSprite = false;
 				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+					if(settingsButton.isClicked(xpos.get(2), ypos.get(2))){
+						gameState = 1;
+						return;
+					}
 					boxSelect.setTopLeft(xpos.get(1), ypos.get(1));
 					//boxSelect.setBottomRight(xpos.get(0), ypos.get(0));
 					oldMouseX = xpos;
@@ -459,6 +479,7 @@ public class StarshipArena {
 				titlePage.setBottomRight(WINDOW_WIDTH - 250, 150);
 				titlePage.setPoints();
 				titlePage.display();
+				settingsIcon.display();
 				glfwSwapBuffers(window); // swap the color buffers
 			}
 			if(gameState == 2){
@@ -467,6 +488,7 @@ public class StarshipArena {
 				levelSelect.setBottomRight(WINDOW_WIDTH - 200, 50);
 				levelSelect.setPoints();
 				levelSelect.display();
+				settingsIcon.display();
 				glfwSwapBuffers(window); // swap the color buffers
 			}
 			else if(gameState == 3){
