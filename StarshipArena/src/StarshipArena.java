@@ -496,7 +496,7 @@ public class StarshipArena {
 					}
 					checkProjectiles();
 					
-					enemy.buyShips();
+//					enemy.buyShips();
 					enemy.move();
 					
 					//onMouseEvent();
@@ -733,12 +733,18 @@ public class StarshipArena {
 		    WORLD_HEIGHT = 2700;
 		    CURR_X = 0;
 			CURR_Y = 0;
-			//enemy = new AdvancedEnemy(this, new Player(this, "red"));
+			enemy = new AdvancedEnemy(this, new Player(this, "red"));
 			new Planet(this, 1350, 1000, 1);
 			new Planet(this, 3000, 1500, 2);
 			new Fighter(this, "blue", 500, 400, 0);
 			new Fighter(this, "blue", 600, 350, 0);
 			new Fighter(this, "blue", 400, 350, 0);
+//			new Fighter(this, "blue", 700, 600, 0);
+//			new Fighter(this, "blue", 800, 550, 0);
+//			new Fighter(this, "blue", 600, 550, 0);
+//			new Fighter(this, "blue", 900, 400, 0);
+//			new Fighter(this, "blue", 1000, 350, 0);
+//			new Fighter(this, "blue", 800, 350, 0);
 			
 			new Fighter(this, "red", 2800, 1500, 135);
 			new Fighter(this, "red", 3000, 1500, 90);
