@@ -31,8 +31,8 @@ public class Starship {
 	
 	//Customizable variables
 	//Ship specifications
-	int max_health;
-	int current_health;
+	double max_health;
+	double current_health;
 	double acceleration;
 	double max_velocity;
 	double max_reverse_velocity;
@@ -440,11 +440,11 @@ public class Starship {
 		angle = newangle;
 	}
 	
-	public int getHealth() {
+	public double getHealth() {
 		return current_health;
 	}
 	
-	public void setHealth(int newhealth) {
+	public void setHealth(double newhealth) {
 		current_health = newhealth;
 	}
 	
@@ -464,7 +464,7 @@ public class Starship {
 		current_turn_speed = newvelocity;
 	}
 	
-	public int getMaxHealth(){
+	public double getMaxHealth(){
 		return max_health;
 	}
 	

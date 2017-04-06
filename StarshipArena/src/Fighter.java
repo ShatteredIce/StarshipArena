@@ -14,16 +14,16 @@ public class Fighter extends Starship{
 	static Texture red_tex4 = new Texture("red_fighter4.png");
 	
 	//weaponry
-	static int primary_damage = 1;
+	static double primary_damage = 2;
 	static int primary_cooldown = 100;
 	static int primary_spread = 5;
 	static int primary_accuracy = 95;
 	static int primary_range = 300;
 	static int primary_speed = 15;
 	static int primary_lifetime = 450;
-	static int primary_id = 1;
-	static int primary_xoffset;
-	static int primary_yoffset;
+	static int primary_xoffset = 0;
+	static int primary_yoffset = 10;
+	int primary_id = 0;
 	
 	public Fighter(StarshipArena mygame, int spawnx, int spawny){
 		super(mygame, spawnx, spawny);
@@ -38,7 +38,7 @@ public class Fighter extends Starship{
 	}
 	
 	public void shipStats(){
-		max_health = 10;
+		max_health = 20;
 		//movement
 		acceleration = 0.5;
 		max_velocity = 5;
@@ -53,15 +53,21 @@ public class Fighter extends Starship{
 	}
 	
 	public void shipTurrets(){
-		Turret primaryTurret = new Turret(game, team, 0, 0, angle, primary_damage, primary_cooldown, 
+		if(team.equals("blue")){
+			primary_id = 1;
+		}
+		else if(team.equals("red")){
+			primary_id = 2;
+		}
+		Turret primaryTurret = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
 				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id);
 		primaryTurret.setOffset(primary_xoffset, primary_yoffset);
 		turrets.add(primaryTurret);
 	}
 	
 	public void moveTurrets(){
-		Point p = new Point();
 		for (int i = 0; i < turrets.size(); i++) {
+			Point p = new Point();
 			p.setX(turrets.get(i).getXOffset() + center.X());
 			p.setY(turrets.get(i).getYOffset() + center.Y());
 			p.rotatePoint(center.X(), center.Y(), angle);

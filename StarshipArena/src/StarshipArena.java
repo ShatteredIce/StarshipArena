@@ -67,6 +67,7 @@ public class StarshipArena {
 	Layer levelSelect;
 	Button levelSelectButton = new Button(550, 555, 760, 465);
 	Button level1Button = new Button(300, 650, 400, 550);
+	Button level2Button = new Button(500, 650, 600, 550);
 	Button controlsButton = new Button(550, 435, 760, 345);
 	Layer boxSelect;
 	boolean boxSelectCurrent = false;
@@ -196,6 +197,10 @@ public class StarshipArena {
 					if(level1Button.isClicked(xpos.get(2), ypos.get(2))){
 						gameState = 3;
 						loadLevel(1);
+					}
+					else if(level2Button.isClicked(xpos.get(2), ypos.get(2))){
+						gameState = 3;
+						loadLevel(2);
 					}
 				}
 			}
@@ -347,7 +352,7 @@ public class StarshipArena {
 		
 		playerList.add(player);
 		
-		createShips(1000);
+		createShips(200);
 		
 		new Planet(this, 1300, 900, 1);
 		sidebar = new Sidebar(this, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 18);
@@ -359,9 +364,7 @@ public class StarshipArena {
 		settingsIcon.setTopLeft(WINDOW_WIDTH - 50, WINDOW_HEIGHT - 2);
 		settingsIcon.setBottomRight(WINDOW_WIDTH - 2, WINDOW_HEIGHT - 50);
 		settingsIcon.setPoints();
-		
-		Texture projectileTexture = new Texture("torpedo.png");
-		
+				
 		genTiles();
 
 		// Run the rendering loop until the user has attempted to close
@@ -426,7 +429,6 @@ public class StarshipArena {
 					}
 					
 					//display projectiles
-					projectileTexture.bind();
 					for(int p = 0; p < projectiles.size(); p++){
 				    	projectiles.get(p).setPoints();
 						if(projectiles.get(p).display() == false){
@@ -640,19 +642,22 @@ public class StarshipArena {
 		int startx;
 		int starty;
 		int angle;
-		for(int i = 0; i < num; i++){
-			startx = random.nextInt(WORLD_WIDTH - 100) + 50;
-			starty = random.nextInt(WORLD_HEIGHT - 100) + 50;
-			angle = random.nextInt(360);
-			new Fighter(this, "none", startx, starty, angle);
-			if(i % 2 == 0){
-				new Interceptor(this, "none", startx , starty, angle);
-			}
-		}
+//		for(int i = 0; i < num; i++){
+//			startx = random.nextInt(WORLD_WIDTH - 100) + 50;
+//			starty = random.nextInt(WORLD_HEIGHT - 100) + 50;
+//			angle = random.nextInt(360);
+//			new Fighter(this, "none", startx, starty, angle);
+//			if(i % 2 == 0){
+//				new Interceptor(this, "none", startx , starty, angle);
+//			}
+//		}
 //		new Fighter(this, "red", 1500, 400, 270, 5);
-		new Fighter(this, "red", 200, 400, 0);
-		new Fighter(this, "red", 210, 500, 0);
-		new Interceptor(this, "red", 190, 900, 330);
+		new Fighter(this, "blue", 200, 500, 270);
+		new Transport(this, "red", 400, 450, 0).setHealth(10000);
+		new Transport(this, "red", 100, 450, 0).setHealth(10000);
+		new Transport(this, "red", 5, 450, 0).setHealth(10000);
+		new Transport(this, "red", 400, 600, 0).setHealth(10000);
+		new Interceptor(this, "blue", 600, 500, 90);
 //		new Fighter(this, "blue", 200, 500, 270, 1);
 //		new Interceptor(this, 500, 700, 0, 1);
 	}
@@ -733,7 +738,7 @@ public class StarshipArena {
 		    WORLD_HEIGHT = 2700;
 		    CURR_X = 0;
 			CURR_Y = 0;
-			enemy = new AdvancedEnemy(this, new Player(this, "red"));
+			enemy = new Enemy(this, new Player(this, "red"));
 			new Planet(this, 1350, 1000, 1);
 			new Planet(this, 3000, 1500, 2);
 			new Fighter(this, "blue", 500, 400, 0);
@@ -753,6 +758,31 @@ public class StarshipArena {
 			new Fighter(this, "red", 3200, 1300, 160);
 			new Fighter(this, "red", 3000, 1300, 150);
 		}
+		else if(level == 2){
+			WORLD_WIDTH = 3900;
+		    WORLD_HEIGHT = 2700;
+		    CURR_X = 0;
+			CURR_Y = 0;
+			enemy = new AdvancedEnemy(this, new Player(this, "red"));
+			new Planet(this, 1350, 1000, 1);
+			new Planet(this, 3000, 1500, 2);
+			new Fighter(this, "blue", 500, 400, 0);
+			new Fighter(this, "blue", 600, 350, 0);
+			new Fighter(this, "blue", 400, 350, 0);
+			new Fighter(this, "blue", 700, 600, 0);
+			new Fighter(this, "blue", 800, 550, 0);
+			new Fighter(this, "blue", 600, 550, 0);
+			new Fighter(this, "blue", 900, 400, 0);
+			new Fighter(this, "blue", 1000, 350, 0);
+			new Fighter(this, "blue", 800, 350, 0);
+			
+			new Fighter(this, "red", 2800, 1500, 135);
+			new Fighter(this, "red", 3000, 1500, 90);
+			new Fighter(this, "red", 3000, 1700, 80);
+			new Fighter(this, "red", 3200, 1500, 150);
+			new Fighter(this, "red", 3200, 1300, 160);
+			new Fighter(this, "red", 3000, 1300, 150);
+		}
 		genTiles();
 	}
 	
@@ -762,10 +792,11 @@ public class StarshipArena {
     		Projectile p = projectiles.get(i);
 			for (int j = 0; j < ships.size(); j++) {
 				Starship s = ships.get(j);
-				if((!p.getTeam().equals(s.getTeam()) || p.getTeam().equals("none")) && 
+				if(!p.getOwner().equals(s) && (!p.getTeam().equals(s.getTeam()) || p.getTeam().equals("none")) && 
 						polygon_intersection(p.getPoints(), s.getPoints())){
 	    			s.setHealth(s.getHealth()-p.getDamage());
 	    			s.damageDisplayDelay = 100;
+	    			p.destroy();
 	    			projectiles.remove(p);
 	    		}
 			}

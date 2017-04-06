@@ -4,8 +4,14 @@ public class Projectile {
 	
 	Random random = new Random();
 	StarshipArena game;
+	Starship owner;
 	String team;
 	Model model;
+	
+	static Texture tex0 = new Texture("projectile_green.png");
+	static Texture tex1 = new Texture("projectile_blue.png");
+	static Texture tex2 = new Texture("projectile_red.png");
+	static Texture tex3 = new Texture("projectile_machinegun.png");
 	
 	double[] vertices;
 	double[] textureCoords;
@@ -13,19 +19,22 @@ public class Projectile {
 	Point center;
 	Point[] points;
 	
-	int damage;
+	double damage;
 	int angle;
 	double speed;
 	double lifetime;
 	double current_lifetime = 0;
+	int texId;
 	
-	Projectile(StarshipArena mygame, String myteam, double spawnx, double spawny, int newdamage, int spawnangle, int accuracy, double newspeed, double newlifetime){
-		team = myteam;
+	Projectile(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newdamage, int spawnangle, int accuracy, double newspeed, double newlifetime, int id){
 		game = mygame;
+		owner = newowner;
+		team = myteam;
 		damage = newdamage;
 		angle = spawnangle;
 		speed = newspeed;
 		lifetime = newlifetime;
+		texId = id;
 		setAccuracy(accuracy);
 		center = new Point(spawnx, spawny);
 		points = generatePoints();
@@ -74,24 +83,51 @@ public class Projectile {
 	}
 	
 	public Point[] generatePoints(){
-		Point[] points = new Point[]{
-			new Point(-3, -10, true),
-			new Point(-3, 10, true),
-			new Point(3, 10, true),
-			new Point(3, -10, true),
-		};
+		Point[] points = null;
+		if(texId == 0 || texId == 1 || texId == 2){
+			points = new Point[]{
+				new Point(-7, 14, true),
+				new Point(-7, -14, true),
+				new Point(7, 14, true),
+				new Point(7, -14, true),
+			};
+		}
+		else if(texId == 3){
+			points = new Point[]{
+				new Point(-2, 10, true),
+				new Point(-2, -10, true),
+				new Point(2, 10, true),
+				new Point(2, -10, true),
+			};
+		}
 		return points;
 	}
 	
 	public void setTextureCoords(){
-		textureCoords = new double[]{1, 1, 0, 1, 0, 0, 1, 0};
+		textureCoords = new double[]{0, 0, 0, 1, 1, 0, 1, 1};
 	}
 	
 	public void setIndices(){
-		indices = new int[]{0, 1, 2, 2, 3, 0};
+		indices = new int[]{0, 1, 2, 2, 1, 3};
+	}
+	
+	public void setTexture(){
+		if(texId == 1){
+			tex1.bind();
+		}
+		else if(texId == 2){
+			tex2.bind();
+		}
+		else if(texId == 3){
+			tex3.bind();
+		}
+		else{
+			tex0.bind();
+		}
 	}
 	
 	public boolean display(){
+		setTexture();
 		if(updateLifetime()){
 			model.render(vertices);
 			return true;
@@ -107,6 +143,10 @@ public class Projectile {
 		game.removeProjectile(this);
 	}
 	
+	public Starship getOwner(){
+		return owner;
+	}
+	
 	public String getTeam(){
 		return team;
 	}
@@ -115,7 +155,7 @@ public class Projectile {
 		return points;
 	}
 	
-	public int getDamage(){
+	public double getDamage(){
 		return damage;
 	}
 }

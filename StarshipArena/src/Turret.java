@@ -3,6 +3,7 @@ import java.util.ArrayList;
 public class Turret {
 	
 	StarshipArena game;
+	Starship owner;
 	String team;
 	
 	//turret firing variables
@@ -11,7 +12,7 @@ public class Turret {
 	int spread;
 	int accuracy;
 	int scan_range;
-	int projectile_damage;
+	double projectile_damage;
 	int projectile_speed;
 	int projectile_lifetime;
 	int projectile_textureId;
@@ -22,8 +23,9 @@ public class Turret {
 	double xOff = 0;
 	double yOff = 0;
 	
-	Turret(StarshipArena mygame, String myteam, double spawnx, double spawny, int newangle, int newdamage, int newcooldown, int newspread, int newaccuracy, int newscanrange, int newspeed, int newlifetime, int newid){
+	Turret(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, int newangle, double newdamage, int newcooldown, int newspread, int newaccuracy, int newscanrange, int newspeed, int newlifetime, int newid){
 		game = mygame;
+		owner = newowner;
 		team = myteam;
 		center = new Point(spawnx, spawny);
 		angle = newangle;
@@ -61,7 +63,7 @@ public class Turret {
 	}
 	
 	public void fire(){
-		new Projectile(game, team, center.X(), center.Y(), projectile_damage, angle, accuracy, projectile_speed, projectile_lifetime);
+		new Projectile(game, owner, team, center.X(), center.Y(), projectile_damage, angle, accuracy, projectile_speed, projectile_lifetime, projectile_textureId);
 	}
 	
 	public ArrayList<Starship> getEnemyShips(){
