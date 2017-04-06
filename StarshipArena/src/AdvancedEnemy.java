@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class AdvancedEnemy extends Enemy{
-	
+	int attackDelay = 0;
 	Random random = new Random();
 
 	AdvancedEnemy(StarshipArena mygame, Player newEnemyPlayer) {
@@ -22,6 +22,10 @@ public class AdvancedEnemy extends Enemy{
 				game.buyShips(enemyPlayer, shipType);
 			}
 		}
+	}
+	
+	public void makeMove() {
+		
 	}
 
 }
