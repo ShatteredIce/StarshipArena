@@ -68,6 +68,7 @@ public class StarshipArena {
 	Button levelSelectButton = new Button(550, 555, 760, 465);
 	Button level1Button = new Button(300, 650, 400, 550);
 	Button level2Button = new Button(500, 650, 600, 550);
+	Button level3Button = new Button(700, 650, 800, 550);
 	Button controlsButton = new Button(550, 435, 760, 345);
 	Layer boxSelect;
 	boolean boxSelectCurrent = false;
@@ -124,25 +125,54 @@ public class StarshipArena {
 				gameState = 1;
 			}
 			//Figure out which arrow keys, if any, are depressed and tell the loop to pan the camera
-			if ( key == GLFW_KEY_A && action == GLFW_PRESS )
+			if ( key == GLFW_KEY_LEFT && action == GLFW_PRESS )
 				panLeft = true;
-			if ( key == GLFW_KEY_A && action == GLFW_RELEASE )
+			if ( key == GLFW_KEY_LEFT && action == GLFW_RELEASE )
 				panLeft = false;
 			
-			if ( key == GLFW_KEY_D && action == GLFW_PRESS )
+			if ( key == GLFW_KEY_RIGHT && action == GLFW_PRESS )
 				panRight = true;
-			if ( key == GLFW_KEY_D && action == GLFW_RELEASE )
+			if ( key == GLFW_KEY_RIGHT && action == GLFW_RELEASE )
 				panRight = false;
 			
-			if ( key == GLFW_KEY_W && action == GLFW_PRESS )
+			if ( key == GLFW_KEY_UP && action == GLFW_PRESS )
 				panUp = true;
-			if ( key == GLFW_KEY_W && action == GLFW_RELEASE )
+			if ( key == GLFW_KEY_UP && action == GLFW_RELEASE )
 				panUp = false;
 			
-			if ( key == GLFW_KEY_S && action == GLFW_PRESS )
+			if ( key == GLFW_KEY_DOWN && action == GLFW_PRESS )
 				panDown = true;
-			if ( key == GLFW_KEY_S && action == GLFW_RELEASE )
+			if ( key == GLFW_KEY_DOWN && action == GLFW_RELEASE )
 				panDown = false;
+			
+			if ( key == GLFW_KEY_A && action == GLFW_RELEASE ) {
+				ArrayList<Starship> typesSelected = new ArrayList<>();
+				for (int i = 0; i < ships.size(); i++) {
+					if (ships.get(i).selected) {
+						boolean alreadyHave = false;
+						for (int j = 0; j < typesSelected.size(); j++) {
+							if (typesSelected.get(j).getClass().equals(ships.get(i).getClass())
+									&& typesSelected.get(j).getTeam().equals(ships.get(i).getTeam())) alreadyHave = true;
+						}
+						if (!alreadyHave) typesSelected.add(ships.get(i));
+					}
+				}
+				if (typesSelected.size() > 0) {
+					for (int i = 0; i < ships.size(); i++) {
+						for (int j = 0; j < typesSelected.size(); j++) {
+							if (typesSelected.get(j).getClass().equals(ships.get(i).getClass())
+									&& typesSelected.get(j).getTeam().equals(ships.get(i).getTeam()))
+								ships.get(i).setSelected(true);
+						}
+					}
+				}
+				else {
+					for (int i = 0; i < ships.size(); i++) {
+						if (ships.get(i).getTeam().equals(player.getTeam())) ships.get(i).setSelected(true);
+					}
+				}
+			}
+			
 			if ( key == GLFW_KEY_MINUS && action == GLFW_PRESS )
 				if(gameState == 3){
 					updateZoomLevel(true);
@@ -152,14 +182,22 @@ public class StarshipArena {
 					updateZoomLevel(false);
 				}
 			
-			if ( key == GLFW_KEY_DOWN && action == GLFW_PRESS )
-				SLOW = 100000;
-			if ( key == GLFW_KEY_DOWN && action == GLFW_RELEASE )
-				SLOW = 1;
-			if ( key == GLFW_KEY_UP && action == GLFW_PRESS )
-				SLOW = 5000;
-			if ( key == GLFW_KEY_UP && action == GLFW_RELEASE )
-				SLOW = 1;
+			if ( key == GLFW_KEY_LEFT_BRACKET && action == GLFW_PRESS ) {
+				if (SLOW == 1) SLOW = 5000;
+				else if (SLOW == 5000) SLOW = 100000;
+			}
+
+			if ( key == GLFW_KEY_RIGHT_BRACKET && action == GLFW_PRESS ) {
+				if (SLOW == 100000) SLOW = 5000;
+				else if (SLOW == 5000) SLOW = 1;
+			}
+		
+//			if ( key == GLFW_KEY_DOWN && action == GLFW_RELEASE )
+//				SLOW = 1;
+//			if ( key == GLFW_KEY_UP && action == GLFW_PRESS )
+//				SLOW = 5000;
+//			if ( key == GLFW_KEY_UP && action == GLFW_RELEASE )
+//				SLOW = 1;
 			if ( key == GLFW_KEY_1 && action == GLFW_PRESS)
 				buyShips(player, 1);
 			if ( key == GLFW_KEY_2 && action == GLFW_PRESS)
@@ -202,6 +240,10 @@ public class StarshipArena {
 						gameState = 3;
 						loadLevel(2);
 					}
+					else if(level3Button.isClicked(xpos.get(2), ypos.get(2))){
+						gameState = 3;
+						loadLevel(3);
+					}
 				}
 			}
 			else if(gameState == 3){
@@ -223,6 +265,7 @@ public class StarshipArena {
 						player.setSelectedPlanet(null);
 					}
 					String shipsControllingTeam = "";
+					ArrayList<Starship> selectedUncontrolledShips = new ArrayList<>();
 					for (int i = 0; i < ships.size(); i++) {
 						Starship s = ships.get(i);
 						Point clickCenter = new Point(s.getX() + s.getXOff(), s.getY() + s.getYOff());
@@ -236,8 +279,19 @@ public class StarshipArena {
 								&& clickCenter.Y() < Math.max(newMouseY.get(1), oldMouseY.get(1)) + s.getClickRadius()
 								&& clickCenter.Y() > Math.min(oldMouseY.get(1), newMouseY.get(1)) - s.getClickRadius()) {
 							if (shipsControllingTeam.equals("") || s.getTeam().equals(shipsControllingTeam)) {
-								s.setSelected(true);
 								shipsControllingTeam = s.getTeam();
+								if (!shipsControllingTeam.equals(player.getTeam())) {
+									selectedUncontrolledShips.add(s);
+									s.setSelected(false);
+								}
+								else {
+									s.setSelected(true);
+									clickedOnSprite = true;
+								}
+							}
+							else if (s.getTeam().equals(player.getTeam())) {
+								shipsControllingTeam = s.getTeam();
+								s.setSelected(true);
 								clickedOnSprite = true;
 							}
 							else s.setSelected(false);
@@ -247,13 +301,30 @@ public class StarshipArena {
 								|| distance(oldMouseX.get(1), newMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
 								|| distance(oldMouseX.get(1), oldMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()) {
 							if (shipsControllingTeam.equals("") || s.getTeam().equals(shipsControllingTeam)) {
-								s.setSelected(true);
 								shipsControllingTeam = s.getTeam();
+								if (!shipsControllingTeam.equals(player.getTeam())) {
+									selectedUncontrolledShips.add(s);
+									s.setSelected(false);
+								}
+								else {
+									s.setSelected(true);
+									clickedOnSprite = true;
+								}
+							}
+							else if (s.getTeam().equals(player.getTeam())) {
+								shipsControllingTeam = s.getTeam();
+								s.setSelected(true);
 								clickedOnSprite = true;
 							}
 							else s.setSelected(false);
 						}
 						else s.setSelected(false);
+					}
+					if (!clickedOnSprite && selectedUncontrolledShips.size() > 0) {
+						for (int i = 0; i < selectedUncontrolledShips.size(); i++) {
+							selectedUncontrolledShips.get(i).setSelected(true);
+						}
+						clickedOnSprite = true;
 					}
 					//if we haven't clicked on a ship, check if we clicked on a planet
 					if(!clickedOnSprite){
@@ -785,6 +856,35 @@ public class StarshipArena {
 			new Fighter(this, "red", 3200, 1300, 160);
 			new Fighter(this, "red", 3000, 1300, 150);
 		}
+		else if (level == 3) {
+			WORLD_WIDTH = 5000;
+		    WORLD_HEIGHT = 4000;
+		    CURR_X = 200;
+			CURR_Y = 200;
+			zoomLevel = 2;
+			
+			enemy = new AdvancedEnemy(this, new Player(this, "red"));
+			new Planet(this, 350, 200, 1);
+			new Planet(this, 2000, 700, 2);
+			new Planet(this, 2250, 3000, 3);
+			new Planet(this, 4700, 2300, 4);
+			new Fighter(this, "blue", 500, 200, 0);
+			new Fighter(this, "blue", 600, 150, 0);
+			new Fighter(this, "blue", 400, 150, 0);
+			
+			new Fighter(this, "blue", 2000, 700, 0);
+			new Fighter(this, "blue", 2100, 650, 0);
+			new Fighter(this, "blue", 1900, 650, 0);
+			
+			new Fighter(this, "red", 2250, 3000, 0);
+			new Fighter(this, "red", 2350, 2950, 0);
+			new Fighter(this, "red", 2150, 2950, 0);
+			
+			new Fighter(this, "red", 4700, 2300, 0);
+			new Fighter(this, "red", 4800, 2250, 0);
+			new Fighter(this, "red", 4650, 2250, 0);
+		}
+	
 		genTiles();
 	}
 	
