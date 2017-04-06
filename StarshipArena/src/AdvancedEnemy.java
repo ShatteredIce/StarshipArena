@@ -79,13 +79,15 @@ public class AdvancedEnemy extends Enemy{
 		//For idle transports, choose a random controlled planet and move it there
 		for (int i = 0; i < myTransports.size(); i++) {
 			if (myTransports.get(i).locationTarget == null) {
-				int targetPlanet = random.nextInt(myPlanets.size());
-				myTransports.get(i).setLocationTarget(myPlanets.get(targetPlanet).center);
-				System.out.println("Transports moving between planets");
+				if (myPlanets.size() > 0) {
+					int targetPlanet = random.nextInt(myPlanets.size());
+					myTransports.get(i).setLocationTarget(myPlanets.get(targetPlanet).center);
+					System.out.println("Transports moving between planets");
+				}
 			}
 		}
 		//AI spends roughly between 10% and 50% of their ships (in cost) on attack
-		int costOfAttack = random.nextInt(costOfShips * 4 / 10) + costOfShips / 10;
+		int costOfAttack = random.nextInt(costOfShips * 4 / 10 + 1) + costOfShips / 10;
 		for (int i = 0; i < myShips.size(); i++) {
 			if (costOfAttack <= 0) break;
 			if (myShips.get(i) instanceof Fighter && myShips.get(i).locationTarget == null) {
@@ -104,8 +106,10 @@ public class AdvancedEnemy extends Enemy{
 			//Up to 5 attempts to choose a non-allied planet to attack.
 			//Otherwise, an allied planet will have been chosen and AI will patrol it.
 			for (int attempt = 0; attempt < 5; attempt++) {
-				targetPlanet = random.nextInt(game.planets.size());
-				if (!game.planets.get(targetPlanet).getTeam().equals(enemyPlayer.getTeam())) break;
+				if (game.planets.size() > 0) {
+					targetPlanet = random.nextInt(game.planets.size());
+					if (!game.planets.get(targetPlanet).getTeam().equals(enemyPlayer.getTeam())) break;
+				}
 			}
 			if (targetPlanet == -1) {
 				attackPlanet = false;
