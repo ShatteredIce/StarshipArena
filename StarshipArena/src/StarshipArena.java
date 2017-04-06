@@ -548,10 +548,10 @@ public class StarshipArena {
 					if (sidebarIsDisplayed) {
 						if (selectedPlanetResources > Integer.MIN_VALUE) {
 							writeText("Planet resources:", 20, 40);
-							if (planetControllingTeam.equals(player.getTeam()))
+//							if (planetControllingTeam.equals(player.getTeam()))
 								writeText("" + selectedPlanetResources, 20, 20);
-							else
-								writeText("??", 20, 20);
+//							else
+//								writeText("??", 20, 20);
 							
 							writeText("Controlled by:", 20, 100);
 							writeText(planetControllingTeam, 20, 80);
@@ -560,10 +560,10 @@ public class StarshipArena {
 							if (numFightersSelected == 1) writeText("Fighter", 400, 15, 30);
 							else if (numInterceptorsSelected == 1) writeText("Interceptor", 400, 15, 30);
 							else if (numTransportsSelected == 1) writeText("Transport", 400, 15, 30);
-							if(shipsControllingTeam.equals(player.getTeam()))
+//							if(shipsControllingTeam.equals(player.getTeam()))
 								writeText("Armor:" + sumCurrentHP + "/" + sumMaxHP, 800, 20);
-							else
-								writeText("Armor:??/??", 800, 20);
+//							else
+//								writeText("Armor:??/??", 800, 20);
 							writeText("Faction:", 20, 100);
 							writeText(shipsControllingTeam, 20, 80);
 							writeText("Ship status:", 20, 40);
@@ -574,10 +574,10 @@ public class StarshipArena {
 							writeText("Fighters:" + numFightersSelected, 1000, 100);
 							writeText("Interceptors:" + numInterceptorsSelected, 1000, 80);
 							writeText("Transports:" + numTransportsSelected, 1000, 60);
-							if (shipsControllingTeam.equals(player.getTeam()))
+//							if (shipsControllingTeam.equals(player.getTeam()))
 								writeText("Fleet armor:" + sumCurrentHP + "/" + sumMaxHP, 800, 20);
-							else
-								writeText("Fleet armor:??/??", 800, 20);
+//							else
+//								writeText("Fleet armor:??/??", 800, 20);
 							writeText("Faction:", 20, 100);
 							writeText(shipsControllingTeam, 20, 80);
 							writeText("Fleet status:", 20, 40);
