@@ -6,6 +6,8 @@ public class Layer {
 	static Texture tex2 = new Texture("level_select.png");
 	static Texture tex3 = new Texture("box_select.png");
 	static Texture tex4 = new Texture("settings_icon.png");
+	static Texture tex5 = new Texture("planet_menu1.png");
+	static Texture tex6 = new Texture("planet_menu2base.png");
 	
 	double[] vertices;
 	double[] textureCoords; 
@@ -67,6 +69,12 @@ public class Layer {
 		}
 		else if(id == 4){
 			tex4.bind();
+		}
+		else if(id == 5){
+			tex5.bind();
+		}
+		else if(id == 6){
+			tex6.bind();
 		}
 	}
 	
