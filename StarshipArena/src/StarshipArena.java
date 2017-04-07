@@ -158,6 +158,9 @@ public class StarshipArena {
 				panDown = false;
 			
 			if ( key == GLFW_KEY_A && action == GLFW_RELEASE ) {
+				for (int i = 0; i < planets.size(); i++) {
+					planets.get(i).setSelected(false);
+				}
 				ArrayList<Starship> typesSelected = new ArrayList<>();
 				for (int i = 0; i < ships.size(); i++) {
 					if (ships.get(i).selected) {
