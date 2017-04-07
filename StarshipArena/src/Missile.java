@@ -22,10 +22,14 @@ public class Missile extends Projectile {
 	public void destroy(){
 		model.destroy();
 		game.removeProjectile(this);
+		int x_rand;
+		int y_rand;
 		for (int i = 0; i < 360; i += 5) {
-			new Projectile(game, null, "none", center.x, center.y, 0.5, i, 100, 10, 10, 3);
-			new Projectile(game, null, "none", center.x, center.y, 0.5, i, 100, 10, 10, 3);
-			new Projectile(game, null, "none", center.x, center.y, 0.5, i, 100, 10, 10, 3);
+			x_rand = random.nextInt(5) - 2;
+			y_rand = random.nextInt(5) - 2;
+			new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0.5, i, 100, 5, 10, 3);
+			new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0.5, i, 100, 5, 10, 3);
+			new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0.5, i, 100, 5, 10, 3);
 		}
 	}
 	
@@ -131,7 +135,7 @@ public class Missile extends Projectile {
 		}
 		else{
 			try {
-				throw new GameException("error in function Fighter.getTurnDistance");
+				throw new GameException("error in function Missile.getTurnDistance");
 			} catch (GameException e) {
 				e.printStackTrace();
 			}
