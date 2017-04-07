@@ -264,6 +264,7 @@ public class StarshipArena {
 				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 					if(settingsButton.isClicked(xpos.get(2), ypos.get(2))){
 						gameState = 1;
+						return;
 					}
 				}
 				else if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
@@ -281,6 +282,7 @@ public class StarshipArena {
 				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 					if(settingsButton.isClicked(xpos.get(2), ypos.get(2))){
 						gameState = 1;
+						return;
 					}
 					boxSelect.setTopLeft(xpos.get(1), ypos.get(1));
 					//boxSelect.setBottomRight(xpos.get(0), ypos.get(0));
