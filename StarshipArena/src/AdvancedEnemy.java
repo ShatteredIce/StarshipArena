@@ -100,36 +100,50 @@ public class AdvancedEnemy extends Enemy{
 				costOfAttack -= 20;
 			}
 		}
-		//50-50 chance of targeting an enemy ship or a non-allied planet
-		boolean attackPlanet = random.nextBoolean();
-		if (attackPlanet) {
-			int targetPlanet = -1;
-			//Up to 5 attempts to choose a non-allied planet to attack.
-			//Otherwise, an allied planet will have been chosen and AI will patrol it.
-			for (int attempt = 0; attempt < 5; attempt++) {
-				if (game.planets.size() > 0) {
-					targetPlanet = random.nextInt(game.planets.size());
-					if (!game.planets.get(targetPlanet).getTeam().equals(enemyPlayer.getTeam())) break;
+		//First target any planets without ships around them
+		boolean attackingUnprotected = false;
+		for (int i = 0; i < game.planets.size(); i++) {
+			if (game.planets.get(i).capturingTeam.equals("none")) {
+				for (int j = 0; j < attackGroup.size(); j++) {
+					attackGroup.get(j).setLocationTarget(game.planets.get(i).center);
+					System.out.println("Attacking unprotected planet");
 				}
-			}
-			if (targetPlanet == -1) {
-				attackPlanet = false;
-			}
-			else {
-				for (int i = 0; i < attackGroup.size(); i++) {
-					attackGroup.get(i).setLocationTarget(game.planets.get(targetPlanet).center);
-					System.out.println("Attacking planet");
-				}
+				attackingUnprotected = true;
+				break;
 			}
 		}
-		if (!attackPlanet) {
-			ArrayList<Starship> playerShips = game.player.getControlledShips();
-			//TODO Remove this temporary workaround that exists to prevent game from crashing.
-			//TODO Instead, make the level end when one side or the other is wiped out.
-			if(playerShips.size() > 0) {
-				int targetShip = random.nextInt(playerShips.size());
-				for (int i = 0; i < attackGroup.size(); i++) {
-					attackGroup.get(i).setLocationTarget(playerShips.get(targetShip).center);
+		if (!attackingUnprotected) {
+		//50-50 chance of targeting an enemy ship or a non-allied planet
+		boolean attackPlanet = random.nextBoolean();
+			if (attackPlanet) {
+				int targetPlanet = -1;
+				//Up to 5 attempts to choose a non-allied planet to attack.
+				//Otherwise, an allied planet will have been chosen and AI will patrol it.
+				for (int attempt = 0; attempt < 5; attempt++) {
+					if (game.planets.size() > 0) {
+						targetPlanet = random.nextInt(game.planets.size());
+						if (!game.planets.get(targetPlanet).getTeam().equals(enemyPlayer.getTeam())) break;
+					}
+				}
+				if (targetPlanet == -1) {
+					attackPlanet = false;
+				}
+				else {
+					for (int i = 0; i < attackGroup.size(); i++) {
+						attackGroup.get(i).setLocationTarget(game.planets.get(targetPlanet).center);
+						System.out.println("Attacking planet");
+					}
+				}
+			}
+			if (!attackPlanet) {
+				ArrayList<Starship> playerShips = game.player.getControlledShips();
+				//TODO Remove this temporary workaround that exists to prevent game from crashing.
+				//TODO Instead, make the level end when one side or the other is wiped out.
+				if(playerShips.size() > 0) {
+					int targetShip = random.nextInt(playerShips.size());
+					for (int i = 0; i < attackGroup.size(); i++) {
+						attackGroup.get(i).setLocationTarget(playerShips.get(targetShip).center);
+					}
 				}
 			}
 		}

@@ -1005,6 +1005,30 @@ public class StarshipArena {
 			
 			
 			new Interceptor(this, "red", 4350, 4200, 0);
+			new Interceptor(this, "red", 4450, 4200, 0);
+			new Interceptor(this, "red", 4350, 4100, 0);
+			new Interceptor(this, "red", 4250, 4200, 0);
+			new Interceptor(this, "red", 4350, 4300, 0);
+			new Interceptor(this, "red", (int)(4350 + 50 * Math.sqrt(2)), (int)(4200 + 50 * Math.sqrt(2)), 315);
+			new Interceptor(this, "red", (int)(4350 - 50 * Math.sqrt(2)), (int)(4200 + 50 * Math.sqrt(2)), 45);
+			new Interceptor(this, "red", (int)(4350 - 50 * Math.sqrt(2)), (int)(4200 - 50 * Math.sqrt(2)), 135);
+			new Interceptor(this, "red", (int)(4350 + 50 * Math.sqrt(2)), (int)(4200 - 50 * Math.sqrt(2)), 225);
+			new Fighter(this, "red", 4550, 4200, 0);
+			new Fighter(this, "red", 4350, 4000, 0);
+			new Fighter(this, "red", 4150, 4200, 0);
+			new Fighter(this, "red", 4350, 4400, 0);
+			new Fighter(this, "red", (int)(4350 + 100 * Math.sqrt(2)), (int)(4200 + 100 * Math.sqrt(2)), 315);
+			new Fighter(this, "red", (int)(4350 - 100 * Math.sqrt(2)), (int)(4200 + 100 * Math.sqrt(2)), 45);
+			new Fighter(this, "red", (int)(4350 - 100 * Math.sqrt(2)), (int)(4200 - 100 * Math.sqrt(2)), 135);
+			new Fighter(this, "red", (int)(4350 + 100 * Math.sqrt(2)), (int)(4200 - 100 * Math.sqrt(2)), 225);
+			new Fighter(this, "red", 4650, 4200, 0);
+			new Fighter(this, "red", 4350, 3900, 0);
+			new Fighter(this, "red", 4050, 4200, 0);
+			new Fighter(this, "red", 4350, 4500, 0);
+			new Fighter(this, "red", (int)(4350 + 150 * Math.sqrt(2)), (int)(4200 + 150 * Math.sqrt(2)), 315);
+			new Fighter(this, "red", (int)(4350 - 150 * Math.sqrt(2)), (int)(4200 + 150 * Math.sqrt(2)), 45);
+			new Fighter(this, "red", (int)(4350 - 150 * Math.sqrt(2)), (int)(4200 - 150 * Math.sqrt(2)), 135);
+			new Fighter(this, "red", (int)(4350 + 150 * Math.sqrt(2)), (int)(4200 - 150 * Math.sqrt(2)), 225);
 		}
 	
 		genTiles();

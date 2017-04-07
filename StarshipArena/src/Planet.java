@@ -32,8 +32,8 @@ public class Planet {
 	String team = "none";
 	String capturingTeam = "none";
 	int captureStrength = 0;
-	int captureTime = 500;
-	int maxCaptureTime = 500;
+	int captureTime = 350;
+	int maxCaptureTime = 350;
 	int storedResources = 0;
 	int resourcesPerTick = 1;
 	int resourcesCooldown = 50;
