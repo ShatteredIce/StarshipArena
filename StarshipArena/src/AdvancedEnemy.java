@@ -69,6 +69,18 @@ public class AdvancedEnemy extends Enemy{
 		ArrayList<Planet> myPlanets = enemyPlayer.getControlledPlanets();
 		ArrayList<Starship> attackGroup = new ArrayList<Starship>();
 		int costOfShips = 0;
+		//Remove ships that are currently capturing a non-controlled planet from the ships that can be part of a valid attack
+		for (int i = 0; i < game.planets.size(); i++) {
+			if (game.planets.get(i).capturingTeam.equals(enemyPlayer.getTeam())
+					&& !game.planets.get(i).getTeam().equals(enemyPlayer.getTeam())) {
+				ArrayList<Starship> orbitingShips = game.planets.get(i).getShips();
+				//For each ship orbiting a non-controlled planet that has enemy player as the capturing team,
+				//attempt to remove it from the myships array list
+				for (int j = 0; j < orbitingShips.size(); j++) {
+					myShips.remove(orbitingShips);
+				}
+			}
+		}
 		for (int i = 0; i < myShips.size(); i++) {
 			if (myShips.get(i) instanceof Fighter && myShips.get(i).locationTarget == null) costOfShips += 5;
 			else if (myShips.get(i) instanceof Interceptor && myShips.get(i).locationTarget == null) costOfShips += 20;
