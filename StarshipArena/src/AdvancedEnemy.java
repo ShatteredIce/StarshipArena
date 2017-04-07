@@ -16,21 +16,26 @@ public class AdvancedEnemy extends Enemy{
 		ArrayList<Starship> playerShips = game.player.getControlledShips();
 		int fightersCost = 0;
 		int interceptorsCost = 0;
+		int battleshipsCost = 0;
 		for (int i = 0; i < playerShips.size(); i++) {
 			if (playerShips.get(i) instanceof Fighter) fightersCost += 5;
 			else if (playerShips.get(i) instanceof Interceptor) interceptorsCost += 20;
+			else if (playerShips.get(i) instanceof Battleship) battleshipsCost += 100;
 		}
 		for (int i = 0; i < myPlanets.size(); i++) {
-			if (fightersCost >= interceptorsCost) {
-				//TODO When the counter to fighter is finished, build these. For now, build fighters
+			if (fightersCost >= interceptorsCost && fightersCost > battleshipsCost) {
+				if (myPlanets.get(i).getResources() >= 100) {
+					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
+					game.buyShips(enemyPlayer, 4);
+				}
+			}
+			else if (interceptorsCost >= fightersCost && interceptorsCost >= battleshipsCost) {
 				if (myPlanets.get(i).getResources() >= 5) {
 					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
 					game.buyShips(enemyPlayer, 1);
 				}
 			}
-			else if (interceptorsCost >= fightersCost) {
-				//TODO For now, enemy player will build interceptors when player has more cost in interceptors.
-				//TODO But normally the enemy player should build fighters to counter
+			else if (battleshipsCost >= fightersCost && battleshipsCost >= interceptorsCost) {
 				if (myPlanets.get(i).getResources() >= 20) {
 					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
 					game.buyShips(enemyPlayer, 2);
