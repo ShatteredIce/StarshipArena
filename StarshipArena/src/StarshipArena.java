@@ -88,6 +88,14 @@ public class StarshipArena {
 	Layer settingsIcon;
 	Button settingsButton = new Button(1250, 898, 1298, 850);
 	
+	int planetMenuState = 0;
+	Layer planetMainMenu;
+	Button planetBuyButton = new Button(WINDOW_WIDTH - 380, 80, WINDOW_WIDTH - 280, 20);
+	Button planetIndustryButton = new Button(WINDOW_WIDTH - 250, 80, WINDOW_WIDTH - 150, 20);
+	Button planetEconomyButton = new Button(WINDOW_WIDTH - 120, 80, WINDOW_WIDTH - 20, 20);
+	
+	Layer planetMenuBase;
+	
 	Player player = new Player(this, "blue");
 	Enemy enemy = new Enemy(this, new Player(this, "red"));
 	
@@ -270,7 +278,6 @@ public class StarshipArena {
 				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 					if(settingsButton.isClicked(xpos.get(2), ypos.get(2))){
 						gameState = 1;
-						return;
 					}
 					boxSelect.setTopLeft(xpos.get(1), ypos.get(1));
 					//boxSelect.setBottomRight(xpos.get(0), ypos.get(0));
@@ -283,6 +290,20 @@ public class StarshipArena {
 					newMouseY = ypos;
 					boxSelectCurrent = false;
 					//remove selected planet
+					if(planetMenuState == 1){
+						if(planetBuyButton.isClicked(xpos.get(2), ypos.get(2))){
+							planetMenuState = 2;
+							return;
+						}
+						else if(planetEconomyButton.isClicked(xpos.get(2), ypos.get(2))){
+							planetMenuState = 2;
+							return;
+						}
+						else if(planetIndustryButton.isClicked(xpos.get(2), ypos.get(2))){
+							planetMenuState = 2;
+							return;
+						}
+					}
 					if(player.getSelectedPlanet() != null){
 						player.getSelectedPlanet().setSelected(false);
 						player.setSelectedPlanet(null);
@@ -379,6 +400,7 @@ public class StarshipArena {
 									player.getSelectedPlanet().setSelected(false);
 								}
 								player.setSelectedPlanet(p);
+								planetMenuState = 1;
 								p.setSelected(true);
 								clickedOnSprite = true;
 								break;
@@ -460,6 +482,16 @@ public class StarshipArena {
 		settingsIcon.setTopLeft(WINDOW_WIDTH - 50, WINDOW_HEIGHT - 2);
 		settingsIcon.setBottomRight(WINDOW_WIDTH - 2, WINDOW_HEIGHT - 50);
 		settingsIcon.setPoints();
+		
+		planetMainMenu = new Layer(5);
+		planetMainMenu.setTopLeft(WINDOW_WIDTH - 400, 100);
+		planetMainMenu.setBottomRight(WINDOW_WIDTH, -50);
+		planetMainMenu.setPoints();
+		
+		planetMenuBase = new Layer(6);
+		planetMenuBase.setTopLeft(WINDOW_WIDTH - 250, 150);
+		planetMenuBase.setBottomRight(WINDOW_WIDTH, 0);
+		planetMenuBase.setPoints();
 				
 		genTiles();
 
@@ -615,6 +647,7 @@ public class StarshipArena {
 					int numTransportsSelected = 0;
 					String shipStatus = "Idle";
 					int selectedPlanetResources = Integer.MIN_VALUE;
+					boolean alliedPlanetSelected = false;
 					String planetControllingTeam = "none";
 					String shipsControllingTeam = "none";
 					for(int p = 0; p < planets.size(); p++){
@@ -646,10 +679,12 @@ public class StarshipArena {
 					if (sidebarIsDisplayed) {
 						if (selectedPlanetResources > Integer.MIN_VALUE) {
 							writeText("Planet resources:", 20, 40);
-//							if (planetControllingTeam.equals(player.getTeam()))
+							if (planetControllingTeam.equals(player.getTeam())){
 								writeText("" + selectedPlanetResources, 20, 20);
-//							else
-//								writeText("??", 20, 20);
+								alliedPlanetSelected = true;
+							}
+							else
+								writeText("??", 20, 20);
 							
 							writeText("Controlled by:", 20, 100);
 							writeText(planetControllingTeam, 20, 80);
@@ -680,6 +715,16 @@ public class StarshipArena {
 							writeText(shipsControllingTeam, 20, 80);
 							writeText("Fleet status:", 20, 40);
 							writeText(shipStatus, 20, 20);
+						}
+						if(!alliedPlanetSelected){
+							planetMenuState = 0;
+						}
+						
+						if(planetMenuState == 1){
+							planetMainMenu.display();
+						}
+						else if(planetMenuState == 2){
+							planetMenuBase.display();
 						}
 						
 						for (int i = 0; i < text.size(); i++) {
