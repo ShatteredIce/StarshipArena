@@ -11,7 +11,7 @@ public class Missile extends Projectile {
 	int max_velocity = 20;
 	int max_reverse_velocity = -2;
 	int min_turn_velocity = 1;
-	int max_turn_speed = 3;
+	int max_turn_speed = 2;
 	//weaponry
 	int scan_range = 1500;
 

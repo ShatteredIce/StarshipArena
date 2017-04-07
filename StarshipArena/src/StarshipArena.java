@@ -52,6 +52,7 @@ public class StarshipArena {
     int FIGHTER_COST = 5;
     int INTERCEPTOR_COST = 20;
     int TRANSPORT_COST = 10;
+    int BATTLESHIP_COST = 100;
     
 	Random random = new Random();
 	
@@ -227,6 +228,8 @@ public class StarshipArena {
 				buyShips(player, 2);
 			if ( key == GLFW_KEY_3 && action == GLFW_PRESS)
 				buyShips(player, 3);
+			if ( key == GLFW_KEY_4 && action == GLFW_PRESS)
+				buyShips(player, 4);
 			if ( key == GLFW_KEY_ENTER && action == GLFW_PRESS)
 				gameState = 3;
 		
@@ -832,6 +835,13 @@ public class StarshipArena {
 			else if(type == 3 && p.getResources() >= TRANSPORT_COST){
 				p.setResources(p.getResources() - TRANSPORT_COST);
 				new Transport(this, p.getTeam(), (int) p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(), 
+						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), 0);
+				
+			}
+			//attempt to buy battleship
+			else if(type == 4 && p.getResources() >= BATTLESHIP_COST){
+				p.setResources(p.getResources() - BATTLESHIP_COST);
+				new Battleship(this, p.getTeam(), (int) p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(), 
 						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), 0);
 				
 			}
