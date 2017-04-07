@@ -12,6 +12,7 @@ public class Projectile {
 	static Texture tex1 = new Texture("projectile_blue.png");
 	static Texture tex2 = new Texture("projectile_red.png");
 	static Texture tex3 = new Texture("projectile_machinegun.png");
+	static Texture tex4 = new Texture("torpedo.png");
 	
 	double[] vertices;
 	double[] textureCoords;
@@ -100,6 +101,14 @@ public class Projectile {
 				new Point(2, -10, true),
 			};
 		}
+		else if (texId == 4) {
+			points = new Point[]{
+				new Point(-3, -10, true),
+				new Point(-3, 10, true),
+				new Point(3, 10, true),
+				new Point(3, -10, true),
+			};
+		}
 		return points;
 	}
 	
@@ -120,6 +129,9 @@ public class Projectile {
 		}
 		else if(texId == 3){
 			tex3.bind();
+		}
+		else if (texId == 4){
+			tex4.bind();
 		}
 		else{
 			tex0.bind();
