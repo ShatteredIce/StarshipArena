@@ -754,8 +754,14 @@ public class StarshipArena {
 		new Transport(this, "red", 400, 450, 0).setHealth(10000);
 		new Transport(this, "red", 100, 450, 0).setHealth(10000);
 		new Transport(this, "red", 5, 450, 0).setHealth(10000);
-		new Transport(this, "red", 400, 600, 0).setHealth(10000);
+		new Transport(this, "r"
+				+ "ed", 400, 600, 0).setHealth(10000);
 		new Interceptor(this, "blue", 600, 500, 90);
+		new Battleship(this, "blue", 700, 500, 0);
+		new Fighter(this, "red", 1700, 1500, 0);
+		new Fighter(this, "red", 1750, 1500, 0);
+		new Fighter(this, "red", 1650, 1500, 0);
+		new Fighter(this, "red", 1700, 1550, 0);
 //		new Fighter(this, "blue", 200, 500, 270, 1);
 //		new Interceptor(this, 500, 700, 0, 1);
 	}
@@ -1043,13 +1049,22 @@ public class StarshipArena {
     		Projectile p = projectiles.get(i);
 			for (int j = 0; j < ships.size(); j++) {
 				Starship s = ships.get(j);
-				if(!p.getOwner().equals(s) && (!p.getTeam().equals(s.getTeam()) || p.getTeam().equals("none")) && 
-						polygon_intersection(p.getPoints(), s.getPoints())){
-	    			s.setHealth(s.getHealth()-p.getDamage());
+				if (p.getOwner() != null ) {
+					if(!p.getOwner().equals(s) && (!p.getTeam().equals(s.getTeam()) || p.getTeam().equals("none")) && 
+							polygon_intersection(p.getPoints(), s.getPoints())){
+		    			s.setHealth(s.getHealth()-p.getDamage());
+		    			s.damageDisplayDelay = 100;
+		    			p.destroy();
+		    			projectiles.remove(p);
+		    		}
+				}
+				else if ((!p.getTeam().equals(s.getTeam()) || p.getTeam().equals("none")) && 
+							polygon_intersection(p.getPoints(), s.getPoints())) {
+					s.setHealth(s.getHealth()-p.getDamage());
 	    			s.damageDisplayDelay = 100;
 	    			p.destroy();
 	    			projectiles.remove(p);
-	    		}
+				}
 			}
 		}
     }

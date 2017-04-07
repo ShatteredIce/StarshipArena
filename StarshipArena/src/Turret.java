@@ -22,6 +22,9 @@ public class Turret {
 	int angle;
 	double xOff = 0;
 	double yOff = 0;
+	boolean autoAiming = false;
+	boolean fireMissiles = false;
+	int angle_offset = 0;
 	
 	Turret(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, int newangle, double newdamage, int newcooldown, int newspread, int newaccuracy, int newscanrange, int newspeed, int newlifetime, int newid){
 		game = mygame;
@@ -39,6 +42,25 @@ public class Turret {
 		projectile_textureId = newid;
 	}
 	
+	Turret(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, int newangle, double newdamage, int newcooldown, int newspread, int newaccuracy, int newscanrange, int newspeed, int newlifetime, int newid, int modifier, int newangle_offset){
+		game = mygame;
+		owner = newowner;
+		team = myteam;
+		center = new Point(spawnx, spawny);
+		angle = (newangle + newangle_offset) % 360;
+		cooldown = newcooldown;
+		spread = newspread;
+		accuracy = newaccuracy;
+		scan_range = newscanrange;
+		projectile_damage = newdamage;
+		projectile_speed = newspeed;
+		projectile_lifetime = newlifetime / projectile_speed;
+		projectile_textureId = newid;
+		if (modifier == 1) autoAiming = true;
+		else if (modifier == 2) fireMissiles = true;
+		angle_offset = newangle_offset;
+	}
+	
 	public void setOffset(double newx, double newy){
 		xOff = newx;
 		yOff = newy;
@@ -51,7 +73,10 @@ public class Turret {
 			for (int i = 0; i < enemyShips.size(); i++) {
 				relativeAngle = game.angleToPoint(center.X(), center.Y(), enemyShips.get(i).getX(), enemyShips.get(i).getY());
 				if(Math.abs(relativeAngle - angle) < spread){
-					fire();
+					if (!autoAiming)
+						fire(angle);
+					else
+						fire(relativeAngle);
 					current_cooldown = cooldown;
 					break;
 				}
@@ -62,8 +87,11 @@ public class Turret {
 		}
 	}
 	
-	public void fire(){
-		new Projectile(game, owner, team, center.X(), center.Y(), projectile_damage, angle, accuracy, projectile_speed, projectile_lifetime, projectile_textureId);
+	public void fire(int newAngle){
+		if (!fireMissiles)
+			new Projectile(game, owner, team, center.X(), center.Y(), projectile_damage, newAngle, accuracy, projectile_speed, projectile_lifetime, projectile_textureId);
+		else
+			new Missile(game, owner, team, center.X(), center.Y(), projectile_damage, newAngle, accuracy, projectile_speed, projectile_lifetime, projectile_textureId);
 	}
 	
 	public ArrayList<Starship> getEnemyShips(){
@@ -85,7 +113,7 @@ public class Turret {
 	}
 	
 	public void setAngle(int newangle){
-		angle = newangle;
+		angle = (newangle + angle_offset) % 360;
 	}
 	
 	public void setCenter(Point p){
