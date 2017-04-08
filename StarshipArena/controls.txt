@@ -17,6 +17,8 @@ Objective: In each level, the player controls the blue faction while an enemy AI
 
 
 *****STRATEGY*****:
+Ships can be purchased at your controlled planets for resources. They can be used to blow up enemy ships
+and to capture enemy planets (by moving ships to them).
 There are three ship types in the game:
  1: Fighters. These are the basic combat starship. Costing 5 resources, they have 20 armor and are mounted with a medium-damage plasma cannon.
     They move fairly slowly and are not very manueverable, but en masse they will melt anything in their path.

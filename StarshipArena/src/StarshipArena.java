@@ -269,7 +269,7 @@ public class StarshipArena {
 						gameState = 2;
 					}
 					else if(controlsButton.isClicked(xpos.get(2), ypos.get(2))){
-						ProcessBuilder pb = new ProcessBuilder("Notepad.exe", "controls.txt");
+						ProcessBuilder pb = new ProcessBuilder("notepad.exe", "controls.txt");
 						try {
 							pb.start();
 						} catch (Exception e) {
@@ -278,7 +278,7 @@ public class StarshipArena {
 						}
 					}
 					else if(creditsButton.isClicked(xpos.get(2), ypos.get(2))){
-						ProcessBuilder pb = new ProcessBuilder("Notepad.exe", "credits.txt");
+						ProcessBuilder pb = new ProcessBuilder("notepad.exe", "credits.txt");
 						try {
 							pb.start();
 						} catch (Exception e) {
