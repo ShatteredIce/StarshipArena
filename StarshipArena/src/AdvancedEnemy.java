@@ -21,7 +21,7 @@ public class AdvancedEnemy extends Enemy{
 		for (int i = 0; i < playerShips.size(); i++) {
 			if (playerShips.get(i) instanceof Fighter) fightersCost += 5;
 			else if (playerShips.get(i) instanceof Interceptor) interceptorsCost += 20;
-			else if (playerShips.get(i) instanceof Battleship) battleshipsCost += 100;
+			else if (playerShips.get(i) instanceof Battleship) battleshipsCost += 40;
 		}
 		for (int i = 0; i < myPlanets.size(); i++) {
 			if (fightersCost >= interceptorsCost && fightersCost > battleshipsCost) {
