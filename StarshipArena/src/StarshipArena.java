@@ -17,7 +17,6 @@ import static org.lwjgl.system.MemoryUtil.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-
 public class StarshipArena {
 
 	//The window handle and size
@@ -38,6 +37,7 @@ public class StarshipArena {
 	
 	int gameState = 1;
 	int SLOW = 1;
+	int currentLevel = 0;
     
     boolean panLeft = false;
     boolean panRight = false;
@@ -89,13 +89,17 @@ public class StarshipArena {
 	Layer settingsIcon;
 	Button settingsButton = new Button(1250, 898, 1298, 850);
 	
-	int planetMenuState = 0;
 	Layer planetMainMenu;
 	Button planetBuyButton = new Button(WINDOW_WIDTH - 380, 80, WINDOW_WIDTH - 280, 20);
 	Button planetIndustryButton = new Button(WINDOW_WIDTH - 250, 80, WINDOW_WIDTH - 150, 20);
 	Button planetEconomyButton = new Button(WINDOW_WIDTH - 120, 80, WINDOW_WIDTH - 20, 20);
 	
 	Layer planetMenuBase;
+	
+	Layer victoryMessage;
+	Layer defeatMessage;
+	Button nextLevelButton = new Button(WINDOW_WIDTH / 2 - 70, WINDOW_HEIGHT / 2 + 5, WINDOW_WIDTH / 2 + 70, WINDOW_HEIGHT / 2 - 25);
+	Button restartLevelButton = new Button(WINDOW_WIDTH / 2 - 70, WINDOW_HEIGHT / 2 - 35, WINDOW_WIDTH / 2 + 70, WINDOW_HEIGHT / 2 - 65);
 	
 	Player player = new Player(this, "blue");
 	Enemy enemy = new Enemy(this, new Player(this, "red"));
@@ -281,6 +285,25 @@ public class StarshipArena {
 					}
 				}
 			}
+			//player has beaten or lost the level buttons
+			else if(gameState == 4 || gameState == 5){
+				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+					if(settingsButton.isClicked(xpos.get(2), ypos.get(2))){
+						gameState = 1;
+						return;
+					}
+				}
+				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE){
+					if(nextLevelButton.isClicked(xpos.get(2), ypos.get(2))){
+						loadLevel(currentLevel + 1);
+						gameState = 3;
+					}
+					else if(restartLevelButton.isClicked(xpos.get(2), ypos.get(2))){
+						loadLevel(currentLevel);
+						gameState = 3;
+					}
+				}
+			}
 			else if(gameState == 3){
 				boolean clickedOnSprite = false;
 				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
@@ -299,20 +322,6 @@ public class StarshipArena {
 					newMouseY = ypos;
 					boxSelectCurrent = false;
 					//remove selected planet
-					if(planetMenuState == 1){
-						if(planetBuyButton.isClicked(xpos.get(2), ypos.get(2))){
-							planetMenuState = 2;
-							return;
-						}
-						else if(planetEconomyButton.isClicked(xpos.get(2), ypos.get(2))){
-							planetMenuState = 2;
-							return;
-						}
-						else if(planetIndustryButton.isClicked(xpos.get(2), ypos.get(2))){
-							planetMenuState = 2;
-							return;
-						}
-					}
 					if(player.getSelectedPlanet() != null){
 						player.getSelectedPlanet().setSelected(false);
 						player.setSelectedPlanet(null);
@@ -409,7 +418,6 @@ public class StarshipArena {
 									player.getSelectedPlanet().setSelected(false);
 								}
 								player.setSelectedPlanet(p);
-								planetMenuState = 1;
 								p.setSelected(true);
 								clickedOnSprite = true;
 								break;
@@ -501,6 +509,16 @@ public class StarshipArena {
 		planetMenuBase.setTopLeft(WINDOW_WIDTH - 250, 150);
 		planetMenuBase.setBottomRight(WINDOW_WIDTH, 0);
 		planetMenuBase.setPoints();
+		
+		victoryMessage = new Layer(7);
+		victoryMessage.setTopLeft(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 + 70);
+		victoryMessage.setBottomRight(WINDOW_WIDTH / 2 + 100, WINDOW_HEIGHT / 2 - 70);
+		victoryMessage.setPoints();
+		
+		defeatMessage = new Layer(8);
+		defeatMessage.setTopLeft(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 + 70);
+		defeatMessage.setBottomRight(WINDOW_WIDTH / 2 + 100, WINDOW_HEIGHT / 2 - 70);
+		defeatMessage.setPoints();
 				
 		genTiles();
 
@@ -509,8 +527,6 @@ public class StarshipArena {
 		int slowCounter = 0;
 		int counter = 0;
 		while ( !glfwWindowShouldClose(window) ) {
-			
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 			// Poll for window events. The key callback above will only be
 			// invoked during this call.
 			glfwPollEvents();
@@ -518,6 +534,10 @@ public class StarshipArena {
 			
 			//display the title
 			if(gameState == 1){
+				if(currentLevel != 0){
+					currentLevel = 0;
+				}
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 				projectTrueWindowCoordinates();
 				titlePage.setTopLeft(250, WINDOW_HEIGHT - 150);
 				titlePage.setBottomRight(WINDOW_WIDTH - 250, 150);
@@ -527,12 +547,23 @@ public class StarshipArena {
 				glfwSwapBuffers(window); // swap the color buffers
 			}
 			if(gameState == 2){
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 				projectTrueWindowCoordinates();
 				levelSelect.setTopLeft(200, WINDOW_HEIGHT - 50);
 				levelSelect.setBottomRight(WINDOW_WIDTH - 200, 50);
 				levelSelect.setPoints();
 				levelSelect.display();
 				settingsIcon.display();
+				glfwSwapBuffers(window); // swap the color buffers
+			}
+			else if(gameState == 4){
+				projectTrueWindowCoordinates();
+				victoryMessage.display();
+				glfwSwapBuffers(window); // swap the color buffers
+			}
+			else if(gameState == 5){
+				projectTrueWindowCoordinates();
+				defeatMessage.display();
 				glfwSwapBuffers(window); // swap the color buffers
 			}
 			else if(gameState == 3){
@@ -723,8 +754,8 @@ public class StarshipArena {
 							writeText("Starfleet(" + (numFightersSelected + numInterceptorsSelected + numTransportsSelected + numBattleshipsSelected) + ")", 400, 15, 30);
 							writeText("Fighters:" + numFightersSelected, 1000, 100);
 							writeText("Interceptors:" + numInterceptorsSelected, 1000, 80);
-							writeText("Transports:" + numTransportsSelected, 1000, 60);
-							writeText("Battleships:" + numBattleshipsSelected, 1000, 40);
+//							writeText("Transports:" + numTransportsSelected, 1000, 60);
+							writeText("Battleships:" + numBattleshipsSelected, 1000, 60);
 //							if (shipsControllingTeam.equals(player.getTeam()))
 								writeText("Fleet armor:" + sumCurrentHP + "/" + sumMaxHP, 800, 20);
 //							else
@@ -734,15 +765,8 @@ public class StarshipArena {
 							writeText("Fleet status:", 20, 40);
 							writeText(shipStatus, 20, 20);
 						}
-						if(!alliedPlanetSelected){
-							planetMenuState = 0;
-						}
-						
-						if(planetMenuState == 1){
+						if(alliedPlanetSelected){
 							planetMainMenu.display();
-						}
-						else if(planetMenuState == 2){
-							planetMenuBase.display();
 						}
 						
 						for (int i = 0; i < text.size(); i++) {
@@ -753,10 +777,10 @@ public class StarshipArena {
 					
 					//Check win
 					if (player.getControlledPlanets().size() == 0 && player.getControlledShips().size() == 0) {
-						writeText("You lose!", 400, 450, 50);
+						gameState = 5;
 					}
 					else if (enemy.enemyPlayer.getControlledPlanets().size() == 0 && enemy.enemyPlayer.getControlledShips().size() == 0) {
-						writeText("You win!", 450, 450, 50);
+						gameState = 4;
 					}
 					
 					for (int i = 0; i < text.size(); i++) {
@@ -918,6 +942,7 @@ public class StarshipArena {
 		destroyAllProjectiles();
 		destroyAllTiles();
 		
+		currentLevel = level;
 		zoomLevel = 3;
 		CAMERA_WIDTH = 2600;
 		CAMERA_HEIGHT = 1800;
@@ -1125,17 +1150,22 @@ public class StarshipArena {
 		}
 		
 		else if(level == 6){
-			WORLD_WIDTH = 7000;
+			WORLD_WIDTH = 7500;
 		    WORLD_HEIGHT = 6000;
-		    CURR_X = 1750;
-			CURR_Y = 2400;
-			zoomLevel = 3;
-			CAMERA_WIDTH = 5200;
-			CAMERA_HEIGHT = 3600;
+		    CURR_X = 1600;
+			CURR_Y = 700;
+			zoomLevel = 2;
+			CAMERA_WIDTH = 4550;
+			CAMERA_HEIGHT = 3150;
 			
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
 			
 			new Planet(this, 3500, 4000, 4).setTeam("red");
+			new Fighter(this, "red", 3400, 3950, 180);
+			new Fighter(this, "red", 3600, 3950, 180);
+			new Planet(this, 5300, 5000, 4).setTeam("red");
+			new Fighter(this, "red", 5200, 4950, 180);
+			new Fighter(this, "red", 5400, 4950, 180);
 			
 			new MissilePod(this, "red", 3300, 3600, 180);
 			new MissilePod(this, "red", 3500, 3600, 180);
@@ -1161,8 +1191,6 @@ public class StarshipArena {
 			new Interceptor(this, "blue", 3500, 900, 0);
 			
 			new Planet(this, 6300, 1300, 3);
-			
-			new Planet(this, 5300, 5000, 4);
 			
 			new Planet(this, 1750, 1900, 5);
 			
