@@ -153,6 +153,8 @@ public class Projectile {
 	public void destroy(){
 		model.destroy();
 		game.removeProjectile(this);
+		if (texId < 3) new Explosion(game, center.X(), center.Y(), 40);
+		else if (texId == 3) new Explosion(game, center.X(), center.Y(), 20);
 	}
 	
 	public Starship getOwner(){

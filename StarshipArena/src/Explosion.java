@@ -26,10 +26,13 @@ public class Explosion {
 	int ticksPerFrame = 2;
 	int lifetime = -1;
 	
-	
-	Explosion(StarshipArena mygame, double spawnx, double spawny){
+	Explosion(StarshipArena mygame, double spawnx, double spawny) {
+		this(mygame, spawnx, spawny, 100);
+	}
+	Explosion(StarshipArena mygame, double spawnx, double spawny, int newsize){
 		game = mygame;
 		center = new Point(spawnx, spawny);
+		size = newsize;
 		points = generatePoints();
 		vertices = new double[points.length * 2];
 		setTextureCoords();
@@ -123,6 +126,10 @@ public class Explosion {
 	public void display(){
 		setTexture();
 		model.render(vertices);
+	}
+	
+	public void setSize(int newsize) {
+		size = newsize;
 	}
 	
 }
