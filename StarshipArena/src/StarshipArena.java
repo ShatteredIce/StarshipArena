@@ -82,6 +82,7 @@ public class StarshipArena {
 		new Button(900, 250, 1000, 150),
 	};
 	Button controlsButton = new Button(550, 435, 760, 345);
+	Button creditsButton = new Button(550, 315, 760, 225);
 	
 	Layer boxSelect;
 	boolean boxSelectCurrent = false;
@@ -265,6 +266,24 @@ public class StarshipArena {
 				//System.out.println(xpos.get(1) + " " + ypos.get(1));
 					if(levelSelectButton.isClicked(xpos.get(2), ypos.get(2))){
 						gameState = 2;
+					}
+					else if(controlsButton.isClicked(xpos.get(2), ypos.get(2))){
+						ProcessBuilder pb = new ProcessBuilder("Notepad.exe", "controls.txt");
+						try {
+							pb.start();
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					else if(creditsButton.isClicked(xpos.get(2), ypos.get(2))){
+						ProcessBuilder pb = new ProcessBuilder("Notepad.exe", "credits.txt");
+						try {
+							pb.start();
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 				}
 			}

@@ -1,0 +1,68 @@
+				 _____           _                        ___   __ _          
+				/  ___|         | |                      / _ \ / _(_)         
+				\ `--. _   _ ___| |_ ___ _ __ ___  ___  / /_\ \ |_ _ _ __ ___ 
+				 `--. \ | | / __| __/ _ \ '_ ` _ \/ __| |  _  |  _| | '__/ _ \
+				/\__/ / |_| \__ \ ||  __/ | | | | \__ \ | | | | | | | | |  __/
+				\____/ \__, |___/\__\___|_| |_| |_|___/ \_| |_/_| |_|_|  \___|
+				        __/ |                                                 
+				       |___/                                                  
+=====HOW TO PLAY=====
+Systems Afire is a 2D space-based RTS written in Java using the LWJGL game library.
+
+
+Objective: In each level, the player controls the blue faction while an enemy AI controls the red faction.
+           The player must destroy all of the enemy's ships and take over all of the enemy's planets to win.
+
+
+
+
+*****STRATEGY*****:
+There are three ship types in the game:
+ 1: Fighters. These are the basic combat starship. Costing 5 resources, they have 20 armor and are mounted with a medium-damage plasma cannon.
+    They move fairly slowly and are not very manueverable, but en masse they will melt anything in their path.
+     - Counters: Interceptor
+     - Countered by: Battleship
+ 2: Interceptors. These are advanced starships designed for quick and effective penetration into enemy territory. Costing 20 resources, they have 30 armor
+    and are mounted with not only a plasma cannon but also two high-damage machine guns. They are quick and agile and are great for raiding
+    and ambushing troops.
+     - Counters: Battleship
+     - Countered by: Fighter
+ 3: Battleships. These are heavy behemoths suited with long-range harrasment and defense. Costing 40 resources, they have 50 armor and are mounted with
+    six medium-damage defensive machinegun turrets and one long-range missile launcher. Although they are slow and unwielding, their missiles will turn
+    any ship into shrapnel with a direct hit.
+     - Counters: Fighter
+     - Countered by: Interceptor
+A player should use these three ship types to build an effective army to conquer more planets. Planets provide resource production, so the player with more planets
+will be able to build more ships and perform better in the long run.
+
+
+
+*****HOTKEYS*****:
+ - Left click:
+       * In menu: Navigate the menus and select levels to play.
+       * In game: Click on planets or ships to select them, or draw a box to select multiple ships.
+         Selecting ships or planets will show the player more information about them.
+ - Right click:
+       * In game: With ships selected, right click to attack-move the selected ships to the location of the mouse.
+         Ships will automatically attack enemies while en route.
+ - A:
+       * In game: If no ships are selected, select all allied ships.
+         Otherwise, select all ships that are in the same faction and of the same type as the current selection.
+ - +/-:
+       * In game: Zoom the camera in or out.
+ - Arrow keys:
+       * In game: Pan the camera to see more of the battlefield.
+ - Numbers (1, 2, 3):
+       * In game: With an allied planet selected, build Fighters (number 1), Interceptors (number 2), or Battleships (number 3) if resources are sufficient.
+
+
+
+
+
+*****CHEATS*****
+ - Enter:
+       * In menu: Enter the test world. This is used for demonstration only.
+ - '[' and ']':
+       * In game: Slow the game down with '[' and use ']' to speed it back up to normal.
+ - F1:
+       * In game: Instantly add 100 resources to the selected planet.
