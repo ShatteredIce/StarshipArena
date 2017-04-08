@@ -5,12 +5,12 @@ public class MissilePod extends Starship{
 	static Texture tex = new Texture("missile_pod.png");
 	
 	static double primary_damage = 10;
-	static int primary_cooldown = 300;
+	static int primary_cooldown = 3000;
 	static int primary_spread = 55;
 	static int primary_accuracy = 95;
 	static int primary_range = 2000;
 	static int primary_speed = 15;
-	static int primary_lifetime = 2500;
+	static int primary_lifetime = 2100;
 	static int primary_xoffset = 0;
 	static int primary_yoffset = 20;
 	int primary_id = 4;

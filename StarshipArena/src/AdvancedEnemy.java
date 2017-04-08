@@ -99,7 +99,7 @@ public class AdvancedEnemy extends Enemy{
 				//For each ship orbiting a non-controlled planet that has enemy player as the capturing team,
 				//attempt to remove it from the myships array list
 				for (int j = 0; j < orbitingShips.size(); j++) {
-					myShips.remove(orbitingShips);
+					myShips.remove(orbitingShips.get(j));
 				}
 			}
 		}

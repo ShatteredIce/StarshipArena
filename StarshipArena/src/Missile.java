@@ -17,6 +17,7 @@ public class Missile extends Projectile {
 
 	public Missile(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newdamage, int spawnangle, int accuracy, double newspeed, double newlifetime, int id) {
 		super(mygame, newowner, myteam, spawnx, spawny, newdamage, spawnangle, accuracy, newspeed, newlifetime, id);
+		max_velocity = (int)newspeed;
 	}
 	
 	public void destroy(Starship victim){
