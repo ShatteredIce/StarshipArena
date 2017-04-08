@@ -1214,6 +1214,82 @@ public class StarshipArena {
 			new Planet(this, 1750, 1900, 5);
 			
 		}
+		
+		else if(level == 7){
+			WORLD_WIDTH = 6000;
+		    WORLD_HEIGHT = 8000;
+		    CURR_X = 400;
+			CURR_Y = 300;
+			zoomLevel = 3;
+			CAMERA_WIDTH = 5200;
+			CAMERA_HEIGHT = 3600;
+			
+			enemy = new AdvancedEnemy(this, new Player(this, "red"));
+			
+			new Planet(this, 3100, 7000, 6).setTeam("red");
+			new Fighter(this, "red", 3100, 6900, 180);
+			new Fighter(this, "red", 2950, 7000, 180);
+			new Fighter(this, "red", 3250, 7000, 180);
+			new Planet(this, 5000, 6000, 6).setTeam("red");
+			new Fighter(this, "red", 5000, 5900, 180);
+			new Fighter(this, "red", 4850, 6000, 180);
+			new Fighter(this, "red", 5150, 6000, 180);
+			new Planet(this, 2400, 6500, 6).setTeam("red");
+			new Fighter(this, "red", 2400, 6400, 180);
+			new Fighter(this, "red", 2250, 6500, 180);
+			new Fighter(this, "red", 2550, 6500, 180);
+			new Planet(this, 3400, 6000, 6).setTeam("red");
+			new Fighter(this, "red", 3400, 5900, 180);
+			new Fighter(this, "red", 3250, 6000, 180);
+			new Fighter(this, "red", 3550, 6000, 180);
+			
+			new Battleship(this, "red", 4200, 6500, 180);
+			new Interceptor(this, "red", 4000, 6500, 180);
+			new Interceptor(this, "red", 4400, 6500, 180);
+			
+			new Battleship(this, "red", 5000, 6800, 180);
+			new Interceptor(this, "red", 4800, 6800, 180);
+			new Interceptor(this, "red", 5200, 6800, 180);
+			
+			new Battleship(this, "red", 1500, 6900, 180);
+			new Interceptor(this, "red", 1300, 6900, 180);
+			new Interceptor(this, "red", 1700, 6900, 180);
+			
+			new Planet(this, 1900, 4500, 2);
+			new Planet(this, 2800, 4500, 2);
+			new Planet(this, 5100, 3900, 1);
+			
+			new Planet(this, 3000, 2000, 5).setTeam("blue");
+			new Interceptor(this, "blue", 2800, 1450, 0);
+			new Interceptor(this, "blue", 3000, 1450, 0);
+			new Interceptor(this, "blue", 3200, 1450, 0);
+			new Fighter(this, "blue", 2900, 1600, 0);
+			new Fighter(this, "blue", 3100, 1600, 0);
+			new MissilePod(this, "blue", 2700, 2300, 0);
+			new MissilePod(this, "blue", 3300, 2300, 0);
+			
+			new Planet(this, 1400, 1500, 5).setTeam("blue");
+			new Fighter(this, "blue", 2200, 1400, 0);
+			new Fighter(this, "blue", 2050, 1300, 0);
+			new Fighter(this, "blue", 2350, 1300, 0);
+			new Fighter(this, "blue", 2200, 1900, 0);
+			new Fighter(this, "blue", 2050, 1800, 0);
+			new Fighter(this, "blue", 2350, 1800, 0);
+			new MissilePod(this, "blue", 1100, 1800, 0);
+			new MissilePod(this, "blue", 1700, 1800, 0);
+			
+			new Planet(this, 4600, 1500, 5).setTeam("blue");
+			new Fighter(this, "blue", 3800, 1400, 0);
+			new Fighter(this, "blue", 3650, 1300, 0);
+			new Fighter(this, "blue", 3950, 1300, 0);
+			new Fighter(this, "blue", 3800, 1900, 0);
+			new Fighter(this, "blue", 3650, 1800, 0);
+			new Fighter(this, "blue", 3950, 1800, 0);
+			new MissilePod(this, "blue", 4300, 1800, 0);
+			new MissilePod(this, "blue", 4900, 1800, 0);
+			
+			
+		}
 	
 		genTiles();
 	}
