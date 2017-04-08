@@ -31,12 +31,23 @@ public class Missile extends Projectile {
 				new Projectile(game, null, team, center.x + x_rand, center.y + y_rand, 0.5, i, 100, 5, 10, 3);
 			}
 			else {
-				new Projectile(game, null, "none", victim.center.x, victim.center.y, 3, i, 100, 20, 10, 3);
-				new Projectile(game, null, "none", victim.center.x, victim.center.y, 3, i, 100, 16, 10, 3);
-				new Projectile(game, null, "none", victim.center.x, victim.center.y, 3, i, 100, 12, 10, 3);
-				new Projectile(game, null, "none", victim.center.x, victim.center.y, 3, i, 100, 40, 10, 3);
-				new Projectile(game, null, "none", victim.center.x, victim.center.y, 3, i, 100, 32, 10, 3);
-				new Projectile(game, null, "none", victim.center.x, victim.center.y, 3, i, 100, 26, 10, 3);
+				if(victim instanceof MissilePod){
+					new Projectile(game, null, "none", victim.center.x, victim.center.y, 0, i, 100, 20, 5, 3);
+					new Projectile(game, null, "none", victim.center.x, victim.center.y, 0, i, 100, 16, 5, 3);
+					new Projectile(game, null, "none", victim.center.x, victim.center.y, 0, i, 100, 12, 5, 3);
+					new Projectile(game, null, "none", victim.center.x, victim.center.y, 0, i, 100, 40, 5, 3);
+					new Projectile(game, null, "none", victim.center.x, victim.center.y, 0, i, 100, 32, 5, 3);
+					new Projectile(game, null, "none", victim.center.x, victim.center.y, 0, i, 100, 26, 5, 3);
+				}
+				else{
+					new Projectile(game, null, "none", victim.center.x, victim.center.y, 3, i, 100, 20, 10, 3);
+					new Projectile(game, null, "none", victim.center.x, victim.center.y, 3, i, 100, 16, 10, 3);
+					new Projectile(game, null, "none", victim.center.x, victim.center.y, 3, i, 100, 12, 10, 3);
+					new Projectile(game, null, "none", victim.center.x, victim.center.y, 3, i, 100, 40, 10, 3);
+					new Projectile(game, null, "none", victim.center.x, victim.center.y, 3, i, 100, 32, 10, 3);
+					new Projectile(game, null, "none", victim.center.x, victim.center.y, 3, i, 100, 26, 10, 3);
+			
+				}
 			}
 		}
 	}

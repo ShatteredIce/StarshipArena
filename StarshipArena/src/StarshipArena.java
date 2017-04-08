@@ -17,7 +17,6 @@ import static org.lwjgl.system.MemoryUtil.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-
 public class StarshipArena {
 
 	//The window handle and size
@@ -90,7 +89,6 @@ public class StarshipArena {
 	Layer settingsIcon;
 	Button settingsButton = new Button(1250, 898, 1298, 850);
 	
-	int planetMenuState = 0;
 	Layer planetMainMenu;
 	Button planetBuyButton = new Button(WINDOW_WIDTH - 380, 80, WINDOW_WIDTH - 280, 20);
 	Button planetIndustryButton = new Button(WINDOW_WIDTH - 250, 80, WINDOW_WIDTH - 150, 20);
@@ -324,20 +322,6 @@ public class StarshipArena {
 					newMouseY = ypos;
 					boxSelectCurrent = false;
 					//remove selected planet
-					if(planetMenuState == 1){
-						if(planetBuyButton.isClicked(xpos.get(2), ypos.get(2))){
-							planetMenuState = 2;
-							return;
-						}
-						else if(planetEconomyButton.isClicked(xpos.get(2), ypos.get(2))){
-							planetMenuState = 2;
-							return;
-						}
-						else if(planetIndustryButton.isClicked(xpos.get(2), ypos.get(2))){
-							planetMenuState = 2;
-							return;
-						}
-					}
 					if(player.getSelectedPlanet() != null){
 						player.getSelectedPlanet().setSelected(false);
 						player.setSelectedPlanet(null);
@@ -434,7 +418,6 @@ public class StarshipArena {
 									player.getSelectedPlanet().setSelected(false);
 								}
 								player.setSelectedPlanet(p);
-								planetMenuState = 1;
 								p.setSelected(true);
 								clickedOnSprite = true;
 								break;
@@ -771,8 +754,8 @@ public class StarshipArena {
 							writeText("Starfleet(" + (numFightersSelected + numInterceptorsSelected + numTransportsSelected + numBattleshipsSelected) + ")", 400, 15, 30);
 							writeText("Fighters:" + numFightersSelected, 1000, 100);
 							writeText("Interceptors:" + numInterceptorsSelected, 1000, 80);
-							writeText("Transports:" + numTransportsSelected, 1000, 60);
-							writeText("Battleships:" + numBattleshipsSelected, 1000, 40);
+//							writeText("Transports:" + numTransportsSelected, 1000, 60);
+							writeText("Battleships:" + numBattleshipsSelected, 1000, 60);
 //							if (shipsControllingTeam.equals(player.getTeam()))
 								writeText("Fleet armor:" + sumCurrentHP + "/" + sumMaxHP, 800, 20);
 //							else
@@ -782,15 +765,8 @@ public class StarshipArena {
 							writeText("Fleet status:", 20, 40);
 							writeText(shipStatus, 20, 20);
 						}
-						if(!alliedPlanetSelected){
-							planetMenuState = 0;
-						}
-						
-						if(planetMenuState == 1){
+						if(alliedPlanetSelected){
 							planetMainMenu.display();
-						}
-						else if(planetMenuState == 2){
-							planetMenuBase.display();
 						}
 						
 						for (int i = 0; i < text.size(); i++) {
@@ -1174,17 +1150,22 @@ public class StarshipArena {
 		}
 		
 		else if(level == 6){
-			WORLD_WIDTH = 7000;
+			WORLD_WIDTH = 7500;
 		    WORLD_HEIGHT = 6000;
-		    CURR_X = 1750;
-			CURR_Y = 2400;
-			zoomLevel = 3;
-			CAMERA_WIDTH = 5200;
-			CAMERA_HEIGHT = 3600;
+		    CURR_X = 1600;
+			CURR_Y = 700;
+			zoomLevel = 2;
+			CAMERA_WIDTH = 4550;
+			CAMERA_HEIGHT = 3150;
 			
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
 			
 			new Planet(this, 3500, 4000, 4).setTeam("red");
+			new Fighter(this, "red", 3400, 3950, 180);
+			new Fighter(this, "red", 3600, 3950, 180);
+			new Planet(this, 5300, 5000, 4).setTeam("red");
+			new Fighter(this, "red", 5200, 4950, 180);
+			new Fighter(this, "red", 5400, 4950, 180);
 			
 			new MissilePod(this, "red", 3300, 3600, 180);
 			new MissilePod(this, "red", 3500, 3600, 180);
@@ -1210,8 +1191,6 @@ public class StarshipArena {
 			new Interceptor(this, "blue", 3500, 900, 0);
 			
 			new Planet(this, 6300, 1300, 3);
-			
-			new Planet(this, 5300, 5000, 4);
 			
 			new Planet(this, 1750, 1900, 5);
 			
