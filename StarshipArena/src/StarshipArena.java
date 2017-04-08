@@ -297,7 +297,7 @@ public class StarshipArena {
 				}
 				else if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
 					//System.out.println(xpos.get(1) + " " + ypos.get(1));
-					for (int i = 0; i < levelButtons.length; i++) {
+					for (int i = 0; i < levelButtons.length - 4; i++) {
 						if(levelButtons[i].isClicked(xpos.get(2), ypos.get(2))){
 							gameState = 3;
 							loadLevel(i+1);
@@ -315,8 +315,10 @@ public class StarshipArena {
 				}
 				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE){
 					if(nextLevelButton.isClicked(xpos.get(2), ypos.get(2))){
-						loadLevel(currentLevel + 1);
-						gameState = 3;
+						if (currentLevel + 1 < 9) {
+							loadLevel(currentLevel + 1);
+							gameState = 3;
+						}
 					}
 					else if(restartLevelButton.isClicked(xpos.get(2), ypos.get(2))){
 						loadLevel(currentLevel);
@@ -608,11 +610,22 @@ public class StarshipArena {
 						planets.get(p).display();
 					}
 					
-					//display ships
+					//display ships and heal them
+			    	for (int i = 0; i < planets.size(); i++) {
+			    		ArrayList<Starship> orbitingShips = planets.get(i).getShips();
+						for (int j = 0; j < orbitingShips.size(); j++) {
+							if (orbitingShips.get(j).getTeam().equals(planets.get(i).getTeam()) && orbitingShips.get(j).damageDisplayDelay < 200)
+								orbitingShips.get(j).damageDisplayDelay -= 2;
+						}
+					}
 					for(int s = 0; s < ships.size(); s++){
 						ships.get(s).doRandomMovement();
 				    	ships.get(s).setPoints();
 				    	ships.get(s).damageDisplayDelay--;
+				    	if (ships.get(s).damageDisplayDelay < 0) {
+				    		ships.get(s).current_health = Math.min(ships.get(s).current_health + 1, ships.get(s).max_health);
+				    		ships.get(s).damageDisplayDelay = 200;
+				    	}
 				    	if(ships.get(s).display() == false){
 				    		s--;
 				    	}
@@ -738,7 +751,7 @@ public class StarshipArena {
 							shipsControllingTeam = ships.get(s).getTeam();
 							if (ships.get(s).locationTarget != null && shipStatus.equals("Idle"))shipStatus = "Moving";
 							if (ships.get(s).target != null && !shipStatus.equals("Taking damage")) shipStatus = "Engaging enemy";
-							if (ships.get(s).damageDisplayDelay > 0) shipStatus = "Taking damage";
+							if (ships.get(s).damageDisplayDelay > 900) shipStatus = "Taking damage";
 							if (ships.get(s) instanceof Fighter) numFightersSelected++;
 							else if (ships.get(s) instanceof Interceptor) numInterceptorsSelected++;
 							else if (ships.get(s) instanceof Transport) numTransportsSelected++;
@@ -896,18 +909,20 @@ public class StarshipArena {
 	public void buyShips(Player player, int type){
 		Planet p = player.getSelectedPlanet();
 		//if player has selected an allied planet
+		int spawnangle = 0;
 		if(p != null && p.getTeam().equals(player.getTeam())){
+			if (p.getTeam().equals("red")) spawnangle = 180;
 			//attempt to buy fighter
 			if(type == 1 && p.getResources() >= FIGHTER_COST){
 				p.setResources(p.getResources() - FIGHTER_COST);
 				new Fighter(this, p.getTeam(), (int) p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(), 
-						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), 0);
+						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), spawnangle);
 			}
 			//attempt to buy interceptor
 			else if(type == 2 && p.getResources() >= INTERCEPTOR_COST){
 				p.setResources(p.getResources() - INTERCEPTOR_COST);
 				new Interceptor(this, p.getTeam(), (int) p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(), 
-						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), 0);
+						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), spawnangle);
 				
 			}
 //			//attempt to buy transport
@@ -921,7 +936,7 @@ public class StarshipArena {
 			else if(type ==3 && p.getResources() >= BATTLESHIP_COST){
 				p.setResources(p.getResources() - BATTLESHIP_COST);
 				new Battleship(this, p.getTeam(), (int) p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(), 
-						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), 0);
+						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), spawnangle);
 				
 			}
 		}
@@ -931,7 +946,7 @@ public class StarshipArena {
 		int ZOOM_WIDTH = 650;
 		int ZOOM_HEIGHT = 450;
 		if(zoomOut){
-			if(zoomLevel < 5 && WORLD_WIDTH >= CAMERA_WIDTH + ZOOM_WIDTH && WORLD_HEIGHT >= CAMERA_HEIGHT + ZOOM_HEIGHT){
+			if(/*zoomLevel < 5 && */WORLD_WIDTH >= CAMERA_WIDTH + ZOOM_WIDTH && WORLD_HEIGHT >= CAMERA_HEIGHT + ZOOM_HEIGHT){
 				zoomLevel++;
 				CAMERA_WIDTH += ZOOM_WIDTH;
 				CAMERA_HEIGHT += ZOOM_HEIGHT;
@@ -952,7 +967,7 @@ public class StarshipArena {
 			}
 		}
 		else{
-			if(zoomLevel > 1){
+			if(/*zoomLevel > 1*/ CAMERA_WIDTH - 2 * ZOOM_WIDTH > 0 && CAMERA_HEIGHT - 2 * ZOOM_HEIGHT > 0){
 				zoomLevel--;
 				CAMERA_WIDTH -= ZOOM_WIDTH;
 				CAMERA_HEIGHT -= ZOOM_HEIGHT;
@@ -1251,6 +1266,9 @@ public class StarshipArena {
 			new Fighter(this, "red", 3250, 6000, 180);
 			new Fighter(this, "red", 3550, 6000, 180);
 			
+			new MissilePod(this, "red", 3700, 7300, 180);
+			new MissilePod(this, "red", 1800, 6500, 180);
+			
 			new Battleship(this, "red", 4200, 6500, 180);
 			new Interceptor(this, "red", 4000, 6500, 180);
 			new Interceptor(this, "red", 4400, 6500, 180);
@@ -1323,7 +1341,7 @@ public class StarshipArena {
 			
 			new Fighter(this, "red", 1350, 1000, 0);
 			new Fighter(this, "red", 1250, 950, 0);
-			new Fighter(this, "red", 1450, 9500, 0);
+			new Fighter(this, "red", 1450, 950, 0);
 			
 			new Interceptor(this, "red", 3000, 1500, 0);
 			
@@ -1381,7 +1399,7 @@ public class StarshipArena {
 							s.setHealth(s.getHealth()-p.getDamage()*20);
 						else
 							s.setHealth(s.getHealth()-p.getDamage());
-		    			s.damageDisplayDelay = 100;
+		    			s.damageDisplayDelay = 1000;
 		    			if (p instanceof Missile) {
 		    				Missile m = (Missile)p;
 		    				m.destroy(s);
@@ -1397,7 +1415,7 @@ public class StarshipArena {
 						s.setHealth(s.getHealth()-p.getDamage()*20);
 					else
 						s.setHealth(s.getHealth()-p.getDamage());
-	    			s.damageDisplayDelay = 100;
+	    			s.damageDisplayDelay = 1000;
 	    			p.destroy();
 	    			projectiles.remove(p);
 				}
