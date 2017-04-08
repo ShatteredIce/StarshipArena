@@ -38,6 +38,7 @@ public class StarshipArena {
 	
 	int gameState = 1;
 	int SLOW = 1;
+	int currentLevel = 0;
     
     boolean panLeft = false;
     boolean panRight = false;
@@ -96,6 +97,11 @@ public class StarshipArena {
 	Button planetEconomyButton = new Button(WINDOW_WIDTH - 120, 80, WINDOW_WIDTH - 20, 20);
 	
 	Layer planetMenuBase;
+	
+	Layer victoryMessage;
+	Layer defeatMessage;
+	Button nextLevelButton = new Button(WINDOW_WIDTH / 2 - 70, WINDOW_HEIGHT / 2 + 5, WINDOW_WIDTH / 2 + 70, WINDOW_HEIGHT / 2 - 25);
+	Button restartLevelButton = new Button(WINDOW_WIDTH / 2 - 70, WINDOW_HEIGHT / 2 - 35, WINDOW_WIDTH / 2 + 70, WINDOW_HEIGHT / 2 - 65);
 	
 	Player player = new Player(this, "blue");
 	Enemy enemy = new Enemy(this, new Player(this, "red"));
@@ -278,6 +284,25 @@ public class StarshipArena {
 							gameState = 3;
 							loadLevel(i+1);
 						}
+					}
+				}
+			}
+			//player has beaten or lost the level buttons
+			else if(gameState == 4 || gameState == 5){
+				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+					if(settingsButton.isClicked(xpos.get(2), ypos.get(2))){
+						gameState = 1;
+						return;
+					}
+				}
+				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE){
+					if(nextLevelButton.isClicked(xpos.get(2), ypos.get(2))){
+						loadLevel(currentLevel + 1);
+						gameState = 3;
+					}
+					else if(restartLevelButton.isClicked(xpos.get(2), ypos.get(2))){
+						loadLevel(currentLevel);
+						gameState = 3;
 					}
 				}
 			}
@@ -501,6 +526,16 @@ public class StarshipArena {
 		planetMenuBase.setTopLeft(WINDOW_WIDTH - 250, 150);
 		planetMenuBase.setBottomRight(WINDOW_WIDTH, 0);
 		planetMenuBase.setPoints();
+		
+		victoryMessage = new Layer(7);
+		victoryMessage.setTopLeft(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 + 70);
+		victoryMessage.setBottomRight(WINDOW_WIDTH / 2 + 100, WINDOW_HEIGHT / 2 - 70);
+		victoryMessage.setPoints();
+		
+		defeatMessage = new Layer(8);
+		defeatMessage.setTopLeft(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 + 70);
+		defeatMessage.setBottomRight(WINDOW_WIDTH / 2 + 100, WINDOW_HEIGHT / 2 - 70);
+		defeatMessage.setPoints();
 				
 		genTiles();
 
@@ -509,8 +544,6 @@ public class StarshipArena {
 		int slowCounter = 0;
 		int counter = 0;
 		while ( !glfwWindowShouldClose(window) ) {
-			
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 			// Poll for window events. The key callback above will only be
 			// invoked during this call.
 			glfwPollEvents();
@@ -518,6 +551,10 @@ public class StarshipArena {
 			
 			//display the title
 			if(gameState == 1){
+				if(currentLevel != 0){
+					currentLevel = 0;
+				}
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 				projectTrueWindowCoordinates();
 				titlePage.setTopLeft(250, WINDOW_HEIGHT - 150);
 				titlePage.setBottomRight(WINDOW_WIDTH - 250, 150);
@@ -527,12 +564,23 @@ public class StarshipArena {
 				glfwSwapBuffers(window); // swap the color buffers
 			}
 			if(gameState == 2){
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 				projectTrueWindowCoordinates();
 				levelSelect.setTopLeft(200, WINDOW_HEIGHT - 50);
 				levelSelect.setBottomRight(WINDOW_WIDTH - 200, 50);
 				levelSelect.setPoints();
 				levelSelect.display();
 				settingsIcon.display();
+				glfwSwapBuffers(window); // swap the color buffers
+			}
+			else if(gameState == 4){
+				projectTrueWindowCoordinates();
+				victoryMessage.display();
+				glfwSwapBuffers(window); // swap the color buffers
+			}
+			else if(gameState == 5){
+				projectTrueWindowCoordinates();
+				defeatMessage.display();
 				glfwSwapBuffers(window); // swap the color buffers
 			}
 			else if(gameState == 3){
@@ -753,10 +801,10 @@ public class StarshipArena {
 					
 					//Check win
 					if (player.getControlledPlanets().size() == 0 && player.getControlledShips().size() == 0) {
-						writeText("You lose!", 400, 450, 50);
+						gameState = 5;
 					}
 					else if (enemy.enemyPlayer.getControlledPlanets().size() == 0 && enemy.enemyPlayer.getControlledShips().size() == 0) {
-						writeText("You win!", 450, 450, 50);
+						gameState = 4;
 					}
 					
 					for (int i = 0; i < text.size(); i++) {
@@ -918,6 +966,7 @@ public class StarshipArena {
 		destroyAllProjectiles();
 		destroyAllTiles();
 		
+		currentLevel = level;
 		zoomLevel = 3;
 		CAMERA_WIDTH = 2600;
 		CAMERA_HEIGHT = 1800;
