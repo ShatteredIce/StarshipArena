@@ -56,7 +56,6 @@ public class BitmapFontLetter {
 		indices = new int[]{0, 1, 2, 2, 1, 3};
 	}
 	
-	//TODO change this from the Sidebar copy paste into something else that works
 	public void setPoints(){
 //		int v_index = 0;
 //		center.setX(game.getWidthScalar() * trueX + game.getCameraX());

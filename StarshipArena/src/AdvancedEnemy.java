@@ -11,52 +11,45 @@ public class AdvancedEnemy extends Enemy{
 	}
 	
 	public void buyShips(){
+		System.out.println("Enemy buy ships");
 		int shipType;
 		ArrayList<Planet> myPlanets = enemyPlayer.getControlledPlanets();
 		ArrayList<Starship> playerShips = game.player.getControlledShips();
 		int fightersCost = 0;
 		int interceptorsCost = 0;
 		int battleshipsCost = 0;
-		int randomFactor = random.nextInt(2);
 		for (int i = 0; i < playerShips.size(); i++) {
 			if (playerShips.get(i) instanceof Fighter) fightersCost += 5;
 			else if (playerShips.get(i) instanceof Interceptor) interceptorsCost += 20;
-			else if (playerShips.get(i) instanceof Battleship) battleshipsCost += 100;
+			else if (playerShips.get(i) instanceof Battleship) battleshipsCost += 40;
 		}
 		for (int i = 0; i < myPlanets.size(); i++) {
 			if (fightersCost >= interceptorsCost && fightersCost > battleshipsCost) {
-				if(randomFactor == 1){
-					if (myPlanets.get(i).getResources() >= 100) {
-						enemyPlayer.setSelectedPlanet(myPlanets.get(i));
-						game.buyShips(enemyPlayer, 4);
-					}
+				if (myPlanets.get(i).getResources() >= 40) {
+					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
+					game.buyShips(enemyPlayer, 3);
 				}
-				else{
-					if (myPlanets.get(i).getResources() >= 100) {
-						enemyPlayer.setSelectedPlanet(myPlanets.get(i));
-						game.buyShips(enemyPlayer, 1);
-					}	
+				else if (myPlanets.get(i).getResources() >= 5) {
+					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
+					game.buyShips(enemyPlayer, 1);
+					attackDelay += 1000;
 				}
 			}
 			else if (interceptorsCost >= fightersCost && interceptorsCost >= battleshipsCost) {
-				if(randomFactor == 1){
-					if (myPlanets.get(i).getResources() >= 20) {
-						enemyPlayer.setSelectedPlanet(myPlanets.get(i));
-						game.buyShips(enemyPlayer, 1);
-						game.buyShips(enemyPlayer, 1);
-					}
-				}
-				else{
-					if (myPlanets.get(i).getResources() >= 20) {
-						enemyPlayer.setSelectedPlanet(myPlanets.get(i));
-						game.buyShips(enemyPlayer, 2);
-					}
+				if (myPlanets.get(i).getResources() >= 5) {
+					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
+					game.buyShips(enemyPlayer, 1);
 				}
 			}
 			else if (battleshipsCost >= fightersCost && battleshipsCost >= interceptorsCost) {
 				if (myPlanets.get(i).getResources() >= 20) {
 					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
 					game.buyShips(enemyPlayer, 2);
+				}
+				else if (myPlanets.get(i).getResources() >= 5) {
+					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
+					game.buyShips(enemyPlayer, 1);
+					attackDelay += 1000;
 				}
 			}
 //			if(myPlanets.get(i).getResources() >= 20){
@@ -84,9 +77,15 @@ public class AdvancedEnemy extends Enemy{
 				performAttack();
 			buyShips();
 		}
+		ArrayList<Starship> myShips = enemyPlayer.getControlledShips();
+		for (int i = 0; i < myShips.size(); i++) {
+			if (myShips.get(i) instanceof Battleship && myShips.get(i).target != null)
+				myShips.get(i).setLocationTarget(null);
+		}
 	}
 	
 	public void performAttack() {
+		System.out.println("Attack");
 		ArrayList<Starship> myShips = enemyPlayer.getControlledShips();
 		ArrayList<Starship> myTransports = new ArrayList<Starship>();
 		ArrayList<Planet> myPlanets = enemyPlayer.getControlledPlanets();
@@ -107,6 +106,7 @@ public class AdvancedEnemy extends Enemy{
 		for (int i = 0; i < myShips.size(); i++) {
 			if (myShips.get(i) instanceof Fighter && myShips.get(i).locationTarget == null) costOfShips += 5;
 			else if (myShips.get(i) instanceof Interceptor && myShips.get(i).locationTarget == null) costOfShips += 20;
+			else if (myShips.get(i) instanceof Battleship && myShips.get(i).locationTarget == null) costOfShips += 40;
 			else if (myShips.get(i) instanceof Transport) {
 				myTransports.add(myShips.remove(i));
 				i--;
@@ -118,7 +118,6 @@ public class AdvancedEnemy extends Enemy{
 				if (myPlanets.size() > 0) {
 					int targetPlanet = random.nextInt(myPlanets.size());
 					myTransports.get(i).setLocationTarget(myPlanets.get(targetPlanet).center);
-					System.out.println("Transports moving between planets");
 				}
 			}
 		}
@@ -134,6 +133,10 @@ public class AdvancedEnemy extends Enemy{
 				attackGroup.add(myShips.get(i));
 				costOfAttack -= 20;
 			}
+			else if (myShips.get(i) instanceof Battleship && myShips.get(i).locationTarget == null) {
+				attackGroup.add(myShips.get(i));
+				costOfAttack -= 40;
+			}
 		}
 		//First target any planets without ships around them
 		boolean attackingUnprotected = false;
@@ -141,7 +144,6 @@ public class AdvancedEnemy extends Enemy{
 			if (game.planets.get(i).capturingTeam.equals("none")) {
 				for (int j = 0; j < attackGroup.size(); j++) {
 					attackGroup.get(j).setLocationTarget(game.planets.get(i).center);
-					System.out.println("Attacking unprotected planet");
 				}
 				attackingUnprotected = true;
 				break;
@@ -166,7 +168,6 @@ public class AdvancedEnemy extends Enemy{
 				else {
 					for (int i = 0; i < attackGroup.size(); i++) {
 						attackGroup.get(i).setLocationTarget(game.planets.get(targetPlanet).center);
-						System.out.println("Attacking planet");
 					}
 				}
 			}

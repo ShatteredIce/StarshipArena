@@ -2,7 +2,6 @@ import java.util.ArrayList;
 
 public class Battleship extends Starship{
 	
-	Starship target = null;
 	int changeDirection = 0;
 	int changeDirectionCooldown = 0;
 	static Texture blue_tex1 = new Texture("blue_transport1.png");
@@ -15,14 +14,14 @@ public class Battleship extends Starship{
 	static Texture red_tex4 = new Texture("red_transport4.png");
 	
 	static double primary_damage = 10;
-	static int primary_cooldown = 800;
-	static int primary_spread = 60;
+	static int primary_cooldown = 2000;
+	static int primary_spread = 360;
 	static int primary_accuracy = 95;
-	static int primary_range = 2000;
-	static int primary_speed = 15;
+	static int primary_range = 1500;
+	static int primary_speed = 20;
 	static int primary_lifetime = 2500;
 	static int primary_xoffset = 0;
-	static int primary_yoffset = 10;
+	static int primary_yoffset = 40;
 	int primary_id = 4;
 	
 	static double secondary_damage = 0.5;
@@ -57,7 +56,7 @@ public class Battleship extends Starship{
 		min_turn_velocity = 1;
 		max_turn_speed = 1;
 		//weaponry
-		scan_range = 300;
+		scan_range = 1450;
 		//other
 		clickRadius = 55;
 		xOff = 0;
@@ -77,7 +76,7 @@ public class Battleship extends Starship{
 		turrets.add(primaryTurret);
 		
 		Turret secondaryTurret1 = new Turret(game, this, team, 0, 0, angle, secondary_damage, secondary_cooldown, 
-				secondary_spread, secondary_accuracy, secondary_range, secondary_speed, secondary_lifetime, secondary_id, 1, 90);
+				secondary_spread, secondary_accuracy, secondary_range, secondary_speed, secondary_lifetime, secondary_id, 1, 60);
 		secondaryTurret1.setOffset(-secondary_xoffset, 50);
 		turrets.add(secondaryTurret1);
 		
@@ -87,12 +86,12 @@ public class Battleship extends Starship{
 		turrets.add(secondaryTurret2);
 		
 		Turret secondaryTurret3 = new Turret(game, this, team, 0, 0, angle, secondary_damage, secondary_cooldown, 
-				secondary_spread, secondary_accuracy, secondary_range, secondary_speed, secondary_lifetime, secondary_id, 1, 90);
+				secondary_spread, secondary_accuracy, secondary_range, secondary_speed, secondary_lifetime, secondary_id, 1, 120);
 		secondaryTurret3.setOffset(-secondary_xoffset, -50);
 		turrets.add(secondaryTurret3);
 		
 		Turret secondaryTurret4 = new Turret(game, this, team, 0, 0, angle, secondary_damage, secondary_cooldown, 
-				secondary_spread, secondary_accuracy, secondary_range, secondary_speed, secondary_lifetime, secondary_id, 1, 270);
+				secondary_spread, secondary_accuracy, secondary_range, secondary_speed, secondary_lifetime, secondary_id, 1, 300);
 		secondaryTurret4.setOffset(secondary_xoffset, 50);
 		turrets.add(secondaryTurret4);
 		
@@ -102,7 +101,7 @@ public class Battleship extends Starship{
 		turrets.add(secondaryTurret5);
 		
 		Turret secondaryTurret6 = new Turret(game, this, team, 0, 0, angle, secondary_damage, secondary_cooldown, 
-				secondary_spread, secondary_accuracy, secondary_range, secondary_speed, secondary_lifetime, secondary_id, 1, 270);
+				secondary_spread, secondary_accuracy, secondary_range, secondary_speed, secondary_lifetime, secondary_id, 1, 240);
 		secondaryTurret6.setOffset(secondary_xoffset, -50);
 		turrets.add(secondaryTurret6);
 	}
@@ -217,6 +216,10 @@ public class Battleship extends Starship{
 	
 	
 	public void doRandomMovement(){
+		if(target != null && target.getHealth() <= 0){
+			target = null;
+		}
+		getClosestEnemy();
 		if (locationTarget != null) {
 			double distance = distance(this.getX(), this.getY(), locationTarget.x, locationTarget.y);
 			if (distance > 50) {
@@ -243,6 +246,7 @@ public class Battleship extends Starship{
 		}
 		moveTurrets();
 		edgeGuard();
+		getClosestEnemy();
 	}
 	
 	//gets the closest enemy and changes target accordingly

@@ -11,31 +11,56 @@ public class Missile extends Projectile {
 	int max_velocity = 20;
 	int max_reverse_velocity = -2;
 	int min_turn_velocity = 1;
-	int max_turn_speed = 3;
+	int max_turn_speed = 2;
 	//weaponry
-	int scan_range = 1500;
+	int scan_range = 4000;
 
 	public Missile(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newdamage, int spawnangle, int accuracy, double newspeed, double newlifetime, int id) {
 		super(mygame, newowner, myteam, spawnx, spawny, newdamage, spawnangle, accuracy, newspeed, newlifetime, id);
 	}
 	
+	public void destroy(Starship victim){
+		model.destroy();
+		game.removeProjectile(this);
+		for (int i = 0; i < 360; i += 6) {
+			if(owner instanceof MissilePod){
+				new Projectile(game, null, team, victim.center.x, victim.center.y, 3, i, 100, 20, 10, 3);
+				new Projectile(game, null, team, victim.center.x, victim.center.y, 3, i, 100, 16, 10, 3);
+				new Projectile(game, null, team, victim.center.x, victim.center.y, 3, i, 100, 12, 10, 3);
+				new Projectile(game, null, team, victim.center.x, victim.center.y, 3, i, 100, 40, 10, 3);
+				new Projectile(game, null, team, victim.center.x, victim.center.y, 3, i, 100, 32, 10, 3);
+				new Projectile(game, null, team, victim.center.x, victim.center.y, 3, i, 100, 26, 10, 3);
+			}
+			else {
+				new Projectile(game, null, "none", victim.center.x, victim.center.y, 3, i, 100, 20, 10, 3);
+				new Projectile(game, null, "none", victim.center.x, victim.center.y, 3, i, 100, 16, 10, 3);
+				new Projectile(game, null, "none", victim.center.x, victim.center.y, 3, i, 100, 12, 10, 3);
+				new Projectile(game, null, "none", victim.center.x, victim.center.y, 3, i, 100, 40, 10, 3);
+				new Projectile(game, null, "none", victim.center.x, victim.center.y, 3, i, 100, 32, 10, 3);
+				new Projectile(game, null, "none", victim.center.x, victim.center.y, 3, i, 100, 26, 10, 3);
+			}
+		}
+	}
+	
 	public void destroy(){
 		model.destroy();
 		game.removeProjectile(this);
-		int x_rand;
-		int y_rand;
-		for (int i = 0; i < 360; i += 5) {
-			x_rand = random.nextInt(5) - 2;
-			y_rand = random.nextInt(5) - 2;
+		for (int i = 0; i < 360; i += 6) {
 			if(owner instanceof MissilePod){
-				new Projectile(game, null, team, center.x + x_rand, center.y + y_rand, 0.5, i, 100, 5, 10, 3);
-				new Projectile(game, null, team, center.x + x_rand, center.y + y_rand, 0.5, i, 100, 5, 10, 3);
-				new Projectile(game, null, team, center.x + x_rand, center.y + y_rand, 0.5, i, 100, 5, 10, 3);
+				new Projectile(game, null, team, center.x, center.y, 3, i, 100, 20, 10, 3);
+				new Projectile(game, null, team, center.x, center.y, 3, i, 100, 16, 10, 3);
+				new Projectile(game, null, team, center.x, center.y, 3, i, 100, 12, 10, 3);
+				new Projectile(game, null, team, center.x, center.y, 3, i, 100, 40, 10, 3);
+				new Projectile(game, null, team, center.x, center.y, 3, i, 100, 32, 10, 3);
+				new Projectile(game, null, team, center.x, center.y, 3, i, 100, 26, 10, 3);
 			}
 			else{
-				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0.5, i, 100, 5, 10, 3);
-				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0.5, i, 100, 5, 10, 3);
-				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0.5, i, 100, 5, 10, 3);
+				new Projectile(game, null, "none", center.x, center.y, 3, i, 100, 20, 10, 3);
+				new Projectile(game, null, "none", center.x, center.y, 3, i, 100, 16, 10, 3);
+				new Projectile(game, null, "none", center.x, center.y, 3, i, 100, 12, 10, 3);
+				new Projectile(game, null, "none", center.x, center.y, 3, i, 100, 40, 10, 3);
+				new Projectile(game, null, "none", center.x, center.y, 3, i, 100, 32, 10, 3);
+				new Projectile(game, null, "none", center.x, center.y, 3, i, 100, 26, 10, 3);
 			}
 		}
 	}

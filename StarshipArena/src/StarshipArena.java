@@ -52,6 +52,7 @@ public class StarshipArena {
     int FIGHTER_COST = 5;
     int INTERCEPTOR_COST = 20;
     int TRANSPORT_COST = 10;
+    int BATTLESHIP_COST = 40;
     
 	Random random = new Random();
 	
@@ -211,11 +212,11 @@ public class StarshipArena {
 			}
 			if ( key == GLFW_KEY_LEFT_BRACKET && action == GLFW_PRESS ) {
 				if (SLOW == 1) SLOW = 5000;
-				else if (SLOW == 5000) SLOW = 100000;
+				else if (SLOW == 5000) SLOW = 50000;
 			}
 
 			if ( key == GLFW_KEY_RIGHT_BRACKET && action == GLFW_PRESS ) {
-				if (SLOW == 100000) SLOW = 5000;
+				if (SLOW == 50000) SLOW = 5000;
 				else if (SLOW == 5000) SLOW = 1;
 			}
 		
@@ -231,6 +232,8 @@ public class StarshipArena {
 				buyShips(player, 2);
 			if ( key == GLFW_KEY_3 && action == GLFW_PRESS)
 				buyShips(player, 3);
+//			if ( key == GLFW_KEY_4 && action == GLFW_PRESS)
+//				buyShips(player, 4);
 			if ( key == GLFW_KEY_ENTER && action == GLFW_PRESS)
 				gameState = 3;
 		
@@ -655,6 +658,7 @@ public class StarshipArena {
 					int numFightersSelected = 0;
 					int numInterceptorsSelected = 0;
 					int numTransportsSelected = 0;
+					int numBattleshipsSelected = 0;
 					String shipStatus = "Idle";
 					int selectedPlanetResources = Integer.MIN_VALUE;
 					boolean alliedPlanetSelected = false;
@@ -680,7 +684,8 @@ public class StarshipArena {
 							if (ships.get(s).damageDisplayDelay > 0) shipStatus = "Taking damage";
 							if (ships.get(s) instanceof Fighter) numFightersSelected++;
 							else if (ships.get(s) instanceof Interceptor) numInterceptorsSelected++;
-							else if (ships.get(s) instanceof Transport) numTransportsSelected++; 
+							else if (ships.get(s) instanceof Transport) numTransportsSelected++;
+							else if (ships.get(s) instanceof Battleship) numBattleshipsSelected++;
 						}
 					}
 					
@@ -694,15 +699,17 @@ public class StarshipArena {
 								alliedPlanetSelected = true;
 							}
 							else
-								writeText("??", 20, 20);
+//								writeText("??", 20, 20);
+								writeText("" + selectedPlanetResources, 20, 20);
 							
 							writeText("Controlled by:", 20, 100);
 							writeText(planetControllingTeam, 20, 80);
 						}
-						else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected == 1) {
+						else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected + numBattleshipsSelected == 1) {
 							if (numFightersSelected == 1) writeText("Fighter", 400, 15, 30);
 							else if (numInterceptorsSelected == 1) writeText("Interceptor", 400, 15, 30);
 							else if (numTransportsSelected == 1) writeText("Transport", 400, 15, 30);
+							else if (numBattleshipsSelected == 1) writeText("Battleship", 400, 15, 30);
 //							if(shipsControllingTeam.equals(player.getTeam()))
 								writeText("Armor:" + sumCurrentHP + "/" + sumMaxHP, 800, 20);
 //							else
@@ -712,11 +719,12 @@ public class StarshipArena {
 							writeText("Ship status:", 20, 40);
 							writeText(shipStatus, 20, 20);
 						}
-						else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected > 1) {
-							writeText("Starfleet(" + (numFightersSelected + numInterceptorsSelected + numTransportsSelected) + ")", 400, 15, 30);
+						else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected  + numBattleshipsSelected> 1) {
+							writeText("Starfleet(" + (numFightersSelected + numInterceptorsSelected + numTransportsSelected + numBattleshipsSelected) + ")", 400, 15, 30);
 							writeText("Fighters:" + numFightersSelected, 1000, 100);
 							writeText("Interceptors:" + numInterceptorsSelected, 1000, 80);
 							writeText("Transports:" + numTransportsSelected, 1000, 60);
+							writeText("Battleships:" + numBattleshipsSelected, 1000, 40);
 //							if (shipsControllingTeam.equals(player.getTeam()))
 								writeText("Fleet armor:" + sumCurrentHP + "/" + sumMaxHP, 800, 20);
 //							else
@@ -743,6 +751,19 @@ public class StarshipArena {
 						}
 					}
 					
+					//Check win
+					if (player.getControlledPlanets().size() == 0 && player.getControlledShips().size() == 0) {
+						writeText("You lose!", 400, 450, 50);
+					}
+					else if (enemy.enemyPlayer.getControlledPlanets().size() == 0 && enemy.enemyPlayer.getControlledShips().size() == 0) {
+						writeText("You win!", 450, 450, 50);
+					}
+					
+					for (int i = 0; i < text.size(); i++) {
+//						text.get(i).setPoints();
+						text.get(i).display();
+					}
+					
 					glDisable(GL_TEXTURE_2D);
 					
 					//Check which direction the camera should move, and move accordingly
@@ -754,6 +775,7 @@ public class StarshipArena {
 						CURR_Y = Math.max(0, CURR_Y - CAMERA_SPEED * WORLD_HEIGHT / 2600);
 					if (panUp)
 						CURR_Y = Math.min(WORLD_HEIGHT - CAMERA_HEIGHT, CURR_Y + CAMERA_SPEED * WORLD_HEIGHT / 2600);
+					
 					
 					glfwSwapBuffers(window); // swap the color buffers
 		        
@@ -838,10 +860,17 @@ public class StarshipArena {
 						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), 0);
 				
 			}
-			//attempt to buy transport
-			else if(type == 3 && p.getResources() >= TRANSPORT_COST){
-				p.setResources(p.getResources() - TRANSPORT_COST);
-				new Transport(this, p.getTeam(), (int) p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(), 
+//			//attempt to buy transport
+//			else if(type == 3 && p.getResources() >= TRANSPORT_COST){
+//				p.setResources(p.getResources() - TRANSPORT_COST);
+//				new Transport(this, p.getTeam(), (int) p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(), 
+//						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), 0);
+//				
+//			}
+			//attempt to buy battleship
+			else if(type ==3 && p.getResources() >= BATTLESHIP_COST){
+				p.setResources(p.getResources() - BATTLESHIP_COST);
+				new Battleship(this, p.getTeam(), (int) p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(), 
 						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), 0);
 				
 			}
@@ -951,17 +980,17 @@ public class StarshipArena {
 			zoomLevel = 2;
 			
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
-			new Planet(this, 350, 200, 1).setTeam("blue");
-			new Planet(this, 2000, 700, 2).setTeam("blue");
+			new Planet(this, 1350, 1000, 1).setTeam("blue");
+			new Planet(this, 3000, 1500, 2).setTeam("blue");
 			new Planet(this, 2250, 3000, 3).setTeam("red");
 			new Planet(this, 4700, 2300, 4).setTeam("red");
-			new Fighter(this, "blue", 350, 200, 0);
-			new Fighter(this, "blue", 450, 150, 0);
-			new Fighter(this, "blue", 250, 150, 0);
+			new Fighter(this, "blue", 1350, 1000, 0);
+			new Fighter(this, "blue", 1450, 950, 0);
+			new Fighter(this, "blue", 1250, 950, 0);
 			
-			new Fighter(this, "blue", 2000, 700, 0);
-			new Fighter(this, "blue", 2100, 650, 0);
-			new Fighter(this, "blue", 1900, 650, 0);
+			new Fighter(this, "blue", 3000, 1500, 0);
+			new Fighter(this, "blue", 3100, 1450, 0);
+			new Fighter(this, "blue", 2900, 1450, 0);
 			
 			new Fighter(this, "red", 2250, 3000, 0);
 			new Fighter(this, "red", 2350, 2950, 0);
@@ -982,8 +1011,8 @@ public class StarshipArena {
 			CAMERA_HEIGHT = 3600;
 			
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
-			new Planet(this, 350, 200, 1).setTeam("blue");
-			new Planet(this, 2000, 700, 2).setTeam("blue");
+			new Planet(this, 1350, 1000, 1).setTeam("blue");
+			new Planet(this, 3000, 1500, 2).setTeam("blue");
 			new Planet(this, 2250, 3000, 3).setTeam("blue");
 			new Planet(this, 4700, 2300, 4).setTeam("blue");
 			
@@ -993,15 +1022,15 @@ public class StarshipArena {
 			new Planet(this, 2700, 6300, 0).setTeam("red");
 			new Planet(this, 6700, 7500, 0).setTeam("red");
 			
-			new Fighter(this, "blue", 350, 200, 0);
-			new Fighter(this, "blue", 450, 150, 0);
-			new Fighter(this, "blue", 250, 150, 0);
-			new Interceptor(this, "blue", 150, 100, 0);
-			new Interceptor(this, "blue", 550, 100, 0);
+			new Fighter(this, "blue", 1350, 1000, 0);
+			new Fighter(this, "blue", 1450, 950, 0);
+			new Fighter(this, "blue", 1250, 950, 0);
+			new Interceptor(this, "blue", 1150, 900, 0);
+			new Interceptor(this, "blue", 1550, 900, 0);
 			
-			new Interceptor(this, "blue", 2000, 700, 0);
-			new Fighter(this, "blue", 2100, 650, 0);
-			new Fighter(this, "blue", 1900, 650, 0);
+			new Interceptor(this, "blue", 3000, 1500, 0);
+			new Fighter(this, "blue", 3100, 1450, 0);
+			new Fighter(this, "blue", 2900, 1450, 0);
 			
 			new Fighter(this, "blue", 2250, 3000, 0);
 			new Fighter(this, "blue", 2350, 2950, 0);
@@ -1041,8 +1070,8 @@ public class StarshipArena {
 			CAMERA_HEIGHT = 3600;
 			
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
-			new Planet(this, 350, 200, 1).setTeam("blue");
-			new Planet(this, 2000, 700, 2).setTeam("blue");
+			new Planet(this, 1350, 1000, 1).setTeam("blue");
+			new Planet(this, 3000, 1500, 2).setTeam("blue");
 			new Planet(this, 2250, 3000, 3).setTeam("blue");
 			new Planet(this, 4700, 2300, 4).setTeam("blue");
 			
@@ -1053,9 +1082,9 @@ public class StarshipArena {
 			new Planet(this, 2700, 6300, 0).setTeam("blue");
 			new Planet(this, 6700, 7500, 0).setTeam("blue");
 			
-			new Fighter(this, "blue", 350, 200, 0);
+			new Fighter(this, "blue", 1350, 1000, 0);
 			
-			new Interceptor(this, "blue", 2000, 700, 0);
+			new Interceptor(this, "blue", 3000, 1500, 0);
 			
 			new Fighter(this, "blue", 2250, 3000, 0);
 			
@@ -1153,7 +1182,12 @@ public class StarshipArena {
 							polygon_intersection(p.getPoints(), s.getPoints())){
 		    			s.setHealth(s.getHealth()-p.getDamage());
 		    			s.damageDisplayDelay = 100;
-		    			p.destroy();
+		    			if (p instanceof Missile) {
+		    				Missile m = (Missile)p;
+		    				m.destroy(s);
+		    			}
+		    			else
+		    				p.destroy();
 		    			projectiles.remove(p);
 		    		}
 				}
@@ -1278,6 +1312,7 @@ public class StarshipArena {
     
     public void destroyAllProjectiles(){
     	for (int i = projectiles.size()-1; i >= 0; i--) {
+    		if (projectiles.get(i) instanceof Missile) projectiles.get(i).center = new Point(100000, 100000);
 			projectiles.get(i).destroy();
 		}
     }
