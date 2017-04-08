@@ -11,7 +11,6 @@ public class AdvancedEnemy extends Enemy{
 	}
 	
 	public void buyShips(){
-		System.out.println("Enemy buy ships");
 		int shipType;
 		ArrayList<Planet> myPlanets = enemyPlayer.getControlledPlanets();
 		ArrayList<Starship> playerShips = game.player.getControlledShips();
@@ -87,7 +86,6 @@ public class AdvancedEnemy extends Enemy{
 	}
 	
 	public void performAttack() {
-		System.out.println("Attack");
 		ArrayList<Starship> myShips = enemyPlayer.getControlledShips();
 		ArrayList<Starship> myTransports = new ArrayList<Starship>();
 		ArrayList<Planet> myPlanets = enemyPlayer.getControlledPlanets();
