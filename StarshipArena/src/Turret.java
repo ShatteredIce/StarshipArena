@@ -56,8 +56,8 @@ public class Turret {
 		projectile_speed = newspeed;
 		projectile_lifetime = newlifetime / projectile_speed;
 		projectile_textureId = newid;
-		if (modifier == 1) autoAiming = true;
-		else if (modifier == 2) fireMissiles = true;
+		if (modifier % 2 == 1) autoAiming = true;
+		if (modifier > 1) fireMissiles = true;
 		angle_offset = newangle_offset;
 	}
 	
