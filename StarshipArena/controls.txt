@@ -36,7 +36,7 @@ There are three ship types in the game:
 Ships begin to slowly regenerate HP if they are out of combat for about 10 seconds. This regeneration is faster if the ships are near an allied planet.
 
 A player should use these three ship types to build an effective army to conquer more planets. Planets provide resource production, so the player with more planets
-will be able to build more ships and perform better in the long run.
+will be able to build more ships and perform better in the long run. The enemy will be building these ships too, so you must build smartly to counter them.
 
 There is a fourth type of enemy that you will encounter later in the game. We can't give you much information about them, but be warned that they are very dangerous!
 
