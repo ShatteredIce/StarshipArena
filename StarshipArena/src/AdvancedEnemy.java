@@ -32,7 +32,8 @@ public class AdvancedEnemy extends Enemy{
 				else if (myPlanets.get(i).getResources() >= 5) {
 					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
 					game.buyShips(enemyPlayer, 1);
-					attackDelay += 1000;
+					if (attackDelay < 2000)
+						attackDelay += 1000;
 				}
 			}
 			else if (interceptorsCost >= fightersCost && interceptorsCost >= battleshipsCost) {
@@ -49,7 +50,8 @@ public class AdvancedEnemy extends Enemy{
 				else if (myPlanets.get(i).getResources() >= 5) {
 					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
 					game.buyShips(enemyPlayer, 1);
-					attackDelay += 1000;
+					if (attackDelay < 2000)
+						attackDelay += 1000;
 				}
 			}
 //			if(myPlanets.get(i).getResources() >= 20){

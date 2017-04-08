@@ -1303,7 +1303,10 @@ public class StarshipArena {
 				if (p.getOwner() != null ) {
 					if(!p.getOwner().equals(s) && (!p.getTeam().equals(s.getTeam()) || p.getTeam().equals("none")) && 
 							polygon_intersection(p.getPoints(), s.getPoints())){
-		    			s.setHealth(s.getHealth()-p.getDamage());
+						if (p instanceof Missile && s instanceof Fighter)
+							s.setHealth(s.getHealth()-p.getDamage()*20);
+						else
+							s.setHealth(s.getHealth()-p.getDamage());
 		    			s.damageDisplayDelay = 100;
 		    			if (p instanceof Missile) {
 		    				Missile m = (Missile)p;
@@ -1316,7 +1319,10 @@ public class StarshipArena {
 				}
 				else if ((!p.getTeam().equals(s.getTeam()) || p.getTeam().equals("none")) && 
 							polygon_intersection(p.getPoints(), s.getPoints())) {
-					s.setHealth(s.getHealth()-p.getDamage());
+					if (p instanceof Missile && s instanceof Fighter)
+						s.setHealth(s.getHealth()-p.getDamage()*20);
+					else
+						s.setHealth(s.getHealth()-p.getDamage());
 	    			s.damageDisplayDelay = 100;
 	    			p.destroy();
 	    			projectiles.remove(p);

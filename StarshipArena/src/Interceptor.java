@@ -27,7 +27,7 @@ public class Interceptor extends Starship{
 	int primary_id = 0;
 	
 	static double secondary_damage = 0.5;
-	static int secondary_cooldown = 10;
+	static int secondary_cooldown = 8;
 	static int secondary_spread = 10;
 	static int secondary_accuracy = 97;
 	static int secondary_range = 500;

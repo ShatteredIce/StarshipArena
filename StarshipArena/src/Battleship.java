@@ -13,24 +13,24 @@ public class Battleship extends Starship{
 	static Texture red_tex3 = new Texture("red_transport3.png");
 	static Texture red_tex4 = new Texture("red_transport4.png");
 	
-	static double primary_damage = 10;
-	static int primary_cooldown = 2000;
+	static double primary_damage = 0.5;
+	static int primary_cooldown = 70;
 	static int primary_spread = 360;
 	static int primary_accuracy = 95;
-	static int primary_range = 1500;
+	static int primary_range = 2000;
 	static int primary_speed = 20;
-	static int primary_lifetime = 1600;
+	static int primary_lifetime = 2200;
 	static int primary_xoffset = 0;
 	static int primary_yoffset = 40;
 	static int primary_id = 4;
 	
 	static double secondary_damage = 0.5;
-	static int secondary_cooldown = 40;
+	static int secondary_cooldown = 50;
 	static int secondary_spread = 30;
 	static int secondary_accuracy = 97;
 	static int secondary_range = 600;
 	static int secondary_speed = 30; 
-	static int secondary_lifetime = 400;
+	static int secondary_lifetime = 800;
 	static int secondary_xoffset = 0;
 	static int secondary_yoffset = 0;
 	static int secondary_id = 3;
@@ -56,7 +56,7 @@ public class Battleship extends Starship{
 		min_turn_velocity = 1;
 		max_turn_speed = 1;
 		//weaponry
-		scan_range = 1450;
+		scan_range = 1900;
 		//other
 		clickRadius = 55;
 		xOff = 0;
