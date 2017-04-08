@@ -25,12 +25,12 @@ public class Battleship extends Starship{
 	static int primary_id = 4;
 	
 	static double secondary_damage = 0.5;
-	static int secondary_cooldown = 50;
+	static int secondary_cooldown = 80;
 	static int secondary_spread = 30;
 	static int secondary_accuracy = 97;
-	static int secondary_range = 600;
+	static int secondary_range = 500;
 	static int secondary_speed = 30; 
-	static int secondary_lifetime = 800;
+	static int secondary_lifetime = 650;
 	static int secondary_xoffset = 0;
 	static int secondary_yoffset = 0;
 	static int secondary_id = 3;
