@@ -32,16 +32,20 @@ There are three ship types in the game:
     any ship into shrapnel with a direct hit.
      - Counters: Fighter
      - Countered by: Interceptor
+
+Ships begin to slowly regenerate HP if they are out of combat for about 10 seconds. This regeneration is faster if the ships are near an allied planet.
+
 A player should use these three ship types to build an effective army to conquer more planets. Planets provide resource production, so the player with more planets
-will be able to build more ships and perform better in the long run.
+will be able to build more ships and perform better in the long run. The enemy will be building these ships too, so you must build smartly to counter them.
 
-
+There is a fourth type of enemy that you will encounter later in the game. We can't give you much information about them, but be warned that they are very dangerous!
 
 *****HOTKEYS*****:
  - Left click:
        * In menu: Navigate the menus and select levels to play.
        * In game: Click on planets or ships to select them, or draw a box to select multiple ships.
          Selecting ships or planets will show the player more information about them.
+         Clicking on the 'X' in the top right corner will exit the level and return to main menu.
  - Right click:
        * In game: With ships selected, right click to attack-move the selected ships to the location of the mouse.
          Ships will automatically attack enemies while en route.
@@ -54,6 +58,8 @@ will be able to build more ships and perform better in the long run.
        * In game: Pan the camera to see more of the battlefield.
  - Numbers (1, 2, 3):
        * In game: With an allied planet selected, build Fighters (number 1), Interceptors (number 2), or Battleships (number 3) if resources are sufficient.
+ - Esc:
+       * In game: Functions as if the player pressed the 'X'; exits to main menu.
 
 
 
@@ -62,7 +68,8 @@ will be able to build more ships and perform better in the long run.
 *****CHEATS*****
  - Enter:
        * In menu: Enter the test world. This is used for demonstration only.
+       If another level is loaded at any point, pressing 'Enter' will enter that level in the state it was
  - '[' and ']':
        * In game: Slow the game down with '[' and use ']' to speed it back up to normal.
  - F1:
-       * In game: Instantly add 100 resources to the selected planet.
+       * In game: Instantly add 100 resources to the selected allied planet.
