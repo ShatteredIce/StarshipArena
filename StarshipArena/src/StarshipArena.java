@@ -743,6 +743,19 @@ public class StarshipArena {
 						}
 					}
 					
+					//Check win
+					if (player.getControlledPlanets().size() == 0 && player.getControlledShips().size() == 0) {
+						writeText("You lose!", 400, 450, 50);
+					}
+					else if (enemy.enemyPlayer.getControlledPlanets().size() == 0 && enemy.enemyPlayer.getControlledShips().size() == 0) {
+						writeText("You win!", 450, 450, 50);
+					}
+					
+					for (int i = 0; i < text.size(); i++) {
+//						text.get(i).setPoints();
+						text.get(i).display();
+					}
+					
 					glDisable(GL_TEXTURE_2D);
 					
 					//Check which direction the camera should move, and move accordingly
@@ -754,6 +767,7 @@ public class StarshipArena {
 						CURR_Y = Math.max(0, CURR_Y - CAMERA_SPEED * WORLD_HEIGHT / 2600);
 					if (panUp)
 						CURR_Y = Math.min(WORLD_HEIGHT - CAMERA_HEIGHT, CURR_Y + CAMERA_SPEED * WORLD_HEIGHT / 2600);
+					
 					
 					glfwSwapBuffers(window); // swap the color buffers
 		        
@@ -1246,6 +1260,7 @@ public class StarshipArena {
     
     public void destroyAllProjectiles(){
     	for (int i = projectiles.size()-1; i >= 0; i--) {
+    		if (projectiles.get(i) instanceof Missile) projectiles.get(i).center = new Point(100000, 100000);
 			projectiles.get(i).destroy();
 		}
     }
