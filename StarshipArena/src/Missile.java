@@ -27,9 +27,16 @@ public class Missile extends Projectile {
 		for (int i = 0; i < 360; i += 5) {
 			x_rand = random.nextInt(5) - 2;
 			y_rand = random.nextInt(5) - 2;
-			new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0.5, i, 100, 5, 10, 3);
-			new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0.5, i, 100, 5, 10, 3);
-			new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0.5, i, 100, 5, 10, 3);
+			if(owner instanceof MissilePod){
+				new Projectile(game, null, team, center.x + x_rand, center.y + y_rand, 0.5, i, 100, 5, 10, 3);
+				new Projectile(game, null, team, center.x + x_rand, center.y + y_rand, 0.5, i, 100, 5, 10, 3);
+				new Projectile(game, null, team, center.x + x_rand, center.y + y_rand, 0.5, i, 100, 5, 10, 3);
+			}
+			else{
+				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0.5, i, 100, 5, 10, 3);
+				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0.5, i, 100, 5, 10, 3);
+				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0.5, i, 100, 5, 10, 3);
+			}
 		}
 	}
 	

@@ -79,13 +79,13 @@ public class Starship {
 				e.printStackTrace();
 			}
 		}
+		spawnPoint = new Point(spawnx, spawny);
+		center = new Point(spawnx, spawny);
 		angle = spawnangle;
 		shipStats();
 		shipTurrets();
 		current_health = max_health;
 		locationTarget = null;
-		spawnPoint = new Point(spawnx, spawny);
-		center = new Point(spawnx, spawny);
 		points = generatePoints();
 		haloPoints = generateHaloPoints();
 		hitbox = generateHitbox();

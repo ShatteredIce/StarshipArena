@@ -204,7 +204,11 @@ public class StarshipArena {
 				if(gameState == 3){
 					updateZoomLevel(false);
 				}
-			
+			if ( key == GLFW_KEY_F1 && action == GLFW_RELEASE ){
+				if(player.getSelectedPlanet() != null && player.getSelectedPlanet().getTeam().equals(player.getTeam())){
+					player.getSelectedPlanet().setResources(player.getSelectedPlanet().getResources() + 100);
+				}
+			}
 			if ( key == GLFW_KEY_LEFT_BRACKET && action == GLFW_PRESS ) {
 				if (SLOW == 1) SLOW = 5000;
 				else if (SLOW == 5000) SLOW = 100000;
@@ -601,8 +605,12 @@ public class StarshipArena {
 								newSecondX = Math.min(Math.max(second.center.x + Math.cos(angle), second.getClickRadius()), WORLD_WIDTH - second.getClickRadius());
 								newSecondY = Math.min(Math.max(second.center.y - Math.sin(angle), second.getClickRadius()), WORLD_HEIGHT - second.getClickRadius());
 							}
-							first.center = new Point(newFirstX, newFirstY);
-							second.center = new Point(newSecondX, newSecondY);
+							if(!(first instanceof MissilePod)){
+								first.center = new Point(newFirstX, newFirstY);
+							}
+							if(!(second instanceof MissilePod)){
+								second.center = new Point(newSecondX, newSecondY);
+							}
 //							if (first.locationTarget != null) {
 //								if (second.locationTarget != null) {
 //									first.setLocationTarget(new Point(first.locationTarget.x + newFirstX - first.center.x
@@ -1085,6 +1093,50 @@ public class StarshipArena {
 			new Fighter(this, "red", (int)(4350 - 150 * Math.sqrt(2)), (int)(4200 + 150 * Math.sqrt(2)), 45);
 			new Fighter(this, "red", (int)(4350 - 150 * Math.sqrt(2)), (int)(4200 - 150 * Math.sqrt(2)), 135);
 			new Fighter(this, "red", (int)(4350 + 150 * Math.sqrt(2)), (int)(4200 - 150 * Math.sqrt(2)), 225);
+		}
+		
+		else if(level == 6){
+			WORLD_WIDTH = 7000;
+		    WORLD_HEIGHT = 6000;
+		    CURR_X = 1750;
+			CURR_Y = 2400;
+			zoomLevel = 3;
+			CAMERA_WIDTH = 5200;
+			CAMERA_HEIGHT = 3600;
+			
+			enemy = new AdvancedEnemy(this, new Player(this, "red"));
+			
+			new Planet(this, 3500, 4000, 4).setTeam("red");
+			
+			new MissilePod(this, "red", 3300, 3600, 180);
+			new MissilePod(this, "red", 3500, 3600, 180);
+			new MissilePod(this, "red", 3700, 3600, 180);
+			
+			new MissilePod(this, "red", 3100, 3800, 90);
+			new MissilePod(this, "red", 3100, 4000, 90);
+			new MissilePod(this, "red", 3100, 4200, 90);
+			
+			new MissilePod(this, "red", 3900, 3800, 270);
+			new MissilePod(this, "red", 3900, 4000, 270);
+			new MissilePod(this, "red", 3900, 4200, 270);
+			
+			new MissilePod(this, "red", 3300, 4400, 0);
+			new MissilePod(this, "red", 3500, 4400, 0);
+			new MissilePod(this, "red", 3700, 4400, 0);
+	
+			new Planet(this, 3400, 1000, 2).setTeam("blue");
+			
+			new Interceptor(this, "blue", 3300, 1100, 0);
+			new Interceptor(this, "blue", 3300, 900, 0);
+			new Interceptor(this, "blue", 3500, 1100, 0);
+			new Interceptor(this, "blue", 3500, 900, 0);
+			
+			new Planet(this, 6300, 1300, 3);
+			
+			new Planet(this, 5300, 5000, 4);
+			
+			new Planet(this, 1750, 1900, 5);
+			
 		}
 	
 		genTiles();

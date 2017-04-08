@@ -120,6 +120,14 @@ public class Turret {
 		center = p;
 	}
 	
+	public void setX(double newx){
+		center.setX(newx);
+	}
+	
+	public void setY(double newy){
+		center.setY(newy);
+	}
+	
 	public double getXOffset(){
 		return xOff;
 	}
