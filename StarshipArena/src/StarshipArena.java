@@ -1070,9 +1070,9 @@ public class StarshipArena {
 			
 			new Planet(this, 4350, 4200, 5).setTeam("red");
 			new Planet(this, 9500, 1500, 6).setTeam("red");
-			new Planet(this, 1500, 4000, 0).setTeam("red");
-			new Planet(this, 2700, 6300, 0).setTeam("red");
-			new Planet(this, 6700, 7500, 0).setTeam("red");
+			new Planet(this, 1500, 4000, 4).setTeam("red");
+			new Planet(this, 2700, 6300, 3).setTeam("red");
+			new Planet(this, 6700, 7500, 2).setTeam("red");
 			
 			new Fighter(this, "blue", 1350, 1000, 0);
 			new Fighter(this, "blue", 1450, 950, 0);
@@ -1130,9 +1130,9 @@ public class StarshipArena {
 			new Planet(this, 4350, 4200, 5).setTeam("red");
 			
 			new Planet(this, 9500, 1500, 6).setTeam("blue");
-			new Planet(this, 1500, 4000, 0).setTeam("blue");
-			new Planet(this, 2700, 6300, 0).setTeam("blue");
-			new Planet(this, 6700, 7500, 0).setTeam("blue");
+			new Planet(this, 1500, 4000, 4).setTeam("blue");
+			new Planet(this, 2700, 6300, 3).setTeam("blue");
+			new Planet(this, 6700, 7500, 2).setTeam("blue");
 			
 			new Fighter(this, "blue", 1350, 1000, 0);
 			
@@ -1297,6 +1297,72 @@ public class StarshipArena {
 			new MissilePod(this, "blue", 4900, 1800, 0);
 			
 			
+		}
+		
+		else if (level == 8) {
+			WORLD_WIDTH = 10000;
+		    WORLD_HEIGHT = 8000;
+		    CURR_X = 1750;
+			CURR_Y = 2400;
+			zoomLevel = 3;
+			CAMERA_WIDTH = 5200;
+			CAMERA_HEIGHT = 3600;
+			
+			enemy = new AdvancedEnemy(this, new Player(this, "red"));
+			new Planet(this, 1350, 1000, 1).setTeam("red");
+			new Planet(this, 3000, 1500, 2).setTeam("red");
+			new Planet(this, 2250, 3000, 3).setTeam("red");
+			new Planet(this, 4700, 2300, 4).setTeam("red");
+			
+			new Planet(this, 4350, 4200, 5).setTeam("blue");
+			
+			new Planet(this, 9500, 1500, 6).setTeam("red");
+			new Planet(this, 1500, 4000, 4).setTeam("red");
+			new Planet(this, 2700, 6300, 3).setTeam("red");
+			new Planet(this, 6700, 7500, 2).setTeam("red");
+			
+			new Fighter(this, "red", 1350, 1000, 0);
+			new Fighter(this, "red", 1250, 950, 0);
+			new Fighter(this, "red", 1450, 9500, 0);
+			
+			new Interceptor(this, "red", 3000, 1500, 0);
+			
+			new Fighter(this, "red", 2250, 3000, 0);
+			
+			new Interceptor(this, "red", 4700, 2300, 0);
+			new Interceptor(this, "red", 4700, 2100, 0);
+			
+			
+			new Fighter(this, "red", 6700, 7500, 0);
+			
+			new Fighter(this, "red", 1500, 4000, 0);
+			
+			new Battleship(this, "red", 9500, 1500, 0);
+			new Interceptor(this, "red", 9400, 1400, 0);
+			new Interceptor(this, "red", 9600, 1400, 0);
+			
+			
+			new Interceptor(this, "blue", 4350, 4200, 0);
+			new Interceptor(this, "blue", 4450, 4200, 0);
+			new Interceptor(this, "blue", 4350, 4100, 0);
+			new Interceptor(this, "blue", 4250, 4200, 0);
+			new Interceptor(this, "blue", 4350, 4300, 0);
+			new Interceptor(this, "blue", (int)(4350 + 50 * Math.sqrt(2)), (int)(4200 + 50 * Math.sqrt(2)), 315);
+			new Interceptor(this, "blue", (int)(4350 - 50 * Math.sqrt(2)), (int)(4200 + 50 * Math.sqrt(2)), 45);
+			new Interceptor(this, "blue", (int)(4350 - 50 * Math.sqrt(2)), (int)(4200 - 50 * Math.sqrt(2)), 135);
+			new Interceptor(this, "blue", (int)(4350 + 50 * Math.sqrt(2)), (int)(4200 - 50 * Math.sqrt(2)), 225);
+			new Fighter(this, "blue", 4550, 4200, 0);
+			new Fighter(this, "blue", 4150, 4200, 0);
+			new Fighter(this, "blue", (int)(4350 + 100 * Math.sqrt(2)), (int)(4200 + 100 * Math.sqrt(2)), 315);
+			new Fighter(this, "blue", (int)(4350 - 100 * Math.sqrt(2)), (int)(4200 + 100 * Math.sqrt(2)), 45);
+			new Fighter(this, "blue", (int)(4350 - 100 * Math.sqrt(2)), (int)(4200 - 100 * Math.sqrt(2)), 135);
+			new Fighter(this, "blue", (int)(4350 + 100 * Math.sqrt(2)), (int)(4200 - 100 * Math.sqrt(2)), 225);
+			new Fighter(this, "blue", 4650, 4200, 0);
+			new Fighter(this, "blue", 4350, 4500, 0);
+			new Fighter(this, "blue", (int)(4350 + 150 * Math.sqrt(2)), (int)(4200 + 150 * Math.sqrt(2)), 315);
+			new Fighter(this, "blue", (int)(4350 - 150 * Math.sqrt(2)), (int)(4200 + 150 * Math.sqrt(2)), 45);
+			new Fighter(this, "blue", (int)(4350 - 150 * Math.sqrt(2)), (int)(4200 - 150 * Math.sqrt(2)), 135);
+			new Fighter(this, "blue", (int)(4350 + 150 * Math.sqrt(2)), (int)(4200 - 150 * Math.sqrt(2)), 225);
 		}
 	
 		genTiles();
