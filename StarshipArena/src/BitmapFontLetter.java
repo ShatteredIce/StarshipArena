@@ -6,7 +6,7 @@ public class BitmapFontLetter {
 	
 	
 	//Bitmap is 16 by 16
-	static Texture bitmap_font = new Texture("bitmap_font_larger.png");
+	static Texture bitmap_font = new Texture("bitmap_font_larger_transparent.png");
 	double[] vertices;
 	double[] textureCoords; 
 	int[] indices;
