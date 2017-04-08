@@ -2,7 +2,8 @@ import java.util.ArrayList;
 
 public class MissilePod extends Starship{
 	
-	static Texture tex = new Texture("missile_pod.png");
+	static Texture tex1 = new Texture("red_missilepod.png");
+	static Texture tex2 = new Texture("blue_missilepod.png");
 	
 	static double primary_damage = 10;
 	static int primary_cooldown = 300;
@@ -62,7 +63,12 @@ public class MissilePod extends Starship{
 	}
 	
 	public void setTexture(){
-		tex.bind();
+		if(team.equals("red")){
+			tex1.bind();
+		}
+		else{
+			tex2.bind();
+		}
 	}
 	
 	public void setTextureCoords(){
