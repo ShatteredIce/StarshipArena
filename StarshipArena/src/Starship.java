@@ -203,6 +203,7 @@ public class Starship {
 			return true;
 		}
 		else {
+			new Explosion(game, center.X(), center.Y());
 			destroy();
 			return false;
 		}
