@@ -58,6 +58,7 @@ public class StarshipArena {
 	
 	ArrayList<Starship> ships = new ArrayList<>();
 	ArrayList<Projectile> projectiles = new ArrayList<>();
+	ArrayList<Explosion> explosions = new ArrayList<>();
 	ArrayList<Planet> planets = new ArrayList<>();
 	ArrayList<Tile> backgroundTiles = new ArrayList<>();
 	ArrayList<Player> playerList = new ArrayList<>(); 
@@ -624,6 +625,12 @@ public class StarshipArena {
 							p--;
 						}
 					}
+					
+					//display explosions
+					for(int e = 0; e < explosions.size(); e++){
+				    	explosions.get(e).update();
+				    	explosions.get(e).display();
+					}
 				
 				//display box select
 				if(boxSelectCurrent){
@@ -959,6 +966,7 @@ public class StarshipArena {
 		destroyAllShips();
 		destroyAllPlanets();
 		destroyAllProjectiles();
+		destroyAllExplosions();
 		destroyAllTiles();
 		
 		currentLevel = level;
@@ -1440,6 +1448,12 @@ public class StarshipArena {
 		}
     }
     
+    public void destroyAllExplosions(){
+    	for (int i = explosions.size()-1; i >= 0; i--) {
+			explosions.get(i).destroy();
+		}
+    }
+    
     public void destroyAllTiles(){
     	for (int i = backgroundTiles.size()-1; i >= 0; i--) {
 			backgroundTiles.get(i).destroy();
@@ -1479,6 +1493,14 @@ public class StarshipArena {
 	
 	public void removeProjectile(Projectile p){
 		projectiles.remove(p);
+	}
+	
+	public void addExplosion(Explosion e){
+		explosions.add(e);
+	}
+	
+	public void removeExplosion(Explosion e){
+		explosions.remove(e);
 	}
 	
 	public void addPlanet(Planet p){
