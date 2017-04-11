@@ -54,9 +54,9 @@ public class Interceptor extends Starship{
 		max_health = 30;
 		//movement
 		acceleration = 0.5;
-		max_velocity = 8;
+		max_velocity = 12;
 		max_reverse_velocity = -2;
-		min_turn_velocity = 3;
+		min_turn_velocity = 4;
 		max_turn_speed = 6;
 		//weaponry
 		scan_range = 500;
@@ -102,10 +102,10 @@ public class Interceptor extends Starship{
 	
 	public void setTexture(){
 		if(team.equals("red")){
-			if(current_velocity > 7){
+			if(current_velocity > 11){
 				red_tex4.bind();
 			}
-			else if(current_velocity > 4){
+			else if(current_velocity > 6){
 				red_tex3.bind();
 			}
 			else if(current_velocity > 0){
