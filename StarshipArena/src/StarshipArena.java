@@ -37,7 +37,12 @@ public class StarshipArena {
 	
 	int gameState = 1;
 	int SLOW = 1;
+	
 	int currentLevel = 0;
+	final int endLevelDelay = 50;
+	int endLevelTimer = 0;
+	
+	boolean staticFrame = false;
     
     boolean panLeft = false;
     boolean panRight = false;
@@ -267,6 +272,7 @@ public class StarshipArena {
 				//System.out.println(xpos.get(1) + " " + ypos.get(1));
 					if(levelSelectButton.isClicked(xpos.get(2), ypos.get(2))){
 						gameState = 2;
+						staticFrame = false;
 					}
 					else if(controlsButton.isClicked(xpos.get(2), ypos.get(2))){
 						ProcessBuilder pb = new ProcessBuilder("notepad.exe", "controls.txt");
@@ -292,6 +298,7 @@ public class StarshipArena {
 				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 					if(settingsButton.isClicked(xpos.get(2), ypos.get(2))){
 						gameState = 1;
+						staticFrame = false;
 						return;
 					}
 				}
@@ -310,6 +317,7 @@ public class StarshipArena {
 				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 					if(settingsButton.isClicked(xpos.get(2), ypos.get(2))){
 						gameState = 1;
+						staticFrame = false;
 						return;
 					}
 				}
@@ -331,6 +339,7 @@ public class StarshipArena {
 				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 					if(settingsButton.isClicked(xpos.get(2), ypos.get(2))){
 						gameState = 1;
+						staticFrame = false;
 						return;
 					}
 					boxSelect.setTopLeft(xpos.get(1), ypos.get(1));
@@ -559,36 +568,51 @@ public class StarshipArena {
 				if(currentLevel != 0){
 					currentLevel = 0;
 				}
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-				projectTrueWindowCoordinates();
-				titlePage.setTopLeft(250, WINDOW_HEIGHT - 150);
-				titlePage.setBottomRight(WINDOW_WIDTH - 250, 150);
-				titlePage.setPoints();
-				titlePage.display();
-				settingsIcon.display();
-				glfwSwapBuffers(window); // swap the color buffers
+				if(staticFrame == false){
+					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+					projectTrueWindowCoordinates();
+					titlePage.setTopLeft(250, WINDOW_HEIGHT - 150);
+					titlePage.setBottomRight(WINDOW_WIDTH - 250, 150);
+					titlePage.setPoints();
+					titlePage.display();
+					settingsIcon.display();
+					glfwSwapBuffers(window); // swap the color buffers
+					staticFrame = true;
+				}
 			}
 			if(gameState == 2){
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-				projectTrueWindowCoordinates();
-				levelSelect.setTopLeft(200, WINDOW_HEIGHT - 50);
-				levelSelect.setBottomRight(WINDOW_WIDTH - 200, 50);
-				levelSelect.setPoints();
-				levelSelect.display();
-				settingsIcon.display();
-				glfwSwapBuffers(window); // swap the color buffers
+				if(staticFrame == false){
+					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
+					projectTrueWindowCoordinates();
+					levelSelect.setTopLeft(200, WINDOW_HEIGHT - 50);
+					levelSelect.setBottomRight(WINDOW_WIDTH - 200, 50);
+					levelSelect.setPoints();
+					levelSelect.display();
+					settingsIcon.display();
+					glfwSwapBuffers(window); // swap the color buffers
+					staticFrame = true;
+				}
 			}
 			else if(gameState == 4){
-				projectTrueWindowCoordinates();
-				victoryMessage.display();
-				glfwSwapBuffers(window); // swap the color buffers
+				if(staticFrame == false){
+					projectTrueWindowCoordinates();
+					victoryMessage.display();
+					glfwSwapBuffers(window); // swap the color buffers
+					staticFrame = true;
+				}
 			}
 			else if(gameState == 5){
-				projectTrueWindowCoordinates();
-				defeatMessage.display();
-				glfwSwapBuffers(window); // swap the color buffers
+				if(staticFrame == false){
+					projectTrueWindowCoordinates();
+					defeatMessage.display();
+					glfwSwapBuffers(window); // swap the color buffers
+					staticFrame = true;
+				}
 			}
 			else if(gameState == 3){
+				if(staticFrame == true){
+					staticFrame = false;
+				}
 				slowCounter++;
 				if (slowCounter >= SLOW) {
 					slowCounter = 0;
@@ -816,10 +840,22 @@ public class StarshipArena {
 					
 					//Check win
 					if (player.getControlledPlanets().size() == 0 && player.getControlledShips().size() == 0) {
-						gameState = 5;
+						if(endLevelTimer >= endLevelDelay){
+							gameState = 5;
+							endLevelTimer = 0;
+						}
+						else{
+							endLevelTimer++;
+						}
 					}
 					else if (enemy.enemyPlayer.getControlledPlanets().size() == 0 && enemy.enemyPlayer.getControlledShips().size() == 0) {
-						gameState = 4;
+						if(endLevelTimer >= endLevelDelay){
+							gameState = 4;
+							endLevelTimer = 0;
+						}
+						else{
+							endLevelTimer++;
+						}
 					}
 					
 					for (int i = 0; i < text.size(); i++) {
