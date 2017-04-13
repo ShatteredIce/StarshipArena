@@ -65,17 +65,6 @@ public class Fighter extends Starship{
 		turrets.add(primaryTurret);
 	}
 	
-	public void moveTurrets(){
-		for (int i = 0; i < turrets.size(); i++) {
-			Point p = new Point();
-			p.setX(turrets.get(i).getXOffset() + center.X());
-			p.setY(turrets.get(i).getYOffset() + center.Y());
-			p.rotatePoint(center.X(), center.Y(), angle);
-			turrets.get(i).setCenter(p);
-			turrets.get(i).setAngle(angle);
-			turrets.get(i).update();
-		}
-	}
 	
 	public void setTexture(){
 		if(team.equals("red")){
