@@ -54,9 +54,9 @@ public class Interceptor extends Starship{
 		max_health = 30;
 		//movement
 		acceleration = 0.5;
-		max_velocity = 8;
+		max_velocity = 12;
 		max_reverse_velocity = -2;
-		min_turn_velocity = 3;
+		min_turn_velocity = 4;
 		max_turn_speed = 6;
 		//weaponry
 		scan_range = 500;
@@ -88,24 +88,13 @@ public class Interceptor extends Starship{
 		turrets.add(secondaryTurret2);
 	}
 	
-	public void moveTurrets(){
-		for (int i = 0; i < turrets.size(); i++) {
-			Point p = new Point();
-			p.setX(turrets.get(i).getXOffset() + center.X());
-			p.setY(turrets.get(i).getYOffset() + center.Y());
-			p.rotatePoint(center.X(), center.Y(), angle);
-			turrets.get(i).setCenter(p);
-			turrets.get(i).setAngle(angle);
-			turrets.get(i).update();
-		}
-	}
 	
 	public void setTexture(){
 		if(team.equals("red")){
-			if(current_velocity > 7){
+			if(current_velocity > 11){
 				red_tex4.bind();
 			}
-			else if(current_velocity > 4){
+			else if(current_velocity > 6){
 				red_tex3.bind();
 			}
 			else if(current_velocity > 0){

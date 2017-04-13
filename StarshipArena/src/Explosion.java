@@ -100,7 +100,6 @@ public class Explosion {
 		}
 		else{
 			destroy();
-			game.removeExplosion(this);
 		}
 	
 	}
