@@ -30,11 +30,11 @@ public class MissilePod extends Starship{
 	}
 	
 	public void shipStats(){
-		max_health = 50;
+		max_health = 60;
 		//other
-		clickRadius = 30;
+		clickRadius = 65;
 		xOff = 0;
-		yOff = 0;
+		yOff = -5;
 	}
 	
 	public void shipTurrets(){
@@ -50,17 +50,17 @@ public class MissilePod extends Starship{
 		turrets.add(primaryTurret);
 	}
 	
-	public void moveTurrets(){
-		for (int i = 0; i < turrets.size(); i++) {
-			Point p = new Point();
-			p.setX(turrets.get(i).getXOffset() + center.X());
-			p.setY(turrets.get(i).getYOffset() + center.Y());
-			p.rotatePoint(center.X(), center.Y(), angle);
-			turrets.get(i).setCenter(p);
-			turrets.get(i).setAngle(angle);
-			turrets.get(i).update();
-		}
-	}
+//	public void moveTurrets(){
+//		for (int i = 0; i < turrets.size(); i++) {
+//			Point p = new Point();
+//			p.setX(turrets.get(i).getXOffset() + center.X());
+//			p.setY(turrets.get(i).getYOffset() + center.Y());
+//			p.rotatePoint(center.X(), center.Y(), angle);
+//			turrets.get(i).setCenter(p);
+//			turrets.get(i).setAngle(angle);
+//			turrets.get(i).update();
+//		}
+//	}
 	
 	public void setTexture(){
 		if(team.equals("red")){

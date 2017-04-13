@@ -520,7 +520,6 @@ public class StarshipArena {
 		
 		createShips(200);
 		
-		new Planet(this, 1300, 900, 1);
 		sidebar = new Sidebar(this, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 18);
 		titlePage = new Layer(1);
 		levelSelect = new Layer(2);
@@ -913,6 +912,7 @@ public class StarshipArena {
 	//Creates the number of ships specified by the user
 	//Each ship has a random starting location and angle
 	public void createShips(int num){
+		new Planet(this, 2200, 1000, 1).setTeam("blue");
 		int startx;
 		int starty;
 		int angle;
@@ -925,19 +925,21 @@ public class StarshipArena {
 //				new Interceptor(this, "none", startx , starty, angle);
 //			}
 //		}
-//		new Fighter(this, "red", 1500, 400, 270, 5);
-		new Fighter(this, "blue", 200, 500, 270);
 		new Transport(this, "red", 400, 450, 0).setHealth(10000);
 		new Transport(this, "red", 100, 450, 0).setHealth(10000);
 		new Transport(this, "red", 5, 450, 0).setHealth(10000);
-		new Transport(this, "r"
-				+ "ed", 400, 600, 0).setHealth(10000);
-		new Interceptor(this, "blue", 600, 500, 90);
-		new Battleship(this, "blue", 700, 500, 0);
-		new Fighter(this, "red", 1700, 1500, 0);
-		new Fighter(this, "red", 1750, 1500, 0);
-		new Fighter(this, "red", 1650, 1500, 0);
-		new Fighter(this, "red", 1700, 1550, 0);
+		new Transport(this, "red", 400, 600, 0).setHealth(10000);
+//		new Fighter(this, "blue", 200, 500, 270);
+//		new Interceptor(this, "blue", 600, 500, 90);
+//		new Battleship(this, "blue", 700, 500, 0);
+//		new Fighter(this, "red", 1700, 400, 0);
+//		new Fighter(this, "red", 1750, 400, 0);
+//		new Fighter(this, "red", 1650, 400, 0);
+//		new Fighter(this, "red", 1700, 450, 0);
+		
+		new MachineGunPod(this, "red", 300, 1500, 270);
+		new MachineGunPod(this, "red", 350, 1400, 270);
+		new MachineGunPod(this, "red", 300, 1300, 270);
 //		new Fighter(this, "blue", 200, 500, 270, 1);
 //		new Interceptor(this, 500, 700, 0, 1);
 	}
