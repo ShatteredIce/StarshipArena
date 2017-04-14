@@ -61,6 +61,9 @@ public class StarshipArena {
     int TRANSPORT_COST = 10;
     int BATTLESHIP_COST = 40;
     
+    int planetDisplayBorder = 400;
+    int shipDisplayBorder = 100;
+    
 	Random random = new Random();
 	
 	ArrayList<Starship> ships = new ArrayList<>();
@@ -261,11 +264,11 @@ public class StarshipArena {
 			glfwGetCursorPos(window, xpos, ypos);
 			//convert the glfw coordinate to our coordinate system
 			//relative camera coordinates
-			xpos.put(1, getWidthScalar() * xpos.get(0) + CURR_X);
-			ypos.put(1, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0)) + CURR_Y));
+			xpos.put(1, getWidthScalar() * (xpos.get(0) - windowXOffset) + CURR_X);
+			ypos.put(1, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0) + windowYOffset) + CURR_Y));
 			//true window coordinates
-			xpos.put(2, xpos.get(0));
-			ypos.put(2, (WINDOW_HEIGHT - ypos.get(0)));
+			xpos.put(2, xpos.get(0) - windowXOffset);
+			ypos.put(2, (WINDOW_HEIGHT - ypos.get(0) + windowYOffset));
 			if(gameState == 1){
 				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 					if(settingsButton.isClicked(xpos.get(2), ypos.get(2))){
@@ -614,6 +617,7 @@ public class StarshipArena {
 					//System.out.println(counter);
 					counter++;
 					
+					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 					projectRelativeCameraCoordinates();
 					
 					//Display background
@@ -626,6 +630,8 @@ public class StarshipArena {
 						planets.get(p).checkCapturePoint();
 						planets.get(p).updateResources();
 						//System.out.println(player.getResources());
+						if(planets.get(p).getX() > CURR_X - (planetDisplayBorder * getWidthScalar()) && planets.get(p).getX() < CURR_X + CAMERA_WIDTH + (planetDisplayBorder * getWidthScalar()) 
+								&& planets.get(p).getY() > CURR_Y - (planetDisplayBorder * getHeightScalar()) && planets.get(p).getY() < CURR_Y + CAMERA_HEIGHT + (planetDisplayBorder * getHeightScalar()))
 						planets.get(p).display();
 					}
 					
@@ -637,6 +643,8 @@ public class StarshipArena {
 								orbitingShips.get(j).damageDisplayDelay -= 2;
 						}
 					}
+			    	
+			    	//update ships
 					for(int s = 0; s < ships.size(); s++){
 						ships.get(s).doRandomMovement();
 				    	ships.get(s).setPoints();
@@ -645,9 +653,17 @@ public class StarshipArena {
 				    		ships.get(s).current_health = Math.min(ships.get(s).current_health + 1, ships.get(s).max_health);
 				    		ships.get(s).damageDisplayDelay = 200;
 				    	}
-				    	if(ships.get(s).display() == false){
+				    	if(ships.get(s).checkHealth() == false){
 				    		s--;
 				    	}
+					}
+					
+					//display ships
+					for(int s = 0; s < ships.size(); s++){
+						if(ships.get(s).getX() > CURR_X - (shipDisplayBorder * getWidthScalar()) && ships.get(s).getX() < CURR_X + CAMERA_WIDTH + (shipDisplayBorder * getWidthScalar())
+								&& ships.get(s).getY() > CURR_Y - (shipDisplayBorder * getHeightScalar()) && ships.get(s).getY() < CURR_Y + CAMERA_HEIGHT + (shipDisplayBorder * getHeightScalar())){
+							ships.get(s).display();
+						}
 					}
 					
 					//display projectiles
@@ -670,8 +686,8 @@ public class StarshipArena {
 					DoubleBuffer ypos = BufferUtils.createDoubleBuffer(2);
 					glfwGetCursorPos(window.getWindowHandle(), xpos, ypos);
 					//convert the glfw coordinate to our coordinate system
-					xpos.put(1, getWidthScalar() * (xpos.get(0)) + CURR_X);
-					ypos.put(1, (getHeightScalar() * ((WINDOW_HEIGHT) - ypos.get(0)) + CURR_Y));
+					xpos.put(1, getWidthScalar() * (xpos.get(0) - windowXOffset) + CURR_X);
+					ypos.put(1, (getHeightScalar() * ((WINDOW_HEIGHT) - ypos.get(0) + windowYOffset) + CURR_Y));
 					boxSelect.setBottomRight(xpos.get(1), ypos.get(1));
 					boxSelect.setPoints();
 					boxSelect.display();
@@ -899,14 +915,14 @@ public class StarshipArena {
 	public void projectRelativeCameraCoordinates(){
 		glMatrixMode(GL_PROJECTION);
         glLoadIdentity(); // Resets any previous projection matrices
-        glOrtho(CURR_X, CURR_X + CAMERA_WIDTH, CURR_Y, CURR_Y + CAMERA_HEIGHT, 1, -1);
+        glOrtho((-windowXOffset * getWidthScalar()) + CURR_X, CURR_X + CAMERA_WIDTH + (windowXOffset * getWidthScalar()), CURR_Y + (-windowYOffset * getHeightScalar()), CURR_Y + CAMERA_HEIGHT + (windowYOffset * getHeightScalar()), 1, -1);
         glMatrixMode(GL_MODELVIEW);
 	}
 	
 	public void projectTrueWindowCoordinates(){
 		glMatrixMode(GL_PROJECTION);
         glLoadIdentity(); // Resets any previous projection matrices
-        glOrtho(0, WINDOW_WIDTH, 0, WINDOW_HEIGHT, 1, -1);
+        glOrtho(-windowXOffset, WINDOW_WIDTH + windowXOffset, -windowYOffset, WINDOW_HEIGHT + windowYOffset, 1, -1);
         glMatrixMode(GL_MODELVIEW);
 	}
 	

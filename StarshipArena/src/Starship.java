@@ -182,6 +182,32 @@ public class Starship {
 	}
 	
 	public void destroy(){
+		if (this instanceof Battleship) {
+			new Explosion(game, center.X(), center.Y(), 300);
+			for (int i = 0; i < 4; i++) {
+				int x_rand = random.nextInt(5) - 2;
+				int y_rand = random.nextInt(5) - 2;
+				int rand_angle = random.nextInt(360);
+				
+				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 18, 9, 0);
+				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 18, 12, 0);
+				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 18, 15, 0);
+				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 18, 18, 0);
+			}
+		}
+		else {
+			new Explosion(game, center.X(), center.Y());
+			for (int i = 0; i < 4; i++) {
+				int x_rand = random.nextInt(5) - 2;
+				int y_rand = random.nextInt(5) - 2;
+				int rand_angle = random.nextInt(360);
+				
+				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 6, 9, 3);
+				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 6, 12, 3);
+				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 6, 15, 3);
+				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 6, 18, 3);
+			}
+		}
 		model.destroy();
 		game.removeShip(this);
 	}
@@ -198,47 +224,23 @@ public class Starship {
 		indices = new int[]{0, 1, 2};
 	}
 	
-	public boolean display(){
+	public boolean checkHealth(){
 		if(current_health > 0){
-			setTexture();
-			model.render(vertices);
-			if(selected){
-				setHaloPoints();
-				haloTexture.bind();
-//				setHaloTexture();
-				haloModel.render(haloVertices);
-			}
 			return true;
 		}
 		else {
-			if (this instanceof Battleship) {
-				new Explosion(game, center.X(), center.Y(), 300);
-				for (int i = 0; i < 4; i++) {
-					int x_rand = random.nextInt(5) - 2;
-					int y_rand = random.nextInt(5) - 2;
-					int rand_angle = random.nextInt(360);
-					
-					new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 18, 9, 0);
-					new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 18, 12, 0);
-					new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 18, 15, 0);
-					new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 18, 18, 0);
-				}
-			}
-			else {
-				new Explosion(game, center.X(), center.Y());
-				for (int i = 0; i < 4; i++) {
-					int x_rand = random.nextInt(5) - 2;
-					int y_rand = random.nextInt(5) - 2;
-					int rand_angle = random.nextInt(360);
-					
-					new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 6, 9, 3);
-					new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 6, 12, 3);
-					new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 6, 15, 3);
-					new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 6, 18, 3);
-				}
-			}
 			destroy();
 			return false;
+		}
+	}
+	
+	public void display(){
+		setTexture();
+		model.render(vertices);
+		if(selected){
+			setHaloPoints();
+			haloTexture.bind();
+			haloModel.render(haloVertices);
 		}
 	}
 

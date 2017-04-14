@@ -16,8 +16,8 @@ public class Window {
 	public void createWindow(String title){
 		// Get the resolution of the primary monitor
 		GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-		window = glfwCreateWindow(width, height, title, NULL, NULL);
-		//window = glfwCreateWindow(vidmode.width(), vidmode.height(), title, glfwGetPrimaryMonitor(), NULL);
+//		window = glfwCreateWindow(width, height, title, NULL, NULL);
+		window = glfwCreateWindow(vidmode.width(), vidmode.height(), title, glfwGetPrimaryMonitor(), NULL);
 		if ( window == NULL ){
 			throw new RuntimeException("Failed to create the GLFW window");
 		}
@@ -25,12 +25,12 @@ public class Window {
 		fullscreenXOffset = (vidmode.width() - width) / 2;
 		fullscreenYOffset = (vidmode.height() - height) / 2;
 		
-		// Center the window
-		glfwSetWindowPos(
-			window,
-			(vidmode.width() - width) / 2,
-			(vidmode.height() - height) / 2
-		);
+//		// Center the window
+//		glfwSetWindowPos(
+//			window,
+//			(vidmode.width() - width) / 2,
+//			(vidmode.height() - height) / 2
+//		);
 		
 		// Make the window visible
 		glfwShowWindow(window);
