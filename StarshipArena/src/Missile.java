@@ -172,4 +172,15 @@ public class Missile extends Projectile {
 			return 0;
 		}
 	}
+	
+	//returns false if projectile is destroyed. Also creates explosion trail
+		public boolean updateLifetime(){
+			current_lifetime += 1;
+			if (current_lifetime % 3 == 0)
+				new Explosion(game, center.x, center.y, 20);
+			if(current_lifetime >= lifetime){
+				return false;
+			}
+			return true;
+		}
 }
