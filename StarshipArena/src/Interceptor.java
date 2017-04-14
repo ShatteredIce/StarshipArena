@@ -19,16 +19,16 @@ public class Interceptor extends Starship{
 //	static int primary_spread = 50;
 	static int primary_spread = 10;
 	static int primary_accuracy = 95;
-	static int primary_range = 300;
+	static int primary_range = 500;
 	static int primary_speed = 20;
-	static int primary_lifetime = 450;
+	static int primary_lifetime = 600;
 	static int primary_xoffset = 0;
 	static int primary_yoffset = 10;
 	int primary_id = 0;
 	
 	static double secondary_damage = 0.5;
-	static int secondary_cooldown = 8;
-	static int secondary_spread = 10;
+	static int secondary_cooldown = 10;
+	static int secondary_spread = 30;
 	static int secondary_accuracy = 97;
 	static int secondary_range = 500;
 	static int secondary_speed = 30; 

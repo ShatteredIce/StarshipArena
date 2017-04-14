@@ -73,12 +73,19 @@ public class Turret {
 			for (int i = 0; i < enemyShips.size(); i++) {
 				relativeAngle = game.angleToPoint(center.X(), center.Y(), enemyShips.get(i).getX(), enemyShips.get(i).getY());
 				if(Math.abs(relativeAngle - angle) < spread){
-					if (!autoAiming)
+					boolean fired = false;
+					if (!autoAiming) {
 						fire(angle);
-					else
+						fired = true;
+					}
+					else if (enemyShips.get(i).equals(owner.target) || spread < 180) {
 						fire(relativeAngle);
-					current_cooldown = cooldown;
-					break;
+						fired = true;
+					}
+					if (fired == true) {
+						current_cooldown = cooldown;
+						break;
+					}
 				}
 			}
 		}
@@ -96,13 +103,19 @@ public class Turret {
 	
 	public ArrayList<Starship> getEnemyShips(){
 		ArrayList<Starship> allShips = game.getAllShips();
-		if(team == "none"){
-			return allShips;
-		}
 		ArrayList<Starship> enemyShips = new ArrayList<>();
-		for (int i = 0; i < allShips.size(); i++) {
-			if(!allShips.get(i).getTeam().equals(team) && game.distance(center.X(), center.Y(), allShips.get(i).getX(), allShips.get(i).getY()) <= scan_range){
-				enemyShips.add(allShips.get(i));
+		if(team == "none"){
+			for (int i = 0; i < allShips.size(); i++) {
+				if(game.distance(center.X(), center.Y(), allShips.get(i).getX(), allShips.get(i).getY()) <= scan_range){
+					enemyShips.add(allShips.get(i));
+				}
+			}
+		}
+		else {
+			for (int i = 0; i < allShips.size(); i++) {
+				if(!allShips.get(i).getTeam().equals(team) && game.distance(center.X(), center.Y(), allShips.get(i).getX(), allShips.get(i).getY()) <= scan_range){
+					enemyShips.add(allShips.get(i));
+				}
 			}
 		}
 		return enemyShips;
