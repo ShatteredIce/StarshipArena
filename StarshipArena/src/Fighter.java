@@ -18,9 +18,9 @@ public class Fighter extends Starship{
 	static int primary_cooldown = 100;
 	static int primary_spread = 5;
 	static int primary_accuracy = 95;
-	static int primary_range = 300;
+	static int primary_range = 500;
 	static int primary_speed = 15;
-	static int primary_lifetime = 450;
+	static int primary_lifetime = 600;
 	static int primary_xoffset = 0;
 	static int primary_yoffset = 10;
 	int primary_id = 0;
