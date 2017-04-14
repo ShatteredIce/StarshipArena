@@ -301,7 +301,7 @@ public class Interceptor extends Starship{
 				}
 			}
 			//if target is behind
-			else if(distanceToTarget < 150 && getClosestBearing(target) > 140 &&
+			else if(distanceToTarget < 300 && getClosestBearing(target) > 140 &&
 					Math.abs(relativeAngle - target.getAngle()) > 160 && Math.abs(relativeAngle - target.getAngle()) < 200){
 				//System.out.println("point b");
 				targeted_velocity = max_velocity;

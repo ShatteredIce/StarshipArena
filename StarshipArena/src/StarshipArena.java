@@ -221,7 +221,7 @@ public class StarshipArena {
 					updateZoomLevel(false);
 				}
 			if ( key == GLFW_KEY_F1 && action == GLFW_RELEASE ){
-				if(player.getSelectedPlanet() != null && player.getSelectedPlanet().getTeam().equals(player.getTeam())){
+				if(player.getSelectedPlanet() != null /*&& player.getSelectedPlanet().getTeam().equals(player.getTeam())*/){
 					player.getSelectedPlanet().setResources(player.getSelectedPlanet().getResources() + 100);
 				}
 			}
@@ -748,11 +748,13 @@ public class StarshipArena {
 					int numInterceptorsSelected = 0;
 					int numTransportsSelected = 0;
 					int numBattleshipsSelected = 0;
+					int numPodsSelected = 0;
 					String shipStatus = "Idle";
 					int selectedPlanetResources = Integer.MIN_VALUE;
 					boolean alliedPlanetSelected = false;
 					String planetControllingTeam = "none";
 					String shipsControllingTeam = "none";
+					String podTypeSelected = "none";
 					for(int p = 0; p < planets.size(); p++){
 						if(planets.get(p).getSelected()){
 							sidebar.display();
@@ -775,6 +777,12 @@ public class StarshipArena {
 							else if (ships.get(s) instanceof Interceptor) numInterceptorsSelected++;
 							else if (ships.get(s) instanceof Transport) numTransportsSelected++;
 							else if (ships.get(s) instanceof Battleship) numBattleshipsSelected++;
+							else if (ships.get(s) instanceof MissilePod || ships.get(s) instanceof MachineGunPod || ships.get(s) instanceof BasicPod) {
+								numPodsSelected++;
+								if (ships.get(s) instanceof MissilePod) podTypeSelected = "Missile Turret";
+								else if (ships.get(s) instanceof MachineGunPod) podTypeSelected = "Machinegun Turret";
+								else if (ships.get(s) instanceof BasicPod) podTypeSelected = "Basic Turret";
+							}
 						}
 					}
 					
@@ -794,12 +802,15 @@ public class StarshipArena {
 							writeText("Controlled by:", 20, 100);
 							writeText(planetControllingTeam, 20, 80);
 						}
-						else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected + numBattleshipsSelected == 1) {
+						else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected + numBattleshipsSelected + numPodsSelected == 1) {
 							if (numFightersSelected == 1) writeText("Fighter", 400, 15, 30);
 							else if (numInterceptorsSelected == 1) writeText("Interceptor", 400, 15, 30);
 							else if (numTransportsSelected == 1) writeText("Transport", 400, 15, 30);
 							else if (numBattleshipsSelected == 1) writeText("Battleship", 400, 15, 30);
+							else if (numPodsSelected == 1) writeText(podTypeSelected, 350, 15, 30);
 //							if(shipsControllingTeam.equals(player.getTeam()))
+							if (sumCurrentHP - (int)sumCurrentHP > 0)		
+								sumCurrentHP++;
 								writeText("Armor:" + sumCurrentHP + "/" + sumMaxHP, 800, 20);
 //							else
 //								writeText("Armor:??/??", 800, 20);
@@ -808,13 +819,16 @@ public class StarshipArena {
 							writeText("Ship status:", 20, 40);
 							writeText(shipStatus, 20, 20);
 						}
-						else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected  + numBattleshipsSelected> 1) {
-							writeText("Starfleet(" + (numFightersSelected + numInterceptorsSelected + numTransportsSelected + numBattleshipsSelected) + ")", 400, 15, 30);
-							writeText("Fighters:" + numFightersSelected, 1000, 100);
-							writeText("Interceptors:" + numInterceptorsSelected, 1000, 80);
+						else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected  + numBattleshipsSelected + numPodsSelected > 1) {
+							writeText("Starfleet(" + (numFightersSelected + numInterceptorsSelected + numTransportsSelected + numBattleshipsSelected + numPodsSelected) + ")", 400, 15, 30);
+							writeText("Fighters:" + numFightersSelected, 1000, 120);
+							writeText("Interceptors:" + numInterceptorsSelected, 1000, 100);
 //							writeText("Transports:" + numTransportsSelected, 1000, 60);
-							writeText("Battleships:" + numBattleshipsSelected, 1000, 60);
+							writeText("Battleships:" + numBattleshipsSelected, 1000, 80);
+							writeText("Turrets:" + numPodsSelected, 1000, 60);
 //							if (shipsControllingTeam.equals(player.getTeam()))
+							if (sumCurrentHP - (int)sumCurrentHP > 0)		
+								sumCurrentHP++;
 								writeText("Fleet armor:" + sumCurrentHP + "/" + sumMaxHP, 800, 20);
 //							else
 //								writeText("Fleet armor:??/??", 800, 20);
@@ -1081,10 +1095,15 @@ public class StarshipArena {
 			zoomLevel = 2;
 			
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
-			new Planet(this, 1350, 1000, 1).setTeam("blue");
-			new Planet(this, 3000, 1500, 2).setTeam("blue");
-			new Planet(this, 2250, 3000, 3).setTeam("red");
-			new Planet(this, 4700, 2300, 4).setTeam("red");
+			Planet temp;
+			temp = new Planet(this, 1350, 1000, 1);
+			temp.setTeam("blue"); temp.setResources(40);
+			temp = new Planet(this, 3000, 1500, 2);
+			temp.setTeam("blue"); temp.setResources(40);		
+			temp = new Planet(this, 2250, 3000, 3);		
+			temp.setTeam("red"); temp.setResources(40);		
+			temp = new Planet(this, 4700, 2300, 4);		
+			temp.setTeam("red"); temp.setResources(40);
 			new Fighter(this, "blue", 1350, 1000, 0);
 			new Fighter(this, "blue", 1450, 950, 0);
 			new Fighter(this, "blue", 1250, 950, 0);
@@ -1431,6 +1450,10 @@ public class StarshipArena {
 							polygon_intersection(p.getPoints(), s.getPoints())){
 						if (p instanceof Missile && s instanceof Fighter)
 							s.setHealth(s.getHealth()-p.getDamage()*20);
+						else if (p.texId == 3 && s instanceof Battleship)		
+							s.setHealth(s.getHealth()-p.getDamage()*2);		
+						else if (p.texId < 3 && s instanceof Interceptor)		
+							s.setHealth(s.getHealth()-p.getDamage()*2);
 						else
 							s.setHealth(s.getHealth()-p.getDamage());
 		    			s.damageDisplayDelay = 1000;
@@ -1447,6 +1470,10 @@ public class StarshipArena {
 							polygon_intersection(p.getPoints(), s.getPoints())) {
 					if (p instanceof Missile && s instanceof Fighter)
 						s.setHealth(s.getHealth()-p.getDamage()*20);
+					else if (p.texId == 3 && s instanceof Battleship)		
+						s.setHealth(s.getHealth()-p.getDamage()*2);		
+					else if (p.texId < 3 && s instanceof Interceptor)		
+						s.setHealth(s.getHealth()-p.getDamage()*2);
 					else
 						s.setHealth(s.getHealth()-p.getDamage());
 	    			s.damageDisplayDelay = 1000;
