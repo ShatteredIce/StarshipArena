@@ -106,7 +106,10 @@ public class StarshipArena {
 	Button planetIndustryButton = new Button(WINDOW_WIDTH - 250, 80, WINDOW_WIDTH - 150, 20);
 	Button planetEconomyButton = new Button(WINDOW_WIDTH - 120, 80, WINDOW_WIDTH - 20, 20);
 	
-	Layer planetMenuBase;
+	Layer border1;
+	Layer border2;
+	Layer border3;
+	Layer border4;
 	
 	Layer victoryMessage;
 	Layer defeatMessage;
@@ -540,10 +543,25 @@ public class StarshipArena {
 		planetMainMenu.setBottomRight(WINDOW_WIDTH, -50);
 		planetMainMenu.setPoints();
 		
-		planetMenuBase = new Layer(6);
-		planetMenuBase.setTopLeft(WINDOW_WIDTH - 250, 150);
-		planetMenuBase.setBottomRight(WINDOW_WIDTH, 0);
-		planetMenuBase.setPoints();
+		border1 = new Layer(6);
+		border1.setTopLeft(-windowXOffset, WINDOW_HEIGHT + windowYOffset);
+		border1.setBottomRight(0, -windowYOffset);
+		border1.setPoints();
+		
+		border2 = new Layer(6);
+		border2.setTopLeft(-windowXOffset, WINDOW_HEIGHT + windowYOffset);
+		border2.setBottomRight(WINDOW_WIDTH + windowXOffset, WINDOW_HEIGHT);
+		border2.setPoints();
+		
+		border3 = new Layer(6);
+		border3.setTopLeft(WINDOW_WIDTH, WINDOW_HEIGHT + windowYOffset);
+		border3.setBottomRight(WINDOW_WIDTH + windowXOffset * 2, -windowYOffset);
+		border3.setPoints();
+		
+		border4 = new Layer(6);
+		border4.setTopLeft(-windowXOffset, 0);
+		border4.setBottomRight(WINDOW_WIDTH + windowXOffset, -windowYOffset);
+		border4.setPoints();
 		
 		victoryMessage = new Layer(7);
 		victoryMessage.setTopLeft(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 + 70);
@@ -577,16 +595,19 @@ public class StarshipArena {
 					projectTrueWindowCoordinates();
 					titlePage.display();
 					settingsIcon.display();
+					displayBorders();
 					window.swapBuffers();
 					staticFrame = true;
 				}
 			}
+			//display level select
 			if(gameState == 2){
 				if(staticFrame == false){
 					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 					projectTrueWindowCoordinates();
 					levelSelect.display();
 					settingsIcon.display();
+					displayBorders();
 					window.swapBuffers();
 					staticFrame = true;
 				}
@@ -692,6 +713,7 @@ public class StarshipArena {
 					boxSelect.setPoints();
 					boxSelect.display();
 				}
+				
 				
 				//Make ships drift apart if they're too close
 				for (int s = 0; s < ships.size(); s++) {
@@ -863,6 +885,8 @@ public class StarshipArena {
 						}
 					}
 					
+					displayBorders();
+					
 					//Check win
 					if (player.getControlledPlanets().size() == 0 && player.getControlledShips().size() == 0) {
 						if(endLevelTimer >= endLevelDelay){
@@ -934,6 +958,13 @@ public class StarshipArena {
     	bounds[3] = WORLD_HEIGHT;
     	return bounds;
     }
+	
+	public void displayBorders(){
+		border1.display();
+		border2.display();
+		border3.display();
+		border4.display();
+	}
 	
 	//Creates the number of ships specified by the user
 	//Each ship has a random starting location and angle
