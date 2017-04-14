@@ -18,12 +18,14 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class StarshipArena {
-
-	//The window handle and size
-	private long window;
+	
+	Window window;
 	
 	int WINDOW_WIDTH = 1300;
 	int WINDOW_HEIGHT = 900;
+	
+	int windowXOffset;
+	int windowYOffset;
 	
 	int WORLD_WIDTH = 2600;
     int WORLD_HEIGHT = 1800;
@@ -117,9 +119,9 @@ public class StarshipArena {
 		init();
 		loop();
 
-		// Free the window callbacks and destroy the window
-		glfwFreeCallbacks(window);
-		glfwDestroyWindow(window);
+//		// Free the window callbacks and destroy the window
+		glfwFreeCallbacks(window.getWindowHandle());
+		glfwDestroyWindow(window.getWindowHandle());
 
 		// Terminate GLFW and free the error callback
 		glfwTerminate();
@@ -140,21 +142,23 @@ public class StarshipArena {
 		glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // the window will not be resizable
 		
-		// Create the window
-		window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Starship Arena [WIP]", NULL, NULL);
-		if ( window == NULL )
-			throw new RuntimeException("Failed to create the GLFW window");
+		window = new Window(WINDOW_WIDTH, WINDOW_HEIGHT);
+		window.createWindow("Starship Arena [WIP]");
+		windowXOffset = window.getXOffset();
+		windowYOffset = window.getYOffset();
+		System.out.println(windowXOffset);
+		System.out.println(windowYOffset);
 
 		// Setup a key callback. It will be called every time a key is pressed, repeated or released.
-		glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
+		glfwSetKeyCallback(window.getWindowHandle(), (window, key, scancode, action, mods) -> {
 			if ( key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE ){
-//				glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
-				CAMERA_WIDTH = 2600;
-				CAMERA_HEIGHT = 1800;
-				zoomLevel = 3;
-				CURR_X = 0;
-				CURR_Y = 0;
-				gameState = 1;
+				glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
+//				CAMERA_WIDTH = 2600;
+//				CAMERA_HEIGHT = 1800;
+//				zoomLevel = 3;
+//				CURR_X = 0;
+//				CURR_Y = 0;
+//				gameState = 1;
 			}
 			//Figure out which arrow keys, if any, are depressed and tell the loop to pan the camera
 			if ( key == GLFW_KEY_LEFT && action == GLFW_PRESS )
@@ -217,7 +221,7 @@ public class StarshipArena {
 					updateZoomLevel(false);
 				}
 			if ( key == GLFW_KEY_F1 && action == GLFW_RELEASE ){
-				if(player.getSelectedPlanet() != null /*&& player.getSelectedPlanet().getTeam().equals(player.getTeam())*/){
+				if(player.getSelectedPlanet() != null && player.getSelectedPlanet().getTeam().equals(player.getTeam())){
 					player.getSelectedPlanet().setResources(player.getSelectedPlanet().getResources() + 100);
 				}
 			}
@@ -251,7 +255,7 @@ public class StarshipArena {
 		});
 		
 		//Mouse clicks
-		glfwSetMouseButtonCallback (window, (window, button, action, mods) -> {
+		glfwSetMouseButtonCallback (window.getWindowHandle(), (window, button, action, mods) -> {
 			DoubleBuffer xpos = BufferUtils.createDoubleBuffer(3);
 			DoubleBuffer ypos = BufferUtils.createDoubleBuffer(3);
 			glfwGetCursorPos(window, xpos, ypos);
@@ -468,32 +472,27 @@ public class StarshipArena {
 			}
 		});
 		
-		// Get the thread stack and push a new frame
-		try ( MemoryStack stack = stackPush() ) {
-			IntBuffer pWidth = stack.mallocInt(1); // int*
-			IntBuffer pHeight = stack.mallocInt(1); // int*
+//		// Get the thread stack and push a new frame
+//		try ( MemoryStack stack = stackPush() ) {
+//			IntBuffer pWidth = stack.mallocInt(1); // int*
+//			IntBuffer pHeight = stack.mallocInt(1); // int*
+//
+//			// Get the window size passed to glfwCreateWindow
+//			glfwGetWindowSize(window, pWidth, pHeight);
+//
+//			// Get the resolution of the primary monitor
+//			GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+//
+//			// Center the window
+//			glfwSetWindowPos(
+//				window,
+//				(vidmode.width() - pWidth.get(0)) / 2,
+//				(vidmode.height() - pHeight.get(0)) / 2
+//			);
+//		} // the stack frame is popped automatically
 
-			// Get the window size passed to glfwCreateWindow
-			glfwGetWindowSize(window, pWidth, pHeight);
-
-			// Get the resolution of the primary monitor
-			GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-
-			// Center the window
-			glfwSetWindowPos(
-				window,
-				(vidmode.width() - pWidth.get(0)) / 2,
-				(vidmode.height() - pHeight.get(0)) / 2
-			);
-		} // the stack frame is popped automatically
-
-		// Make the OpenGL context current
-		glfwMakeContextCurrent(window);
 		// Enable v-sync
 		glfwSwapInterval(1);
-
-		// Make the window visible
-		glfwShowWindow(window);
 	}
 
 	private void loop() {
@@ -504,10 +503,7 @@ public class StarshipArena {
 		// bindings available for use.
 		GL.createCapabilities();
 		
-		glMatrixMode(GL_PROJECTION);
-        glLoadIdentity(); // Resets any previous projection matrices
-        glOrtho(CURR_X, CURR_X + CAMERA_WIDTH, CURR_Y, CURR_Y + CAMERA_HEIGHT, 1, -1);
-        glMatrixMode(GL_MODELVIEW);
+		projectRelativeCameraCoordinates();
 
 		// Set the clear color
 		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -522,7 +518,13 @@ public class StarshipArena {
 		
 		sidebar = new Sidebar(this, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 18);
 		titlePage = new Layer(1);
+		titlePage.setTopLeft(250, WINDOW_HEIGHT - 150);
+		titlePage.setBottomRight(WINDOW_WIDTH - 250, 150);
+		titlePage.setPoints();
 		levelSelect = new Layer(2);
+		levelSelect.setTopLeft(200, WINDOW_HEIGHT - 50);
+		levelSelect.setBottomRight(WINDOW_WIDTH - 200, 50);
+		levelSelect.setPoints();
 		boxSelect = new Layer(3);
 		//static layer on top of game
 		settingsIcon = new Layer(4);
@@ -556,7 +558,7 @@ public class StarshipArena {
 		// the window or has pressed the ESCAPE key.
 		int slowCounter = 0;
 		int counter = 0;
-		while ( !glfwWindowShouldClose(window) ) {
+		while ( !window.shouldClose()) {
 			// Poll for window events. The key callback above will only be
 			// invoked during this call.
 			glfwPollEvents();
@@ -570,12 +572,9 @@ public class StarshipArena {
 				if(staticFrame == false){
 					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 					projectTrueWindowCoordinates();
-					titlePage.setTopLeft(250, WINDOW_HEIGHT - 150);
-					titlePage.setBottomRight(WINDOW_WIDTH - 250, 150);
-					titlePage.setPoints();
 					titlePage.display();
 					settingsIcon.display();
-					glfwSwapBuffers(window); // swap the color buffers
+					window.swapBuffers();
 					staticFrame = true;
 				}
 			}
@@ -583,12 +582,9 @@ public class StarshipArena {
 				if(staticFrame == false){
 					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 					projectTrueWindowCoordinates();
-					levelSelect.setTopLeft(200, WINDOW_HEIGHT - 50);
-					levelSelect.setBottomRight(WINDOW_WIDTH - 200, 50);
-					levelSelect.setPoints();
 					levelSelect.display();
 					settingsIcon.display();
-					glfwSwapBuffers(window); // swap the color buffers
+					window.swapBuffers();
 					staticFrame = true;
 				}
 			}
@@ -596,7 +592,7 @@ public class StarshipArena {
 				if(staticFrame == false){
 					projectTrueWindowCoordinates();
 					victoryMessage.display();
-					glfwSwapBuffers(window); // swap the color buffers
+					window.swapBuffers();
 					staticFrame = true;
 				}
 			}
@@ -604,7 +600,7 @@ public class StarshipArena {
 				if(staticFrame == false){
 					projectTrueWindowCoordinates();
 					defeatMessage.display();
-					glfwSwapBuffers(window); // swap the color buffers
+					window.swapBuffers();
 					staticFrame = true;
 				}
 			}
@@ -672,10 +668,10 @@ public class StarshipArena {
 				if(boxSelectCurrent){
 					DoubleBuffer xpos = BufferUtils.createDoubleBuffer(2);
 					DoubleBuffer ypos = BufferUtils.createDoubleBuffer(2);
-					glfwGetCursorPos(window, xpos, ypos);
+					glfwGetCursorPos(window.getWindowHandle(), xpos, ypos);
 					//convert the glfw coordinate to our coordinate system
-					xpos.put(1, getWidthScalar() * xpos.get(0) + CURR_X);
-					ypos.put(1, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0)) + CURR_Y));
+					xpos.put(1, getWidthScalar() * (xpos.get(0)) + CURR_X);
+					ypos.put(1, (getHeightScalar() * ((WINDOW_HEIGHT) - ypos.get(0)) + CURR_Y));
 					boxSelect.setBottomRight(xpos.get(1), ypos.get(1));
 					boxSelect.setPoints();
 					boxSelect.display();
@@ -804,8 +800,6 @@ public class StarshipArena {
 							else if (numTransportsSelected == 1) writeText("Transport", 400, 15, 30);
 							else if (numBattleshipsSelected == 1) writeText("Battleship", 400, 15, 30);
 //							if(shipsControllingTeam.equals(player.getTeam()))
-							if (sumCurrentHP - (int)sumCurrentHP > 0)
-								sumCurrentHP++;
 								writeText("Armor:" + sumCurrentHP + "/" + sumMaxHP, 800, 20);
 //							else
 //								writeText("Armor:??/??", 800, 20);
@@ -821,8 +815,6 @@ public class StarshipArena {
 //							writeText("Transports:" + numTransportsSelected, 1000, 60);
 							writeText("Battleships:" + numBattleshipsSelected, 1000, 60);
 //							if (shipsControllingTeam.equals(player.getTeam()))
-							if (sumCurrentHP - (int)sumCurrentHP > 0)
-								sumCurrentHP++;
 								writeText("Fleet armor:" + sumCurrentHP + "/" + sumMaxHP, 800, 20);
 //							else
 //								writeText("Fleet armor:??/??", 800, 20);
@@ -879,7 +871,7 @@ public class StarshipArena {
 						CURR_Y = Math.min(WORLD_HEIGHT - CAMERA_HEIGHT, CURR_Y + CAMERA_SPEED * WORLD_HEIGHT / 2600);
 					
 					
-					glfwSwapBuffers(window); // swap the color buffers
+					window.swapBuffers();
 		        
 				}
 			}
@@ -1089,15 +1081,10 @@ public class StarshipArena {
 			zoomLevel = 2;
 			
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
-			Planet temp;
-			temp = new Planet(this, 1350, 1000, 1);
-			temp.setTeam("blue"); temp.setResources(40);
-			temp = new Planet(this, 3000, 1500, 2);
-			temp.setTeam("blue"); temp.setResources(40);
-			temp = new Planet(this, 2250, 3000, 3);
-			temp.setTeam("red"); temp.setResources(40);
-			temp = new Planet(this, 4700, 2300, 4);
-			temp.setTeam("red"); temp.setResources(40);
+			new Planet(this, 1350, 1000, 1).setTeam("blue");
+			new Planet(this, 3000, 1500, 2).setTeam("blue");
+			new Planet(this, 2250, 3000, 3).setTeam("red");
+			new Planet(this, 4700, 2300, 4).setTeam("red");
 			new Fighter(this, "blue", 1350, 1000, 0);
 			new Fighter(this, "blue", 1450, 950, 0);
 			new Fighter(this, "blue", 1250, 950, 0);
@@ -1444,10 +1431,6 @@ public class StarshipArena {
 							polygon_intersection(p.getPoints(), s.getPoints())){
 						if (p instanceof Missile && s instanceof Fighter)
 							s.setHealth(s.getHealth()-p.getDamage()*20);
-						else if (p.texId == 3 && s instanceof Battleship)
-							s.setHealth(s.getHealth()-p.getDamage()*2);
-						else if (p.texId < 3 && s instanceof Interceptor)
-							s.setHealth(s.getHealth()-p.getDamage()*2);
 						else
 							s.setHealth(s.getHealth()-p.getDamage());
 		    			s.damageDisplayDelay = 1000;
@@ -1464,10 +1447,6 @@ public class StarshipArena {
 							polygon_intersection(p.getPoints(), s.getPoints())) {
 					if (p instanceof Missile && s instanceof Fighter)
 						s.setHealth(s.getHealth()-p.getDamage()*20);
-					else if (p.texId == 3 && s instanceof Battleship)
-						s.setHealth(s.getHealth()-p.getDamage()*2);
-					else if (p.texId < 3 && s instanceof Interceptor)
-						s.setHealth(s.getHealth()-p.getDamage()*2);
 					else
 						s.setHealth(s.getHealth()-p.getDamage());
 	    			s.damageDisplayDelay = 1000;
