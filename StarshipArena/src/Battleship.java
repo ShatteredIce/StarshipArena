@@ -50,7 +50,7 @@ public class Battleship extends Starship{
 	public void shipStats(){
 		max_health = 50;
 		//movement
-		acceleration = 0.2;
+		acceleration = 0.1;
 		max_velocity = 5;
 		max_reverse_velocity = -2;
 		min_turn_velocity = 1;
@@ -222,7 +222,7 @@ public class Battleship extends Starship{
 		getClosestEnemy();
 		if (locationTarget != null) {
 			double distance = distance(this.getX(), this.getY(), locationTarget.x, locationTarget.y);
-			if (distance > 50) {
+			if (distance > 80) {
 				boolean positiveY = false;
 				if (locationTarget.y >=  this.getY()) positiveY = true;
 				double angle = Math.acos((locationTarget.x - this.getX()) / distance) * 180 / Math.PI;
@@ -230,7 +230,7 @@ public class Battleship extends Starship{
 				if (positiveY) targetAngle = (270 + angle) % 360;
 				else targetAngle = 270 - angle;
 				//System.out.println(targetAngle);
-				targeted_velocity = max_velocity / 2;
+				targeted_velocity = max_velocity / 4;
 				if (Math.abs(this.angle - Math.round(targetAngle)) < 2) {
 					current_turn_speed = 0;
 					targeted_velocity = max_velocity;

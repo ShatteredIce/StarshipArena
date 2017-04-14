@@ -748,11 +748,13 @@ public class StarshipArena {
 					int numInterceptorsSelected = 0;
 					int numTransportsSelected = 0;
 					int numBattleshipsSelected = 0;
+					int numPodsSelected = 0;
 					String shipStatus = "Idle";
 					int selectedPlanetResources = Integer.MIN_VALUE;
 					boolean alliedPlanetSelected = false;
 					String planetControllingTeam = "none";
 					String shipsControllingTeam = "none";
+					String podTypeSelected = "none";
 					for(int p = 0; p < planets.size(); p++){
 						if(planets.get(p).getSelected()){
 							sidebar.display();
@@ -775,6 +777,12 @@ public class StarshipArena {
 							else if (ships.get(s) instanceof Interceptor) numInterceptorsSelected++;
 							else if (ships.get(s) instanceof Transport) numTransportsSelected++;
 							else if (ships.get(s) instanceof Battleship) numBattleshipsSelected++;
+							else if (ships.get(s) instanceof MissilePod || ships.get(s) instanceof MachineGunPod || ships.get(s) instanceof BasicPod) {
+								numPodsSelected++;
+								if (ships.get(s) instanceof MissilePod) podTypeSelected = "Missile Turret";
+								else if (ships.get(s) instanceof MachineGunPod) podTypeSelected = "Machinegun Turret";
+								else if (ships.get(s) instanceof BasicPod) podTypeSelected = "Basic Turret";
+							}
 						}
 					}
 					
@@ -794,11 +802,12 @@ public class StarshipArena {
 							writeText("Controlled by:", 20, 100);
 							writeText(planetControllingTeam, 20, 80);
 						}
-						else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected + numBattleshipsSelected == 1) {
+						else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected + numBattleshipsSelected + numPodsSelected == 1) {
 							if (numFightersSelected == 1) writeText("Fighter", 400, 15, 30);
 							else if (numInterceptorsSelected == 1) writeText("Interceptor", 400, 15, 30);
 							else if (numTransportsSelected == 1) writeText("Transport", 400, 15, 30);
 							else if (numBattleshipsSelected == 1) writeText("Battleship", 400, 15, 30);
+							else if (numPodsSelected == 1) writeText(podTypeSelected, 350, 15, 30);
 //							if(shipsControllingTeam.equals(player.getTeam()))
 								writeText("Armor:" + sumCurrentHP + "/" + sumMaxHP, 800, 20);
 //							else
@@ -808,12 +817,13 @@ public class StarshipArena {
 							writeText("Ship status:", 20, 40);
 							writeText(shipStatus, 20, 20);
 						}
-						else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected  + numBattleshipsSelected> 1) {
-							writeText("Starfleet(" + (numFightersSelected + numInterceptorsSelected + numTransportsSelected + numBattleshipsSelected) + ")", 400, 15, 30);
-							writeText("Fighters:" + numFightersSelected, 1000, 100);
-							writeText("Interceptors:" + numInterceptorsSelected, 1000, 80);
+						else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected  + numBattleshipsSelected + numPodsSelected > 1) {
+							writeText("Starfleet(" + (numFightersSelected + numInterceptorsSelected + numTransportsSelected + numBattleshipsSelected + numPodsSelected) + ")", 400, 15, 30);
+							writeText("Fighters:" + numFightersSelected, 1000, 120);
+							writeText("Interceptors:" + numInterceptorsSelected, 1000, 100);
 //							writeText("Transports:" + numTransportsSelected, 1000, 60);
-							writeText("Battleships:" + numBattleshipsSelected, 1000, 60);
+							writeText("Battleships:" + numBattleshipsSelected, 1000, 80);
+							writeText("Turrets:" + numPodsSelected, 1000, 60);
 //							if (shipsControllingTeam.equals(player.getTeam()))
 								writeText("Fleet armor:" + sumCurrentHP + "/" + sumMaxHP, 800, 20);
 //							else
