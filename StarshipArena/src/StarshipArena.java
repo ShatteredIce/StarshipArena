@@ -265,217 +265,222 @@ public class StarshipArena {
 			DoubleBuffer xpos = BufferUtils.createDoubleBuffer(3);
 			DoubleBuffer ypos = BufferUtils.createDoubleBuffer(3);
 			glfwGetCursorPos(window, xpos, ypos);
-			//convert the glfw coordinate to our coordinate system
-			//relative camera coordinates
-			xpos.put(1, getWidthScalar() * (xpos.get(0) - windowXOffset) + CURR_X);
-			ypos.put(1, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0) + windowYOffset) + CURR_Y));
-			//true window coordinates
-			xpos.put(2, xpos.get(0) - windowXOffset);
-			ypos.put(2, (WINDOW_HEIGHT - ypos.get(0) + windowYOffset));
-			if(gameState == 1){
-				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-					if(settingsButton.isClicked(xpos.get(2), ypos.get(2))){
-						System.exit(1);
-					}
-				}
-				else if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
-				//System.out.println(xpos.get(1) + " " + ypos.get(1));
-					if(levelSelectButton.isClicked(xpos.get(2), ypos.get(2))){
-						gameState = 2;
-						staticFrame = false;
-					}
-					else if(controlsButton.isClicked(xpos.get(2), ypos.get(2))){
-						ProcessBuilder pb = new ProcessBuilder("notepad.exe", "controls.txt");
-						try {
-							pb.start();
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+			//check if the mouse click is in the game frame
+			if(xpos.get(0) > windowXOffset && xpos.get(0) < WINDOW_WIDTH + windowXOffset &&
+					ypos.get(0) > windowYOffset && ypos.get(0) < WINDOW_HEIGHT + windowYOffset){
+				//convert the glfw coordinate to our coordinate system
+				//relative camera coordinates
+				xpos.put(1, getWidthScalar() * (xpos.get(0) - windowXOffset) + CURR_X);
+				ypos.put(1, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0) + windowYOffset) + CURR_Y));
+				//true window coordinates
+				xpos.put(2, xpos.get(0) - windowXOffset);
+				ypos.put(2, (WINDOW_HEIGHT - ypos.get(0) + windowYOffset));
+				if(gameState == 1){
+					if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+						if(settingsButton.isClicked(xpos.get(2), ypos.get(2))){
+							System.exit(1);
 						}
 					}
-					else if(creditsButton.isClicked(xpos.get(2), ypos.get(2))){
-						ProcessBuilder pb = new ProcessBuilder("notepad.exe", "credits.txt");
-						try {
-							pb.start();
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				}
-			}
-			else if(gameState == 2){
-				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-					if(settingsButton.isClicked(xpos.get(2), ypos.get(2))){
-						gameState = 1;
-						staticFrame = false;
-						return;
-					}
-				}
-				else if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
+					else if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
 					//System.out.println(xpos.get(1) + " " + ypos.get(1));
-					for (int i = 0; i < levelButtons.length - 4; i++) {
-						if(levelButtons[i].isClicked(xpos.get(2), ypos.get(2))){
-							gameState = 3;
-							loadLevel(i+1);
+						if(levelSelectButton.isClicked(xpos.get(2), ypos.get(2))){
+							gameState = 2;
+							staticFrame = false;
+						}
+						else if(controlsButton.isClicked(xpos.get(2), ypos.get(2))){
+							ProcessBuilder pb = new ProcessBuilder("notepad.exe", "controls.txt");
+							try {
+								pb.start();
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+						else if(creditsButton.isClicked(xpos.get(2), ypos.get(2))){
+							ProcessBuilder pb = new ProcessBuilder("notepad.exe", "credits.txt");
+							try {
+								pb.start();
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 						}
 					}
 				}
-			}
-			//player has beaten or lost the level buttons
-			else if(gameState == 4 || gameState == 5){
-				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-					if(settingsButton.isClicked(xpos.get(2), ypos.get(2))){
-						gameState = 1;
-						staticFrame = false;
-						return;
+				else if(gameState == 2){
+					if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+						if(settingsButton.isClicked(xpos.get(2), ypos.get(2))){
+							gameState = 1;
+							staticFrame = false;
+							return;
+						}
+					}
+					else if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
+						//System.out.println(xpos.get(1) + " " + ypos.get(1));
+						for (int i = 0; i < levelButtons.length - 4; i++) {
+							if(levelButtons[i].isClicked(xpos.get(2), ypos.get(2))){
+								gameState = 3;
+								loadLevel(i+1);
+							}
+						}
 					}
 				}
-				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE){
-					if(nextLevelButton.isClicked(xpos.get(2), ypos.get(2))){
-						if (currentLevel + 1 < 9) {
-							loadLevel(currentLevel + 1);
+				//player has beaten or lost the level buttons
+				else if(gameState == 4 || gameState == 5){
+					if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+						if(settingsButton.isClicked(xpos.get(2), ypos.get(2))){
+							gameState = 1;
+							staticFrame = false;
+							return;
+						}
+					}
+					if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE){
+						if(nextLevelButton.isClicked(xpos.get(2), ypos.get(2))){
+							if (currentLevel + 1 < 9) {
+								loadLevel(currentLevel + 1);
+								gameState = 3;
+							}
+						}
+						else if(restartLevelButton.isClicked(xpos.get(2), ypos.get(2))){
+							loadLevel(currentLevel);
 							gameState = 3;
 						}
 					}
-					else if(restartLevelButton.isClicked(xpos.get(2), ypos.get(2))){
-						loadLevel(currentLevel);
-						gameState = 3;
-					}
 				}
-			}
-			else if(gameState == 3){
-				boolean clickedOnSprite = false;
-				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-					if(settingsButton.isClicked(xpos.get(2), ypos.get(2))){
-						gameState = 1;
-						staticFrame = false;
-						return;
+				else if(gameState == 3){
+					boolean clickedOnSprite = false;
+					if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+						if(settingsButton.isClicked(xpos.get(2), ypos.get(2))){
+							gameState = 1;
+							staticFrame = false;
+							return;
+						}
+						boxSelect.setTopLeft(xpos.get(1), ypos.get(1));
+						//boxSelect.setBottomRight(xpos.get(0), ypos.get(0));
+						oldMouseX = xpos;
+						oldMouseY = ypos;
+						boxSelectCurrent = true;
 					}
-					boxSelect.setTopLeft(xpos.get(1), ypos.get(1));
-					//boxSelect.setBottomRight(xpos.get(0), ypos.get(0));
-					oldMouseX = xpos;
-					oldMouseY = ypos;
-					boxSelectCurrent = true;
-				}
-				if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
-					newMouseX = xpos;
-					newMouseY = ypos;
-					boxSelectCurrent = false;
-					//remove selected planet
-					if(player.getSelectedPlanet() != null){
-						player.getSelectedPlanet().setSelected(false);
-						player.setSelectedPlanet(null);
-					}
-					String shipsControllingTeam = "";
-					ArrayList<Starship> selectedUncontrolledShips = new ArrayList<>();
-					for (int i = 0; i < ships.size(); i++) {
-						Starship s = ships.get(i);
-						Point clickCenter = new Point(s.getX() + s.getXOff(), s.getY() + s.getYOff());
-						clickCenter.rotatePoint(s.getX(), s.getY(), s.getAngle());
-						if (clickCenter.X() < Math.max(newMouseX.get(1), oldMouseX.get(1)) + s.getClickRadius()
-								&& clickCenter.X() > Math.min(oldMouseX.get(1), newMouseX.get(1)) - s.getClickRadius()
-								&& clickCenter.Y() < Math.max(newMouseY.get(1), oldMouseY.get(1))
-								&& clickCenter.Y() > Math.min(oldMouseY.get(1), newMouseY.get(1))
-								|| clickCenter.X() < Math.max(newMouseX.get(1), oldMouseX.get(1))
-								&& clickCenter.X() > Math.min(oldMouseX.get(1), newMouseX.get(1))
-								&& clickCenter.Y() < Math.max(newMouseY.get(1), oldMouseY.get(1)) + s.getClickRadius()
-								&& clickCenter.Y() > Math.min(oldMouseY.get(1), newMouseY.get(1)) - s.getClickRadius()) {
-							if (shipsControllingTeam.equals("") || s.getTeam().equals(shipsControllingTeam)) {
-								shipsControllingTeam = s.getTeam();
-								if (!shipsControllingTeam.equals(player.getTeam())) {
-									selectedUncontrolledShips.add(s);
-									s.setSelected(false);
+					if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
+						newMouseX = xpos;
+						newMouseY = ypos;
+						boxSelectCurrent = false;
+						//remove selected planet
+						if(player.getSelectedPlanet() != null){
+							player.getSelectedPlanet().setSelected(false);
+							player.setSelectedPlanet(null);
+						}
+						String shipsControllingTeam = "";
+						ArrayList<Starship> selectedUncontrolledShips = new ArrayList<>();
+						for (int i = 0; i < ships.size(); i++) {
+							Starship s = ships.get(i);
+							Point clickCenter = new Point(s.getX() + s.getXOff(), s.getY() + s.getYOff());
+							clickCenter.rotatePoint(s.getX(), s.getY(), s.getAngle());
+							if (clickCenter.X() < Math.max(newMouseX.get(1), oldMouseX.get(1)) + s.getClickRadius()
+									&& clickCenter.X() > Math.min(oldMouseX.get(1), newMouseX.get(1)) - s.getClickRadius()
+									&& clickCenter.Y() < Math.max(newMouseY.get(1), oldMouseY.get(1))
+									&& clickCenter.Y() > Math.min(oldMouseY.get(1), newMouseY.get(1))
+									|| clickCenter.X() < Math.max(newMouseX.get(1), oldMouseX.get(1))
+									&& clickCenter.X() > Math.min(oldMouseX.get(1), newMouseX.get(1))
+									&& clickCenter.Y() < Math.max(newMouseY.get(1), oldMouseY.get(1)) + s.getClickRadius()
+									&& clickCenter.Y() > Math.min(oldMouseY.get(1), newMouseY.get(1)) - s.getClickRadius()) {
+								if (shipsControllingTeam.equals("") || s.getTeam().equals(shipsControllingTeam)) {
+									shipsControllingTeam = s.getTeam();
+									if (!shipsControllingTeam.equals(player.getTeam())) {
+										selectedUncontrolledShips.add(s);
+										s.setSelected(false);
+									}
+									else {
+										s.setSelected(true);
+										clickedOnSprite = true;
+									}
 								}
-								else {
+								else if (s.getTeam().equals(player.getTeam())) {
+									shipsControllingTeam = s.getTeam();
 									s.setSelected(true);
 									clickedOnSprite = true;
 								}
+								else s.setSelected(false);
 							}
-							else if (s.getTeam().equals(player.getTeam())) {
-								shipsControllingTeam = s.getTeam();
-								s.setSelected(true);
-								clickedOnSprite = true;
-							}
-							else s.setSelected(false);
-						}
-						else if (distance(newMouseX.get(1), newMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
-								|| distance(newMouseX.get(1), oldMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
-								|| distance(oldMouseX.get(1), newMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
-								|| distance(oldMouseX.get(1), oldMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()) {
-							if (shipsControllingTeam.equals("") || s.getTeam().equals(shipsControllingTeam)) {
-								shipsControllingTeam = s.getTeam();
-								if (!shipsControllingTeam.equals(player.getTeam())) {
-									selectedUncontrolledShips.add(s);
-									s.setSelected(false);
+							else if (distance(newMouseX.get(1), newMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
+									|| distance(newMouseX.get(1), oldMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
+									|| distance(oldMouseX.get(1), newMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
+									|| distance(oldMouseX.get(1), oldMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()) {
+								if (shipsControllingTeam.equals("") || s.getTeam().equals(shipsControllingTeam)) {
+									shipsControllingTeam = s.getTeam();
+									if (!shipsControllingTeam.equals(player.getTeam())) {
+										selectedUncontrolledShips.add(s);
+										s.setSelected(false);
+									}
+									else {
+										s.setSelected(true);
+										clickedOnSprite = true;
+									}
 								}
-								else {
+								else if (s.getTeam().equals(player.getTeam())) {
+									shipsControllingTeam = s.getTeam();
 									s.setSelected(true);
 									clickedOnSprite = true;
 								}
-							}
-							else if (s.getTeam().equals(player.getTeam())) {
-								shipsControllingTeam = s.getTeam();
-								s.setSelected(true);
-								clickedOnSprite = true;
+								else s.setSelected(false);
 							}
 							else s.setSelected(false);
 						}
-						else s.setSelected(false);
-					}
-					if (!clickedOnSprite && selectedUncontrolledShips.size() > 0) {
-						for (int i = 0; i < selectedUncontrolledShips.size(); i++) {
-							selectedUncontrolledShips.get(i).setSelected(true);
+						if (!clickedOnSprite && selectedUncontrolledShips.size() > 0) {
+							for (int i = 0; i < selectedUncontrolledShips.size(); i++) {
+								selectedUncontrolledShips.get(i).setSelected(true);
+							}
+							clickedOnSprite = true;
 						}
-						clickedOnSprite = true;
-					}
-					//if we haven't clicked on a ship, check if we clicked on a planet
-					if(!clickedOnSprite){
-						for (int i = 0; i < planets.size(); i++) {
-							Planet p = planets.get(i);
-							//allows box select of planet
-	//						if (p.getX() < Math.max(newMouseX.get(1), oldMouseX.get(1)) + p.getSize() - 30
-	//								&& p.getX() > Math.min(oldMouseX.get(1), newMouseX.get(1)) - p.getSize() + 30
-	//								&& p.getY() < Math.max(newMouseY.get(1), oldMouseY.get(1))- 30
-	//								&& p.getY() > Math.min(oldMouseY.get(1), newMouseY.get(1))+ 30
-	//								|| p.getX() < Math.max(newMouseX.get(1), oldMouseX.get(1))- 30
-	//								&& p.getX() > Math.min(oldMouseX.get(1), newMouseX.get(1))+ 30
-	//								&& p.getY() < Math.max(newMouseY.get(1), oldMouseY.get(1)) + p.getSize() - 30
-	//								&& p.getY() > Math.min(oldMouseY.get(1), newMouseY.get(1)) - p.getSize() + 30) {
-	//							System.out.println("check1");
-	//							if(player.getSelectedPlanet() != null){
-	//								player.getSelectedPlanet().setSelected(false);
-	//							}
-	//							player.setSelectedPlanet(p);
-	//							p.setSelected(true);
-	//							clickedOnSprite = true;
-	//							break;
-	//						}
-							if (Math.abs(newMouseX.get(2) - oldMouseX.get(2)) < 5 && Math.abs(newMouseY.get(2) - oldMouseY.get(2)) < 5 && (distance(newMouseX.get(1), newMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30
-									|| distance(newMouseX.get(1), oldMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30
-									|| distance(oldMouseX.get(1), newMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30
-									|| distance(oldMouseX.get(1), oldMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30)) {
-								if(player.getSelectedPlanet() != null){
-									player.getSelectedPlanet().setSelected(false);
+						//if we haven't clicked on a ship, check if we clicked on a planet
+						if(!clickedOnSprite){
+							for (int i = 0; i < planets.size(); i++) {
+								Planet p = planets.get(i);
+								//allows box select of planet
+		//						if (p.getX() < Math.max(newMouseX.get(1), oldMouseX.get(1)) + p.getSize() - 30
+		//								&& p.getX() > Math.min(oldMouseX.get(1), newMouseX.get(1)) - p.getSize() + 30
+		//								&& p.getY() < Math.max(newMouseY.get(1), oldMouseY.get(1))- 30
+		//								&& p.getY() > Math.min(oldMouseY.get(1), newMouseY.get(1))+ 30
+		//								|| p.getX() < Math.max(newMouseX.get(1), oldMouseX.get(1))- 30
+		//								&& p.getX() > Math.min(oldMouseX.get(1), newMouseX.get(1))+ 30
+		//								&& p.getY() < Math.max(newMouseY.get(1), oldMouseY.get(1)) + p.getSize() - 30
+		//								&& p.getY() > Math.min(oldMouseY.get(1), newMouseY.get(1)) - p.getSize() + 30) {
+		//							System.out.println("check1");
+		//							if(player.getSelectedPlanet() != null){
+		//								player.getSelectedPlanet().setSelected(false);
+		//							}
+		//							player.setSelectedPlanet(p);
+		//							p.setSelected(true);
+		//							clickedOnSprite = true;
+		//							break;
+		//						}
+								if (Math.abs(newMouseX.get(2) - oldMouseX.get(2)) < 5 && Math.abs(newMouseY.get(2) - oldMouseY.get(2)) < 5 && (distance(newMouseX.get(1), newMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30
+										|| distance(newMouseX.get(1), oldMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30
+										|| distance(oldMouseX.get(1), newMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30
+										|| distance(oldMouseX.get(1), oldMouseY.get(1), p.getX(), p.getY()) <= p.getSize() - 30)) {
+									if(player.getSelectedPlanet() != null){
+										player.getSelectedPlanet().setSelected(false);
+									}
+									player.setSelectedPlanet(p);
+									p.setSelected(true);
+									clickedOnSprite = true;
+									break;
 								}
-								player.setSelectedPlanet(p);
-								p.setSelected(true);
-								clickedOnSprite = true;
-								break;
 							}
 						}
 					}
-				}
-				if ( button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
-					for (int i = 0; i < ships.size(); i++) {
-						Starship s = ships.get(i);
-						if (s.getSelected() && s.getTeam().equals(player.getTeam())) {
-							s.setLocationTarget(new Point(xpos.get(1), ypos.get(1)));
-							//System.out.println(xpos.get(0) + ", " + ypos.get(0));
+					if ( button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+						for (int i = 0; i < ships.size(); i++) {
+							Starship s = ships.get(i);
+							if (s.getSelected() && s.getTeam().equals(player.getTeam())) {
+								s.setLocationTarget(new Point(xpos.get(1), ypos.get(1)));
+								//System.out.println(xpos.get(0) + ", " + ypos.get(0));
+							}
 						}
 					}
 				}
 			}
+			
 		});
 		
 //		// Get the thread stack and push a new frame
