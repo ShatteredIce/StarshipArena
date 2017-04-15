@@ -21,11 +21,11 @@ public class MissilePod extends BasicPod{
 		super(mygame, spawnx, spawny);
 	}
 	
-	public MissilePod(StarshipArena mygame, int spawnx, int spawny, int spawnangle){
+	public MissilePod(StarshipArena mygame, int spawnx, int spawny, double spawnangle){
 		super(mygame, "none", spawnx, spawny, spawnangle);
 	}
 
-	public MissilePod(StarshipArena mygame, String newteam, int spawnx, int spawny, int spawnangle){
+	public MissilePod(StarshipArena mygame, String newteam, int spawnx, int spawny, double spawnangle){
 		super(mygame, newteam, spawnx, spawny, spawnangle);
 	}
 	

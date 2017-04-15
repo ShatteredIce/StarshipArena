@@ -51,6 +51,9 @@ public class StarshipArena {
     boolean panUp = false;
     boolean panDown = false;
     
+    boolean shiftPressed = false;
+    boolean controlPressed = false;
+    
     DoubleBuffer oldMouseX;
     DoubleBuffer oldMouseY;
     DoubleBuffer newMouseX;
@@ -186,6 +189,23 @@ public class StarshipArena {
 				panDown = true;
 			if ( key == GLFW_KEY_DOWN && action == GLFW_RELEASE )
 				panDown = false;
+			
+			if ( key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS )
+				shiftPressed = true;
+			if ( key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE )
+				shiftPressed = false;
+			if ( key == GLFW_KEY_RIGHT_SHIFT && action == GLFW_PRESS )
+				shiftPressed = true;
+			if ( key == GLFW_KEY_RIGHT_SHIFT && action == GLFW_RELEASE )
+				shiftPressed = false;
+			if ( key == GLFW_KEY_LEFT_CONTROL && action == GLFW_PRESS )
+				controlPressed = true;
+			if ( key == GLFW_KEY_LEFT_CONTROL && action == GLFW_RELEASE )
+				controlPressed = false;
+			if ( key == GLFW_KEY_RIGHT_CONTROL && action == GLFW_PRESS )
+				controlPressed = true;
+			if ( key == GLFW_KEY_RIGHT_CONTROL && action == GLFW_RELEASE )
+				controlPressed = false;
 			
 			if ( key == GLFW_KEY_A && action == GLFW_RELEASE ) {
 				for (int i = 0; i < planets.size(); i++) {
@@ -473,6 +493,18 @@ public class StarshipArena {
 						for (int i = 0; i < ships.size(); i++) {
 							Starship s = ships.get(i);
 							if (s.getSelected() && s.getTeam().equals(player.getTeam())) {
+								if(shiftPressed){
+									s.setLockPosition(true);
+								}
+								else{
+									s.setLockPosition(false);
+								}
+								if(controlPressed){
+									s.setAttackMove(false);
+								}
+								else{
+									s.setAttackMove(true);
+								}
 								s.setLocationTarget(new Point(xpos.get(1), ypos.get(1)));
 								//System.out.println(xpos.get(0) + ", " + ypos.get(0));
 							}

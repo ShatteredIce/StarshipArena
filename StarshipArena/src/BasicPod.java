@@ -15,16 +15,15 @@ public class BasicPod extends Starship{
 	static int primary_yoffset = 20;
 	int primary_id = 0;
 	
-	
 	public BasicPod(StarshipArena mygame, int spawnx, int spawny){
 		super(mygame, spawnx, spawny);
 	}
 	
-	public BasicPod(StarshipArena mygame, int spawnx, int spawny, int spawnangle){
+	public BasicPod(StarshipArena mygame, int spawnx, int spawny, double spawnangle){
 		super(mygame, "none", spawnx, spawny, spawnangle);
 	}
 
-	public BasicPod(StarshipArena mygame, String newteam, int spawnx, int spawny, int spawnangle){
+	public BasicPod(StarshipArena mygame, String newteam, int spawnx, int spawny, double spawnangle){
 		super(mygame, newteam, spawnx, spawny, spawnangle);
 	}
 	
@@ -55,30 +54,7 @@ public class BasicPod extends Starship{
 	}
 	
 	public void doRandomMovement(){
-		if (locationTarget != null) {
-			double distance = distance(this.getX(), this.getY(), locationTarget.x, locationTarget.y);
-			if (distance > 50) {
-				boolean positiveY = false;
-				if (locationTarget.y >=  this.getY()) positiveY = true;
-				double angle = Math.acos((locationTarget.x - this.getX()) / distance) * 180 / Math.PI;
-				double targetAngle;
-				if (positiveY) targetAngle = (270 + angle) % 360;
-				else targetAngle = 270 - angle;
-				//System.out.println(targetAngle);
-				targeted_velocity = max_velocity / 2;
-				if (this.angle == Math.round(targetAngle)) {
-					current_turn_speed = 0;
-					targeted_velocity = max_velocity;
-				}
-				else if ((Math.round(targetAngle) - this.angle + 360) % 360 < 180) current_turn_speed = Math.min(max_turn_speed, (Math.round(targetAngle) - this.angle + 360) % 360);
-				else current_turn_speed = Math.max(-max_turn_speed, -((this.angle - Math.round(targetAngle) + 360) % 360));
-			}
-			else locationTarget = null;
-		}
-		else{
-			current_turn_speed = 0;
-			targeted_velocity = 0;
-		}
+		moveToLocation();
 	}
 	
 	public void setTexture(){

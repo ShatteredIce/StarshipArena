@@ -20,11 +20,11 @@ public class MachineGunPod extends BasicPod{
 		super(mygame, spawnx, spawny);
 	}
 	
-	public MachineGunPod(StarshipArena mygame, int spawnx, int spawny, int spawnangle){
+	public MachineGunPod(StarshipArena mygame, int spawnx, int spawny, double spawnangle){
 		super(mygame, "none", spawnx, spawny, spawnangle);
 	}
 
-	public MachineGunPod(StarshipArena mygame, String newteam, int spawnx, int spawny, int spawnangle){
+	public MachineGunPod(StarshipArena mygame, String newteam, int spawnx, int spawny, double spawnangle){
 		super(mygame, newteam, spawnx, spawny, spawnangle);
 	}
 	

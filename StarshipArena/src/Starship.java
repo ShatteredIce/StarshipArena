@@ -49,6 +49,8 @@ public class Starship {
 	Point locationTarget;
 	
 	boolean selected = false;
+	boolean lockPosition = false;
+	boolean attackMove = true;
 	
 	static Texture blueHalo = new Texture("blue_halo.png");
 	static Texture redHalo = new Texture("red_halo.png");
@@ -64,11 +66,11 @@ public class Starship {
 		this(mygame, "none", spawnx, spawny, 0);
 	}
 	
-	Starship(StarshipArena mygame, int spawnx, int spawny, int spawnangle){
+	Starship(StarshipArena mygame, int spawnx, int spawny, double spawnangle){
 		this(mygame, "none", spawnx, spawny, spawnangle);
 	}
 	
-	Starship(StarshipArena mygame, String newteam, int spawnx, int spawny, int spawnangle){
+	Starship(StarshipArena mygame, String newteam, int spawnx, int spawny, double spawnangle){
 		game = mygame;
 		team = newteam;
 		setScreenBounds(game.getScreenBounds());
@@ -338,6 +340,51 @@ public class Starship {
 		return scanned;
 	}
 	
+	public void moveToLocation(){
+		if(locationTarget != null){
+			double relativeAngle = game.angleToPoint(this.getX(), this.getY(), locationTarget.X(), locationTarget.Y());
+			double distance = distance(this.getX(), this.getY(), locationTarget.X(), locationTarget.Y());
+			double leftBearing = getTurnDistance(relativeAngle, true);
+			double rightBearing = getTurnDistance(relativeAngle, false);
+			if (lockPosition == true) {
+				if(leftBearing < max_turn_speed || rightBearing < max_turn_speed){
+					lockPosition = false;
+					locationTarget = null;
+				}
+				//adjust angle
+				else if(leftBearing <= rightBearing){ //turn left
+					current_turn_speed = Math.min((relativeAngle - angle + 360) % 360, max_turn_speed);
+				}
+				else{ //turn right
+					current_turn_speed = Math.max(-((angle - relativeAngle + 360) % 360), -max_turn_speed);
+				}
+			}
+			else if (lockPosition == false) {
+				if (distance > 50) {
+					targeted_velocity = max_velocity / 2;
+					if (this.angle == Math.round(relativeAngle)) {
+						current_turn_speed = 0;
+						targeted_velocity = max_velocity;
+					}
+					else if (leftBearing <= rightBearing){ //turn left
+						current_turn_speed = Math.min(max_turn_speed, (Math.round(relativeAngle) - this.angle + 360) % 360);
+					}
+					else{ //turn right
+						current_turn_speed = Math.max(-max_turn_speed, -((this.angle - Math.round(relativeAngle) + 360) % 360));
+					}
+				}
+				else locationTarget = null;
+			}
+		}
+		else{
+			current_turn_speed = 0;
+			targeted_velocity = 0;
+			if(attackMove == false){
+				attackMove = true;
+			}
+		}
+	}
+	
 	public void shipStats(){
 		max_health = 1;
 		//movement
@@ -533,5 +580,13 @@ public class Starship {
 
 	public Point getSpawnPoint() {
 		return spawnPoint;
+	}
+	
+	public void setLockPosition(boolean b){
+		lockPosition = b;
+	}
+	
+	public void setAttackMove(boolean b){
+		attackMove = b;
 	}
 }
