@@ -15,7 +15,7 @@ public class Missile extends Projectile {
 	//weaponry
 	int scan_range = 4000;
 
-	public Missile(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newdamage, int spawnangle, int accuracy, double newspeed, double newlifetime, int id) {
+	public Missile(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newdamage, double spawnangle, int accuracy, double newspeed, double newlifetime, int id) {
 		super(mygame, newowner, myteam, spawnx, spawny, newdamage, spawnangle, accuracy, newspeed, newlifetime, id);
 		max_velocity = (int)newspeed;
 	}
@@ -133,10 +133,10 @@ public class Missile extends Projectile {
 		return scanned;
 	}
 	
-	public int getClosestBearing(Starship s){
-		int relativeAngle = game.angleToPoint(center.X(), center.Y(), s.getX(), s.getY());
-		int leftBearing = getTurnDistance(relativeAngle, true);
-		int rightBearing = getTurnDistance(relativeAngle, false);
+	public double getClosestBearing(Starship s){
+		double relativeAngle = game.angleToPoint(center.X(), center.Y(), s.getX(), s.getY());
+		double leftBearing = getTurnDistance(relativeAngle, true);
+		double rightBearing = getTurnDistance(relativeAngle, false);
 		if(leftBearing <= rightBearing){
 			return leftBearing;
 		}
@@ -145,7 +145,7 @@ public class Missile extends Projectile {
 		}
 	}
 	
-	public int getTurnDistance(int relativeAngle, boolean toLeft){
+	public double getTurnDistance(double relativeAngle, boolean toLeft){
 		//find which direction to turn is shortest to target
 		if(angle >= relativeAngle){
 			if(toLeft){

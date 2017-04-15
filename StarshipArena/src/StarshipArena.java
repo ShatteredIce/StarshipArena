@@ -820,7 +820,7 @@ public class StarshipArena {
 							else if (ships.get(s) instanceof Interceptor) numInterceptorsSelected++;
 							else if (ships.get(s) instanceof Transport) numTransportsSelected++;
 							else if (ships.get(s) instanceof Battleship) numBattleshipsSelected++;
-							else if (ships.get(s) instanceof MissilePod || ships.get(s) instanceof MachineGunPod || ships.get(s) instanceof BasicPod) {
+							else if (ships.get(s) instanceof BasicPod) {
 								numPodsSelected++;
 								if (ships.get(s) instanceof MissilePod) podTypeSelected = "Missile Turret";
 								else if (ships.get(s) instanceof MachineGunPod) podTypeSelected = "Machinegun Turret";
@@ -1561,13 +1561,15 @@ public class StarshipArena {
     	}
     }
 	
-	public int normalizeAngle(int angle){
+	public double normalizeAngle(double angle){
 		while(angle < 0){
 			angle += 360;
 		}
 		while(angle >= 360){
 			angle -= 360;
 		}
+		//convert to two decimal places
+		angle = ((double) Math.round(angle * 100)) / 100;
 		return angle;
 	}
     

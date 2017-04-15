@@ -206,8 +206,8 @@ public class Fighter extends Starship{
 						current_turn_speed = 0;
 						targeted_velocity = max_velocity;
 					}
-					else if ((Math.round(targetAngle) - this.angle + 360) % 360 < 180) current_turn_speed = (int) Math.min(max_turn_speed, (Math.round(targetAngle) - this.angle + 360) % 360);
-					else current_turn_speed = (int) Math.max(-max_turn_speed, -((this.angle - Math.round(targetAngle) + 360) % 360));
+					else if ((Math.round(targetAngle) - this.angle + 360) % 360 < 180) current_turn_speed = Math.min(max_turn_speed, (Math.round(targetAngle) - this.angle + 360) % 360);
+					else current_turn_speed = Math.max(-max_turn_speed, -((this.angle - Math.round(targetAngle) + 360) % 360));
 				}
 				else locationTarget = null;
 			}
@@ -222,8 +222,8 @@ public class Fighter extends Starship{
 			if (locationTarget == null) locationTarget = new Point(center.x, center.y);
 			int relativeAngle = game.angleToPoint(center.X(), center.Y(), target.getX(), target.getY());
 			double distanceToTarget = game.distance(center.X(), center.Y(), target.getX(), target.getY());
-			int leftBearing = getTurnDistance(relativeAngle, true);
-			int rightBearing = getTurnDistance(relativeAngle, false);
+			double leftBearing = getTurnDistance(relativeAngle, true);
+			double rightBearing = getTurnDistance(relativeAngle, false);
 			//if interceptor is facing target
 			if(angle > (relativeAngle - distanceToTarget / 5) && angle < (relativeAngle + distanceToTarget / 5)){
 				targeted_velocity = max_velocity;

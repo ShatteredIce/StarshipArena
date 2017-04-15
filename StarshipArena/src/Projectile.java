@@ -21,13 +21,13 @@ public class Projectile {
 	Point[] points;
 	
 	double damage;
-	int angle;
+	double angle;
 	double speed;
 	double lifetime;
 	double current_lifetime = 0;
 	int texId;
 	
-	Projectile(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newdamage, int spawnangle, int accuracy, double newspeed, double newlifetime, int id){
+	Projectile(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newdamage, double spawnangle, int accuracy, double newspeed, double newlifetime, int id){
 		game = mygame;
 		owner = newowner;
 		team = myteam;

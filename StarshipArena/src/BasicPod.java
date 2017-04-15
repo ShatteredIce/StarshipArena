@@ -30,6 +30,11 @@ public class BasicPod extends Starship{
 	
 	public void shipStats(){
 		max_health = 40;
+		//movement
+		acceleration = 0.1;
+		max_velocity = 0.5;
+		min_turn_velocity = 0;
+		max_turn_speed = 0.5;
 		//other
 		clickRadius = 45;
 		xOff = 0;
@@ -47,6 +52,33 @@ public class BasicPod extends Starship{
 				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 1, 0);
 		primaryTurret.setOffset(primary_xoffset, primary_yoffset);
 		turrets.add(primaryTurret);
+	}
+	
+	public void doRandomMovement(){
+		if (locationTarget != null) {
+			double distance = distance(this.getX(), this.getY(), locationTarget.x, locationTarget.y);
+			if (distance > 50) {
+				boolean positiveY = false;
+				if (locationTarget.y >=  this.getY()) positiveY = true;
+				double angle = Math.acos((locationTarget.x - this.getX()) / distance) * 180 / Math.PI;
+				double targetAngle;
+				if (positiveY) targetAngle = (270 + angle) % 360;
+				else targetAngle = 270 - angle;
+				//System.out.println(targetAngle);
+				targeted_velocity = max_velocity / 2;
+				if (this.angle == Math.round(targetAngle)) {
+					current_turn_speed = 0;
+					targeted_velocity = max_velocity;
+				}
+				else if ((Math.round(targetAngle) - this.angle + 360) % 360 < 180) current_turn_speed = Math.min(max_turn_speed, (Math.round(targetAngle) - this.angle + 360) % 360);
+				else current_turn_speed = Math.max(-max_turn_speed, -((this.angle - Math.round(targetAngle) + 360) % 360));
+			}
+			else locationTarget = null;
+		}
+		else{
+			current_turn_speed = 0;
+			targeted_velocity = 0;
+		}
 	}
 	
 	public void setTexture(){

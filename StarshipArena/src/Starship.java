@@ -24,10 +24,10 @@ public class Starship {
 	Point[] hitbox;
 	
 	String team;
-	int angle;
+	double angle;
 	double targeted_velocity;
 	double current_velocity = 0;
-	int current_turn_speed;
+	double current_turn_speed;
 	
 	//Customizable variables
 	//Ship specifications
@@ -37,7 +37,7 @@ public class Starship {
 	double max_velocity;
 	double max_reverse_velocity;
 	double min_turn_velocity;
-	int max_turn_speed;
+	double max_turn_speed;
 	int scan_range;
 	int clickRadius;
 	
@@ -372,7 +372,7 @@ public class Starship {
 	}
 	
 	//get turn distance to angle depending on which direction to turn, 
-	public int getTurnDistance(int relativeAngle, boolean toLeft){
+	public double getTurnDistance(double relativeAngle, boolean toLeft){
 		//find which direction to turn is shortest to target
 		if(angle >= relativeAngle){
 			if(toLeft){
@@ -401,10 +401,10 @@ public class Starship {
 	}
 		
 	//finds the closest angle to turn to be facing starship s
-	public int getClosestBearing(Starship s){
-		int relativeAngle = game.angleToPoint(center.X(), center.Y(), s.getX(), s.getY());
-		int leftBearing = getTurnDistance(relativeAngle, true);
-		int rightBearing = getTurnDistance(relativeAngle, false);
+	public double getClosestBearing(Starship s){
+		double relativeAngle = game.angleToPoint(center.X(), center.Y(), s.getX(), s.getY());
+		double leftBearing = getTurnDistance(relativeAngle, true);
+		double rightBearing = getTurnDistance(relativeAngle, false);
 		if(leftBearing <= rightBearing){
 			return leftBearing;
 		}
@@ -434,7 +434,7 @@ public class Starship {
 	}
 	
 	
-	public int normalizeValue(int i){
+	public double normalizeValue(double i){
 		while(i < 0){
 			i += 360;
 		}
@@ -468,11 +468,11 @@ public class Starship {
 		return center.Y();
 	}
 	
-	public int getAngle() {
+	public double getAngle() {
 		return angle;
 	}
 	
-	public void setAngle(int newangle) {
+	public void setAngle(double newangle) {
 		angle = newangle;
 	}
 	
@@ -488,7 +488,7 @@ public class Starship {
 		return targeted_velocity;
 	}
 	
-	public int getTSpeed(){
+	public double getTSpeed(){
 		return current_turn_speed;
 	}
 	
