@@ -7,7 +7,7 @@ public class Layer {
 	static Texture tex3 = new Texture("box_select.png");
 	static Texture tex4 = new Texture("settings_icon.png");
 	static Texture tex5 = new Texture("planet_buyshipsmenu.png");
-	static Texture tex6 = new Texture("planet_menu2base.png");
+	static Texture tex6 = new Texture("border.png");
 	static Texture tex7 = new Texture("victory_screen.png");
 	static Texture tex8 = new Texture("defeat_screen.png");
 	

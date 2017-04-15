@@ -66,7 +66,7 @@ public class Point {
 		return y_offset;
 	}
 	
-	public void rotatePoint(double center_x, double center_y, int angle){
+	public void rotatePoint(double center_x, double center_y, double angle){
 		double cos_angle = Math.cos(Math.toRadians(angle));
 		double sin_angle = Math.sin(Math.toRadians(angle));
 		double rotated_x = ((x-center_x)*(cos_angle) - (y-center_y)*(sin_angle)) + center_x;

@@ -15,7 +15,7 @@ public class Missile extends Projectile {
 	//weaponry
 	int scan_range = 4000;
 
-	public Missile(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newdamage, int spawnangle, int accuracy, double newspeed, double newlifetime, int id) {
+	public Missile(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newdamage, double spawnangle, int accuracy, double newspeed, double newlifetime, int id) {
 		super(mygame, newowner, myteam, spawnx, spawny, newdamage, spawnangle, accuracy, newspeed, newlifetime, id);
 		max_velocity = (int)newspeed;
 	}
@@ -46,10 +46,10 @@ public class Missile extends Projectile {
 				int rand_angle = random.nextInt(360);
 				
 //					new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 5, 10, 3);
-				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 3, 8, 3);
-				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 3, 13, 3);
-				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 3, 18, 3);
-				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 3, 23, 3);
+				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 6, 4, 3);
+				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 6, 7, 3);
+				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 6, 10, 3);
+				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 6, 13, 3);
 //					new Projectile(game, null, team, center.x + x_rand, center.y + y_rand, 0.5, i, 100, 5, 10, 3);
 //					new Projectile(game, null, team, center.x + x_rand, center.y + y_rand, 0.5, i, 100, 5, 10, 3);
 		
@@ -133,10 +133,10 @@ public class Missile extends Projectile {
 		return scanned;
 	}
 	
-	public int getClosestBearing(Starship s){
-		int relativeAngle = game.angleToPoint(center.X(), center.Y(), s.getX(), s.getY());
-		int leftBearing = getTurnDistance(relativeAngle, true);
-		int rightBearing = getTurnDistance(relativeAngle, false);
+	public double getClosestBearing(Starship s){
+		double relativeAngle = game.angleToPoint(center.X(), center.Y(), s.getX(), s.getY());
+		double leftBearing = getTurnDistance(relativeAngle, true);
+		double rightBearing = getTurnDistance(relativeAngle, false);
 		if(leftBearing <= rightBearing){
 			return leftBearing;
 		}
@@ -145,7 +145,7 @@ public class Missile extends Projectile {
 		}
 	}
 	
-	public int getTurnDistance(int relativeAngle, boolean toLeft){
+	public double getTurnDistance(double relativeAngle, boolean toLeft){
 		//find which direction to turn is shortest to target
 		if(angle >= relativeAngle){
 			if(toLeft){
@@ -172,4 +172,15 @@ public class Missile extends Projectile {
 			return 0;
 		}
 	}
+	
+	//returns false if projectile is destroyed. Also creates explosion trail
+		public boolean updateLifetime(){
+			current_lifetime += 1;
+			if (current_lifetime % 3 == 0)
+				new Explosion(game, center.x, center.y, 20);
+			if(current_lifetime >= lifetime){
+				return false;
+			}
+			return true;
+		}
 }

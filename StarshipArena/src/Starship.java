@@ -24,10 +24,10 @@ public class Starship {
 	Point[] hitbox;
 	
 	String team;
-	int angle;
+	double angle;
 	double targeted_velocity;
 	double current_velocity = 0;
-	int current_turn_speed;
+	double current_turn_speed;
 	
 	//Customizable variables
 	//Ship specifications
@@ -37,7 +37,7 @@ public class Starship {
 	double max_velocity;
 	double max_reverse_velocity;
 	double min_turn_velocity;
-	int max_turn_speed;
+	double max_turn_speed;
 	int scan_range;
 	int clickRadius;
 	
@@ -49,6 +49,8 @@ public class Starship {
 	Point locationTarget;
 	
 	boolean selected = false;
+	boolean lockPosition = false;
+	boolean attackMove = true;
 	
 	static Texture blueHalo = new Texture("blue_halo.png");
 	static Texture redHalo = new Texture("red_halo.png");
@@ -64,11 +66,11 @@ public class Starship {
 		this(mygame, "none", spawnx, spawny, 0);
 	}
 	
-	Starship(StarshipArena mygame, int spawnx, int spawny, int spawnangle){
+	Starship(StarshipArena mygame, int spawnx, int spawny, double spawnangle){
 		this(mygame, "none", spawnx, spawny, spawnangle);
 	}
 	
-	Starship(StarshipArena mygame, String newteam, int spawnx, int spawny, int spawnangle){
+	Starship(StarshipArena mygame, String newteam, int spawnx, int spawny, double spawnangle){
 		game = mygame;
 		team = newteam;
 		setScreenBounds(game.getScreenBounds());
@@ -182,6 +184,32 @@ public class Starship {
 	}
 	
 	public void destroy(){
+		if (this instanceof Battleship) {
+			new Explosion(game, center.X(), center.Y(), 300);
+			for (int i = 0; i < 4; i++) {
+				int x_rand = random.nextInt(5) - 2;
+				int y_rand = random.nextInt(5) - 2;
+				int rand_angle = random.nextInt(360);
+				
+				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 18, 9, 0);
+				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 18, 12, 0);
+				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 18, 15, 0);
+				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 18, 18, 0);
+			}
+		}
+		else {
+			new Explosion(game, center.X(), center.Y());
+			for (int i = 0; i < 4; i++) {
+				int x_rand = random.nextInt(5) - 2;
+				int y_rand = random.nextInt(5) - 2;
+				int rand_angle = random.nextInt(360);
+				
+				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 6, 9, 3);
+				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 6, 12, 3);
+				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 6, 15, 3);
+				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 6, 18, 3);
+			}
+		}
 		model.destroy();
 		game.removeShip(this);
 	}
@@ -198,22 +226,23 @@ public class Starship {
 		indices = new int[]{0, 1, 2};
 	}
 	
-	public boolean display(){
+	public boolean checkHealth(){
 		if(current_health > 0){
-			setTexture();
-			model.render(vertices);
-			if(selected){
-				setHaloPoints();
-				haloTexture.bind();
-//				setHaloTexture();
-				haloModel.render(haloVertices);
-			}
 			return true;
 		}
 		else {
-			new Explosion(game, center.X(), center.Y());
 			destroy();
 			return false;
+		}
+	}
+	
+	public void display(){
+		setTexture();
+		model.render(vertices);
+		if(selected){
+			setHaloPoints();
+			haloTexture.bind();
+			haloModel.render(haloVertices);
 		}
 	}
 
@@ -311,6 +340,51 @@ public class Starship {
 		return scanned;
 	}
 	
+	public void moveToLocation(){
+		if(locationTarget != null){
+			double relativeAngle = game.angleToPoint(this.getX(), this.getY(), locationTarget.X(), locationTarget.Y());
+			double distance = distance(this.getX(), this.getY(), locationTarget.X(), locationTarget.Y());
+			double leftBearing = getTurnDistance(relativeAngle, true);
+			double rightBearing = getTurnDistance(relativeAngle, false);
+			if (lockPosition == true) {
+				if(leftBearing < max_turn_speed || rightBearing < max_turn_speed){
+					lockPosition = false;
+					locationTarget = null;
+				}
+				//adjust angle
+				else if(leftBearing <= rightBearing){ //turn left
+					current_turn_speed = Math.min((relativeAngle - angle + 360) % 360, max_turn_speed);
+				}
+				else{ //turn right
+					current_turn_speed = Math.max(-((angle - relativeAngle + 360) % 360), -max_turn_speed);
+				}
+			}
+			else if (lockPosition == false) {
+				if (distance > 50) {
+					targeted_velocity = max_velocity / 2;
+					if (this.angle == Math.round(relativeAngle)) {
+						current_turn_speed = 0;
+						targeted_velocity = max_velocity;
+					}
+					else if (leftBearing <= rightBearing){ //turn left
+						current_turn_speed = Math.min(max_turn_speed, (Math.round(relativeAngle) - this.angle + 360) % 360);
+					}
+					else{ //turn right
+						current_turn_speed = Math.max(-max_turn_speed, -((this.angle - Math.round(relativeAngle) + 360) % 360));
+					}
+				}
+				else locationTarget = null;
+			}
+		}
+		else{
+			current_turn_speed = 0;
+			targeted_velocity = 0;
+			if(attackMove == false){
+				attackMove = true;
+			}
+		}
+	}
+	
 	public void shipStats(){
 		max_health = 1;
 		//movement
@@ -345,7 +419,7 @@ public class Starship {
 	}
 	
 	//get turn distance to angle depending on which direction to turn, 
-	public int getTurnDistance(int relativeAngle, boolean toLeft){
+	public double getTurnDistance(double relativeAngle, boolean toLeft){
 		//find which direction to turn is shortest to target
 		if(angle >= relativeAngle){
 			if(toLeft){
@@ -374,10 +448,10 @@ public class Starship {
 	}
 		
 	//finds the closest angle to turn to be facing starship s
-	public int getClosestBearing(Starship s){
-		int relativeAngle = game.angleToPoint(center.X(), center.Y(), s.getX(), s.getY());
-		int leftBearing = getTurnDistance(relativeAngle, true);
-		int rightBearing = getTurnDistance(relativeAngle, false);
+	public double getClosestBearing(Starship s){
+		double relativeAngle = game.angleToPoint(center.X(), center.Y(), s.getX(), s.getY());
+		double leftBearing = getTurnDistance(relativeAngle, true);
+		double rightBearing = getTurnDistance(relativeAngle, false);
 		if(leftBearing <= rightBearing){
 			return leftBearing;
 		}
@@ -407,7 +481,7 @@ public class Starship {
 	}
 	
 	
-	public int normalizeValue(int i){
+	public double normalizeValue(double i){
 		while(i < 0){
 			i += 360;
 		}
@@ -441,11 +515,11 @@ public class Starship {
 		return center.Y();
 	}
 	
-	public int getAngle() {
+	public double getAngle() {
 		return angle;
 	}
 	
-	public void setAngle(int newangle) {
+	public void setAngle(double newangle) {
 		angle = newangle;
 	}
 	
@@ -461,7 +535,7 @@ public class Starship {
 		return targeted_velocity;
 	}
 	
-	public int getTSpeed(){
+	public double getTSpeed(){
 		return current_turn_speed;
 	}
 	
@@ -506,5 +580,13 @@ public class Starship {
 
 	public Point getSpawnPoint() {
 		return spawnPoint;
+	}
+	
+	public void setLockPosition(boolean b){
+		lockPosition = b;
+	}
+	
+	public void setAttackMove(boolean b){
+		attackMove = b;
 	}
 }

@@ -15,21 +15,25 @@ public class BasicPod extends Starship{
 	static int primary_yoffset = 20;
 	int primary_id = 0;
 	
-	
 	public BasicPod(StarshipArena mygame, int spawnx, int spawny){
 		super(mygame, spawnx, spawny);
 	}
 	
-	public BasicPod(StarshipArena mygame, int spawnx, int spawny, int spawnangle){
+	public BasicPod(StarshipArena mygame, int spawnx, int spawny, double spawnangle){
 		super(mygame, "none", spawnx, spawny, spawnangle);
 	}
 
-	public BasicPod(StarshipArena mygame, String newteam, int spawnx, int spawny, int spawnangle){
+	public BasicPod(StarshipArena mygame, String newteam, int spawnx, int spawny, double spawnangle){
 		super(mygame, newteam, spawnx, spawny, spawnangle);
 	}
 	
 	public void shipStats(){
 		max_health = 40;
+		//movement
+		acceleration = 0.1;
+		max_velocity = 0.5;
+		min_turn_velocity = 0;
+		max_turn_speed = 0.5;
 		//other
 		clickRadius = 45;
 		xOff = 0;
@@ -47,6 +51,10 @@ public class BasicPod extends Starship{
 				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 1, 0);
 		primaryTurret.setOffset(primary_xoffset, primary_yoffset);
 		turrets.add(primaryTurret);
+	}
+	
+	public void doRandomMovement(){
+		moveToLocation();
 	}
 	
 	public void setTexture(){

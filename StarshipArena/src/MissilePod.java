@@ -1,11 +1,11 @@
 import java.util.ArrayList;
 
-public class MissilePod extends Starship{
+public class MissilePod extends BasicPod{
 	
 	static Texture tex1 = new Texture("red_missilepod.png");
 	static Texture tex2 = new Texture("blue_missilepod.png");
 	
-	static double primary_damage = 10;
+	static double primary_damage = 50;
 	static int primary_cooldown = 300;
 	static int primary_spread = 55;
 	static int primary_accuracy = 95;
@@ -21,16 +21,21 @@ public class MissilePod extends Starship{
 		super(mygame, spawnx, spawny);
 	}
 	
-	public MissilePod(StarshipArena mygame, int spawnx, int spawny, int spawnangle){
+	public MissilePod(StarshipArena mygame, int spawnx, int spawny, double spawnangle){
 		super(mygame, "none", spawnx, spawny, spawnangle);
 	}
 
-	public MissilePod(StarshipArena mygame, String newteam, int spawnx, int spawny, int spawnangle){
+	public MissilePod(StarshipArena mygame, String newteam, int spawnx, int spawny, double spawnangle){
 		super(mygame, newteam, spawnx, spawny, spawnangle);
 	}
 	
 	public void shipStats(){
 		max_health = 60;
+		//movement
+		acceleration = 0.1;
+		max_velocity = 0.5;
+		min_turn_velocity = 0;
+		max_turn_speed = 0.5;
 		//other
 		clickRadius = 65;
 		xOff = 0;

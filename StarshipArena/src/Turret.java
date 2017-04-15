@@ -19,14 +19,14 @@ public class Turret {
 	Point center;
 	//turret turning variables
 	int turn_speed;
-	int angle;
+	double angle;
 	double xOff = 0;
 	double yOff = 0;
 	boolean autoAiming = false;
 	boolean fireMissiles = false;
 	int angle_offset = 0;
 	
-	Turret(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, int newangle, double newdamage, int newcooldown, int newspread, int newaccuracy, int newscanrange, int newspeed, int newlifetime, int newid){
+	Turret(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newangle, double newdamage, int newcooldown, int newspread, int newaccuracy, int newscanrange, int newspeed, int newlifetime, int newid){
 		game = mygame;
 		owner = newowner;
 		team = myteam;
@@ -42,7 +42,7 @@ public class Turret {
 		projectile_textureId = newid;
 	}
 	
-	Turret(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, int newangle, double newdamage, int newcooldown, int newspread, int newaccuracy, int newscanrange, int newspeed, int newlifetime, int newid, int modifier, int newangle_offset){
+	Turret(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newangle, double newdamage, int newcooldown, int newspread, int newaccuracy, int newscanrange, int newspeed, int newlifetime, int newid, int modifier, int newangle_offset){
 		game = mygame;
 		owner = newowner;
 		team = myteam;
@@ -94,7 +94,7 @@ public class Turret {
 		}
 	}
 	
-	public void fire(int newAngle){
+	public void fire(double newAngle){
 		if (!fireMissiles)
 			new Projectile(game, owner, team, center.X(), center.Y(), projectile_damage, newAngle, accuracy, projectile_speed, projectile_lifetime, projectile_textureId);
 		else
@@ -121,11 +121,11 @@ public class Turret {
 		return enemyShips;
 	}
 	
-	public int getAngle(){
+	public double getAngle(){
 		return angle;
 	}
 	
-	public void setAngle(int newangle){
+	public void setAngle(double newangle){
 		angle = (newangle + angle_offset) % 360;
 	}
 	

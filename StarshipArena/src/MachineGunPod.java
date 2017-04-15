@@ -1,5 +1,5 @@
 
-public class MachineGunPod extends Starship{
+public class MachineGunPod extends BasicPod{
 	
 	static Texture tex1 = new Texture("red_machinegunpod.png");
 	static Texture tex2 = new Texture("blue_machinegunpod.png");
@@ -20,16 +20,21 @@ public class MachineGunPod extends Starship{
 		super(mygame, spawnx, spawny);
 	}
 	
-	public MachineGunPod(StarshipArena mygame, int spawnx, int spawny, int spawnangle){
+	public MachineGunPod(StarshipArena mygame, int spawnx, int spawny, double spawnangle){
 		super(mygame, "none", spawnx, spawny, spawnangle);
 	}
 
-	public MachineGunPod(StarshipArena mygame, String newteam, int spawnx, int spawny, int spawnangle){
+	public MachineGunPod(StarshipArena mygame, String newteam, int spawnx, int spawny, double spawnangle){
 		super(mygame, newteam, spawnx, spawny, spawnangle);
 	}
 	
 	public void shipStats(){
 		max_health = 40;
+		//movement
+		acceleration = 0.1;
+		max_velocity = 0.5;
+		min_turn_velocity = 0;
+		max_turn_speed = 0.5;
 		//other
 		clickRadius = 45;
 		xOff = 0;
