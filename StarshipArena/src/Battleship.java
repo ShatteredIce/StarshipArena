@@ -13,7 +13,7 @@ public class Battleship extends Starship{
 	static Texture red_tex3 = new Texture("red_transport3.png");
 	static Texture red_tex4 = new Texture("red_transport4.png");
 	
-	static double primary_damage = 0.5;
+	static double primary_damage = 5;
 	static int primary_cooldown = 280;
 	static int primary_spread = 360;
 	static int primary_accuracy = 95;
@@ -23,17 +23,6 @@ public class Battleship extends Starship{
 	static int primary_xoffset = 0;
 	static int primary_yoffset = -50;
 	static int primary_id = 4;
-	
-	static double secondary_damage = 0.5;
-	static int secondary_cooldown = 80;
-	static int secondary_spread = 30;
-	static int secondary_accuracy = 97;
-	static int secondary_range = 500;
-	static int secondary_speed = 30; 
-	static int secondary_lifetime = 650;
-	static int secondary_xoffset = 0;
-	static int secondary_yoffset = 0;
-	static int secondary_id = 3;
 	
 	public Battleship(StarshipArena mygame, int spawnx, int spawny){
 		super(mygame, spawnx, spawny);
@@ -89,36 +78,6 @@ public class Battleship extends Starship{
 				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 3, 0);
 		primaryTurret4.setOffset(primary_xoffset - 25, primary_yoffset - 20);
 		turrets.add(primaryTurret4);
-		
-		Turret secondaryTurret1 = new Turret(game, this, team, 0, 0, angle, secondary_damage, secondary_cooldown, 
-				secondary_spread, secondary_accuracy, secondary_range, secondary_speed, secondary_lifetime, secondary_id, 1, 60);
-		secondaryTurret1.setOffset(-secondary_xoffset, 50);
-		turrets.add(secondaryTurret1);
-		
-		Turret secondaryTurret2 = new Turret(game, this, team, 0, 0, angle, secondary_damage, secondary_cooldown, 
-				secondary_spread, secondary_accuracy, secondary_range, secondary_speed, secondary_lifetime, secondary_id, 1, 90);
-		secondaryTurret2.setOffset(-secondary_xoffset, 0);
-		turrets.add(secondaryTurret2);
-		
-		Turret secondaryTurret3 = new Turret(game, this, team, 0, 0, angle, secondary_damage, secondary_cooldown, 
-				secondary_spread, secondary_accuracy, secondary_range, secondary_speed, secondary_lifetime, secondary_id, 1, 120);
-		secondaryTurret3.setOffset(-secondary_xoffset, -50);
-		turrets.add(secondaryTurret3);
-		
-		Turret secondaryTurret4 = new Turret(game, this, team, 0, 0, angle, secondary_damage, secondary_cooldown, 
-				secondary_spread, secondary_accuracy, secondary_range, secondary_speed, secondary_lifetime, secondary_id, 1, 300);
-		secondaryTurret4.setOffset(secondary_xoffset, 50);
-		turrets.add(secondaryTurret4);
-		
-		Turret secondaryTurret5 = new Turret(game, this, team, 0, 0, angle, secondary_damage, secondary_cooldown, 
-				secondary_spread, secondary_accuracy, secondary_range, secondary_speed, secondary_lifetime, secondary_id, 1, 270);
-		secondaryTurret5.setOffset(secondary_xoffset, 0);
-		turrets.add(secondaryTurret5);
-		
-		Turret secondaryTurret6 = new Turret(game, this, team, 0, 0, angle, secondary_damage, secondary_cooldown, 
-				secondary_spread, secondary_accuracy, secondary_range, secondary_speed, secondary_lifetime, secondary_id, 1, 240);
-		secondaryTurret6.setOffset(secondary_xoffset, -50);
-		turrets.add(secondaryTurret6);
 	}
 	
 	public void moveTurrets(){

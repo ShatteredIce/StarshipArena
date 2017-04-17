@@ -1,10 +1,11 @@
+import java.util.ArrayList;
 
 public class BasicPod extends Starship{
 	
 	static Texture tex1 = new Texture("red_basicpod.png");
 	static Texture tex2 = new Texture("blue_basicpod.png");
 	
-	static double primary_damage = 5;
+	static double primary_damage = 2;
 	static int primary_cooldown = 100;
 	static int primary_spread = 10;
 	static int primary_accuracy = 99;
@@ -29,6 +30,7 @@ public class BasicPod extends Starship{
 	
 	public void shipStats(){
 		max_health = 40;
+		scan_range = primary_range * 3/4;
 		//movement
 		acceleration = 0.1;
 		max_velocity = 0.5;
@@ -54,7 +56,41 @@ public class BasicPod extends Starship{
 	}
 	
 	public void doRandomMovement(){
-		moveToLocation();
+		if(locationTarget != null){
+			moveToLocation();
+		}
+		else{
+			Starship target = null;
+			double closestBearing = 360;
+			ArrayList<Starship> scanned = scan();
+			if(scanned.size() != 0){
+				for (int i = 0; i < scanned.size(); i++) {
+					Starship s = scanned.get(i);
+					//if turret has no team, or scanned enemy is on another team 
+					if(team.equals("none") || !s.getTeam().equals(team)){
+						if(getClosestBearing(s) < closestBearing){
+							closestBearing = getClosestBearing(s);
+							target = s;
+						}
+					}
+				}
+			}
+			if(target != null){
+				double relativeAngle = game.angleToPoint(center.X(), center.Y(), target.getX(), target.getY());
+				double leftBearing = getTurnDistance(relativeAngle, true);
+				double rightBearing = getTurnDistance(relativeAngle, false);
+				if(leftBearing <= rightBearing){ //turn left
+					current_turn_speed = max_turn_speed;
+				}
+				else{ //turn right
+					current_turn_speed = -max_turn_speed;
+				}
+			}
+			else{
+				current_turn_speed = 0;
+				current_velocity = 0;
+			}
+		}
 	}
 	
 	public void setTexture(){
