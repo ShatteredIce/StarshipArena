@@ -155,46 +155,6 @@ public class Interceptor extends Starship{
 		};
 		return points;
 	}
-	
-//	public Point[] generateHitbox(){
-//		Point[] hitbox = new Point[]{
-//			new Point(-40, 38, true),
-//			new Point(-40, 26, true),
-//			new Point(-40, 2, true),
-//			new Point(-34, 22, true),
-//			new Point(-26, 32, true),
-//			new Point(-26, 14, true),
-//			new Point(-22, 32, true),
-//			new Point(-22, 24, true),
-//			new Point(-12, 10, true),
-//			new Point(-12, -14, true),
-//			new Point(-12, -20, true),
-//			new Point(-8, 40, true),
-//			new Point(-8, 10, true),
-//			new Point(-4, 52, true),
-//			new Point(-4, 40, true),
-//			new Point(4, 52, true),
-//			new Point(4, 40, true),
-//			new Point(8, 40, true),
-//			new Point(8, 10, true),
-//			new Point(12, 10, true), 
-//			new Point(12, -14, true),
-//			new Point(12, -20, true),
-//			new Point(22, 32, true),
-//			new Point(22, 24, true),
-//			new Point(26, 32, true),
-//			new Point(26, 14, true),
-//			new Point(34, 22, true),
-//			new Point(40, 38, true),
-//			new Point(40, 26, true),
-//			new Point(40, 2, true),
-//			new Point(-36, 34, true),
-//			new Point(36, 34, true)
-//			
-//		};
-//		return hitbox;
-//	}
-	
 	public Point[] generateHitbox(){
 		Point[] hitbox = new Point[]{
 			new Point(-40, 38, true),
@@ -326,16 +286,6 @@ public class Interceptor extends Starship{
 		if(current_turn_speed != 0 && targeted_velocity < min_turn_velocity){
 			targeted_velocity = min_turn_velocity;
 		}
-		
-		
-		
-		
-		//TODO remove this code after testing
-//		if (angle != 0) {
-//			current_turn_speed = Math.min(max_turn_speed, 360 - angle);
-//		}
-//		else current_turn_speed = 0;
-//		current_turn_speed = max_turn_speed;
 	}
 	
 	//gets the closest enemy and changes target accordingly

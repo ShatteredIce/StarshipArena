@@ -52,6 +52,7 @@ public class StarshipArena {
     boolean panDown = false;
     
     boolean shiftPressed = false;
+    boolean tPressed = false;
     boolean controlPressed = false;
     
     DoubleBuffer oldMouseX;
@@ -190,6 +191,34 @@ public class StarshipArena {
 			if ( key == GLFW_KEY_DOWN && action == GLFW_RELEASE )
 				panDown = false;
 			
+			if ( key == GLFW_KEY_A && action == GLFW_PRESS )
+				panLeft = true;
+			if ( key == GLFW_KEY_A && action == GLFW_RELEASE )
+				panLeft = false;
+			
+			if ( key == GLFW_KEY_D && action == GLFW_PRESS )
+				panRight = true;
+			if ( key == GLFW_KEY_D && action == GLFW_RELEASE )
+				panRight = false;
+			
+			if ( key == GLFW_KEY_W && action == GLFW_PRESS )
+				panUp = true;
+			if ( key == GLFW_KEY_W && action == GLFW_RELEASE )
+				panUp = false;
+			
+			if ( key == GLFW_KEY_S && action == GLFW_PRESS )
+				panDown = true;
+			if ( key == GLFW_KEY_S && action == GLFW_RELEASE )
+				panDown = false;
+			
+			if( key == GLFW_KEY_Z && action == GLFW_RELEASE ){
+				for (int s = 0; s < ships.size(); s++) {
+					if(ships.get(s).getTeam().equals(player.getTeam())){
+						ships.get(s).setLocationTarget(null);
+					}
+				}
+			}
+			
 			if ( key == GLFW_KEY_LEFT_SHIFT && action == GLFW_PRESS )
 				shiftPressed = true;
 			if ( key == GLFW_KEY_LEFT_SHIFT && action == GLFW_RELEASE )
@@ -198,6 +227,10 @@ public class StarshipArena {
 				shiftPressed = true;
 			if ( key == GLFW_KEY_RIGHT_SHIFT && action == GLFW_RELEASE )
 				shiftPressed = false;
+			if ( key == GLFW_KEY_T && action == GLFW_PRESS )
+				tPressed = true;
+			if ( key == GLFW_KEY_T && action == GLFW_RELEASE )
+				tPressed = false;
 			if ( key == GLFW_KEY_LEFT_CONTROL && action == GLFW_PRESS )
 				controlPressed = true;
 			if ( key == GLFW_KEY_LEFT_CONTROL && action == GLFW_RELEASE )
@@ -207,7 +240,7 @@ public class StarshipArena {
 			if ( key == GLFW_KEY_RIGHT_CONTROL && action == GLFW_RELEASE )
 				controlPressed = false;
 			
-			if ( key == GLFW_KEY_A && action == GLFW_RELEASE ) {
+			if ( key == GLFW_KEY_SPACE && action == GLFW_RELEASE ) {
 				for (int i = 0; i < planets.size(); i++) {
 					planets.get(i).setSelected(false);
 				}
@@ -493,7 +526,7 @@ public class StarshipArena {
 						for (int i = 0; i < ships.size(); i++) {
 							Starship s = ships.get(i);
 							if (s.getSelected() && s.getTeam().equals(player.getTeam())) {
-								if(shiftPressed){
+								if(tPressed){
 									s.setLockPosition(true);
 								}
 								else{
@@ -510,6 +543,11 @@ public class StarshipArena {
 							}
 						}
 					}
+				}
+			}
+			else{
+				if(boxSelectCurrent){
+					boxSelectCurrent = false;
 				}
 			}
 			
@@ -1006,7 +1044,7 @@ public class StarshipArena {
 	//Creates the number of ships specified by the user
 	//Each ship has a random starting location and angle
 	public void createShips(int num){
-		new Planet(this, 2200, 1000, 1).setTeam("blue");
+		new Planet(this, 2300, 1000, 1).setTeam("blue");
 		int startx;
 		int starty;
 		int angle;
@@ -1019,10 +1057,10 @@ public class StarshipArena {
 //				new Interceptor(this, "none", startx , starty, angle);
 //			}
 //		}
-		new Transport(this, "red", 400, 450, 0).setHealth(10000);
-		new Transport(this, "red", 100, 450, 0).setHealth(10000);
-		new Transport(this, "red", 5, 450, 0).setHealth(10000);
-		new Transport(this, "red", 400, 600, 0).setHealth(10000);
+		new Battleship(this, "red", 100, 450, 0);
+//		new Transport(this, "red", 100, 450, 0);
+//		new Transport(this, "red", 5, 450, 0);
+//		new Transport(this, "red", 400, 600, 0);
 //		new Fighter(this, "blue", 200, 500, 270);
 //		new Interceptor(this, "blue", 600, 500, 90);
 //		new Battleship(this, "blue", 700, 500, 0);
@@ -1031,9 +1069,9 @@ public class StarshipArena {
 //		new Fighter(this, "red", 1650, 400, 0);
 //		new Fighter(this, "red", 1700, 450, 0);
 		
-		new MachineGunPod(this, "red", 300, 1500, 270);
-		new MachineGunPod(this, "red", 350, 1400, 270);
-		new MachineGunPod(this, "red", 300, 1300, 270);
+		new BasicPod(this, "red", 300, 1500, 270);
+		new BasicPod(this, "red", 350, 1400, 270);
+		new BasicPod(this, "red", 300, 1300, 270);
 //		new Fighter(this, "blue", 200, 500, 270, 1);
 //		new Interceptor(this, 500, 700, 0, 1);
 	}
@@ -1532,12 +1570,12 @@ public class StarshipArena {
 				if (p.getOwner() != null ) {
 					if(!p.getOwner().equals(s) && (!p.getTeam().equals(s.getTeam()) || p.getTeam().equals("none")) && 
 							polygon_intersection(p.getPoints(), s.getPoints())){
+						//fighters have a weakness to missiles
 						if (p instanceof Missile && s instanceof Fighter)
-							s.setHealth(s.getHealth()-p.getDamage()*20);
-						else if (p.texId == 3 && s instanceof Battleship)		
-							s.setHealth(s.getHealth()-p.getDamage()*2);		
-						else if (p.texId < 3 && s instanceof Interceptor)		
-							s.setHealth(s.getHealth()-p.getDamage()*2);
+							s.setHealth(s.getHealth()-p.getDamage()*4);
+						//interceptor has a high resistance to missiles
+						if (p instanceof Missile && s instanceof Interceptor)
+							s.setHealth(s.getHealth()-p.getDamage()/5);
 						else
 							s.setHealth(s.getHealth()-p.getDamage());
 		    			s.damageDisplayDelay = 1000;

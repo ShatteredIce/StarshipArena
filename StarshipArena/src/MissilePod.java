@@ -5,15 +5,15 @@ public class MissilePod extends BasicPod{
 	static Texture tex1 = new Texture("red_missilepod.png");
 	static Texture tex2 = new Texture("blue_missilepod.png");
 	
-	static double primary_damage = 50;
-	static int primary_cooldown = 300;
+	static double primary_damage = 5;
+	static int primary_cooldown = 200;
 	static int primary_spread = 55;
 	static int primary_accuracy = 95;
 	static int primary_range = 2000;
 	static int primary_speed = 15;
 	static int primary_lifetime = 2100;
-	static int primary_xoffset = 0;
-	static int primary_yoffset = 20;
+	static int primary_xoffset = 20;
+	static int primary_yoffset = 30;
 	int primary_id = 4;
 	
 	
@@ -30,7 +30,8 @@ public class MissilePod extends BasicPod{
 	}
 	
 	public void shipStats(){
-		max_health = 60;
+		max_health = 80;
+		scan_range = primary_range * 3/4;
 		//movement
 		acceleration = 0.1;
 		max_velocity = 0.5;
@@ -49,10 +50,14 @@ public class MissilePod extends BasicPod{
 //		else if(team.equals("red")){
 //			primary_id = 2;
 //		}
-		Turret primaryTurret = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
+		Turret primaryTurret1 = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
 				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, 4, 2, 0);
-		primaryTurret.setOffset(primary_xoffset, primary_yoffset);
-		turrets.add(primaryTurret);
+		primaryTurret1.setOffset(primary_xoffset, primary_yoffset);
+		turrets.add(primaryTurret1);
+		Turret primaryTurret2 = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
+				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, 4, 2, 0);
+		primaryTurret2.setOffset(-primary_xoffset, primary_yoffset);
+		turrets.add(primaryTurret2);
 	}
 	
 //	public void moveTurrets(){
