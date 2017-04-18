@@ -1576,9 +1576,10 @@ public class StarshipArena {
 							polygon_intersection(p.getPoints(), s.getPoints())){
 						//fighters have a weakness to missiles
 						if (p instanceof Missile && s instanceof Fighter)
-							s.setHealth(s.getHealth()-p.getDamage()*4);
+							s.setHealth(s.getHealth()-p.getDamage()*2);
 						//interceptor has a high resistance to missiles
 						if (p instanceof Missile && s instanceof Interceptor)
+							//TODO Possibly do /10 instead of /5
 							s.setHealth(s.getHealth()-p.getDamage()/5);
 						else
 							s.setHealth(s.getHealth()-p.getDamage());
