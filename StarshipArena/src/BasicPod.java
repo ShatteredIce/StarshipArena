@@ -60,6 +60,7 @@ public class BasicPod extends Starship{
 			moveToLocation();
 		}
 		else{
+			current_velocity = 0;
 			Starship target = null;
 			double closestBearing = 360;
 			ArrayList<Starship> scanned = scan();
@@ -88,7 +89,6 @@ public class BasicPod extends Starship{
 			}
 			else{
 				current_turn_speed = 0;
-				current_velocity = 0;
 			}
 		}
 	}

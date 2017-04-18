@@ -52,7 +52,7 @@ public class StarshipArena {
     boolean panDown = false;
     
     boolean shiftPressed = false;
-    boolean altPressed = false;
+    boolean tPressed = false;
     boolean controlPressed = false;
     
     DoubleBuffer oldMouseX;
@@ -227,14 +227,10 @@ public class StarshipArena {
 				shiftPressed = true;
 			if ( key == GLFW_KEY_RIGHT_SHIFT && action == GLFW_RELEASE )
 				shiftPressed = false;
-			if ( key == GLFW_KEY_LEFT_ALT && action == GLFW_PRESS )
-				altPressed = true;
-			if ( key == GLFW_KEY_LEFT_ALT && action == GLFW_RELEASE )
-				altPressed = false;
-			if ( key == GLFW_KEY_RIGHT_ALT && action == GLFW_PRESS )
-				altPressed = true;
-			if ( key == GLFW_KEY_RIGHT_ALT && action == GLFW_RELEASE )
-				altPressed = false;
+			if ( key == GLFW_KEY_T && action == GLFW_PRESS )
+				tPressed = true;
+			if ( key == GLFW_KEY_T && action == GLFW_RELEASE )
+				tPressed = false;
 			if ( key == GLFW_KEY_LEFT_CONTROL && action == GLFW_PRESS )
 				controlPressed = true;
 			if ( key == GLFW_KEY_LEFT_CONTROL && action == GLFW_RELEASE )
@@ -530,7 +526,7 @@ public class StarshipArena {
 						for (int i = 0; i < ships.size(); i++) {
 							Starship s = ships.get(i);
 							if (s.getSelected() && s.getTeam().equals(player.getTeam())) {
-								if(altPressed){
+								if(tPressed){
 									s.setLockPosition(true);
 								}
 								else{
