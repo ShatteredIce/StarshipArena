@@ -891,7 +891,7 @@ public class StarshipArena {
 //								writeText("Armor:??/??", 800, 20);
 							writeText("Faction:", 20, 100);
 							writeText(shipsControllingTeam, 20, 80);
-							writeText("Ship status:", 20, 40);
+							writeText("Status:", 20, 40);
 							writeText(shipStatus, 20, 20);
 						}
 						else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected  + numBattleshipsSelected + numPodsSelected > 1) {
