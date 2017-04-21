@@ -16,6 +16,7 @@ public class Window {
 	public void createWindow(String title){
 		// Get the resolution of the primary monitor
 		GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		glfwWindowHint(GLFW_AUTO_ICONIFY, GLFW_FALSE);
 //		window = glfwCreateWindow(width, height, title, NULL, NULL);
 		window = glfwCreateWindow(vidmode.width(), vidmode.height(), title, glfwGetPrimaryMonitor(), NULL);
 		if ( window == NULL ){
@@ -45,6 +46,11 @@ public class Window {
 	// swap the color buffers
 	public void swapBuffers(){
 		glfwSwapBuffers(window);
+	}
+	
+	//set the window context current
+	public void setCurrent(){
+		glfwMakeContextCurrent(window);
 	}
 	
 	public void setSize(int newwidth, int newheight){

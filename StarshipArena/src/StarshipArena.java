@@ -45,6 +45,7 @@ public class StarshipArena {
 	int endLevelTimer = 0;
 	
 	boolean staticFrame = false;
+	boolean windowSelected = true;
     
     boolean panLeft = false;
     boolean panRight = false;
@@ -658,6 +659,18 @@ public class StarshipArena {
 		int slowCounter = 0;
 		int counter = 0;
 		while ( !window.shouldClose()) {
+			if(glfwGetWindowAttrib(window.getWindowHandle(), GLFW_FOCUSED) == GLFW_FALSE){
+				if(windowSelected == true){
+					windowSelected = false;
+				}
+			}
+			else{
+				if(windowSelected == false){
+					window.setCurrent();
+					staticFrame = false;
+					windowSelected = true;
+				}
+			}
 			// Poll for window events. The key callback above will only be
 			// invoked during this call.
 			glfwPollEvents();
