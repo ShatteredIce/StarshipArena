@@ -423,6 +423,7 @@ public class StarshipArena {
 							player.getSelectedPlanet().setSelected(false);
 							player.setSelectedPlanet(null);
 						}
+						//If shift is pressed, we don't unselect currently selected ships
 						String shipsControllingTeam = "";
 						ArrayList<Starship> selectedUncontrolledShips = new ArrayList<>();
 						for (int i = 0; i < ships.size(); i++) {
@@ -441,7 +442,8 @@ public class StarshipArena {
 									shipsControllingTeam = s.getTeam();
 									if (!shipsControllingTeam.equals(player.getTeam())) {
 										selectedUncontrolledShips.add(s);
-										s.setSelected(false);
+										if (!shiftPressed)
+											s.setSelected(false);
 									}
 									else {
 										s.setSelected(true);
@@ -453,7 +455,7 @@ public class StarshipArena {
 									s.setSelected(true);
 									clickedOnSprite = true;
 								}
-								else s.setSelected(false);
+								else if(!shiftPressed) s.setSelected(false);
 							}
 							else if (distance(newMouseX.get(1), newMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
 									|| distance(newMouseX.get(1), oldMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
@@ -463,7 +465,8 @@ public class StarshipArena {
 									shipsControllingTeam = s.getTeam();
 									if (!shipsControllingTeam.equals(player.getTeam())) {
 										selectedUncontrolledShips.add(s);
-										s.setSelected(false);
+										if (!shiftPressed)
+											s.setSelected(false);
 									}
 									else {
 										s.setSelected(true);
@@ -475,9 +478,9 @@ public class StarshipArena {
 									s.setSelected(true);
 									clickedOnSprite = true;
 								}
-								else s.setSelected(false);
+								else if (!shiftPressed) s.setSelected(false);
 							}
-							else s.setSelected(false);
+							else if (!shiftPressed) s.setSelected(false);
 						}
 						if (!clickedOnSprite && selectedUncontrolledShips.size() > 0) {
 							for (int i = 0; i < selectedUncontrolledShips.size(); i++) {
@@ -929,7 +932,7 @@ public class StarshipArena {
 //								writeText("Armor:??/??", 800, 20);
 							writeText("Faction:", 20, 100);
 							writeText(shipsControllingTeam, 20, 80);
-							writeText("Ship status:", 20, 40);
+							writeText("Status:", 20, 40);
 							writeText(shipStatus, 20, 20);
 						}
 						else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected  + numBattleshipsSelected + numPodsSelected > 1) {
@@ -1572,9 +1575,10 @@ public class StarshipArena {
 							polygon_intersection(p.getPoints(), s.getPoints())){
 						//fighters have a weakness to missiles
 						if (p instanceof Missile && s instanceof Fighter)
-							s.setHealth(s.getHealth()-p.getDamage()*4);
+							s.setHealth(s.getHealth()-p.getDamage()*2);
 						//interceptor has a high resistance to missiles
 						if (p instanceof Missile && s instanceof Interceptor)
+							//TODO Possibly do /10 instead of /5
 							s.setHealth(s.getHealth()-p.getDamage()/5);
 						else
 							s.setHealth(s.getHealth()-p.getDamage());

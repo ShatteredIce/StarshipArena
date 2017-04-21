@@ -22,8 +22,14 @@ public class AdvancedEnemy extends Enemy{
 			else if (playerShips.get(i) instanceof Interceptor) interceptorsCost += 20;
 			else if (playerShips.get(i) instanceof Battleship) battleshipsCost += 40;
 		}
+		int total = fightersCost + interceptorsCost + battleshipsCost;
+		//Find the proportion of each type of ship. This helps weight ship purchase probability by enemy ship proportion
+		double fighterProp = (double)fightersCost / total;
+		double interceptorProp = (double)interceptorsCost / total;
+		double battleshipProp = (double)battleshipsCost / total;
 		for (int i = 0; i < myPlanets.size(); i++) {
-			if (fightersCost >= interceptorsCost && fightersCost > battleshipsCost) {
+			double rand = random.nextDouble();
+			if (rand < fighterProp) {
 				if (myPlanets.get(i).getResources() >= 40) {
 					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
 					game.buyShips(enemyPlayer, 3);
@@ -35,13 +41,13 @@ public class AdvancedEnemy extends Enemy{
 						attackDelay += 1000;
 				}
 			}
-			else if (interceptorsCost >= fightersCost && interceptorsCost >= battleshipsCost) {
+			else if (rand < fighterProp + interceptorProp) {
 				if (myPlanets.get(i).getResources() >= 5) {
 					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
 					game.buyShips(enemyPlayer, 1);
 				}
 			}
-			else if (battleshipsCost >= fightersCost && battleshipsCost >= interceptorsCost) {
+			else if (rand < fighterProp + interceptorProp + battleshipProp) {
 				if (myPlanets.get(i).getResources() >= 20) {
 					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
 					game.buyShips(enemyPlayer, 2);
@@ -53,14 +59,6 @@ public class AdvancedEnemy extends Enemy{
 						attackDelay += 1000;
 				}
 			}
-//			if(myPlanets.get(i).getResources() >= 20){
-//				shipType = random.nextInt(10) + 1;
-//				if(shipType > 3){
-//					shipType = 1;
-//				}
-//				enemyPlayer.setSelectedPlanet(myPlanets.get(i));
-//				game.buyShips(enemyPlayer, shipType);
-//			}
 		}
 	}
 	
