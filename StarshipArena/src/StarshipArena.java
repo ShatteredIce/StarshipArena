@@ -936,7 +936,7 @@ public class StarshipArena {
 							else if (numInterceptorsSelected == 1) writeText("Interceptor", 400, 15, 30);
 							else if (numTransportsSelected == 1) writeText("Transport", 400, 15, 30);
 							else if (numBattleshipsSelected == 1) writeText("Battleship", 400, 15, 30);
-							else if (numPodsSelected == 1) writeText(podTypeSelected, 350, 15, 30);
+							else if (numPodsSelected == 1) writeText(podTypeSelected, 300, 15, 30);
 //							if(shipsControllingTeam.equals(player.getTeam()))
 							if (sumCurrentHP - (int)sumCurrentHP > 0)		
 								sumCurrentHP++;
