@@ -1588,11 +1588,17 @@ public class StarshipArena {
 							polygon_intersection(p.getPoints(), s.getPoints())){
 						//fighters have a weakness to missiles
 						if (p instanceof Missile && s instanceof Fighter)
-							s.setHealth(s.getHealth()-p.getDamage()*2);
+							s.setHealth(s.getHealth()-p.getDamage()*4);
 						//interceptor has a high resistance to missiles
-						if (p instanceof Missile && s instanceof Interceptor)
+						else if (p instanceof Missile && s instanceof Interceptor)
 							//TODO Possibly do /10 instead of /5
 							s.setHealth(s.getHealth()-p.getDamage()/5);
+						//Interceptors are vulnerable to plasma
+						else if (p.texId < 3 && s instanceof Interceptor)
+							s.setHealth(s.getHealth()-p.getDamage()*2);
+						//Battleships are vulnerable to machineguns
+						else if (p.texId == 3 && s instanceof Battleship)
+							s.setHealth(s.getHealth()-p.getDamage()*2);
 						else
 							s.setHealth(s.getHealth()-p.getDamage());
 		    			s.damageDisplayDelay = 1000;
@@ -1607,16 +1613,28 @@ public class StarshipArena {
 				}
 				else if ((!p.getTeam().equals(s.getTeam()) || p.getTeam().equals("none")) && 
 							polygon_intersection(p.getPoints(), s.getPoints())) {
+					//fighters have a weakness to missiles
 					if (p instanceof Missile && s instanceof Fighter)
-						s.setHealth(s.getHealth()-p.getDamage()*20);
-					else if (p.texId == 3 && s instanceof Battleship)		
-						s.setHealth(s.getHealth()-p.getDamage()*2);		
-					else if (p.texId < 3 && s instanceof Interceptor)		
+						s.setHealth(s.getHealth()-p.getDamage()*4);
+					//interceptor has a high resistance to missiles
+					else if (p instanceof Missile && s instanceof Interceptor)
+						//TODO Possibly do /10 instead of /5
+						s.setHealth(s.getHealth()-p.getDamage()/5);
+					//Interceptors are vulnerable to plasma
+					else if (p.texId < 3 && s instanceof Interceptor)
+						s.setHealth(s.getHealth()-p.getDamage()*2);
+					//Battleships are vulnerable to machineguns
+					else if (p.texId == 3 && s instanceof Battleship)
 						s.setHealth(s.getHealth()-p.getDamage()*2);
 					else
 						s.setHealth(s.getHealth()-p.getDamage());
 	    			s.damageDisplayDelay = 1000;
-	    			p.destroy();
+	    			if (p instanceof Missile) {
+	    				Missile m = (Missile)p;
+	    				m.destroy(s);
+	    			}
+	    			else
+	    				p.destroy();
 	    			projectiles.remove(p);
 				}
 			}
