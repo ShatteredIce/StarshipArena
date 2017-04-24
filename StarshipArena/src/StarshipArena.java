@@ -1211,8 +1211,8 @@ public class StarshipArena {
 			new Fighter(this, "blue", 600, 350, 0);
 			new Fighter(this, "blue", 400, 350, 0);
 			new Fighter(this, "blue", 700, 600, 0);
-			new Fighter(this, "blue", 800, 550, 0);
-			new Fighter(this, "blue", 600, 550, 0);
+//			new Fighter(this, "blue", 800, 550, 0);
+//			new Fighter(this, "blue", 600, 550, 0);
 			new Fighter(this, "blue", 900, 400, 0);
 			new Fighter(this, "blue", 1000, 350, 0);
 			new Fighter(this, "blue", 800, 350, 0);
