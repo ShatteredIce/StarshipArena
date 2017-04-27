@@ -25,7 +25,7 @@ public class Missile extends Projectile {
 		game.removeProjectile(this);
 		new Explosion(game, center.X(), center.Y(), 55);
 //		for (int i = 0; i < 360; i += 40) {
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 2; i++) {
 //				if(victim instanceof MissilePod){
 //					new Projectile(game, null, "none", victim.center.x, victim.center.y, 0, i, 100, 20, 5, 3);
 //					new Projectile(game, null, "none", victim.center.x, victim.center.y, 0, i, 100, 16, 5, 3);
@@ -176,8 +176,15 @@ public class Missile extends Projectile {
 	//returns false if projectile is destroyed. Also creates explosion trail
 		public boolean updateLifetime(){
 			current_lifetime += 1;
-			if (current_lifetime % 3 == 0)
-				new Explosion(game, center.x, center.y, 20);
+			if (current_lifetime % 2 == 0) {
+//				boolean doExplosion = random.nextBoolean();
+//				int rand = random.nextInt(5) - 4;
+//				if (doExplosion) {
+					Explosion temp = new Explosion(game, center.x, center.y, 20);
+//					temp.lifetime = -2;
+					temp.ticksPerFrame = random.nextInt(3) + 2;
+//				}
+			}
 			if(current_lifetime >= lifetime){
 				return false;
 			}

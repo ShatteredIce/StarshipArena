@@ -66,6 +66,8 @@ public class StarshipArena {
     int TRANSPORT_COST = 10;
     int BATTLESHIP_COST = 40;
     
+    int PROXIMITY_SIZE = 150;
+    
     int planetDisplayBorder = 400;
     int shipDisplayBorder = 100;
     
@@ -216,6 +218,20 @@ public class StarshipArena {
 				for (int s = 0; s < ships.size(); s++) {
 					if(ships.get(s).getTeam().equals(player.getTeam())){
 						ships.get(s).setLocationTarget(null);
+					}
+				}
+			}
+			
+			//TODO Remove this testing thing
+			if( key == GLFW_KEY_P && action == GLFW_RELEASE ){
+				for (int s = 0; s < ships.size(); s++) {
+					if(ships.get(s).getSelected()){
+						ArrayList<Starship> temp = new ArrayList<Starship>();
+						temp.add(ships.get(s));
+						proximityGroup(temp, ships, ships.get(s));
+						for (int i = 0; i < temp.size(); i++) {
+							temp.get(i).setSelected(true);
+						}
 					}
 				}
 			}
@@ -1877,6 +1893,18 @@ public class StarshipArena {
 	public void writeText(String newText, int startx, int starty, int textSize) {
 		for (int i = 0; i < newText.length(); i++) {
 			BitmapFontLetter newLetter = new BitmapFontLetter(this, newText.charAt(i), startx + i * textSize, starty, textSize);
+		 }
+	}
+	
+	//Recursively get a proximity group of allied ships. Used to find approximate fleet strength.
+	public void proximityGroup(ArrayList<Starship> chosen, ArrayList<Starship> allShips, Starship current) {
+		for (int i = 0; i < allShips.size(); i++) {
+			Starship s = allShips.get(i);
+			if (distance(current.center.x, current.center.y, s.center.x, s.center.y) < PROXIMITY_SIZE
+					&& current.team.equals(s.team) && !chosen.contains(s)) {
+				chosen.add(s);
+				proximityGroup(chosen, allShips, s);
+			}
 		}
 	}
 	
