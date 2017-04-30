@@ -17,6 +17,20 @@ import static org.lwjgl.system.MemoryUtil.*;
 import java.util.ArrayList;
 import java.util.Random;
 
+
+
+
+
+
+
+
+//TODO Audio import, remove if it doesn't work
+import javax.sound.sampled.*;
+
+import java.applet.AudioClip;
+import java.io.File;
+import java.io.IOException;
+
 public class StarshipArena {
 	
 	Window window;
@@ -80,6 +94,15 @@ public class StarshipArena {
 	ArrayList<Tile> backgroundTiles = new ArrayList<>();
 	ArrayList<Player> playerList = new ArrayList<>(); 
 	ArrayList<BitmapFontLetter> text = new ArrayList<>();
+	
+	//TODO Audio file down here
+	File temp = new File("sounds/music/Earth.wav");
+	AudioInputStream BGM = AudioSystem.getAudioInputStream(temp);
+	Clip clip;
+
+	
+	
+	
 
 	Sidebar sidebar;
 	Layer titlePage;
@@ -126,7 +149,11 @@ public class StarshipArena {
 	Player player = new Player(this, "blue");
 	Enemy enemy = new Enemy(this, new Player(this, "red"));
 	
-    
+	//This empty constructor exists simply so I can do throws declarations. I have no idea how else to do it.
+    public StarshipArena() throws IOException, LineUnavailableException, UnsupportedAudioFileException {
+    	
+    }
+	
 	public void run() {
 
 		init();
@@ -161,6 +188,15 @@ public class StarshipArena {
 		windowYOffset = window.getYOffset();
 		System.out.println(windowXOffset);
 		System.out.println(windowYOffset);
+		
+		//TODO Set up audio. Remove if bad
+		try {
+			clip = AudioSystem.getClip();
+			clip.open(BGM);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		// Setup a key callback. It will be called every time a key is pressed, repeated or released.
 		glfwSetKeyCallback(window.getWindowHandle(), (window, key, scancode, action, mods) -> {
@@ -222,7 +258,7 @@ public class StarshipArena {
 				}
 			}
 			
-			//TODO Remove this testing thing
+			//TODO Remove this testing thing for proximity groups after testing concludes
 			if( key == GLFW_KEY_P && action == GLFW_RELEASE ){
 				for (int s = 0; s < ships.size(); s++) {
 					if(ships.get(s).getSelected()){
@@ -325,8 +361,14 @@ public class StarshipArena {
 				buyShips(player, 3);
 //			if ( key == GLFW_KEY_4 && action == GLFW_PRESS)
 //				buyShips(player, 4);
-			if ( key == GLFW_KEY_ENTER && action == GLFW_PRESS)
+			if ( key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
 				gameState = 3;
+				//TODO More audio related stuff, remove if bad
+				if (!clip.isActive()) {
+					clip.setFramePosition(0);
+					clip.loop(Clip.LOOP_CONTINUOUSLY);
+				}
+			}
 		
 		});
 		
@@ -362,7 +404,6 @@ public class StarshipArena {
 							try {
 								pb.start();
 							} catch (Exception e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
@@ -371,7 +412,6 @@ public class StarshipArena {
 							try {
 								pb.start();
 							} catch (Exception e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
@@ -423,6 +463,8 @@ public class StarshipArena {
 						if(settingsButton.isClicked(xpos.get(2), ypos.get(2))){
 							gameState = 1;
 							staticFrame = false;
+							clip.stop();
+							clip.flush();
 							return;
 						}
 						boxSelect.setTopLeft(xpos.get(1), ypos.get(1));
@@ -1039,7 +1081,7 @@ public class StarshipArena {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
 		new StarshipArena().run();
 	}
 	
@@ -1178,13 +1220,17 @@ public class StarshipArena {
 			}
 		}
 	}
-	//TODO Maybe make consecutive levels related to each other (i.e. level 2 involves you starting with the two planets you controlled from level 1)
 	public void loadLevel(int level){
 		destroyAllShips();
 		destroyAllPlanets();
 		destroyAllProjectiles();
 		destroyAllExplosions();
 		destroyAllTiles();
+		//TODO Audio here, remove if bad
+		if (!clip.isActive()) {
+			clip.setFramePosition(0);
+			clip.loop(Clip.LOOP_CONTINUOUSLY);
+		}
 		
 		currentLevel = level;
 		zoomLevel = 3;
@@ -1607,7 +1653,6 @@ public class StarshipArena {
 							s.setHealth(s.getHealth()-p.getDamage()*4);
 						//interceptor has a high resistance to missiles
 						else if (p instanceof Missile && s instanceof Interceptor)
-							//TODO Possibly do /10 instead of /5
 							s.setHealth(s.getHealth()-p.getDamage()/5);
 						//Interceptors are vulnerable to plasma
 						else if (p.texId < 3 && s instanceof Interceptor)
@@ -1634,7 +1679,6 @@ public class StarshipArena {
 						s.setHealth(s.getHealth()-p.getDamage()*4);
 					//interceptor has a high resistance to missiles
 					else if (p instanceof Missile && s instanceof Interceptor)
-						//TODO Possibly do /10 instead of /5
 						s.setHealth(s.getHealth()-p.getDamage()/5);
 					//Interceptors are vulnerable to plasma
 					else if (p.texId < 3 && s instanceof Interceptor)
