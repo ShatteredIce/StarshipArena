@@ -46,6 +46,7 @@ public class Fighter extends Starship{
 		min_turn_velocity = 3;
 		max_turn_speed = 3;
 		scan_range = 600;
+		radar_range = 700;
 		//other
 		clickRadius = 45;
 		xOff = 0;

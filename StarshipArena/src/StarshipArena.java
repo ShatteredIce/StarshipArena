@@ -795,17 +795,23 @@ public class StarshipArena {
 						backgroundTiles.get(t).display();
 					}
 					
-					//Display planets
+					//Update planets
 					for(int p = 0; p < planets.size(); p++){
 						planets.get(p).checkCapturePoint();
 						planets.get(p).updateResources();
-						//System.out.println(player.getResources());
+						//only display if planet is in camera window
 						if(planets.get(p).getX() > CURR_X - (planetDisplayBorder * getWidthScalar()) && planets.get(p).getX() < CURR_X + CAMERA_WIDTH + (planetDisplayBorder * getWidthScalar()) 
-								&& planets.get(p).getY() > CURR_Y - (planetDisplayBorder * getHeightScalar()) && planets.get(p).getY() < CURR_Y + CAMERA_HEIGHT + (planetDisplayBorder * getHeightScalar()))
-						planets.get(p).display();
+								&& planets.get(p).getY() > CURR_Y - (planetDisplayBorder * getHeightScalar()) && planets.get(p).getY() < CURR_Y + CAMERA_HEIGHT + (planetDisplayBorder * getHeightScalar())){
+							if(isVisible(planets.get(p), player)){
+								planets.get(p).display(true);
+							}
+							else{
+								planets.get(p).display(false);
+							}
+						}
 					}
 					
-					//display ships and heal them
+					//heal ships in planet range
 			    	for (int i = 0; i < planets.size(); i++) {
 			    		ArrayList<Starship> orbitingShips = planets.get(i).getShips();
 						for (int j = 0; j < orbitingShips.size(); j++) {
@@ -832,7 +838,9 @@ public class StarshipArena {
 					for(int s = 0; s < ships.size(); s++){
 						if(ships.get(s).getX() > CURR_X - (shipDisplayBorder * getWidthScalar()) && ships.get(s).getX() < CURR_X + CAMERA_WIDTH + (shipDisplayBorder * getWidthScalar())
 								&& ships.get(s).getY() > CURR_Y - (shipDisplayBorder * getHeightScalar()) && ships.get(s).getY() < CURR_Y + CAMERA_HEIGHT + (shipDisplayBorder * getHeightScalar())){
-							ships.get(s).display();
+							if(isVisible(ships.get(s), player)){
+								ships.get(s).display();
+							}
 						}
 					}
 					
@@ -1184,6 +1192,50 @@ public class StarshipArena {
 			}
 		}
 	}
+	
+	//fog of war - planets
+	public boolean isVisible(Planet entity, Player p){
+		if(entity.getTeam().equals(p.getTeam())){
+			return true;
+		}
+		Planet currentPlanet;
+		for (int i = 0; i < p.getControlledPlanets().size(); i++) {
+			currentPlanet = p.getControlledPlanets().get(i);
+			if(distance(entity.getX(), entity.getY(), currentPlanet.getX(), currentPlanet.getY()) <= currentPlanet.getRadarRange()){
+				return true;
+			}
+		}
+		Starship currentShip;
+		for (int s = 0; s < p.getControlledShips().size(); s++) {
+			currentShip = p.getControlledShips().get(s);
+			if(distance(entity.getX(), entity.getY(), currentShip.getX(), currentShip.getY()) <= currentShip.getRadarRange()){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	//fog of war - ships
+		public boolean isVisible(Starship entity, Player p){
+			if(entity.getTeam().equals(p.getTeam())){
+				return true;
+			}
+			Planet currentPlanet;
+			for (int i = 0; i < p.getControlledPlanets().size(); i++) {
+				currentPlanet = p.getControlledPlanets().get(i);
+				if(distance(entity.getX(), entity.getY(), currentPlanet.getX(), currentPlanet.getY()) <= currentPlanet.getRadarRange()){
+					return true;
+				}
+			}
+			Starship currentShip;
+			for (int s = 0; s < p.getControlledShips().size(); s++) {
+				currentShip = p.getControlledShips().get(s);
+				if(distance(entity.getX(), entity.getY(), currentShip.getX(), currentShip.getY()) <= currentShip.getRadarRange()){
+					return true;
+				}
+			}
+			return false;
+		}
 	
 	public void updateZoomLevel(boolean zoomOut){
 		int ZOOM_WIDTH = 650;

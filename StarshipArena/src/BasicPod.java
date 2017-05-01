@@ -31,6 +31,7 @@ public class BasicPod extends Starship{
 	public void shipStats(){
 		max_health = 40;
 		scan_range = primary_range * 3/4;
+		radar_range = primary_range;
 		//movement
 		acceleration = 0.1;
 		max_velocity = 0.5;

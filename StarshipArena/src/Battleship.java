@@ -46,6 +46,7 @@ public class Battleship extends Starship{
 		max_turn_speed = 1;
 		//weaponry
 		scan_range = 1900;
+		radar_range = 1000;
 		//other
 		clickRadius = 55;
 		xOff = 0;

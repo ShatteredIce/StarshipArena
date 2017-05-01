@@ -39,6 +39,7 @@ public class Starship {
 	double min_turn_velocity;
 	double max_turn_speed;
 	int scan_range;
+	int radar_range;
 	int clickRadius;
 	
 	ArrayList<Turret> turrets = new ArrayList<>();
@@ -394,6 +395,7 @@ public class Starship {
 		min_turn_velocity = 2;
 		max_turn_speed = 2;
 		scan_range = 200;
+		radar_range = 300;
 	}
 	
 	public void shipTurrets(){
@@ -572,6 +574,10 @@ public class Starship {
 
 	public int getYOff(){
 		return yOff;
+	}
+	
+	public int getRadarRange(){
+		return radar_range;
 	}
 	
     public double distance(double x1, double y1, double x2, double y2){

@@ -60,6 +60,7 @@ public class Interceptor extends Starship{
 		max_turn_speed = 6;
 		//weaponry
 		scan_range = 500;
+		radar_range = 600;
 		//other
 		clickRadius = 40;
 		xOff = 0;
