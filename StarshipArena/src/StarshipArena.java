@@ -871,6 +871,7 @@ public class StarshipArena {
 					
 					//Display sidebar and figure out what has been selected
 					boolean sidebarIsDisplayed = false;
+					sidebar.display();
 					int sumCurrentHP = 0;
 					int sumMaxHP = 0;
 					int numFightersSelected = 0;
@@ -886,7 +887,6 @@ public class StarshipArena {
 					String podTypeSelected = "none";
 					for(int p = 0; p < planets.size(); p++){
 						if(planets.get(p).getSelected()){
-							sidebar.display();
 							sidebarIsDisplayed = true;
 							selectedPlanetResources = planets.get(p).getResources();
 							planetControllingTeam = planets.get(p).getTeam();
@@ -894,7 +894,6 @@ public class StarshipArena {
 					}
 					for (int s = 0; s < ships.size(); s++) {
 						if (ships.get(s).getSelected()) {
-							sidebar.display();
 							sidebarIsDisplayed = true;
 							sumCurrentHP += ships.get(s).current_health;
 							sumMaxHP += ships.get(s).max_health;
@@ -1011,7 +1010,7 @@ public class StarshipArena {
 					if (panRight)
 						CURR_X = Math.min(WORLD_WIDTH - CAMERA_WIDTH, CURR_X + CAMERA_SPEED * WORLD_HEIGHT / 2600);
 					if (panDown)
-						CURR_Y = Math.max(0, CURR_Y - CAMERA_SPEED * WORLD_HEIGHT / 2600);
+						CURR_Y = Math.max((int) (-150 * getHeightScalar()), CURR_Y - CAMERA_SPEED * WORLD_HEIGHT / 2600);
 					if (panUp)
 						CURR_Y = Math.min(WORLD_HEIGHT - CAMERA_HEIGHT, CURR_Y + CAMERA_SPEED * WORLD_HEIGHT / 2600);
 					
@@ -1030,7 +1029,7 @@ public class StarshipArena {
 	public void projectRelativeCameraCoordinates(){
 		glMatrixMode(GL_PROJECTION);
         glLoadIdentity(); // Resets any previous projection matrices
-        glOrtho((-windowXOffset * getWidthScalar()) + CURR_X, CURR_X + CAMERA_WIDTH + (windowXOffset * getWidthScalar()), CURR_Y + (-windowYOffset * getHeightScalar()), CURR_Y + CAMERA_HEIGHT + (windowYOffset * getHeightScalar()), 1, -1);
+        glOrtho((-windowXOffset * getWidthScalar()) + CURR_X, CURR_X + CAMERA_WIDTH + (windowXOffset * getWidthScalar()), CURR_Y + ((-windowYOffset) * getHeightScalar()), CURR_Y + CAMERA_HEIGHT + ((windowYOffset)* getHeightScalar()), 1, -1);
         glMatrixMode(GL_MODELVIEW);
 	}
 	
@@ -1713,8 +1712,8 @@ public class StarshipArena {
     }
     
     public void genTiles(){
-    	for (int x = 360; x <= WORLD_WIDTH + 720; x+=720) {
-			for (int y = 360; y <= WORLD_HEIGHT + 720; y+=720) {
+    	for (int x = -360; x <= WORLD_WIDTH + 720; x+=720) {
+			for (int y = -360; y <= WORLD_HEIGHT + 720; y+=720) {
 				new Tile(this, x, y);
 			}
 		}
