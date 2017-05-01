@@ -17,6 +17,20 @@ import static org.lwjgl.system.MemoryUtil.*;
 import java.util.ArrayList;
 import java.util.Random;
 
+
+
+
+
+
+
+
+//TODO Audio import, remove if it doesn't work
+import javax.sound.sampled.*;
+
+import java.applet.AudioClip;
+import java.io.File;
+import java.io.IOException;
+
 public class StarshipArena {
 	
 	Window window;
@@ -66,6 +80,8 @@ public class StarshipArena {
     int TRANSPORT_COST = 10;
     int BATTLESHIP_COST = 40;
     
+    int PROXIMITY_SIZE = 150;
+    
     int planetDisplayBorder = 400;
     int shipDisplayBorder = 100;
     
@@ -78,6 +94,15 @@ public class StarshipArena {
 	ArrayList<Tile> backgroundTiles = new ArrayList<>();
 	ArrayList<Player> playerList = new ArrayList<>(); 
 	ArrayList<BitmapFontLetter> text = new ArrayList<>();
+	
+	//TODO Audio file down here
+	File temp = new File("sounds/music/Earth.wav");
+	AudioInputStream BGM = AudioSystem.getAudioInputStream(temp);
+	Clip clip;
+
+	
+	
+	
 
 	Sidebar sidebar;
 	Layer titlePage;
@@ -124,7 +149,11 @@ public class StarshipArena {
 	Player player = new Player(this, "blue");
 	Enemy enemy = new Enemy(this, new Player(this, "red"));
 	
-    
+	//This empty constructor exists simply so I can do throws declarations. I have no idea how else to do it.
+    public StarshipArena() throws IOException, LineUnavailableException, UnsupportedAudioFileException {
+    	
+    }
+	
 	public void run() {
 
 		init();
@@ -159,6 +188,15 @@ public class StarshipArena {
 		windowYOffset = window.getYOffset();
 		System.out.println(windowXOffset);
 		System.out.println(windowYOffset);
+		
+		//TODO Set up audio. Remove if bad
+		try {
+			clip = AudioSystem.getClip();
+			clip.open(BGM);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 
 		// Setup a key callback. It will be called every time a key is pressed, repeated or released.
 		glfwSetKeyCallback(window.getWindowHandle(), (window, key, scancode, action, mods) -> {
@@ -216,6 +254,20 @@ public class StarshipArena {
 				for (int s = 0; s < ships.size(); s++) {
 					if(ships.get(s).getTeam().equals(player.getTeam())){
 						ships.get(s).setLocationTarget(null);
+					}
+				}
+			}
+			
+			//TODO Remove this testing thing for proximity groups after testing concludes
+			if( key == GLFW_KEY_P && action == GLFW_RELEASE ){
+				for (int s = 0; s < ships.size(); s++) {
+					if(ships.get(s).getSelected()){
+						ArrayList<Starship> temp = new ArrayList<Starship>();
+						temp.add(ships.get(s));
+						proximityGroup(temp, ships, ships.get(s));
+						for (int i = 0; i < temp.size(); i++) {
+							temp.get(i).setSelected(true);
+						}
 					}
 				}
 			}
@@ -309,8 +361,14 @@ public class StarshipArena {
 				buyShips(player, 3);
 //			if ( key == GLFW_KEY_4 && action == GLFW_PRESS)
 //				buyShips(player, 4);
-			if ( key == GLFW_KEY_ENTER && action == GLFW_PRESS)
+			if ( key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
 				gameState = 3;
+				//TODO More audio related stuff, remove if bad
+				if (!clip.isActive()) {
+					clip.setFramePosition(0);
+					clip.loop(Clip.LOOP_CONTINUOUSLY);
+				}
+			}
 		
 		});
 		
@@ -346,7 +404,6 @@ public class StarshipArena {
 							try {
 								pb.start();
 							} catch (Exception e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
@@ -355,7 +412,6 @@ public class StarshipArena {
 							try {
 								pb.start();
 							} catch (Exception e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
@@ -407,6 +463,8 @@ public class StarshipArena {
 						if(settingsButton.isClicked(xpos.get(2), ypos.get(2))){
 							gameState = 1;
 							staticFrame = false;
+							clip.stop();
+							clip.flush();
 							return;
 						}
 						boxSelect.setTopLeft(xpos.get(1), ypos.get(1));
@@ -1022,7 +1080,7 @@ public class StarshipArena {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
 		new StarshipArena().run();
 	}
 	
@@ -1161,13 +1219,17 @@ public class StarshipArena {
 			}
 		}
 	}
-	//TODO Maybe make consecutive levels related to each other (i.e. level 2 involves you starting with the two planets you controlled from level 1)
 	public void loadLevel(int level){
 		destroyAllShips();
 		destroyAllPlanets();
 		destroyAllProjectiles();
 		destroyAllExplosions();
 		destroyAllTiles();
+		//TODO Audio here, remove if bad
+		if (!clip.isActive()) {
+			clip.setFramePosition(0);
+			clip.loop(Clip.LOOP_CONTINUOUSLY);
+		}
 		
 		currentLevel = level;
 		zoomLevel = 3;
@@ -1210,8 +1272,8 @@ public class StarshipArena {
 			new Fighter(this, "blue", 600, 350, 0);
 			new Fighter(this, "blue", 400, 350, 0);
 			new Fighter(this, "blue", 700, 600, 0);
-			new Fighter(this, "blue", 800, 550, 0);
-			new Fighter(this, "blue", 600, 550, 0);
+//			new Fighter(this, "blue", 800, 550, 0);
+//			new Fighter(this, "blue", 600, 550, 0);
 			new Fighter(this, "blue", 900, 400, 0);
 			new Fighter(this, "blue", 1000, 350, 0);
 			new Fighter(this, "blue", 800, 350, 0);
@@ -1587,11 +1649,16 @@ public class StarshipArena {
 							polygon_intersection(p.getPoints(), s.getPoints())){
 						//fighters have a weakness to missiles
 						if (p instanceof Missile && s instanceof Fighter)
-							s.setHealth(s.getHealth()-p.getDamage()*2);
+							s.setHealth(s.getHealth()-p.getDamage()*4);
 						//interceptor has a high resistance to missiles
-						if (p instanceof Missile && s instanceof Interceptor)
-							//TODO Possibly do /10 instead of /5
+						else if (p instanceof Missile && s instanceof Interceptor)
 							s.setHealth(s.getHealth()-p.getDamage()/5);
+						//Interceptors are vulnerable to plasma
+						else if (p.texId < 3 && s instanceof Interceptor)
+							s.setHealth(s.getHealth()-p.getDamage()*2);
+						//Battleships are vulnerable to machineguns
+						else if (p.texId == 3 && s instanceof Battleship)
+							s.setHealth(s.getHealth()-p.getDamage()*2);
 						else
 							s.setHealth(s.getHealth()-p.getDamage());
 		    			s.damageDisplayDelay = 1000;
@@ -1606,16 +1673,27 @@ public class StarshipArena {
 				}
 				else if ((!p.getTeam().equals(s.getTeam()) || p.getTeam().equals("none")) && 
 							polygon_intersection(p.getPoints(), s.getPoints())) {
+					//fighters have a weakness to missiles
 					if (p instanceof Missile && s instanceof Fighter)
-						s.setHealth(s.getHealth()-p.getDamage()*20);
-					else if (p.texId == 3 && s instanceof Battleship)		
-						s.setHealth(s.getHealth()-p.getDamage()*2);		
-					else if (p.texId < 3 && s instanceof Interceptor)		
+						s.setHealth(s.getHealth()-p.getDamage()*4);
+					//interceptor has a high resistance to missiles
+					else if (p instanceof Missile && s instanceof Interceptor)
+						s.setHealth(s.getHealth()-p.getDamage()/5);
+					//Interceptors are vulnerable to plasma
+					else if (p.texId < 3 && s instanceof Interceptor)
+						s.setHealth(s.getHealth()-p.getDamage()*2);
+					//Battleships are vulnerable to machineguns
+					else if (p.texId == 3 && s instanceof Battleship)
 						s.setHealth(s.getHealth()-p.getDamage()*2);
 					else
 						s.setHealth(s.getHealth()-p.getDamage());
 	    			s.damageDisplayDelay = 1000;
-	    			p.destroy();
+	    			if (p instanceof Missile) {
+	    				Missile m = (Missile)p;
+	    				m.destroy(s);
+	    			}
+	    			else
+	    				p.destroy();
 	    			projectiles.remove(p);
 				}
 			}
@@ -1858,6 +1936,18 @@ public class StarshipArena {
 	public void writeText(String newText, int startx, int starty, int textSize) {
 		for (int i = 0; i < newText.length(); i++) {
 			BitmapFontLetter newLetter = new BitmapFontLetter(this, newText.charAt(i), startx + i * textSize, starty, textSize);
+		 }
+	}
+	
+	//Recursively get a proximity group of allied ships. Used to find approximate fleet strength.
+	public void proximityGroup(ArrayList<Starship> chosen, ArrayList<Starship> allShips, Starship current) {
+		for (int i = 0; i < allShips.size(); i++) {
+			Starship s = allShips.get(i);
+			if (distance(current.center.x, current.center.y, s.center.x, s.center.y) < PROXIMITY_SIZE
+					&& current.team.equals(s.team) && !chosen.contains(s)) {
+				chosen.add(s);
+				proximityGroup(chosen, allShips, s);
+			}
 		}
 	}
 	

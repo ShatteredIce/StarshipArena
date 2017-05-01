@@ -29,19 +29,19 @@ public class AdvancedEnemy extends Enemy{
 		double battleshipProp = (double)battleshipsCost / total;
 		for (int i = 0; i < myPlanets.size(); i++) {
 			double rand = random.nextDouble();
-			if (rand < fighterProp) {
+			if (rand < fighterProp + 0.05) {
 				if (myPlanets.get(i).getResources() >= 40) {
 					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
 					game.buyShips(enemyPlayer, 3);
 				}
 				else if (myPlanets.get(i).getResources() >= 5) {
-					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
-					game.buyShips(enemyPlayer, 1);
+//					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
+//					game.buyShips(enemyPlayer, 1);
 					if (attackDelay < 2000)
 						attackDelay += 1000;
 				}
 			}
-			else if (rand < fighterProp + interceptorProp) {
+			else if (rand < fighterProp + interceptorProp - 0.05) {
 				if (myPlanets.get(i).getResources() >= 5) {
 					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
 					game.buyShips(enemyPlayer, 1);
@@ -53,8 +53,8 @@ public class AdvancedEnemy extends Enemy{
 					game.buyShips(enemyPlayer, 2);
 				}
 				else if (myPlanets.get(i).getResources() >= 5) {
-					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
-					game.buyShips(enemyPlayer, 1);
+//					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
+//					game.buyShips(enemyPlayer, 1);
 					if (attackDelay < 2000)
 						attackDelay += 1000;
 				}
@@ -68,7 +68,7 @@ public class AdvancedEnemy extends Enemy{
 		//If AI has delayed long enough, attempt an attack and buy ships. Then decide a random new attack delay
 		if (counter > attackDelay) {
 			counter = 0;
-			attackDelay = random.nextInt(250) + 50;
+			attackDelay = random.nextInt(500) + 250;
 			int shipCountCheck = random.nextInt(game.player.costOfIdleShips());
 			//AI's chance of attacking increases from 0% (AI has 50% of idle ships in cost as player)
 			//to 100% (AI has 150% of idle ships in cost as player)

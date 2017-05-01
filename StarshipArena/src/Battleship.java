@@ -14,7 +14,7 @@ public class Battleship extends Starship{
 	static Texture red_tex4 = new Texture("red_transport4.png");
 	
 	static double primary_damage = 5;
-	static int primary_cooldown = 280;
+	static int primary_cooldown = 560;
 	static int primary_spread = 360;
 	static int primary_accuracy = 95;
 	static int primary_range = 2000;
