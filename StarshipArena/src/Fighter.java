@@ -15,12 +15,12 @@ public class Fighter extends Starship{
 	
 	//weaponry
 	static double primary_damage = 2;
-	static int primary_cooldown = 100;
+	static int primary_cooldown = 90;
 	static int primary_spread = 5;
 	static int primary_accuracy = 95;
-	static int primary_range = 500;
-	static int primary_speed = 15;
-	static int primary_lifetime = 600;
+	static int primary_range = 700;
+	static int primary_speed = 20;
+	static int primary_lifetime = 800;
 	static int primary_xoffset = 0;
 	static int primary_yoffset = 10;
 	int primary_id = 0;
@@ -41,12 +41,12 @@ public class Fighter extends Starship{
 		max_health = 20;
 		//movement
 		acceleration = 0.5;
-		max_velocity = 5;
+		max_velocity = 7;
 		max_reverse_velocity = -2;
 		min_turn_velocity = 3;
-		max_turn_speed = 3;
-		scan_range = 600;
-		radar_range = 700;
+		max_turn_speed = 4.5;
+		scan_range = 800;
+		radar_range = 900;
 		//other
 		clickRadius = 45;
 		xOff = 0;
