@@ -338,13 +338,13 @@ public class StarshipArena {
 				}
 			}
 			if ( key == GLFW_KEY_LEFT_BRACKET && action == GLFW_PRESS ) {
-				if (SLOW == 1) SLOW = 5000;
-				else if (SLOW == 5000) SLOW = 50000;
+				if (SLOW == 1) SLOW = 20000;
+				else if (SLOW == 20000) SLOW = 150000;
 			}
 
 			if ( key == GLFW_KEY_RIGHT_BRACKET && action == GLFW_PRESS ) {
-				if (SLOW == 50000) SLOW = 5000;
-				else if (SLOW == 5000) SLOW = 1;
+				if (SLOW == 150000) SLOW = 20000;
+				else if (SLOW == 20000) SLOW = 1;
 			}
 		
 //			if ( key == GLFW_KEY_DOWN && action == GLFW_RELEASE )
@@ -1363,13 +1363,13 @@ public class StarshipArena {
 			new Fighter(this, "blue", 3100, 1450, 0);
 			new Fighter(this, "blue", 2900, 1450, 0);
 			
-			new Fighter(this, "red", 2250, 3000, 0);
-			new Fighter(this, "red", 2350, 2950, 0);
-			new Fighter(this, "red", 2150, 2950, 0);
+			new Fighter(this, "red", 2250, 3000, 180);
+			new Fighter(this, "red", 2350, 2950, 180);
+			new Fighter(this, "red", 2150, 2950, 180);
 			
-			new Fighter(this, "red", 4700, 2300, 0);
-			new Fighter(this, "red", 4800, 2250, 0);
-			new Fighter(this, "red", 4600, 2250, 0);
+			new Fighter(this, "red", 4700, 2300, 180);
+			new Fighter(this, "red", 4800, 2250, 180);
+			new Fighter(this, "red", 4600, 2250, 180);
 		}
 		
 		else if (level == 4) {
@@ -1414,21 +1414,21 @@ public class StarshipArena {
 			new Interceptor(this, "blue", 4500, 2050, 0);
 			
 			
-			new Fighter(this, "red", 6700, 7500, 0);
-			new Fighter(this, "red", 6800, 7450, 0);
-			new Fighter(this, "red", 6600, 7450, 0);
-			new Interceptor(this, "red", 6500, 7400, 0);
-			new Interceptor(this, "red", 6900, 7400, 0);
+			new Fighter(this, "red", 6700, 7500, 180);
+			new Fighter(this, "red", 6800, 7450, 180);
+			new Fighter(this, "red", 6600, 7450, 180);
+			new Interceptor(this, "red", 6500, 7400, 180);
+			new Interceptor(this, "red", 6900, 7400, 180);
 			
-			new Interceptor(this, "red", 1500, 4000, 0);
-			new Interceptor(this, "red", 1600, 3950, 0);
-			new Interceptor(this, "red", 1400, 3950, 0);
+			new Interceptor(this, "red", 1500, 4000, 180);
+			new Interceptor(this, "red", 1600, 3950, 180);
+			new Interceptor(this, "red", 1400, 3950, 180);
 			
-			new Fighter(this, "red", 9500, 1500, 0);
-			new Fighter(this, "red", 9600, 1450, 0);
-			new Fighter(this, "red", 9400, 1450, 0);
-			new Interceptor(this, "red", 9700, 1400, 0);
-			new Interceptor(this, "red", 9300, 1400, 0);
+			new Fighter(this, "red", 9500, 1500, 180);
+			new Fighter(this, "red", 9600, 1450, 180);
+			new Fighter(this, "red", 9400, 1450, 180);
+			new Interceptor(this, "red", 9700, 1400, 180);
+			new Interceptor(this, "red", 9300, 1400, 180);
 		}
 		
 		else if (level == 5) {
@@ -1705,9 +1705,9 @@ public class StarshipArena {
 						//interceptor has a high resistance to missiles
 						else if (p instanceof Missile && s instanceof Interceptor)
 							s.setHealth(s.getHealth()-p.getDamage()/5);
-						//Interceptors are vulnerable to plasma
-						else if (p.texId < 3 && s instanceof Interceptor)
-							s.setHealth(s.getHealth()-p.getDamage()*2);
+						//Battleships have resistance to plasma
+						else if (p.texId < 3 && s instanceof Battleship)
+							s.setHealth(s.getHealth()-p.getDamage() / 2);
 						//Battleships are vulnerable to machineguns
 						else if (p.texId == 3 && s instanceof Battleship)
 							s.setHealth(s.getHealth()-p.getDamage()*2);
@@ -1731,9 +1731,9 @@ public class StarshipArena {
 					//interceptor has a high resistance to missiles
 					else if (p instanceof Missile && s instanceof Interceptor)
 						s.setHealth(s.getHealth()-p.getDamage()/5);
-					//Interceptors are vulnerable to plasma
-					else if (p.texId < 3 && s instanceof Interceptor)
-						s.setHealth(s.getHealth()-p.getDamage()*2);
+					//Battleships have resistance to plasma
+					else if (p.texId < 3 && s instanceof Battleship)
+						s.setHealth(s.getHealth()-p.getDamage() / 2);
 					//Battleships are vulnerable to machineguns
 					else if (p.texId == 3 && s instanceof Battleship)
 						s.setHealth(s.getHealth()-p.getDamage()*2);
