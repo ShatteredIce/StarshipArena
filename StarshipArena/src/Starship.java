@@ -1,8 +1,6 @@
 import java.util.ArrayList;
 import java.util.Random;
 
-import javax.sound.sampled.Clip;
-
 public class Starship {
 	
 	int damageDisplayDelay = 0;
@@ -64,9 +62,6 @@ public class Starship {
 	int x_max;
 	int y_min;
 	int y_max;
-	
-	//Sound effects
-	Clip clip;
 	
 	Starship(StarshipArena mygame, int spawnx, int spawny){
 		this(mygame, "none", spawnx, spawny, 0);

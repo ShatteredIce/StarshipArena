@@ -1,4 +1,9 @@
+import java.io.File;
 import java.util.ArrayList;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 
 public class Turret {
 	
@@ -26,6 +31,10 @@ public class Turret {
 	boolean fireMissiles = false;
 	int angle_offset = 0;
 	
+	//Sound effects
+	Clip clip;
+	AudioInputStream weapon;
+	
 	Turret(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newangle, double newdamage, int newcooldown, int newspread, int newaccuracy, int newscanrange, int newspeed, int newlifetime, int newid){
 		game = mygame;
 		owner = newowner;
@@ -40,6 +49,21 @@ public class Turret {
 		projectile_speed = newspeed;
 		projectile_lifetime = newlifetime / projectile_speed;
 		projectile_textureId = newid;
+		
+		try {
+//			if (this.projectile_textureId < 3)
+//				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/plasma.wav"));
+//			else if (this.projectile_textureId == 3)
+				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/heavy_machinegun.wav"));
+//			else
+//				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/missile.wav"));
+				
+			clip = AudioSystem.getClip();
+			clip.open(weapon);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	Turret(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newangle, double newdamage, int newcooldown, int newspread, int newaccuracy, int newscanrange, int newspeed, int newlifetime, int newid, int modifier, int newangle_offset){
@@ -59,6 +83,21 @@ public class Turret {
 		if (modifier % 2 == 1) autoAiming = true;
 		if (modifier > 1) fireMissiles = true;
 		angle_offset = newangle_offset;
+		
+		try {
+//			if (this.projectile_textureId < 3)
+//				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/plasma.wav"));
+//			else if (this.projectile_textureId == 3)
+				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/heavy_machinegun.wav"));
+//			else
+//				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/missile.wav"));
+				
+			clip = AudioSystem.getClip();
+			clip.open(weapon);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void setOffset(double newx, double newy){
@@ -95,10 +134,20 @@ public class Turret {
 	}
 	
 	public void fire(double newAngle){
-		if (!fireMissiles)
+		if (!fireMissiles) {
 			new Projectile(game, owner, team, center.X(), center.Y(), projectile_damage, newAngle, accuracy, projectile_speed, projectile_lifetime, projectile_textureId);
-		else
+			if (this.clip.isOpen()) {
+				this.clip.setFramePosition(0);
+				this.clip.start();
+			}
+		}
+		else {
 			new Missile(game, owner, team, center.X(), center.Y(), projectile_damage, newAngle, accuracy, projectile_speed, projectile_lifetime, projectile_textureId);
+			if (this.clip.isOpen()) {
+				this.clip.setFramePosition(0);
+				this.clip.start();
+			}
+		}
 	}
 	
 	public ArrayList<Starship> getEnemyShips(){
