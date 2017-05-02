@@ -55,12 +55,15 @@ public class Missile extends Projectile {
 		
 //				}
 		}
+		game.addClip("sounds/effects/ex_med5.wav");
 	}
 	
 	public void destroy(){
 		model.destroy();
 		game.removeProjectile(this);
 		new Explosion(game, center.X(), center.Y(), 55);
+		game.addClip("sounds/effects/ex_med5.wav");
+		
 	}
 	
 	public void setPoints(){

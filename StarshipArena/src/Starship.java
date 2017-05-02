@@ -211,6 +211,7 @@ public class Starship {
 				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 6, 18, 3);
 			}
 		}
+		game.addClip("sounds/effects/ex_with_debri.wav");
 		model.destroy();
 		game.removeShip(this);
 	}

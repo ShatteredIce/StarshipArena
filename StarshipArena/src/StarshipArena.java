@@ -94,6 +94,7 @@ public class StarshipArena {
 	ArrayList<Tile> backgroundTiles = new ArrayList<>();
 	ArrayList<Player> playerList = new ArrayList<>(); 
 	ArrayList<BitmapFontLetter> text = new ArrayList<>();
+	ArrayList<Clip> explosionSounds = new ArrayList<>();
 	
 	//TODO Audio file down here
 	File temp = new File("sounds/music/Earth.wav");
@@ -1051,6 +1052,13 @@ public class StarshipArena {
 							text.get(i).display();
 						}
 					}
+					//Remove finished sound clips
+					for (int i = 0; i < explosionSounds.size(); i++) {
+						if (!explosionSounds.get(i).isActive()) {
+							explosionSounds.remove(i);
+							i--;
+						}
+					}
 					
 					displayBorders();
 					
@@ -1290,8 +1298,10 @@ public class StarshipArena {
 		destroyAllTiles();
 		//TODO Audio here, remove if bad
 		menuMusic.stop();
-		gameMusic.setFramePosition(0);
-		gameMusic.loop(Clip.LOOP_CONTINUOUSLY);
+		if (!gameMusic.isActive()) {
+			gameMusic.setFramePosition(0);
+			gameMusic.loop(Clip.LOOP_CONTINUOUSLY);
+		}
 		
 		currentLevel = level;
 		zoomLevel = 3;
@@ -1999,6 +2009,21 @@ public class StarshipArena {
 		for (int i = 0; i < newText.length(); i++) {
 			BitmapFontLetter newLetter = new BitmapFontLetter(this, newText.charAt(i), startx + i * textSize, starty, textSize);
 		 }
+	}
+	
+	//Add audio clip. Used for explosions.
+	public void addClip(String fileName) {
+		try {
+			Clip clip = AudioSystem.getClip();
+			File file = new File(fileName);
+			AudioInputStream sound = AudioSystem.getAudioInputStream(file);
+			clip.open(sound);
+			clip.start();
+			explosionSounds.add(clip);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	//Recursively get a proximity group of allied ships. Used to find approximate fleet strength.
