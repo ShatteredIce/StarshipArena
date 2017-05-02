@@ -51,12 +51,12 @@ public class Turret {
 		projectile_textureId = newid;
 		
 		try {
-//			if (this.projectile_textureId < 3)
-//				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/plasma.wav"));
-//			else if (this.projectile_textureId == 3)
+			if (this.projectile_textureId < 3)
+				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/plasma.wav"));
+			else if (this.projectile_textureId == 3)
 				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/heavy_machinegun.wav"));
-//			else
-//				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/missile.wav"));
+			else
+				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/missile.wav"));
 				
 			clip = AudioSystem.getClip();
 			clip.open(weapon);
@@ -85,12 +85,12 @@ public class Turret {
 		angle_offset = newangle_offset;
 		
 		try {
-//			if (this.projectile_textureId < 3)
-//				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/plasma.wav"));
-//			else if (this.projectile_textureId == 3)
+			if (this.projectile_textureId < 3)
+				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/plasma.wav"));
+			else if (this.projectile_textureId == 3)
 				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/heavy_machinegun.wav"));
-//			else
-//				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/missile.wav"));
+			else
+				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/missile.wav"));
 				
 			clip = AudioSystem.getClip();
 			clip.open(weapon);
