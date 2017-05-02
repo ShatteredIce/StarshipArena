@@ -513,7 +513,7 @@ public class StarshipArena {
 									shipsControllingTeam = s.getTeam();
 									if (!shipsControllingTeam.equals(player.getTeam())) {
 										selectedUncontrolledShips.add(s);
-										if (!shiftPressed)
+										if (!shiftPressed && !controlPressed)
 											s.setSelected(false);
 									}
 									else {
@@ -526,7 +526,7 @@ public class StarshipArena {
 									s.setSelected(true);
 									clickedOnSprite = true;
 								}
-								else if(!shiftPressed) s.setSelected(false);
+								else if(!shiftPressed && !controlPressed) s.setSelected(false);
 							}
 							else if (distance(newMouseX.get(1), newMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
 									|| distance(newMouseX.get(1), oldMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
@@ -536,7 +536,7 @@ public class StarshipArena {
 									shipsControllingTeam = s.getTeam();
 									if (!shipsControllingTeam.equals(player.getTeam())) {
 										selectedUncontrolledShips.add(s);
-										if (!shiftPressed)
+										if (!shiftPressed && !controlPressed)
 											s.setSelected(false);
 									}
 									else {
@@ -549,9 +549,9 @@ public class StarshipArena {
 									s.setSelected(true);
 									clickedOnSprite = true;
 								}
-								else if (!shiftPressed) s.setSelected(false);
+								else if (!shiftPressed && !controlPressed) s.setSelected(false);
 							}
-							else if (!shiftPressed) s.setSelected(false);
+							else if (!shiftPressed && !controlPressed) s.setSelected(false);
 						}
 						if (!clickedOnSprite && selectedUncontrolledShips.size() > 0) {
 							for (int i = 0; i < selectedUncontrolledShips.size(); i++) {
@@ -606,7 +606,7 @@ public class StarshipArena {
 								else{
 									s.setLockPosition(false);
 								}
-								if(controlPressed){
+								if(controlPressed || shiftPressed){
 									s.setAttackMove(false);
 								}
 								else{
