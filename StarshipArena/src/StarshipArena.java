@@ -98,7 +98,10 @@ public class StarshipArena {
 	//TODO Audio file down here
 	File temp = new File("sounds/music/Earth.wav");
 	AudioInputStream BGM = AudioSystem.getAudioInputStream(temp);
-	Clip clip;
+	File temp2 = new File("sounds/music/Journey to the Sky.wav");
+	AudioInputStream menuBGM = AudioSystem.getAudioInputStream(temp2);
+	Clip gameMusic;
+	Clip menuMusic;
 
 	
 	
@@ -191,8 +194,11 @@ public class StarshipArena {
 		
 		//TODO Set up audio. Remove if bad
 		try {
-			clip = AudioSystem.getClip();
-			clip.open(BGM);
+			gameMusic = AudioSystem.getClip();
+			menuMusic = AudioSystem.getClip();
+			menuMusic.open(menuBGM);
+			menuMusic.loop(Clip.LOOP_CONTINUOUSLY);
+			gameMusic.open(BGM);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -364,10 +370,9 @@ public class StarshipArena {
 			if ( key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
 				gameState = 3;
 				//TODO More audio related stuff, remove if bad
-				if (!clip.isActive()) {
-					clip.setFramePosition(0);
-					clip.loop(Clip.LOOP_CONTINUOUSLY);
-				}
+				menuMusic.stop();
+				gameMusic.setFramePosition(0);
+				gameMusic.loop(Clip.LOOP_CONTINUOUSLY);
 			}
 		
 		});
@@ -440,6 +445,11 @@ public class StarshipArena {
 					if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
 						if(settingsButton.isClicked(xpos.get(2), ypos.get(2))){
 							gameState = 1;
+							
+							gameMusic.stop();
+							menuMusic.setFramePosition(0);
+							menuMusic.loop(Clip.LOOP_CONTINUOUSLY);
+						
 							staticFrame = false;
 							return;
 						}
@@ -463,8 +473,9 @@ public class StarshipArena {
 						if(settingsButton.isClicked(xpos.get(2), ypos.get(2))){
 							gameState = 1;
 							staticFrame = false;
-							clip.stop();
-							clip.flush();
+							gameMusic.stop();
+							menuMusic.setFramePosition(0);
+							menuMusic.loop(Clip.LOOP_CONTINUOUSLY);
 							return;
 						}
 						boxSelect.setTopLeft(xpos.get(1), ypos.get(1));
@@ -1278,10 +1289,9 @@ public class StarshipArena {
 		destroyAllExplosions();
 		destroyAllTiles();
 		//TODO Audio here, remove if bad
-		if (!clip.isActive()) {
-			clip.setFramePosition(0);
-			clip.loop(Clip.LOOP_CONTINUOUSLY);
-		}
+		menuMusic.stop();
+		gameMusic.setFramePosition(0);
+		gameMusic.loop(Clip.LOOP_CONTINUOUSLY);
 		
 		currentLevel = level;
 		zoomLevel = 3;
