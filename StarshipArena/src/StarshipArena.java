@@ -94,6 +94,7 @@ public class StarshipArena {
 	ArrayList<Tile> backgroundTiles = new ArrayList<>();
 	ArrayList<Player> playerList = new ArrayList<>(); 
 	ArrayList<BitmapFontLetter> text = new ArrayList<>();
+	ArrayList<Clip> explosionSounds = new ArrayList<>();
 	
 	//TODO Audio file down here
 	File temp = new File("sounds/music/Earth.wav");
@@ -512,7 +513,7 @@ public class StarshipArena {
 									shipsControllingTeam = s.getTeam();
 									if (!shipsControllingTeam.equals(player.getTeam())) {
 										selectedUncontrolledShips.add(s);
-										if (!shiftPressed)
+										if (!shiftPressed && !controlPressed)
 											s.setSelected(false);
 									}
 									else {
@@ -525,7 +526,7 @@ public class StarshipArena {
 									s.setSelected(true);
 									clickedOnSprite = true;
 								}
-								else if(!shiftPressed) s.setSelected(false);
+								else if(!shiftPressed && !controlPressed) s.setSelected(false);
 							}
 							else if (distance(newMouseX.get(1), newMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
 									|| distance(newMouseX.get(1), oldMouseY.get(1), clickCenter.X(), clickCenter.Y()) <= s.getClickRadius()
@@ -535,7 +536,7 @@ public class StarshipArena {
 									shipsControllingTeam = s.getTeam();
 									if (!shipsControllingTeam.equals(player.getTeam())) {
 										selectedUncontrolledShips.add(s);
-										if (!shiftPressed)
+										if (!shiftPressed && !controlPressed)
 											s.setSelected(false);
 									}
 									else {
@@ -548,9 +549,9 @@ public class StarshipArena {
 									s.setSelected(true);
 									clickedOnSprite = true;
 								}
-								else if (!shiftPressed) s.setSelected(false);
+								else if (!shiftPressed && !controlPressed) s.setSelected(false);
 							}
-							else if (!shiftPressed) s.setSelected(false);
+							else if (!shiftPressed && !controlPressed) s.setSelected(false);
 						}
 						if (!clickedOnSprite && selectedUncontrolledShips.size() > 0) {
 							for (int i = 0; i < selectedUncontrolledShips.size(); i++) {
@@ -605,7 +606,7 @@ public class StarshipArena {
 								else{
 									s.setLockPosition(false);
 								}
-								if(controlPressed){
+								if(controlPressed || shiftPressed){
 									s.setAttackMove(false);
 								}
 								else{
@@ -1051,6 +1052,14 @@ public class StarshipArena {
 							text.get(i).display();
 						}
 					}
+					//Remove finished sound clips
+					for (int i = 0; i < explosionSounds.size(); i++) {
+						if (!explosionSounds.get(i).isActive()) {
+							explosionSounds.get(i).close();
+							explosionSounds.remove(i);
+							i--;
+						}
+					}
 					
 					displayBorders();
 					
@@ -1290,8 +1299,10 @@ public class StarshipArena {
 		destroyAllTiles();
 		//TODO Audio here, remove if bad
 		menuMusic.stop();
-		gameMusic.setFramePosition(0);
-		gameMusic.loop(Clip.LOOP_CONTINUOUSLY);
+		if (!gameMusic.isActive()) {
+			gameMusic.setFramePosition(0);
+			gameMusic.loop(Clip.LOOP_CONTINUOUSLY);
+		}
 		
 		currentLevel = level;
 		zoomLevel = 3;
@@ -1999,6 +2010,21 @@ public class StarshipArena {
 		for (int i = 0; i < newText.length(); i++) {
 			BitmapFontLetter newLetter = new BitmapFontLetter(this, newText.charAt(i), startx + i * textSize, starty, textSize);
 		 }
+	}
+	
+	//Add audio clip. Used for explosions.
+	public void addClip(String fileName) {
+		try {
+			Clip clip = AudioSystem.getClip();
+			File file = new File(fileName);
+			AudioInputStream sound = AudioSystem.getAudioInputStream(file);
+			clip.open(sound);
+			clip.start();
+			explosionSounds.add(clip);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	//Recursively get a proximity group of allied ships. Used to find approximate fleet strength.
