@@ -66,7 +66,7 @@ public class Missile extends Projectile {
 		
 	}
 	
-	public void setPoints(){
+	public boolean setPoints(){
 		current_velocity = Math.min(current_velocity + acceleration, max_velocity);
 		//check if the target is already dead
 		if(target != null && target.getHealth() <= 0){
@@ -104,6 +104,13 @@ public class Missile extends Projectile {
 			v_index = 2*i;
 			vertices[v_index] = points[i].X();
 			vertices[v_index+1] = points[i].Y();	
+		}
+		if(updateLifetime()){
+			return true;
+		}
+		else{
+			destroy();
+			return false;
 		}
 	}
 	
