@@ -47,7 +47,7 @@ public class Projectile {
 		game.addProjectile(this);
 	}
 	
-	public void setPoints(){
+	public boolean setPoints(){
 		Point newcenter = new Point(center.X(), center.Y()+speed);
 		newcenter.rotatePoint(center.X(), center.Y(), angle);
 		center.setX(newcenter.X());
@@ -60,6 +60,13 @@ public class Projectile {
 			v_index = 2*i;
 			vertices[v_index] = points[i].X();
 			vertices[v_index+1] = points[i].Y();	
+		}
+		if(updateLifetime()){
+			return true;
+		}
+		else{
+			destroy();
+			return false;
 		}
 	}
 	
@@ -138,16 +145,9 @@ public class Projectile {
 		}
 	}
 	
-	public boolean display(){
+	public void display(){
 		setTexture();
-		if(updateLifetime()){
-			model.render(vertices);
-			return true;
-		}
-		else{
-			destroy();
-			return false;
-		}
+		model.render(vertices);
 	}
 	
 	public void destroy(){

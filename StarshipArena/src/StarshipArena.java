@@ -834,29 +834,51 @@ public class StarshipArena {
 				    	}
 					}
 					
-					//display ships
-					for(int s = 0; s < ships.size(); s++){
-						if(ships.get(s).getX() > CURR_X - (shipDisplayBorder * getWidthScalar()) && ships.get(s).getX() < CURR_X + CAMERA_WIDTH + (shipDisplayBorder * getWidthScalar())
-								&& ships.get(s).getY() > CURR_Y - (shipDisplayBorder * getHeightScalar()) && ships.get(s).getY() < CURR_Y + CAMERA_HEIGHT + (shipDisplayBorder * getHeightScalar())){
-							if(isVisible(ships.get(s), player)){
-								ships.get(s).display();
-							}
-						}
-					}
-					
-					//display projectiles
+					//update projectiles
 					for(int p = 0; p < projectiles.size(); p++){
-				    	projectiles.get(p).setPoints();
-						if(projectiles.get(p).display() == false){
+						if(projectiles.get(p).setPoints() == false){
 							p--;
 						}
 					}
 					
-					//display explosions
+					//update explosions
 					for(int e = 0; e < explosions.size(); e++){
 				    	explosions.get(e).update();
-				    	explosions.get(e).display();
 					}
+					
+					
+					if(CAMERA_WIDTH < 5200 && CAMERA_HEIGHT < 3600){
+						//display ships
+						for(int s = 0; s < ships.size(); s++){
+							if(ships.get(s).getX() > CURR_X - (shipDisplayBorder * getWidthScalar()) && ships.get(s).getX() < CURR_X + CAMERA_WIDTH + (shipDisplayBorder * getWidthScalar())
+									&& ships.get(s).getY() > CURR_Y - (shipDisplayBorder * getHeightScalar()) && ships.get(s).getY() < CURR_Y + CAMERA_HEIGHT + (shipDisplayBorder * getHeightScalar())){
+								if(isVisible(ships.get(s), player)){
+									ships.get(s).display();
+								}
+							}
+						}
+						//display projectiles
+						for(int p = 0; p < projectiles.size(); p++){
+					    	projectiles.get(p).display();
+						}
+						//update explosions
+						for(int e = 0; e < explosions.size(); e++){
+					    	explosions.get(e).display();
+						}
+					}
+					else{
+						//display ship icons
+						for(int s = 0; s < ships.size(); s++){
+							if(ships.get(s).getX() > CURR_X - (shipDisplayBorder * getWidthScalar()) && ships.get(s).getX() < CURR_X + CAMERA_WIDTH + (shipDisplayBorder * getWidthScalar())
+									&& ships.get(s).getY() > CURR_Y - (shipDisplayBorder * getHeightScalar()) && ships.get(s).getY() < CURR_Y + CAMERA_HEIGHT + (shipDisplayBorder * getHeightScalar())){
+								if(isVisible(ships.get(s), player)){
+									ships.get(s).displayIcon();
+								}
+							}
+						}
+					}
+						
+					
 				
 				//display box select
 				if(boxSelectCurrent){

@@ -15,6 +15,10 @@ public class Starship {
 	Point[] haloPoints;
 	int haloSize = 80;
 	static Texture haloTexture = new Texture("ships_halo.png");
+	static Texture blueCircle = new Texture("blue_circle.png");
+	static Texture redCircle = new Texture("red_circle.png");
+	static Texture blueSelectedCircle = new Texture("blue_selected_circle.png");
+	static Texture redSelectedCircle = new Texture("red_selected_circle.png");
 	
 	double[] vertices;
 	double[] textureCoords; 
@@ -245,6 +249,26 @@ public class Starship {
 			haloTexture.bind();
 			haloModel.render(haloVertices);
 		}
+	}
+	
+	public void displayIcon(){
+		if(team == "blue"){
+			if(selected){
+				blueSelectedCircle.bind();
+			}
+			else{
+				blueCircle.bind();
+			}
+		}
+		else{
+			if(selected){
+				redSelectedCircle.bind();
+			}
+			else{
+				redCircle.bind();
+			}
+		}
+		model.render(vertices);
 	}
 
 	public void doRandomMovement(){
