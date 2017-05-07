@@ -54,7 +54,7 @@ public class Turret {
 			if (this.projectile_textureId < 3)
 				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/plasma.wav"));
 			else if (this.projectile_textureId == 3)
-				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/heavy_machinegun.wav"));
+				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/sd_emgv7.wav"));
 			else
 				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/missile.wav"));
 				
@@ -88,7 +88,7 @@ public class Turret {
 			if (this.projectile_textureId < 3)
 				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/plasma.wav"));
 			else if (this.projectile_textureId == 3)
-				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/heavy_machinegun.wav"));
+				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/sd_emgv7.wav"));
 			else
 				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/missile.wav"));
 				
