@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 
 public class Turret {
 	
@@ -45,7 +46,7 @@ public class Turret {
 		spread = newspread;
 		accuracy = newaccuracy;
 		scan_range = newscanrange;
-		projectile_damage = newdamage;
+		projectile_damage = newdamage / 4;
 		projectile_speed = newspeed;
 		projectile_lifetime = newlifetime / projectile_speed;
 		projectile_textureId = newid;
@@ -54,12 +55,24 @@ public class Turret {
 			if (this.projectile_textureId < 3)
 				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/plasma.wav"));
 			else if (this.projectile_textureId == 3)
-				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/heavy_machinegun.wav"));
+				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/sd_emgv7.wav"));
 			else
 				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/missile.wav"));
 				
 			clip = AudioSystem.getClip();
 			clip.open(weapon);
+			if (this.projectile_textureId < 3) {
+				FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+				gainControl.setValue(-20.0f); // Reduce volume by a number of decibels.
+			}
+			else if (this.projectile_textureId == 3) {
+				FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+				gainControl.setValue(-15.0f); // Reduce volume by a number of decibels.
+			}
+			else {
+				FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+				gainControl.setValue(-12.0f); // Reduce volume by a number of decibels.
+			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -76,7 +89,7 @@ public class Turret {
 		spread = newspread;
 		accuracy = newaccuracy;
 		scan_range = newscanrange;
-		projectile_damage = newdamage;
+		projectile_damage = newdamage / 4;
 		projectile_speed = newspeed;
 		projectile_lifetime = newlifetime / projectile_speed;
 		projectile_textureId = newid;
@@ -88,12 +101,24 @@ public class Turret {
 			if (this.projectile_textureId < 3)
 				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/plasma.wav"));
 			else if (this.projectile_textureId == 3)
-				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/heavy_machinegun.wav"));
+				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/sd_emgv7.wav"));
 			else
 				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/missile.wav"));
 				
 			clip = AudioSystem.getClip();
 			clip.open(weapon);
+			if (this.projectile_textureId < 3) {
+				FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+				gainControl.setValue(-20.0f); // Reduce volume by a number of decibels.
+			}
+			else if (this.projectile_textureId == 3) {
+				FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+				gainControl.setValue(-15.0f); // Reduce volume by a number of decibels.
+			}
+			else {
+				FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+				gainControl.setValue(-12.0f); // Reduce volume by a number of decibels.
+			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();

@@ -215,7 +215,12 @@ public class Starship {
 				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 6, 18, 3);
 			}
 		}
+		game.addClip("sounds/effects/ex_with_debri.wav");
 		model.destroy();
+		//Close turret sound clips, save memory hopefully
+//		for (int i = 0; i < turrets.size(); i++) {
+//			turrets.get(i).clip.close();
+//		}
 		game.removeShip(this);
 	}
 	
