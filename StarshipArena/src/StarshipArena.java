@@ -859,7 +859,7 @@ public class StarshipArena {
 					}
 					
 					
-					if(CAMERA_WIDTH < 5200 && CAMERA_HEIGHT < 3600){
+//					if(CAMERA_WIDTH < 5200 && CAMERA_HEIGHT < 3600){
 						//display ships
 						for(int s = 0; s < ships.size(); s++){
 							if(ships.get(s).getX() > CURR_X - (shipDisplayBorder * getWidthScalar()) && ships.get(s).getX() < CURR_X + CAMERA_WIDTH + (shipDisplayBorder * getWidthScalar())
@@ -869,25 +869,25 @@ public class StarshipArena {
 								}
 							}
 						}
-						//display projectiles
-						for(int p = 0; p < projectiles.size(); p++){
-					    	projectiles.get(p).display();
-						}
-						//update explosions
-						for(int e = 0; e < explosions.size(); e++){
-					    	explosions.get(e).display();
-						}
+//					}
+//					else{
+//						//display ship icons
+//						for(int s = 0; s < ships.size(); s++){
+//							if(ships.get(s).getX() > CURR_X - (shipDisplayBorder * getWidthScalar()) && ships.get(s).getX() < CURR_X + CAMERA_WIDTH + (shipDisplayBorder * getWidthScalar())
+//									&& ships.get(s).getY() > CURR_Y - (shipDisplayBorder * getHeightScalar()) && ships.get(s).getY() < CURR_Y + CAMERA_HEIGHT + (shipDisplayBorder * getHeightScalar())){
+//								if(isVisible(ships.get(s), player)){
+//									ships.get(s).displayIcon();
+//								}
+//							}
+//						}
+//					}
+					//display projectiles
+					for(int p = 0; p < projectiles.size(); p++){
+				    	projectiles.get(p).display();
 					}
-					else{
-						//display ship icons
-						for(int s = 0; s < ships.size(); s++){
-							if(ships.get(s).getX() > CURR_X - (shipDisplayBorder * getWidthScalar()) && ships.get(s).getX() < CURR_X + CAMERA_WIDTH + (shipDisplayBorder * getWidthScalar())
-									&& ships.get(s).getY() > CURR_Y - (shipDisplayBorder * getHeightScalar()) && ships.get(s).getY() < CURR_Y + CAMERA_HEIGHT + (shipDisplayBorder * getHeightScalar())){
-								if(isVisible(ships.get(s), player)){
-									ships.get(s).displayIcon();
-								}
-							}
-						}
+					//update explosions
+					for(int e = 0; e < explosions.size(); e++){
+				    	explosions.get(e).display();
 					}
 						
 					
@@ -1192,9 +1192,9 @@ public class StarshipArena {
 //		new Fighter(this, "red", 1650, 400, 0);
 //		new Fighter(this, "red", 1700, 450, 0);
 		
-		new BasicPod(this, "red", 300, 1500, 270);
-		new BasicPod(this, "red", 350, 1400, 270);
-		new BasicPod(this, "red", 300, 1300, 270);
+		new MachineGunPod(this, "red", 300, 1500, 270);
+		new MachineGunPod(this, "red", 350, 1400, 270);
+		new MachineGunPod(this, "red", 300, 1300, 270);
 //		new Fighter(this, "blue", 200, 500, 270, 1);
 //		new Interceptor(this, 500, 700, 0, 1);
 	}
@@ -1748,9 +1748,9 @@ public class StarshipArena {
 						//interceptor has a high resistance to missiles
 						else if (p instanceof Missile && s instanceof Interceptor)
 							s.setHealth(s.getHealth()-p.getDamage()/5);
-						//Battleships have resistance to plasma
-						else if (p.texId < 3 && s instanceof Battleship)
-							s.setHealth(s.getHealth()-p.getDamage() / 2);
+//						//Battleships have resistance to plasma
+//						else if (p.texId < 3 && s instanceof Battleship)
+//							s.setHealth(s.getHealth()-p.getDamage() / 2);
 						//Battleships are vulnerable to machineguns
 						else if (p.texId == 3 && s instanceof Battleship)
 							s.setHealth(s.getHealth()-p.getDamage()*2);
@@ -1774,9 +1774,9 @@ public class StarshipArena {
 					//interceptor has a high resistance to missiles
 					else if (p instanceof Missile && s instanceof Interceptor)
 						s.setHealth(s.getHealth()-p.getDamage()/5);
-					//Battleships have resistance to plasma
-					else if (p.texId < 3 && s instanceof Battleship)
-						s.setHealth(s.getHealth()-p.getDamage() / 2);
+//					//Battleships have resistance to plasma
+//					else if (p.texId < 3 && s instanceof Battleship)
+//						s.setHealth(s.getHealth()-p.getDamage() / 2);
 					//Battleships are vulnerable to machineguns
 					else if (p.texId == 3 && s instanceof Battleship)
 						s.setHealth(s.getHealth()-p.getDamage()*2);
