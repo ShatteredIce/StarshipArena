@@ -859,7 +859,7 @@ public class StarshipArena {
 					}
 					
 					
-//					if(CAMERA_WIDTH < 5200 && CAMERA_HEIGHT < 3600){
+					if(CAMERA_WIDTH < 5200 && CAMERA_HEIGHT < 3600){
 						//display ships
 						for(int s = 0; s < ships.size(); s++){
 							if(ships.get(s).getX() > CURR_X - (shipDisplayBorder * getWidthScalar()) && ships.get(s).getX() < CURR_X + CAMERA_WIDTH + (shipDisplayBorder * getWidthScalar())
@@ -869,18 +869,18 @@ public class StarshipArena {
 								}
 							}
 						}
-//					}
-//					else{
-//						//display ship icons
-//						for(int s = 0; s < ships.size(); s++){
-//							if(ships.get(s).getX() > CURR_X - (shipDisplayBorder * getWidthScalar()) && ships.get(s).getX() < CURR_X + CAMERA_WIDTH + (shipDisplayBorder * getWidthScalar())
-//									&& ships.get(s).getY() > CURR_Y - (shipDisplayBorder * getHeightScalar()) && ships.get(s).getY() < CURR_Y + CAMERA_HEIGHT + (shipDisplayBorder * getHeightScalar())){
-//								if(isVisible(ships.get(s), player)){
-//									ships.get(s).displayIcon();
-//								}
-//							}
-//						}
-//					}
+					}
+					else{
+						//display ship icons
+						for(int s = 0; s < ships.size(); s++){
+							if(ships.get(s).getX() > CURR_X - (shipDisplayBorder * getWidthScalar()) && ships.get(s).getX() < CURR_X + CAMERA_WIDTH + (shipDisplayBorder * getWidthScalar())
+									&& ships.get(s).getY() > CURR_Y - (shipDisplayBorder * getHeightScalar()) && ships.get(s).getY() < CURR_Y + CAMERA_HEIGHT + (shipDisplayBorder * getHeightScalar())){
+								if(isVisible(ships.get(s), player)){
+									ships.get(s).displayIcon();
+								}
+							}
+						}
+					}
 					//display projectiles
 					for(int p = 0; p < projectiles.size(); p++){
 				    	projectiles.get(p).display();
