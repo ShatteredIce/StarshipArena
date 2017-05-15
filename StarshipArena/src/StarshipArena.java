@@ -103,7 +103,7 @@ public class StarshipArena {
 	AudioInputStream menuBGM = AudioSystem.getAudioInputStream(temp2);
 	Clip gameMusic;
 	Clip menuMusic;
-
+	boolean mute = false;
 	
 	
 	
@@ -1314,11 +1314,13 @@ public class StarshipArena {
 		}
 	}
 	public void loadLevel(int level){
+		mute = true;
 		destroyAllShips();
 		destroyAllPlanets();
 		destroyAllProjectiles();
 		destroyAllExplosions();
 		destroyAllTiles();
+		mute = false;
 		//TODO Audio here, remove if bad
 		menuMusic.stop();
 		if (!gameMusic.isActive()) {
@@ -1929,7 +1931,6 @@ public class StarshipArena {
 			text.get(i).destroy();
 		}
     }
- 
     
     public ArrayList<Starship> getAllShips(){
     	return ships;
@@ -2036,6 +2037,9 @@ public class StarshipArena {
 	
 	//Add audio clip. Used for explosions.
 	public void addClip(String fileName) {
+		if(mute){
+			return;
+		}
 		try {
 			Clip clip = AudioSystem.getClip();
 			File file = new File(fileName);
