@@ -43,8 +43,8 @@ public class Fighter extends Starship{
 		acceleration = 0.5;
 		max_velocity = 7;
 		max_reverse_velocity = -2;
-		min_turn_velocity = 3;
-		max_turn_speed = 4.5;
+		min_turn_velocity = 2;
+		max_turn_speed = 4;
 		scan_range = 800;
 		radar_range = 900;
 		//other

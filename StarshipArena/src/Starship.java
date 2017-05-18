@@ -215,7 +215,7 @@ public class Starship {
 				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 6, 18, 3);
 			}
 		}
-		game.addClip("sounds/effects/ex_with_debri.wav");
+		game.addClip("sounds/effects/ex_with_debri.wav", 5.0f);
 		model.destroy();
 		//Close turret sound clips, save memory hopefully
 //		for (int i = 0; i < turrets.size(); i++) {
@@ -301,6 +301,7 @@ public class Starship {
 	
 	public void edgeGuard(){
 		int BORDER = 100;
+		boolean hitEdge = true;
 		//left edge
 		if(center.X() < BORDER && angle <= 90){
 			current_turn_speed = -max_turn_speed;
@@ -328,6 +329,12 @@ public class Starship {
 		}
 		else if(center.Y() > y_max - BORDER && angle >= 270){
 			current_turn_speed = -max_turn_speed;
+		}
+		else {
+			hitEdge = false;
+		}
+		if (hitEdge) {
+			locationTarget = null;
 		}
 	}
 	
@@ -391,7 +398,7 @@ public class Starship {
 			}
 			else if (lockPosition == false) {
 				if (distance > 50) {
-					targeted_velocity = max_velocity / 2;
+					targeted_velocity = this instanceof Battleship ? max_velocity / 8 : max_velocity / 2;
 					if (this.angle == Math.round(relativeAngle)) {
 						current_turn_speed = 0;
 						targeted_velocity = max_velocity;
