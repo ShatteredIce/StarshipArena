@@ -399,7 +399,7 @@ public class Starship {
 			else if (lockPosition == false) {
 				if (distance > 50) {
 					targeted_velocity = this instanceof Battleship ? max_velocity / 8 : max_velocity / 2;
-					if (this.angle == Math.round(relativeAngle)) {
+					if (this.angle >= (relativeAngle + 359) % 360 && this.angle <= (relativeAngle + 1) % 360) {
 						current_turn_speed = 0;
 						targeted_velocity = max_velocity;
 					}

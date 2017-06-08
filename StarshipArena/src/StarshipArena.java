@@ -1118,13 +1118,13 @@ public class StarshipArena {
 					
 					//Check which direction the camera should move, and move accordingly
 					if (panLeft)
-						CURR_X = Math.max(0, CURR_X - CAMERA_SPEED * WORLD_HEIGHT / 2600);
+						CURR_X = Math.max(0, CURR_X - CAMERA_WIDTH / 20);
 					if (panRight)
-						CURR_X = Math.min(WORLD_WIDTH - CAMERA_WIDTH, CURR_X + CAMERA_SPEED * WORLD_HEIGHT / 2600);
+						CURR_X = Math.min(WORLD_WIDTH - CAMERA_WIDTH, CURR_X + CAMERA_WIDTH / 20);
 					if (panDown)
-						CURR_Y = Math.max((int) (-150 * getHeightScalar()), CURR_Y - CAMERA_SPEED * WORLD_HEIGHT / 2600);
+						CURR_Y = Math.max((int) (-150 * getHeightScalar()), CURR_Y - CAMERA_HEIGHT / 20);
 					if (panUp)
-						CURR_Y = Math.min(WORLD_HEIGHT - CAMERA_HEIGHT, CURR_Y + CAMERA_SPEED * WORLD_HEIGHT / 2600);
+						CURR_Y = Math.min(WORLD_HEIGHT - CAMERA_HEIGHT, CURR_Y + CAMERA_HEIGHT / 20);
 					
 					
 					window.swapBuffers();
@@ -1184,7 +1184,7 @@ public class StarshipArena {
 //				new Interceptor(this, "none", startx , starty, angle);
 //			}
 //		}
-//		new Battleship(this, "red", 100, 450, 0);
+		new Battleship(this, "red", 100, 450, 0);
 //		new Transport(this, "red", 100, 450, 0);
 //		new Transport(this, "red", 5, 450, 0);
 //		new Transport(this, "red", 400, 600, 0);
@@ -1196,9 +1196,9 @@ public class StarshipArena {
 //		new Fighter(this, "red", 1650, 400, 0);
 		new Fighter(this, "red", 1700, 450, 0);
 		
-//		new MachineGunPod(this, "red", 300, 1500, 270);
-//		new MachineGunPod(this, "red", 350, 1400, 270);
-//		new MachineGunPod(this, "red", 300, 1300, 270);
+		new MachineGunPod(this, "red", 300, 1500, 270);
+		new MachineGunPod(this, "red", 350, 1400, 270);
+		new MachineGunPod(this, "red", 300, 1300, 270);
 //		new Fighter(this, "blue", 200, 500, 270, 1);
 //		new Interceptor(this, 500, 700, 0, 1);
 	}
