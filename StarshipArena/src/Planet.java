@@ -132,6 +132,7 @@ public class Planet {
 					else{
 						team = "none";
 						captureTime = maxCaptureTime;
+						storedResources/= 2;
 					}
 				}
 			}

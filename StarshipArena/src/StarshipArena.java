@@ -631,6 +631,16 @@ public class StarshipArena {
 			
 		});
 		
+		glfwSetScrollCallback(window.getWindowHandle(), (window, xoffset, yoffset) -> {
+			//If they scrolled up, zoom in. If they scrolled down, zoom out.
+			if (yoffset > 0) {
+				updateZoomLevel(false);
+			}
+			if (yoffset < 0) {
+				updateZoomLevel(true);
+			}
+		});
+		
 //		// Get the thread stack and push a new frame
 //		try ( MemoryStack stack = stackPush() ) {
 //			IntBuffer pWidth = stack.mallocInt(1); // int*
@@ -966,7 +976,6 @@ public class StarshipArena {
 //					enemy.buyShips();
 					enemy.move();
 					
-					//onMouseEvent();
 					
 					projectTrueWindowCoordinates();
 					

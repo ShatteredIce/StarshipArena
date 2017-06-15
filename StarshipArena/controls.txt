@@ -52,13 +52,13 @@ There are also an assortment of turrets in the game. These currently cannot be p
          Clicking on the 'X' in the top right corner will exit the level and return to main menu.
  - Right click:
        * In game: With ships selected, right click to attack-move the selected ships to the location of the mouse.
-         Ships will automatically attack enemies while en route.
+         Ships will automatically engage and chase enemies while en route.
  - Space:
        * In game: If no ships are selected, select all allied ships.
          Otherwise, select all ships that are in the same faction and of the same type as the current selection.
- - +/-:
+ - +/- OR Mouse scroll:
        * In game: Zoom the camera in or out.
- - Arrow keys/WASD:
+ - Arrow keys OR WASD:
        * In game: Pan the camera to see more of the battlefield.
  - Numbers (1, 2, 3):
        * In game: With an allied planet selected, build Fighters (number 1), Interceptors (number 2), or Battleships (number 3) if resources are sufficient.
@@ -69,7 +69,7 @@ There are also an assortment of turrets in the game. These currently cannot be p
 ---ADVANCED---
  - Ctrl:
        * In game: Holding 'ctrl' while issuing an attack-move command (right click) will instead issue a move command.
-         Ships will engage enemies that are in their line of fire, but will continue to move towards the destination.
+         Ships will engage enemies that are in their direct line of fire, but will continue to move towards the destination.
  - T:
        * In game: Holding 'T' while issuing an attack-move command (right click) will instead issue a turn command.
          Ships and turrets will turn to face the cursor but will not move towards it.
