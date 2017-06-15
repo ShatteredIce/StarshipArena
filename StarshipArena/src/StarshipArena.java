@@ -1087,6 +1087,40 @@ public class StarshipArena {
 							text.get(i).display();
 						}
 					}
+					else {
+						writeText("Blue", 100, 15, 30);
+						writeText("Red", 1100, 15, 30);
+						int blueResources = 0;
+						int redResources = 0;
+						int bluePlanets = 0;
+						int redPlanets = 0;
+						for (int i = 0; i < planets.size(); i++) {
+							if (planets.get(i).getTeam().equals("red")) {
+								redPlanets++;
+								redResources += planets.get(i).storedResources;
+							}
+							else if (planets.get(i).getTeam().equals("blue")) {
+								bluePlanets++;
+								blueResources += planets.get(i).storedResources;
+							}
+						}
+						int redShips = 0;
+						int blueShips = 0;
+						for (int i = 0; i < ships.size(); i++) {
+							if (ships.get(i).getTeam().equals("red")) {
+								redShips++;
+							}
+							else if (ships.get(i).getTeam().equals("blue")) {
+								blueShips++;
+							}
+						}
+						writeText("Ships: " + blueShips, 20, 100);
+						writeText("Ships: " + redShips, 1000, 100);
+						writeText("Planets: " + bluePlanets, 20, 80);
+						writeText("Planets: " + redPlanets, 1000, 80);
+						writeText("Resources: " + blueResources, 20, 60);
+						writeText("Resources: " + redResources, 1000, 60);
+					}
 					//Remove finished sound clips
 					for (int i = 0; i < explosionSounds.size(); i++) {
 						if (!explosionSounds.get(i).isActive()) {
