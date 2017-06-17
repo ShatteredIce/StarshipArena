@@ -369,11 +369,13 @@ public class StarshipArena {
 //			if ( key == GLFW_KEY_4 && action == GLFW_PRESS)
 //				buyShips(player, 4);
 			if ( key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
-				gameState = 3;
-				//TODO More audio related stuff, remove if bad
-				menuMusic.stop();
-				gameMusic.setFramePosition(0);
-				gameMusic.loop(Clip.LOOP_CONTINUOUSLY);
+				if (gameState != 3) {
+					gameState = 3;
+					//TODO More audio related stuff, remove if bad
+					menuMusic.stop();
+					gameMusic.setFramePosition(0);
+					gameMusic.loop(Clip.LOOP_CONTINUOUSLY);
+				}
 			}
 		
 		});
@@ -384,10 +386,12 @@ public class StarshipArena {
 			DoubleBuffer ypos = BufferUtils.createDoubleBuffer(3);
 			glfwGetCursorPos(window, xpos, ypos);
 			//check if the mouse click is in the game frame
-			if(xpos.get(0) > windowXOffset && xpos.get(0) < WINDOW_WIDTH + windowXOffset &&
-					ypos.get(0) > windowYOffset && ypos.get(0) < WINDOW_HEIGHT + windowYOffset){
+//			if(xpos.get(0) > windowXOffset && xpos.get(0) < WINDOW_WIDTH + windowXOffset &&
+//					ypos.get(0) > windowYOffset && ypos.get(0) < WINDOW_HEIGHT + windowYOffset){
 				//convert the glfw coordinate to our coordinate system
 				//relative camera coordinates
+				xpos.put(0, Math.min(Math.max(xpos.get(0), windowXOffset), WINDOW_WIDTH + windowXOffset));
+				ypos.put(0, Math.min(Math.max(ypos.get(0), windowYOffset), WINDOW_HEIGHT + windowYOffset));
 				xpos.put(1, getWidthScalar() * (xpos.get(0) - windowXOffset) + CURR_X);
 				ypos.put(1, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0) + windowYOffset) + CURR_Y));
 				//true window coordinates
@@ -618,13 +622,23 @@ public class StarshipArena {
 						}
 					}
 				}
-			}
+//			}
 			else{
 				if(boxSelectCurrent){
 					boxSelectCurrent = false;
 				}
 			}
 			
+		});
+		
+		glfwSetScrollCallback(window.getWindowHandle(), (window, xoffset, yoffset) -> {
+			//If they scrolled up, zoom in. If they scrolled down, zoom out.
+			if (yoffset > 0) {
+				updateZoomLevel(false);
+			}
+			if (yoffset < 0) {
+				updateZoomLevel(true);
+			}
 		});
 		
 //		// Get the thread stack and push a new frame
@@ -962,7 +976,6 @@ public class StarshipArena {
 //					enemy.buyShips();
 					enemy.move();
 					
-					//onMouseEvent();
 					
 					projectTrueWindowCoordinates();
 					
@@ -1074,6 +1087,40 @@ public class StarshipArena {
 							text.get(i).display();
 						}
 					}
+					else {
+						writeText("Blue", 100, 15, 30);
+						writeText("Red", 1100, 15, 30);
+						int blueResources = 0;
+						int redResources = 0;
+						int bluePlanets = 0;
+						int redPlanets = 0;
+						for (int i = 0; i < planets.size(); i++) {
+							if (planets.get(i).getTeam().equals("red")) {
+								redPlanets++;
+								redResources += planets.get(i).storedResources;
+							}
+							else if (planets.get(i).getTeam().equals("blue")) {
+								bluePlanets++;
+								blueResources += planets.get(i).storedResources;
+							}
+						}
+						int redShips = 0;
+						int blueShips = 0;
+						for (int i = 0; i < ships.size(); i++) {
+							if (ships.get(i).getTeam().equals("red")) {
+								redShips++;
+							}
+							else if (ships.get(i).getTeam().equals("blue")) {
+								blueShips++;
+							}
+						}
+						writeText("Ships: " + blueShips, 20, 100);
+						writeText("Ships: " + redShips, 1000, 100);
+						writeText("Planets: " + bluePlanets, 20, 80);
+						writeText("Planets: " + redPlanets, 1000, 80);
+						writeText("Resources: " + blueResources, 20, 60);
+						writeText("Resources: " + redResources, 1000, 60);
+					}
 					//Remove finished sound clips
 					for (int i = 0; i < explosionSounds.size(); i++) {
 						if (!explosionSounds.get(i).isActive()) {
@@ -1114,13 +1161,13 @@ public class StarshipArena {
 					
 					//Check which direction the camera should move, and move accordingly
 					if (panLeft)
-						CURR_X = Math.max(0, CURR_X - CAMERA_SPEED * WORLD_HEIGHT / 2600);
+						CURR_X = Math.max(0, CURR_X - CAMERA_WIDTH / 20);
 					if (panRight)
-						CURR_X = Math.min(WORLD_WIDTH - CAMERA_WIDTH, CURR_X + CAMERA_SPEED * WORLD_HEIGHT / 2600);
+						CURR_X = Math.min(WORLD_WIDTH - CAMERA_WIDTH, CURR_X + CAMERA_WIDTH / 20);
 					if (panDown)
-						CURR_Y = Math.max((int) (-150 * getHeightScalar()), CURR_Y - CAMERA_SPEED * WORLD_HEIGHT / 2600);
+						CURR_Y = Math.max((int) (-150 * getHeightScalar()), CURR_Y - CAMERA_HEIGHT / 20);
 					if (panUp)
-						CURR_Y = Math.min(WORLD_HEIGHT - CAMERA_HEIGHT, CURR_Y + CAMERA_SPEED * WORLD_HEIGHT / 2600);
+						CURR_Y = Math.min(WORLD_HEIGHT - CAMERA_HEIGHT, CURR_Y + CAMERA_HEIGHT / 20);
 					
 					
 					window.swapBuffers();
@@ -1190,7 +1237,7 @@ public class StarshipArena {
 //		new Fighter(this, "red", 1700, 400, 0);
 //		new Fighter(this, "red", 1750, 400, 0);
 //		new Fighter(this, "red", 1650, 400, 0);
-//		new Fighter(this, "red", 1700, 450, 0);
+		new Fighter(this, "red", 1700, 450, 0);
 		
 		new MachineGunPod(this, "red", 300, 1500, 270);
 		new MachineGunPod(this, "red", 350, 1400, 270);
@@ -2036,7 +2083,7 @@ public class StarshipArena {
 	}
 	
 	//Add audio clip. Used for explosions.
-	public void addClip(String fileName) {
+	public void addClip(String fileName, float modifier) {
 		if(mute){
 			return;
 		}
@@ -2045,6 +2092,8 @@ public class StarshipArena {
 			File file = new File(fileName);
 			AudioInputStream sound = AudioSystem.getAudioInputStream(file);
 			clip.open(sound);
+			FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+			gainControl.setValue(modifier); // Reduce volume by a number of decibels.
 			clip.start();
 			explosionSounds.add(clip);
 		}

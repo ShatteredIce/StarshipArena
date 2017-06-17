@@ -3,21 +3,21 @@ import java.util.ArrayList;
 
 public class Missile extends Projectile {
 	double current_velocity = 0;
-	int current_turn_speed;
+	double current_turn_speed;
 	
 	Starship target = null;
 	
 	double acceleration = 0.5;
-	int max_velocity = 20;
-	int max_reverse_velocity = -2;
-	int min_turn_velocity = 1;
-	int max_turn_speed = 2;
+	double max_velocity = 20;
+	double max_reverse_velocity = -2;
+	double min_turn_velocity = 0.25;
+	double max_turn_speed = 0.5;
 	//weaponry
 	int scan_range = 4000;
 
 	public Missile(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newdamage, double spawnangle, int accuracy, double newspeed, double newlifetime, int id) {
 		super(mygame, newowner, myteam, spawnx, spawny, newdamage, spawnangle, accuracy, newspeed, newlifetime, id);
-		max_velocity = (int)newspeed;
+		max_velocity = newspeed;
 	}
 	
 	public void destroy(Starship victim){
@@ -55,14 +55,14 @@ public class Missile extends Projectile {
 		
 //				}
 		}
-		game.addClip("sounds/effects/ex_med5.wav");
+		game.addClip("sounds/effects/ex_med5.wav", -15.0f);
 	}
 	
 	public void destroy(){
 		model.destroy();
 		game.removeProjectile(this);
 		new Explosion(game, center.X(), center.Y(), 55);
-		game.addClip("sounds/effects/ex_med5.wav");
+		game.addClip("sounds/effects/ex_med5.wav", -15.0f);
 		
 	}
 	
@@ -88,8 +88,8 @@ public class Missile extends Projectile {
 			if (this.angle == Math.round(targetAngle)) {
 				current_turn_speed = 0;
 			}
-			else if ((Math.round(targetAngle) - this.angle + 360) % 360 < 180) current_turn_speed = (int) Math.min(max_turn_speed, (Math.round(targetAngle) - this.angle + 360) % 360);
-			else current_turn_speed = (int) Math.max(-max_turn_speed, -((this.angle - Math.round(targetAngle) + 360) % 360));
+			else if ((Math.round(targetAngle) - this.angle + 360) % 360 < 180) current_turn_speed = Math.min(max_turn_speed, (Math.round(targetAngle) - this.angle + 360) % 360);
+			else current_turn_speed = Math.max(-max_turn_speed, -((this.angle - Math.round(targetAngle) + 360) % 360));
 		}
 		angle += current_turn_speed;
 		Point newcenter = new Point(center.X(), center.Y()+current_velocity);
@@ -186,15 +186,15 @@ public class Missile extends Projectile {
 	//returns false if projectile is destroyed. Also creates explosion trail
 		public boolean updateLifetime(){
 			current_lifetime += 1;
-			if (current_lifetime % 2 == 0) {
+//			if (current_lifetime % 2 == 0) {
 //				boolean doExplosion = random.nextBoolean();
 //				int rand = random.nextInt(5) - 4;
 //				if (doExplosion) {
 					Explosion temp = new Explosion(game, center.x, center.y, 20);
 //					temp.lifetime = -2;
-					temp.ticksPerFrame = random.nextInt(3) + 2;
+					temp.ticksPerFrame = random.nextInt(3);
 //				}
-			}
+//			}
 			if(current_lifetime >= lifetime){
 				return false;
 			}

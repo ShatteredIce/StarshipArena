@@ -21,15 +21,16 @@ Ships can be purchased at your controlled planets for resources. They can be use
 and to capture enemy planets (by moving ships to them).
 There are three ship types in the game:
  1: Fighters. These are the basic combat starship. Costing 5 resources, they have 20 armor and are mounted with a medium-damage plasma cannon.
-    They move fairly slowly and are not very manueverable, but en masse they will melt anything in their path.
+    They move fairly slowly and are not very maneuverable, but en masse they will melt anything in their path.
      - Counters: Interceptor
      - Countered by: Battleship
  2: Interceptors. These are advanced starships designed for quick and effective penetration into enemy territory. Costing 20 resources, they have 30 armor
-    and are mounted with not only a plasma cannon but also two high-damage machine guns. They are quick and agile and are great for raiding
+    and are mounted with not only a plasma cannon but also two high-damage machine guns. They are quick and agile and are great for raiding.
     and ambushing troops.
      - Counters: Battleship
      - Countered by: Fighter
- 3: Battleships. These are heavy behemoths suited with long-range harrasment and defense. Costing 40 resources, they have 50 armor and are mounted with four long-range missile launcher. Although they are slow and unwieldy, their missiles have excellent range and are great for creating no-fly zones.
+ 3: Battleships. These are heavy behemoths suited with long-range harassment and defense. Costing 40 resources, they have 50 armor and are mounted with four
+    long-range missile launcher. Although they are slow and unwieldy, their missiles have excellent range and are great for creating no-fly zones.
      - Counters: Fighter
      - Countered by: Interceptor
 
@@ -52,13 +53,14 @@ There are also an assortment of turrets in the game. These currently cannot be p
          Clicking on the 'X' in the top right corner will exit the level and return to main menu.
  - Right click:
        * In game: With ships selected, right click to attack-move the selected ships to the location of the mouse.
-         Ships will automatically attack enemies while en route.
+         Ships will automatically engage and chase enemies while en route.
+         Allied turrets can be moved, but at a glacially-slow pace.
  - Space:
        * In game: If no ships are selected, select all allied ships.
          Otherwise, select all ships that are in the same faction and of the same type as the current selection.
- - +/-:
+ - +/- OR Mouse scroll:
        * In game: Zoom the camera in or out.
- - Arrow keys/WASD:
+ - Arrow keys OR WASD:
        * In game: Pan the camera to see more of the battlefield.
  - Numbers (1, 2, 3):
        * In game: With an allied planet selected, build Fighters (number 1), Interceptors (number 2), or Battleships (number 3) if resources are sufficient.
@@ -67,15 +69,14 @@ There are also an assortment of turrets in the game. These currently cannot be p
        * In game: Close the game.
 
 ---ADVANCED---
- - Ctrl:
-       * In game: Holding 'ctrl' while issuing an attack-move command (right click) will instead issue a move command.
-         Ships will engage enemies that are in their line of fire, but will continue to move towards the destination.
+ - Ctrl OR Shift:
+       * In game: Holding 'ctrl' or 'shift' while issuing an attack-move command (right click) will instead issue a move command.
+         Ships will engage enemies that are in their direct line of fire, but will continue to move towards the destination.
+       * In game: Holding 'ctrl' or 'shift' while selecting ships (with left click) will instead perform "addition-selection".
+         The ships selected will be added to the current selection instead of overriding the current selection.
  - T:
        * In game: Holding 'T' while issuing an attack-move command (right click) will instead issue a turn command.
          Ships and turrets will turn to face the cursor but will not move towards it.
- - Shift:
-       * In game: Holding 'shift' while selecting ships (with left click) will instead perform "addition-selection".
-         The ships selected will be added to the current selection instead of overriding the current selection.
  - Z:
        * In game: With ships selected, issue a stop command.
          Ships selected will cancel movement commands.
@@ -87,7 +88,7 @@ There are also an assortment of turrets in the game. These currently cannot be p
 ---CHEATS---
  - Enter:
        * In menu: Enter the test world. This is used for demonstration only.
-       If another level is loaded at any point, pressing 'Enter' will enter that level in the state it was
+       If another level is loaded at any point, pressing 'Enter' will enter that level in the state it was.
  - '[' and ']':
        * In game: Slow the game down with '[' and use ']' to speed it back up to normal.
  - F1:
