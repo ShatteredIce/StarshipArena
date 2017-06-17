@@ -21,15 +21,16 @@ Ships can be purchased at your controlled planets for resources. They can be use
 and to capture enemy planets (by moving ships to them).
 There are three ship types in the game:
  1: Fighters. These are the basic combat starship. Costing 5 resources, they have 20 armor and are mounted with a medium-damage plasma cannon.
-    They move fairly slowly and are not very manueverable, but en masse they will melt anything in their path.
+    They move fairly slowly and are not very maneuverable, but en masse they will melt anything in their path.
      - Counters: Interceptor
      - Countered by: Battleship
  2: Interceptors. These are advanced starships designed for quick and effective penetration into enemy territory. Costing 20 resources, they have 30 armor
-    and are mounted with not only a plasma cannon but also two high-damage machine guns. They are quick and agile and are great for raiding
+    and are mounted with not only a plasma cannon but also two high-damage machine guns. They are quick and agile and are great for raiding.
     and ambushing troops.
      - Counters: Battleship
      - Countered by: Fighter
- 3: Battleships. These are heavy behemoths suited with long-range harrasment and defense. Costing 40 resources, they have 50 armor and are mounted with four long-range missile launcher. Although they are slow and unwieldy, their missiles have excellent range and are great for creating no-fly zones.
+ 3: Battleships. These are heavy behemoths suited with long-range harassment and defense. Costing 40 resources, they have 50 armor and are mounted with four
+    long-range missile launcher. Although they are slow and unwieldy, their missiles have excellent range and are great for creating no-fly zones.
      - Counters: Fighter
      - Countered by: Interceptor
 
