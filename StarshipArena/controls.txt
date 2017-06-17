@@ -54,6 +54,7 @@ There are also an assortment of turrets in the game. These currently cannot be p
  - Right click:
        * In game: With ships selected, right click to attack-move the selected ships to the location of the mouse.
          Ships will automatically engage and chase enemies while en route.
+         Allied turrets can be moved, but at a glacially-slow pace.
  - Space:
        * In game: If no ships are selected, select all allied ships.
          Otherwise, select all ships that are in the same faction and of the same type as the current selection.
@@ -68,15 +69,14 @@ There are also an assortment of turrets in the game. These currently cannot be p
        * In game: Close the game.
 
 ---ADVANCED---
- - Ctrl:
-       * In game: Holding 'ctrl' while issuing an attack-move command (right click) will instead issue a move command.
+ - Ctrl OR Shift:
+       * In game: Holding 'ctrl' or 'shift' while issuing an attack-move command (right click) will instead issue a move command.
          Ships will engage enemies that are in their direct line of fire, but will continue to move towards the destination.
+       * In game: Holding 'ctrl' or 'shift' while selecting ships (with left click) will instead perform "addition-selection".
+         The ships selected will be added to the current selection instead of overriding the current selection.
  - T:
        * In game: Holding 'T' while issuing an attack-move command (right click) will instead issue a turn command.
          Ships and turrets will turn to face the cursor but will not move towards it.
- - Shift:
-       * In game: Holding 'shift' while selecting ships (with left click) will instead perform "addition-selection".
-         The ships selected will be added to the current selection instead of overriding the current selection.
  - Z:
        * In game: With ships selected, issue a stop command.
          Ships selected will cancel movement commands.
@@ -88,7 +88,7 @@ There are also an assortment of turrets in the game. These currently cannot be p
 ---CHEATS---
  - Enter:
        * In menu: Enter the test world. This is used for demonstration only.
-       If another level is loaded at any point, pressing 'Enter' will enter that level in the state it was
+       If another level is loaded at any point, pressing 'Enter' will enter that level in the state it was.
  - '[' and ']':
        * In game: Slow the game down with '[' and use ']' to speed it back up to normal.
  - F1:
