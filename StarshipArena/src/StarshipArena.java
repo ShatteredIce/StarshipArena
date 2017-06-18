@@ -1391,6 +1391,7 @@ public class StarshipArena {
 		destroyAllProjectiles();
 		destroyAllExplosions();
 		destroyAllTiles();
+		playerList.clear();
 		mute = false;
 		//TODO Audio here, remove if bad
 		menuMusic.stop();
@@ -1804,6 +1805,8 @@ public class StarshipArena {
 		}
 	
 		genTiles();
+		playerList.add(player);
+		playerList.add(enemy.getPlayer());
 	}
 	
 	//check projectile collisions
