@@ -180,14 +180,14 @@ public class Turret {
 		ArrayList<Starship> enemyShips = new ArrayList<>();
 		if(team == "none"){
 			for (int i = 0; i < allShips.size(); i++) {
-				if(game.distance(center.X(), center.Y(), allShips.get(i).getX(), allShips.get(i).getY()) <= scan_range){
+				if(game.distance(center.X(), center.Y(), allShips.get(i).getX(), allShips.get(i).getY()) <= scan_range && game.isVisible(allShips.get(i), team)){
 					enemyShips.add(allShips.get(i));
 				}
 			}
 		}
 		else {
 			for (int i = 0; i < allShips.size(); i++) {
-				if(!allShips.get(i).getTeam().equals(team) && game.distance(center.X(), center.Y(), allShips.get(i).getX(), allShips.get(i).getY()) <= scan_range){
+				if(!allShips.get(i).getTeam().equals(team) && game.distance(center.X(), center.Y(), allShips.get(i).getX(), allShips.get(i).getY()) <= scan_range && game.isVisible(allShips.get(i), team)){
 					enemyShips.add(allShips.get(i));
 				}
 			}
