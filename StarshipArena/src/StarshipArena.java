@@ -1315,6 +1315,12 @@ public class StarshipArena {
 		}
 		return false;
 	}
+	public boolean isVisible(Planet entity, String team){
+		for (int i = 0; i < playerList.size(); i++) {
+			if (team.equals(playerList.get(i).team)) return isVisible(entity, playerList.get(i));
+		}
+		return false;
+	}
 	
 	//fog of war - ships
 		public boolean isVisible(Starship entity, Player p){
@@ -1334,6 +1340,12 @@ public class StarshipArena {
 				if(distance(entity.getX(), entity.getY(), currentShip.getX(), currentShip.getY()) <= currentShip.getRadarRange()){
 					return true;
 				}
+			}
+			return false;
+		}
+		public boolean isVisible(Starship entity, String team){
+			for (int i = 0; i < playerList.size(); i++) {
+				if (team.equals(playerList.get(i).team)) return isVisible(entity, playerList.get(i));
 			}
 			return false;
 		}

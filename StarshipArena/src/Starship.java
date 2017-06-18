@@ -127,7 +127,7 @@ public class Starship {
 		for (int i = 0; i < points.length; i++) {
 			points[i].setX(center.X() + points[i].getXOffset());
 			points[i].setY(center.Y() + points[i].getYOffset());
-			points[i].rotatePoint(center.X(), center.Y(), move_angle);
+			points[i].rotatePoint(center.X(), center.Y(), angle);
 			v_index = 2*i;
 			vertices[v_index] = points[i].X();
 			vertices[v_index+1] = points[i].Y();	
@@ -135,7 +135,7 @@ public class Starship {
 		for (int i = 0; i < hitbox.length; i++) {
 			hitbox[i].setX(center.X() + hitbox[i].getXOffset());
 			hitbox[i].setY(center.Y() + hitbox[i].getYOffset());
-			hitbox[i].rotatePoint(center.X(), center.Y(), move_angle);
+			hitbox[i].rotatePoint(center.X(), center.Y(), angle);
 		}
 		moveTurrets();
 		fireTurrets();
@@ -143,7 +143,7 @@ public class Starship {
 	
 	public void setHaloPoints(){
 		Point trueCenter = new Point(center.X() + xOff, center.Y() + yOff);
-		trueCenter.rotatePoint(center.X(), center.Y(), move_angle);
+		trueCenter.rotatePoint(center.X(), center.Y(), angle);
 		haloPoints[0].setX(trueCenter.X() - haloSize);
 		haloPoints[0].setY(trueCenter.Y() + haloSize);
 		haloPoints[1].setX(trueCenter.X() - haloSize);
@@ -404,12 +404,16 @@ public class Starship {
 						targeted_velocity = max_velocity / 8;
 					}
 					else{
-						targeted_velocity = max_velocity / 3 * 2;
+						targeted_velocity = max_velocity;
 					}
 					if (this.move_angle >= (relativeAngle + 359) % 360 && this.move_angle <= (relativeAngle + 1) % 360) {
 					//if(Math.min(leftBearing, rightBearing) < 2){
 						current_turn_speed = 0;
 						targeted_velocity = max_velocity;
+					}
+					else if ((this instanceof Battleship || this instanceof BasicPod) && this.angle >= (relativeAngle + 359) % 360 && this.angle <= (relativeAngle + 1) % 360) {
+						targeted_velocity = max_velocity;
+						move_angle = angle;
 					}
 					else if (leftBearing <= rightBearing){ //turn left
 						current_turn_speed = Math.min(max_turn_speed, (Math.round(relativeAngle) - this.angle + 360) % 360);
