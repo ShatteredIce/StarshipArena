@@ -29,6 +29,7 @@ public class Starship {
 	
 	String team;
 	double angle;
+	double move_angle;
 	double targeted_velocity;
 	double current_velocity = 0;
 	double current_turn_speed;
@@ -89,6 +90,7 @@ public class Starship {
 		spawnPoint = new Point(spawnx, spawny);
 		center = new Point(spawnx, spawny);
 		angle = spawnangle;
+		move_angle = spawnangle;
 		shipStats();
 		shipTurrets();
 		current_health = max_health;
@@ -110,7 +112,7 @@ public class Starship {
 		updateCurrentVelocity();
 		//set the center point if not offscreen
 		Point newcenter = new Point(center.X(), center.Y()+current_velocity);
-		newcenter.rotatePoint(center.X(), center.Y(), angle);
+		newcenter.rotatePoint(center.X(), center.Y(), move_angle);
 		if(onScreen(newcenter.X(), newcenter.Y())){
 			center.setX(newcenter.X());
 			center.setY(newcenter.Y()); 
@@ -125,7 +127,7 @@ public class Starship {
 		for (int i = 0; i < points.length; i++) {
 			points[i].setX(center.X() + points[i].getXOffset());
 			points[i].setY(center.Y() + points[i].getYOffset());
-			points[i].rotatePoint(center.X(), center.Y(), angle);
+			points[i].rotatePoint(center.X(), center.Y(), move_angle);
 			v_index = 2*i;
 			vertices[v_index] = points[i].X();
 			vertices[v_index+1] = points[i].Y();	
@@ -133,7 +135,7 @@ public class Starship {
 		for (int i = 0; i < hitbox.length; i++) {
 			hitbox[i].setX(center.X() + hitbox[i].getXOffset());
 			hitbox[i].setY(center.Y() + hitbox[i].getYOffset());
-			hitbox[i].rotatePoint(center.X(), center.Y(), angle);
+			hitbox[i].rotatePoint(center.X(), center.Y(), move_angle);
 		}
 		moveTurrets();
 		fireTurrets();
@@ -141,7 +143,7 @@ public class Starship {
 	
 	public void setHaloPoints(){
 		Point trueCenter = new Point(center.X() + xOff, center.Y() + yOff);
-		trueCenter.rotatePoint(center.X(), center.Y(), angle);
+		trueCenter.rotatePoint(center.X(), center.Y(), move_angle);
 		haloPoints[0].setX(trueCenter.X() - haloSize);
 		haloPoints[0].setY(trueCenter.Y() + haloSize);
 		haloPoints[1].setX(trueCenter.X() - haloSize);
@@ -215,7 +217,7 @@ public class Starship {
 				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 6, 18, 3);
 			}
 		}
-		game.addClip("sounds/effects/ex_with_debri.wav", 5.0f);
+		//game.addClip("sounds/effects/ex_with_debri.wav", 5.0f);
 		model.destroy();
 		//Close turret sound clips, save memory hopefully
 //		for (int i = 0; i < turrets.size(); i++) {
@@ -398,8 +400,14 @@ public class Starship {
 			}
 			else if (lockPosition == false) {
 				if (distance > 50) {
-					targeted_velocity = this instanceof Battleship ? max_velocity / 8 : max_velocity / 2;
-					if (this.angle >= (relativeAngle + 359) % 360 && this.angle <= (relativeAngle + 1) % 360) {
+					if(this instanceof Battleship || this instanceof BasicPod){
+						targeted_velocity = max_velocity / 8;
+					}
+					else{
+						targeted_velocity = max_velocity / 3 * 2;
+					}
+					if (this.move_angle >= (relativeAngle + 359) % 360 && this.move_angle <= (relativeAngle + 1) % 360) {
+					//if(Math.min(leftBearing, rightBearing) < 2){
 						current_turn_speed = 0;
 						targeted_velocity = max_velocity;
 					}
@@ -410,7 +418,10 @@ public class Starship {
 						current_turn_speed = Math.max(-max_turn_speed, -((this.angle - Math.round(relativeAngle) + 360) % 360));
 					}
 				}
-				else locationTarget = null;
+				else{
+					locationTarget = null;
+					targeted_velocity = 0;
+				}
 			}
 		}
 		else{
@@ -514,8 +525,30 @@ public class Starship {
 	}
 	
 	public void updateCurrentAngle(){
+		double glide_turn = max_turn_speed / 3;
 		angle += current_turn_speed;
 		angle = game.normalizeAngle(angle);
+		double leftBearing = 0;
+		double rightBearing = 0;
+		if(angle >= move_angle){
+			leftBearing = angle - move_angle;
+			rightBearing = 360 - angle + move_angle;
+		}
+		else if(angle < move_angle){
+			rightBearing = move_angle - angle;
+			leftBearing = 360 - move_angle + angle;
+		}
+		//update move angle
+		if(Math.min(leftBearing, rightBearing) < glide_turn * 2){
+			move_angle = angle;
+		}
+		else if(leftBearing <= rightBearing){
+			move_angle += glide_turn;
+		}
+		else if(rightBearing < leftBearing){
+			move_angle -= glide_turn;
+		}
+		move_angle = game.normalizeAngle(move_angle);
 	}
 	
 	

@@ -81,6 +81,25 @@ public class AdvancedEnemy extends Enemy{
 			if (myShips.get(i) instanceof Battleship && myShips.get(i).target != null)
 				myShips.get(i).setLocationTarget(null);
 		}
+		if(enemyPlayer.getControlledPlanets().size() == 0){
+			for(int i = 0; i < myShips.size(); i++){
+				Starship current = myShips.get(i);
+				ArrayList<Planet> allPlanets = game.getAllPlanets();
+				Planet closestPlanet = null;
+				for(int j = 0; j < allPlanets.size(); j++){
+					if(closestPlanet == null){
+						closestPlanet = allPlanets.get(j);
+					}
+					else{
+						if(game.distance(current.getX(), current.getY(), allPlanets.get(j).getX(), allPlanets.get(j).getY()) <
+							game.distance(current.getX(), current.getY(), closestPlanet.getX(), closestPlanet.getY())){
+							closestPlanet = allPlanets.get(j);
+						}
+					}
+				}
+				current.setLocationTarget(closestPlanet.center);
+			}
+		}
 	}
 	
 	public void performAttack() {

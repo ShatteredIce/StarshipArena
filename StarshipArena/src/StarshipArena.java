@@ -559,7 +559,9 @@ public class StarshipArena {
 						}
 						if (!clickedOnSprite && selectedUncontrolledShips.size() > 0) {
 							for (int i = 0; i < selectedUncontrolledShips.size(); i++) {
-								selectedUncontrolledShips.get(i).setSelected(true);
+								if(isVisible(selectedUncontrolledShips.get(i), player)){
+									selectedUncontrolledShips.get(i).setSelected(true);
+								}
 							}
 							clickedOnSprite = true;
 						}
@@ -993,6 +995,7 @@ public class StarshipArena {
 					int numBattleshipsSelected = 0;
 					int numPodsSelected = 0;
 					String shipStatus = "Idle";
+					Planet selectedPlanet = null;
 					int selectedPlanetResources = Integer.MIN_VALUE;
 					boolean alliedPlanetSelected = false;
 					String planetControllingTeam = "none";
@@ -1001,8 +1004,9 @@ public class StarshipArena {
 					for(int p = 0; p < planets.size(); p++){
 						if(planets.get(p).getSelected()){
 							sidebarIsDisplayed = true;
-							selectedPlanetResources = planets.get(p).getResources();
-							planetControllingTeam = planets.get(p).getTeam();
+							selectedPlanet = planets.get(p);
+							selectedPlanetResources = selectedPlanet.getResources();
+							planetControllingTeam = selectedPlanet.getTeam();
 						}
 					}
 					for (int s = 0; s < ships.size(); s++) {
@@ -1033,15 +1037,23 @@ public class StarshipArena {
 						if (selectedPlanetResources > Integer.MIN_VALUE) {
 							writeText("Planet resources:", 20, 40);
 							if (planetControllingTeam.equals(player.getTeam())){
-								writeText("" + selectedPlanetResources, 20, 20);
+//								writeText("" + selectedPlanetResources, 20, 20);
 								alliedPlanetSelected = true;
 							}
-							else
+							else{
 //								writeText("??", 20, 20);
-								writeText("" + selectedPlanetResources, 20, 20);
-							
+//								writeText("" + selectedPlanetResources, 20, 20);
+							}
 							writeText("Controlled by:", 20, 100);
-							writeText(planetControllingTeam, 20, 80);
+							//if planet is visible
+							if(isVisible(selectedPlanet, player)){
+								writeText("" + selectedPlanetResources, 20, 20);
+								writeText(planetControllingTeam, 20, 80);
+							}
+							else{
+								writeText("???", 20, 20);
+								writeText("???", 20, 80);
+							}
 						}
 						else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected + numBattleshipsSelected + numPodsSelected == 1) {
 							if (numFightersSelected == 1) writeText("Fighter", 400, 15, 30);
@@ -1142,7 +1154,7 @@ public class StarshipArena {
 							endLevelTimer++;
 						}
 					}
-					else if (enemy.enemyPlayer.getControlledPlanets().size() == 0 && enemy.enemyPlayer.getControlledShips().size() == 0) {
+					else if (enemy.getPlayer().getControlledPlanets().size() == 0 && enemy.enemyPlayer.getControlledShips().size() == 0) {
 						if(endLevelTimer >= endLevelDelay){
 							gameState = 4;
 							endLevelTimer = 0;
