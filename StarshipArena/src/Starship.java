@@ -217,7 +217,7 @@ public class Starship {
 				new Projectile(game, null, "none", center.x + x_rand, center.y + y_rand, 0, rand_angle, 100, 6, 18, 3);
 			}
 		}
-		//game.addClip("sounds/effects/ex_with_debri.wav", 5.0f);
+		game.addClip("sounds/effects/ex_with_debri.wav", 5.0f);
 		model.destroy();
 		//Close turret sound clips, save memory hopefully
 //		for (int i = 0; i < turrets.size(); i++) {
@@ -529,7 +529,7 @@ public class Starship {
 	}
 	
 	public void updateCurrentAngle(){
-		double glide_turn = max_turn_speed / 3;
+		double glide_turn = max_turn_speed / 1.95;
 		angle += current_turn_speed;
 		angle = game.normalizeAngle(angle);
 		double leftBearing = 0;
@@ -543,7 +543,7 @@ public class Starship {
 			leftBearing = 360 - move_angle + angle;
 		}
 		//update move angle
-		if(Math.min(leftBearing, rightBearing) < glide_turn * 2){
+		if(Math.min(leftBearing, rightBearing) < glide_turn * 1.1){
 			move_angle = angle;
 		}
 		else if(leftBearing <= rightBearing){

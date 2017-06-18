@@ -1135,7 +1135,7 @@ public class StarshipArena {
 					}
 					//Remove finished sound clips
 					for (int i = 0; i < explosionSounds.size(); i++) {
-						if (!explosionSounds.get(i).isActive()) {
+						if (i < explosionSounds.size() && explosions.get(i) != null && !explosionSounds.get(i).isRunning()) {
 							explosionSounds.get(i).close();
 							explosionSounds.remove(i);
 							i--;
