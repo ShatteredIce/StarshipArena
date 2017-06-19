@@ -55,7 +55,7 @@ public class Missile extends Projectile {
 		
 //				}
 		}
-		game.addClip("sounds/effects/ex_med5.wav", -15.0f);
+//		game.addClip("sounds/effects/ex_med5.wav", -15.0f);
 	}
 	
 	public void destroy(){
