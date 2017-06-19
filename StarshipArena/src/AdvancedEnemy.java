@@ -41,7 +41,7 @@ public class AdvancedEnemy extends Enemy{
 						attackDelay += 1000;
 				}
 			}
-			else if (rand < fighterProp + interceptorProp - 0.05) {
+			else if (rand < fighterProp + interceptorProp - 0.05 || enemyPlayer.getControlledShips().size() == 0) {
 				if (myPlanets.get(i).getResources() >= 5) {
 					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
 					game.buyShips(enemyPlayer, 1);

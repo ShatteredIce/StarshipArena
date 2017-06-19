@@ -53,6 +53,7 @@ public class StarshipArena {
 	
 	int gameState = 1;
 	int SLOW = 1;
+	int NUM_LEVELS = 10;
 	
 	int currentLevel = 0;
 	final int endLevelDelay = 50;
@@ -103,8 +104,9 @@ public class StarshipArena {
 	AudioInputStream menuBGM = AudioSystem.getAudioInputStream(temp2);
 	Clip gameMusic;
 	Clip menuMusic;
-	boolean mute = false;
 	
+	boolean mute = false;
+	boolean fog = false;
 	
 	
 
@@ -326,7 +328,9 @@ public class StarshipArena {
 				}
 				else {
 					for (int i = 0; i < ships.size(); i++) {
-						if (ships.get(i).getTeam().equals(player.getTeam())) ships.get(i).setSelected(true);
+						if (ships.get(i).getTeam().equals(player.getTeam()) && !(ships.get(i) instanceof BasicPod)){
+							ships.get(i).setSelected(true);
+						}
 					}
 				}
 			}
@@ -437,7 +441,7 @@ public class StarshipArena {
 					}
 					else if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
 						//System.out.println(xpos.get(1) + " " + ypos.get(1));
-						for (int i = 0; i < levelButtons.length - 4; i++) {
+						for (int i = 0; i < NUM_LEVELS; i++) {
 							if(levelButtons[i].isClicked(xpos.get(2), ypos.get(2))){
 								gameState = 3;
 								loadLevel(i+1);
@@ -461,7 +465,7 @@ public class StarshipArena {
 					}
 					if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE){
 						if(nextLevelButton.isClicked(xpos.get(2), ypos.get(2))){
-							if (currentLevel + 1 < 9) {
+							if (currentLevel + 1 <= NUM_LEVELS) {
 								loadLevel(currentLevel + 1);
 								gameState = 3;
 							}
@@ -1154,7 +1158,7 @@ public class StarshipArena {
 							endLevelTimer++;
 						}
 					}
-					else if (enemy.getPlayer().getControlledPlanets().size() == 0 && enemy.enemyPlayer.getControlledShips().size() == 0) {
+					else if (enemy.getPlayer().getControlledPlanets().size() == 0 && enemy.getPlayer().getControlledShips().size() == 0) {
 						if(endLevelTimer >= endLevelDelay){
 							gameState = 4;
 							endLevelTimer = 0;
@@ -1296,6 +1300,9 @@ public class StarshipArena {
 	
 	//fog of war - planets
 	public boolean isVisible(Planet entity, Player p){
+		if(fog == false){
+			return true;
+		}
 		if(entity.getTeam().equals(p.getTeam())){
 			return true;
 		}
@@ -1324,6 +1331,9 @@ public class StarshipArena {
 	
 	//fog of war - ships
 		public boolean isVisible(Starship entity, Player p){
+			if(fog == false){
+				return true;
+			}
 			if(entity.getTeam().equals(p.getTeam())){
 				return true;
 			}
@@ -1803,6 +1813,148 @@ public class StarshipArena {
 			new Fighter(this, "blue", (int)(4350 - 150 * Math.sqrt(2)), (int)(4200 - 150 * Math.sqrt(2)), 135);
 			new Fighter(this, "blue", (int)(4350 + 150 * Math.sqrt(2)), (int)(4200 - 150 * Math.sqrt(2)), 225);
 		}
+		else if(level == 9){
+			WORLD_WIDTH = 12500;
+		    WORLD_HEIGHT = 5000;
+		    CURR_X = 3725;
+			CURR_Y = 925;
+			zoomLevel = 3;
+			CAMERA_WIDTH = 4550;
+			CAMERA_HEIGHT = 3150;
+			
+			enemy = new AdvancedEnemy(this, new Player(this, "red"));
+			new Planet(this, 5750, 3000, 3).setTeam("blue");
+			new MachineGunPod(this, "blue", 6200, 3100, 270);
+			new MachineGunPod(this, "blue", 6200, 2900, 270);
+			new MachineGunPod(this, "blue", 5300, 3100, 90);
+			new MachineGunPod(this, "blue", 5300, 2900, 90);
+			new Fighter(this, "blue", 5680, 3070, 45);
+			new Fighter(this, "blue", 5680, 2930, 135);
+			new Fighter(this, "blue", 5820, 3070, 315);
+			new Fighter(this, "blue", 5820, 2930, 225);
+			new Planet(this, 6250, 2000, 4).setTeam("blue");
+			new MachineGunPod(this, "blue", 6700, 2100, 270);
+			new MachineGunPod(this, "blue", 6700, 1900, 270);
+			new MachineGunPod(this, "blue", 5800, 2100, 90);
+			new MachineGunPod(this, "blue", 5800, 1900, 90);
+			new Fighter(this, "blue", 6180, 2070, 45);
+			new Fighter(this, "blue", 6180, 1930, 135);
+			new Fighter(this, "blue", 6320, 2070, 315);
+			new Fighter(this, "blue", 6320, 1930, 225);
+			new Planet(this, 4000, 2500, 3);
+			new Planet(this, 7500, 2500, 6);
+			
+			new Planet(this, 1000, 3800, 3).setTeam("red");
+			new Fighter(this, "red", 1000, 3860, 270);
+			new Fighter(this, "red", 1000, 3740, 270);
+			new BasicPod(this, "red", 1200, 3860, 270);
+			new BasicPod(this, "red", 1200, 3740, 270);
+			new Planet(this, 1200, 2600, 4).setTeam("red");
+			new Fighter(this, "red", 1200, 2660, 270);
+			new Fighter(this, "red", 1200, 2540, 270);
+			new BasicPod(this, "red", 1400, 2660, 270);
+			new BasicPod(this, "red", 1400, 2540, 270);
+			new Planet(this, 900, 1300, 5).setTeam("red");
+			new Fighter(this, "red", 900, 1360, 270);
+			new Fighter(this, "red", 900, 1240, 270);
+			new BasicPod(this, "red", 1100, 1360, 270);
+			new BasicPod(this, "red", 1100, 1240, 270);
+			
+			new Planet(this, 11900, 2700, 4).setTeam("red");
+			new Battleship(this, "red", 11900, 2700, 90);
+			new Planet(this, 11900, 3600, 4).setTeam("red");
+			new Battleship(this, "red", 11900, 3600, 90);
+			new Planet(this, 9600, 4100, 3).setTeam("red");
+			new Fighter(this, "red", 9600, 4160, 90);
+			new Fighter(this, "red", 9600, 4040, 90);
+			new Planet(this, 9460, 3150, 5).setTeam("red");
+			new Fighter(this, "red", 9460, 3210, 90);
+			new Fighter(this, "red", 9460, 3090, 90);
+			new Planet(this, 11000, 1600, 3).setTeam("red");
+			new Interceptor(this, "red", 10950, 1650, 80);
+			new Interceptor(this, "red", 10950, 1550, 80);
+			new Interceptor(this, "red", 11050, 1650, 80);
+			new Interceptor(this, "red", 11050, 1550, 80);
+			
+			
+		}
+		else if(level == 10){
+			WORLD_WIDTH = 12000;
+		    WORLD_HEIGHT = 4000;
+		    CURR_X = 25;
+			CURR_Y = 0;
+			zoomLevel = 3;
+			CAMERA_WIDTH = 4550;
+			CAMERA_HEIGHT = 3150;
+			new Planet(this, 1300, 2500, 2).setTeam("blue");
+			new Planet(this, 1200, 1300, 2).setTeam("blue");
+			new Planet(this, 5600, 3200, 2).setTeam("red");
+			new Planet(this, 10000, 3000, 2).setTeam("red");
+			new Planet(this, 9000, 700, 2).setTeam("red");
+			
+			enemy = new AdvancedEnemy(this, new Player(this, "red"));
+
+			new MachineGunPod(this, "red", 3700, 2400, 90);
+			new MachineGunPod(this, "red", 3700, 2600, 90);
+			new MachineGunPod(this, "red", 3700, 2800, 90);
+			new MissilePod(this, "red", 3900, 2400, 90);
+			new MissilePod(this, "red", 3900, 2600, 90);
+			new MissilePod(this, "red", 3900, 2800, 90);
+			new MachineGunPod(this, "red", 3850, 3100, 90);
+			new MachineGunPod(this, "red", 3850, 3300, 90);
+			new MachineGunPod(this, "red", 3850, 3500, 90);
+			new MissilePod(this, "red", 4050, 3100, 90);
+			new MissilePod(this, "red", 4050, 3300, 90);
+			new MissilePod(this, "red", 4050, 3500, 90);
+			new MachineGunPod(this, "red", 3850, 2100, 90);
+			new MachineGunPod(this, "red", 3850, 1900, 90);
+			new MachineGunPod(this, "red", 3850, 1700, 90);
+			new MissilePod(this, "red", 4050, 2100, 90);
+			new MissilePod(this, "red", 4050, 1900, 90);
+			new MissilePod(this, "red", 4050, 1700, 90);
+			
+			
+			new MachineGunPod(this, "red", 5500, 1000, 90);
+			new MachineGunPod(this, "red", 5500, 1200, 90);
+			new MachineGunPod(this, "red", 5500, 1400, 90);
+			new MissilePod(this, "red", 5700, 1000, 90);
+			new MissilePod(this, "red", 5700, 1200, 90);
+			new MissilePod(this, "red", 5700, 1400, 90);
+			new MachineGunPod(this, "red", 5650, 1700, 90);
+			new MachineGunPod(this, "red", 5650, 1900, 90);
+			new MachineGunPod(this, "red", 5650, 2100, 90);
+			new MissilePod(this, "red", 5850, 1700, 90);
+			new MissilePod(this, "red", 5850, 1900, 90);
+			new MissilePod(this, "red", 5850, 2100, 90);
+			new MachineGunPod(this, "red", 5650, 700, 90);
+			new MachineGunPod(this, "red", 5650, 500, 90);
+			new MachineGunPod(this, "red", 5650, 300, 90);
+			new MissilePod(this, "red", 5850, 700, 90);
+			new MissilePod(this, "red", 5850, 500, 90);
+			new MissilePod(this, "red", 5850, 300, 90);
+			
+			new MachineGunPod(this, "red", 7300, 2400, 90);
+			new MachineGunPod(this, "red", 7300, 2600, 90);
+			new MachineGunPod(this, "red", 7300, 2800, 90);
+			new MissilePod(this, "red", 7500, 2400, 90);
+			new MissilePod(this, "red", 7500, 2600, 90);
+			new MissilePod(this, "red", 7500, 2800, 90);
+			new MachineGunPod(this, "red", 7450, 3100, 90);
+			new MachineGunPod(this, "red", 7450, 3300, 90);
+			new MachineGunPod(this, "red", 7450, 3500, 90);
+			new MissilePod(this, "red", 7650, 3100, 90);
+			new MissilePod(this, "red", 7650, 3300, 90);
+			new MissilePod(this, "red", 7650, 3500, 90);
+			new MachineGunPod(this, "red", 7450, 2100, 90);
+			new MachineGunPod(this, "red", 7450, 1900, 90);
+			new MachineGunPod(this, "red", 7450, 1700, 90);
+			new MissilePod(this, "red", 7650, 2100, 90);
+			new MissilePod(this, "red", 7650, 1900, 90);
+			new MissilePod(this, "red", 7650, 1700, 90);
+			
+
+			
+		}
 	
 		genTiles();
 		playerList.add(player);
@@ -1821,9 +1973,9 @@ public class StarshipArena {
 						//fighters have a weakness to missiles
 						if (p instanceof Missile && s instanceof Fighter)
 							s.setHealth(s.getHealth()-p.getDamage()*4);
-						//interceptor has a high resistance to missiles
+						//interceptor has a resistance to missiles
 						else if (p instanceof Missile && s instanceof Interceptor)
-							s.setHealth(s.getHealth()-p.getDamage()/5);
+							s.setHealth(s.getHealth()-p.getDamage()/2);
 //						//Battleships have resistance to plasma
 //						else if (p.texId < 3 && s instanceof Battleship)
 //							s.setHealth(s.getHealth()-p.getDamage() / 2);
