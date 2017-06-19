@@ -96,6 +96,7 @@ public class StarshipArena {
 	ArrayList<Player> playerList = new ArrayList<>(); 
 	ArrayList<BitmapFontLetter> text = new ArrayList<>();
 	ArrayList<Clip> explosionSounds = new ArrayList<>();
+	Clip[] soundEffects = new Clip[25];
 	
 	//TODO Audio file down here
 	File temp = new File("sounds/music/Earth.wav");
@@ -202,6 +203,22 @@ public class StarshipArena {
 			menuMusic.open(menuBGM);
 			menuMusic.loop(Clip.LOOP_CONTINUOUSLY);
 			gameMusic.open(BGM);
+			for (int i = 0; i < 5; i++) {
+				soundEffects[i] = AudioSystem.getClip();
+				AudioInputStream plasmaSfx = AudioSystem.getAudioInputStream(new File("sounds/effects/plasma.wav"));
+				soundEffects[i].open(plasmaSfx);
+			}
+			for (int i = 5; i < 10; i++) {
+				soundEffects[i] = AudioSystem.getClip();
+				AudioInputStream mgunSfx = AudioSystem.getAudioInputStream(new File("sounds/effects/sd_emgv7.wav"));
+				soundEffects[i].open(mgunSfx);
+			}
+			for (int i = 10; i < 15; i++) {
+				soundEffects[i] = AudioSystem.getClip();
+				AudioInputStream missileSfx = AudioSystem.getAudioInputStream(new File("sounds/effects/missile.wav"));
+				soundEffects[i].open(missileSfx);
+			}
+			
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

@@ -33,8 +33,8 @@ public class Turret {
 	int angle_offset = 0;
 	
 	//Sound effects
-	Clip clip;
-	AudioInputStream weapon;
+//	Clip clip;
+//	AudioInputStream weapon;
 	
 	Turret(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newangle, double newdamage, int newcooldown, int newspread, int newaccuracy, int newscanrange, int newspeed, int newlifetime, int newid){
 		game = mygame;
@@ -51,32 +51,32 @@ public class Turret {
 		projectile_lifetime = newlifetime / projectile_speed;
 		projectile_textureId = newid;
 		
-		try {
-			if (this.projectile_textureId < 3)
-				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/plasma.wav"));
-			else if (this.projectile_textureId == 3)
-				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/sd_emgv7.wav"));
-			else
-				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/missile.wav"));
-				
-			clip = AudioSystem.getClip();
-			clip.open(weapon);
-			if (this.projectile_textureId < 3) {
-				FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-				gainControl.setValue(-20.0f); // Reduce volume by a number of decibels.
-			}
-			else if (this.projectile_textureId == 3) {
-				FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-				gainControl.setValue(-15.0f); // Reduce volume by a number of decibels.
-			}
-			else {
-				FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-				gainControl.setValue(-12.0f); // Reduce volume by a number of decibels.
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//			if (this.projectile_textureId < 3)
+//				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/plasma.wav"));
+//			else if (this.projectile_textureId == 3)
+//				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/sd_emgv7.wav"));
+//			else
+//				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/missile.wav"));
+//				
+//			clip = AudioSystem.getClip();
+//			clip.open(weapon);
+//			if (this.projectile_textureId < 3) {
+//				FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+//				gainControl.setValue(-20.0f); // Reduce volume by a number of decibels.
+//			}
+//			else if (this.projectile_textureId == 3) {
+//				FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+//				gainControl.setValue(-15.0f); // Reduce volume by a number of decibels.
+//			}
+//			else {
+//				FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+//				gainControl.setValue(-12.0f); // Reduce volume by a number of decibels.
+//			}
+//		}
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	Turret(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newangle, double newdamage, int newcooldown, int newspread, int newaccuracy, int newscanrange, int newspeed, int newlifetime, int newid, int modifier, int newangle_offset){
@@ -97,32 +97,32 @@ public class Turret {
 		if (modifier > 1) fireMissiles = true;
 		angle_offset = newangle_offset;
 		
-		try {
-			if (this.projectile_textureId < 3)
-				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/plasma.wav"));
-			else if (this.projectile_textureId == 3)
-				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/sd_emgv7.wav"));
-			else
-				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/missile.wav"));
-				
-			clip = AudioSystem.getClip();
-			clip.open(weapon);
-			if (this.projectile_textureId < 3) {
-				FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-				gainControl.setValue(-20.0f); // Reduce volume by a number of decibels.
-			}
-			else if (this.projectile_textureId == 3) {
-				FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-				gainControl.setValue(-15.0f); // Reduce volume by a number of decibels.
-			}
-			else {
-				FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-				gainControl.setValue(-12.0f); // Reduce volume by a number of decibels.
-			}
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+//		try {
+//			if (this.projectile_textureId < 3)
+//				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/plasma.wav"));
+//			else if (this.projectile_textureId == 3)
+//				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/sd_emgv7.wav"));
+//			else
+//				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/missile.wav"));
+//				
+//			clip = AudioSystem.getClip();
+//			clip.open(weapon);
+//			if (this.projectile_textureId < 3) {
+//				FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+//				gainControl.setValue(-20.0f); // Reduce volume by a number of decibels.
+//			}
+//			else if (this.projectile_textureId == 3) {
+//				FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+//				gainControl.setValue(-15.0f); // Reduce volume by a number of decibels.
+//			}
+//			else {
+//				FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+//				gainControl.setValue(-12.0f); // Reduce volume by a number of decibels.
+//			}
+//		}
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	public void setOffset(double newx, double newy){
@@ -161,16 +161,41 @@ public class Turret {
 	public void fire(double newAngle){
 		if (!fireMissiles) {
 			new Projectile(game, owner, team, center.X(), center.Y(), projectile_damage, newAngle, accuracy, projectile_speed, projectile_lifetime, projectile_textureId);
-			if (this.clip.isOpen()) {
-				this.clip.setFramePosition(0);
-				this.clip.start();
+//			if (this.clip.isOpen()) {
+//				this.clip.setFramePosition(0);
+//				this.clip.start();
+//			}
+			if (projectile_textureId < 3) {
+				for (int i = 0; i < 5; i++) {
+					if (!game.soundEffects[i].isRunning()) {
+						game.soundEffects[i].setFramePosition(0);
+						game.soundEffects[i].start();
+						break;
+					}
+				}
+			}
+			else if (projectile_textureId == 3) {
+				for (int i = 5; i < 10; i++) {
+					if (!game.soundEffects[i].isRunning()) {
+						game.soundEffects[i].setFramePosition(0);
+						game.soundEffects[i].start();
+						break;
+					}
+				}
 			}
 		}
 		else {
 			new Missile(game, owner, team, center.X(), center.Y(), projectile_damage, newAngle, accuracy, projectile_speed, projectile_lifetime, projectile_textureId);
-			if (this.clip.isOpen()) {
-				this.clip.setFramePosition(0);
-				this.clip.start();
+//			if (this.clip.isOpen()) {
+//				this.clip.setFramePosition(0);
+//				this.clip.start();
+//			}
+			for (int i = 10; i < 15; i++) {
+				if (!game.soundEffects[i].isRunning()) {
+					game.soundEffects[i].setFramePosition(0);
+					game.soundEffects[i].start();
+					break;
+				}
 			}
 		}
 	}
