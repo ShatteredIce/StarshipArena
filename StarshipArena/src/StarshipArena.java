@@ -95,10 +95,8 @@ public class StarshipArena {
 	ArrayList<Tile> backgroundTiles = new ArrayList<>();
 	ArrayList<Player> playerList = new ArrayList<>(); 
 	ArrayList<BitmapFontLetter> text = new ArrayList<>();
-	ArrayList<Clip> explosionSounds = new ArrayList<>();
 	Clip[] soundEffects = new Clip[25];
 	
-	//TODO Audio file down here
 	File temp = new File("sounds/music/Earth.wav");
 	AudioInputStream BGM = AudioSystem.getAudioInputStream(temp);
 	File temp2 = new File("sounds/music/Journey to the Sky.wav");
@@ -196,7 +194,6 @@ public class StarshipArena {
 		System.out.println(windowXOffset);
 		System.out.println(windowYOffset);
 		
-		//TODO Set up audio. Remove if bad
 		try {
 			gameMusic = AudioSystem.getClip();
 			menuMusic = AudioSystem.getClip();
@@ -207,20 +204,40 @@ public class StarshipArena {
 				soundEffects[i] = AudioSystem.getClip();
 				AudioInputStream plasmaSfx = AudioSystem.getAudioInputStream(new File("sounds/effects/plasma.wav"));
 				soundEffects[i].open(plasmaSfx);
+				FloatControl gainControl = (FloatControl) soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
+				gainControl.setValue(-20.0f); // Reduce volume by a number of decibels.
 			}
 			for (int i = 5; i < 10; i++) {
 				soundEffects[i] = AudioSystem.getClip();
 				AudioInputStream mgunSfx = AudioSystem.getAudioInputStream(new File("sounds/effects/sd_emgv7.wav"));
 				soundEffects[i].open(mgunSfx);
+				FloatControl gainControl = (FloatControl) soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
+				gainControl.setValue(-18.0f); // Reduce volume by a number of decibels.
+				
 			}
 			for (int i = 10; i < 15; i++) {
 				soundEffects[i] = AudioSystem.getClip();
 				AudioInputStream missileSfx = AudioSystem.getAudioInputStream(new File("sounds/effects/missile.wav"));
 				soundEffects[i].open(missileSfx);
+				FloatControl gainControl = (FloatControl) soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
+				gainControl.setValue(-4.0f); // Reduce volume by a number of decibels.
+			}
+			for (int i = 15; i < 20; i++) {
+				soundEffects[i] = AudioSystem.getClip();
+				AudioInputStream mExplosionSfx = AudioSystem.getAudioInputStream(new File("sounds/effects/ex_med5.wav"));
+				soundEffects[i].open(mExplosionSfx);
+				FloatControl gainControl = (FloatControl) soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
+				gainControl.setValue(-8.0f); // Reduce volume by a number of decibels.
+			}
+			for (int i = 20; i < 25; i++) {
+				soundEffects[i] = AudioSystem.getClip();
+				AudioInputStream deathSfx = AudioSystem.getAudioInputStream(new File("sounds/effects/ex_with_debri.wav"));
+				soundEffects[i].open(deathSfx);
+				FloatControl gainControl = (FloatControl) soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
+				gainControl.setValue(1.0f); // Increase volume by a number of decibels.
 			}
 			
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
@@ -392,7 +409,6 @@ public class StarshipArena {
 			if ( key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
 				if (gameState != 3) {
 					gameState = 3;
-					//TODO More audio related stuff, remove if bad
 					menuMusic.stop();
 					gameMusic.setFramePosition(0);
 					gameMusic.loop(Clip.LOOP_CONTINUOUSLY);
@@ -827,6 +843,7 @@ public class StarshipArena {
 				}
 			}
 			else if(gameState == 3){
+
 				if(staticFrame == true){
 					staticFrame = false;
 				}
@@ -1153,14 +1170,6 @@ public class StarshipArena {
 						writeText("Planets: " + redPlanets, 1000, 80);
 						writeText("Resources: " + blueResources, 20, 60);
 						writeText("Resources: " + redResources, 1000, 60);
-					}
-					//Remove finished sound clips
-					for (int i = 0; i < explosionSounds.size(); i++) {
-						if (i < explosionSounds.size() && explosions.get(i) != null && !explosionSounds.get(i).isRunning()) {
-							explosionSounds.get(i).close();
-							explosionSounds.remove(i);
-							i--;
-						}
 					}
 					
 					displayBorders();
@@ -2279,24 +2288,24 @@ public class StarshipArena {
 	}
 	
 	//Add audio clip. Used for explosions.
-	public void addClip(String fileName, float modifier) {
-		if(mute){
-			return;
-		}
-		try {
-			Clip clip = AudioSystem.getClip();
-			File file = new File(fileName);
-			AudioInputStream sound = AudioSystem.getAudioInputStream(file);
-			clip.open(sound);
-			FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-			gainControl.setValue(modifier); // Reduce volume by a number of decibels.
-			clip.start();
-			explosionSounds.add(clip);
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	public void addClip(String fileName, float modifier) {
+//		if(mute){
+//			return;
+//		}
+//		try {
+//			Clip clip = AudioSystem.getClip();
+//			File file = new File(fileName);
+//			AudioInputStream sound = AudioSystem.getAudioInputStream(file);
+//			clip.open(sound);
+//			FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+//			gainControl.setValue(modifier); // Reduce volume by a number of decibels.
+//			clip.start();
+//			explosionSounds.add(clip);
+//		}
+//		catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 	
 	//Recursively get a proximity group of allied ships. Used to find approximate fleet strength.
 	public void proximityGroup(ArrayList<Starship> chosen, ArrayList<Starship> allShips, Starship current) {

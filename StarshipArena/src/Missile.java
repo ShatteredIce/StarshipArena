@@ -55,14 +55,32 @@ public class Missile extends Projectile {
 		
 //				}
 		}
-//		game.addClip("sounds/effects/ex_med5.wav", -15.0f);
+		for (int i = 15; i < 20; i++) {
+			if (!game.soundEffects[i].isRunning()) {
+				game.soundEffects[i].setFramePosition(0);
+				game.soundEffects[i].start();
+				break;
+			}
+			else if (game.soundEffects[i].getFramePosition() < 500) {
+				break;
+			}
+		}
 	}
 	
 	public void destroy(){
 		model.destroy();
 		game.removeProjectile(this);
 		new Explosion(game, center.X(), center.Y(), 55);
-		game.addClip("sounds/effects/ex_med5.wav", -15.0f);
+		for (int i = 15; i < 20; i++) {
+			if (!game.soundEffects[i].isRunning()) {
+				game.soundEffects[i].setFramePosition(0);
+				game.soundEffects[i].start();
+				break;
+			}
+			else if (game.soundEffects[i].getFramePosition() < 500) {
+				break;
+			}
+		}
 		
 	}
 	

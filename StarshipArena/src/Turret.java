@@ -176,7 +176,7 @@ public class Turret {
 			}
 			else if (projectile_textureId == 3) {
 				for (int i = 5; i < 10; i++) {
-					if (!game.soundEffects[i].isRunning()) {
+					if (game.soundEffects[i].getFramePosition() > 1000 || !game.soundEffects[i].isRunning()) {
 						game.soundEffects[i].setFramePosition(0);
 						game.soundEffects[i].start();
 						break;
@@ -194,6 +194,9 @@ public class Turret {
 				if (!game.soundEffects[i].isRunning()) {
 					game.soundEffects[i].setFramePosition(0);
 					game.soundEffects[i].start();
+					break;
+				}
+				else if (game.soundEffects[i].getFramePosition() < 500) {
 					break;
 				}
 			}
