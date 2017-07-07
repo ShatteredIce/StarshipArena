@@ -97,15 +97,19 @@ public class StarshipArena {
 	ArrayList<BitmapFontLetter> text = new ArrayList<>();
 	Clip[] soundEffects = new Clip[25];
 	
-	File temp = new File("sounds/music/Earth.wav");
+	//TODO I commented out old ingame BGM and replaced with Yin & Yang
+//	File temp = new File("sounds/music/Earth.wav");
+	File temp = new File("sounds/music/Yin & Yang.wav");
 	AudioInputStream BGM = AudioSystem.getAudioInputStream(temp);
-	File temp2 = new File("sounds/music/Journey to the Sky.wav");
+	//TODO I commente out old menu GBM and replaced with Vague
+//	File temp2 = new File("sounds/music/Journey to the Sky.wav");
+	File temp2 = new File("sounds/music/Vague.wav");
 	AudioInputStream menuBGM = AudioSystem.getAudioInputStream(temp2);
 	Clip gameMusic;
 	Clip menuMusic;
 	
 	boolean mute = false;
-	boolean fog = false;
+	boolean fog = true;
 	
 	
 

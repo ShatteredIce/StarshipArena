@@ -56,6 +56,7 @@ public class Missile extends Projectile {
 //				}
 		}
 		for (int i = 15; i < 20; i++) {
+			if (game.mute) break;
 			if (!game.soundEffects[i].isRunning()) {
 				game.soundEffects[i].setFramePosition(0);
 				game.soundEffects[i].start();
@@ -72,6 +73,7 @@ public class Missile extends Projectile {
 		game.removeProjectile(this);
 		new Explosion(game, center.X(), center.Y(), 55);
 		for (int i = 15; i < 20; i++) {
+			if (game.mute) break;
 			if (!game.soundEffects[i].isRunning()) {
 				game.soundEffects[i].setFramePosition(0);
 				game.soundEffects[i].start();

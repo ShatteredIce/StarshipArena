@@ -54,7 +54,7 @@ public class Interceptor extends Starship{
 		max_health = 30;
 		//movement
 		acceleration = 0.5;
-		max_velocity = 12;
+		max_velocity = 10;
 		max_reverse_velocity = -2;
 		min_turn_velocity = 4;
 		max_turn_speed = 7;
