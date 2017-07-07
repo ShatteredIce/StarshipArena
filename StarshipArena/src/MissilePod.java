@@ -37,7 +37,7 @@ public class MissilePod extends BasicPod{
 		acceleration = 0.1;
 		max_velocity = 0.5;
 		min_turn_velocity = 0;
-		max_turn_speed = 0.5;
+		max_turn_speed = 3;
 		//other
 		clickRadius = 65;
 		xOff = 0;

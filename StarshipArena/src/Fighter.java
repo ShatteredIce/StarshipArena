@@ -14,7 +14,7 @@ public class Fighter extends Starship{
 	static Texture red_tex4 = new Texture("red_fighter4.png");
 	
 	//weaponry
-	static double primary_damage = 2;
+	static double primary_damage = 4;
 	static int primary_cooldown = 90;
 	static int primary_spread = 5;
 	static int primary_accuracy = 95;
