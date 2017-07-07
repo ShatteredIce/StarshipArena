@@ -788,6 +788,7 @@ public class StarshipArena {
 		while ( !window.shouldClose()) {
 			if(glfwGetWindowAttrib(window.getWindowHandle(), GLFW_FOCUSED) == GLFW_FALSE){
 				if(windowSelected == true){
+					glfwIconifyWindow(window.getWindowHandle());
 					windowSelected = false;
 				}
 			}
