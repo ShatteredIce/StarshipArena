@@ -28,6 +28,7 @@ public class Starship {
 	Point[] hitbox;
 	
 	String team;
+	int control_group = 0;
 	double angle;
 	double move_angle;
 	double targeted_velocity;
@@ -674,5 +675,13 @@ public class Starship {
 	
 	public void setAttackMove(boolean b){
 		attackMove = b;
+	}
+	
+	public void setControlGroup(int group){
+		control_group = group;
+	}
+	
+	public int getControlGroup(){
+		return control_group;
 	}
 }
