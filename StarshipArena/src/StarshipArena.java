@@ -404,12 +404,42 @@ public class StarshipArena {
 //				SLOW = 5000;
 //			if ( key == GLFW_KEY_UP && action == GLFW_RELEASE )
 //				SLOW = 1;
-			if ( key == GLFW_KEY_1 && action == GLFW_PRESS)
-				buyShips(player, 1);
+			if ( key == GLFW_KEY_0 && action == GLFW_PRESS){
+				if(shiftPressed){
+					assignControlGroup(player, 0);
+				}
+			}
+			if ( key == GLFW_KEY_1 && action == GLFW_PRESS){
+				if(shiftPressed){
+					assignControlGroup(player, 1);
+				}
+				else if(player.getSelectedPlanet() == null){
+					displayControlGroup(player, 1);
+				}
+				else{
+					buyShips(player, 1);
+				}
+			}
 			if ( key == GLFW_KEY_2 && action == GLFW_PRESS)
-				buyShips(player, 2);
+				if(shiftPressed){
+					assignControlGroup(player, 2);
+				}
+				else if(player.getSelectedPlanet() == null){
+					displayControlGroup(player, 2);
+				}
+				else{
+					buyShips(player, 1);
+				}
 			if ( key == GLFW_KEY_3 && action == GLFW_PRESS)
-				buyShips(player, 3);
+				if(shiftPressed){
+					assignControlGroup(player, 3);
+				}
+				else if(player.getSelectedPlanet() == null){
+					displayControlGroup(player, 3);
+				}
+				else{
+					buyShips(player, 1);
+				}
 //			if ( key == GLFW_KEY_4 && action == GLFW_PRESS)
 //				buyShips(player, 4);
 			if ( key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
@@ -1330,6 +1360,27 @@ public class StarshipArena {
 				new Battleship(this, p.getTeam(), (int) p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(), 
 						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), spawnangle);
 				
+			}
+		}
+	}
+	
+	public void assignControlGroup(Player player, int group){
+		ArrayList<Starship> playerShips = player.getControlledShips();
+		for(int i = 0; i < playerShips.size(); i++){
+			if(playerShips.get(i).getSelected()){
+				playerShips.get(i).setControlGroup(group);
+			}
+		}
+	}
+	
+	public void displayControlGroup(Player player, int group){
+		ArrayList<Starship> allShips = getAllShips();
+		for(int i = 0; i < allShips.size(); i++){
+			if(allShips.get(i).getControlGroup() == group){
+				allShips.get(i).setSelected(true);
+			}
+			else{
+				allShips.get(i).setSelected(false);
 			}
 		}
 	}
