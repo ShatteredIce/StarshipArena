@@ -422,7 +422,7 @@ public class StarshipArena {
 					displayControlGroup(player, 2);
 				}
 				else{
-					buyShips(player, 1);
+					buyShips(player, 2);
 				}
 			if ( key == GLFW_KEY_3 && action == GLFW_PRESS)
 				if(shiftPressed){
@@ -432,7 +432,7 @@ public class StarshipArena {
 					displayControlGroup(player, 3);
 				}
 				else{
-					buyShips(player, 1);
+					buyShips(player, 3);
 				}
 //			if ( key == GLFW_KEY_4 && action == GLFW_PRESS)
 //				buyShips(player, 4);
@@ -751,6 +751,7 @@ public class StarshipArena {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
 		playerList.add(player);
+		playerList.add(enemy.getPlayer());
 		
 		createShips(200);
 		
