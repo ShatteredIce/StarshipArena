@@ -97,15 +97,20 @@ public class StarshipArena {
 	ArrayList<BitmapFontLetter> text = new ArrayList<>();
 	Clip[] soundEffects = new Clip[25];
 	
-	File temp = new File("sounds/music/Earth.wav");
+	//TODO I commented out old ingame BGM and replaced with Yin & Yang
+//	File temp = new File("sounds/music/Earth.wav");
+	File temp = new File("sounds/music/Yin & Yang.wav");
 	AudioInputStream BGM = AudioSystem.getAudioInputStream(temp);
-	File temp2 = new File("sounds/music/Journey to the Sky.wav");
+	//TODO I commente out old menu GBM and replaced with Vague
+//	File temp2 = new File("sounds/music/Journey to the Sky.wav");
+	File temp2 = new File("sounds/music/Vague.wav");
 	AudioInputStream menuBGM = AudioSystem.getAudioInputStream(temp2);
 	Clip gameMusic;
 	Clip menuMusic;
 	
+	//TODO it's not a true mute yet
 	boolean mute = false;
-	boolean fog = false;
+	boolean fog = true;
 	
 	
 
@@ -198,7 +203,8 @@ public class StarshipArena {
 			gameMusic = AudioSystem.getClip();
 			menuMusic = AudioSystem.getClip();
 			menuMusic.open(menuBGM);
-			menuMusic.loop(Clip.LOOP_CONTINUOUSLY);
+			if (!mute)
+				menuMusic.loop(Clip.LOOP_CONTINUOUSLY);
 			gameMusic.open(BGM);
 			for (int i = 0; i < 5; i++) {
 				soundEffects[i] = AudioSystem.getClip();
@@ -441,7 +447,8 @@ public class StarshipArena {
 					gameState = 3;
 					menuMusic.stop();
 					gameMusic.setFramePosition(0);
-					gameMusic.loop(Clip.LOOP_CONTINUOUSLY);
+					if (!mute)
+						gameMusic.loop(Clip.LOOP_CONTINUOUSLY);
 				}
 			}
 		
@@ -520,7 +527,8 @@ public class StarshipArena {
 							
 							gameMusic.stop();
 							menuMusic.setFramePosition(0);
-							menuMusic.loop(Clip.LOOP_CONTINUOUSLY);
+							if (!mute)
+								menuMusic.loop(Clip.LOOP_CONTINUOUSLY);
 						
 							staticFrame = false;
 							return;
@@ -547,7 +555,8 @@ public class StarshipArena {
 							staticFrame = false;
 							gameMusic.stop();
 							menuMusic.setFramePosition(0);
-							menuMusic.loop(Clip.LOOP_CONTINUOUSLY);
+							if (!mute)
+								menuMusic.loop(Clip.LOOP_CONTINUOUSLY);
 							return;
 						}
 						boxSelect.setTopLeft(xpos.get(1), ypos.get(1));
@@ -1474,6 +1483,7 @@ public class StarshipArena {
 		}
 	}
 	public void loadLevel(int level){
+		boolean trueMuteState = mute;
 		mute = true;
 		destroyAllShips();
 		destroyAllPlanets();
@@ -1481,12 +1491,13 @@ public class StarshipArena {
 		destroyAllExplosions();
 		destroyAllTiles();
 		playerList.clear();
-		mute = false;
+		mute = trueMuteState;
 		//TODO Audio here, remove if bad
 		menuMusic.stop();
 		if (!gameMusic.isActive()) {
 			gameMusic.setFramePosition(0);
-			gameMusic.loop(Clip.LOOP_CONTINUOUSLY);
+			if (!mute)
+				gameMusic.loop(Clip.LOOP_CONTINUOUSLY);
 		}
 		
 		currentLevel = level;
