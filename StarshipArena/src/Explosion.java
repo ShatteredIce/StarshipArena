@@ -4,17 +4,7 @@ public class Explosion {
 	StarshipArena game;
 	
 	Model model;
-	static Texture tex1 = new Texture("explosionframe1.png");
-	static Texture tex2 = new Texture("explosionframe2.png");
-	static Texture tex3 = new Texture("explosionframe3.png");
-	static Texture tex4 = new Texture("explosionframe4.png");
-	static Texture tex5 = new Texture("explosionframe5.png");
-	static Texture tex6 = new Texture("explosionframe6.png");
-	static Texture tex7 = new Texture("explosionframe7.png");
-	static Texture tex8 = new Texture("explosionframe8.png");
-	static Texture tex9 = new Texture("explosionframe9.png");
-	static Texture tex10 = new Texture("explosionframe10.png");
-	static Texture tex11 = new Texture("explosionframe11.png");
+	static Texture explosion_sprites = new Texture("explosion_sprites.png");
 	
 	double[] vertices;
 	double[] textureCoords; 
@@ -35,9 +25,9 @@ public class Explosion {
 		size = newsize;
 		points = generatePoints();
 		vertices = new double[points.length * 2];
-		setTextureCoords();
 		setIndices();
 		setPoints();
+		setTextureCoords();
 		model = new Model(vertices, textureCoords, indices);
 		game.addExplosion(this);
 
@@ -65,42 +55,44 @@ public class Explosion {
 	}
 	
 	public void setTexture(){
+		explosion_sprites.bind();
 		if(lifetime < ticksPerFrame){
-			tex1.bind();
+			setTextureCoords(0, 0, 0, 0.5, 0.25, 0, 0.25, 0.5);
 		}
 		else if(lifetime < ticksPerFrame * 2){
-			tex2.bind();
+			setTextureCoords(0.125, 0, 0.125, 0.5, 0.25, 0, 0.25, 0.5);
 		}
 		else if(lifetime < ticksPerFrame * 3){
-			tex3.bind();
+			setTextureCoords(0.25, 0, 0.25, 0.5, 0.375, 0, 0.375, 0.5);
 		}
 		else if(lifetime < ticksPerFrame * 4){
-			tex4.bind();
+			setTextureCoords(0.375, 0, 0.375, 0.5, 0.5, 0, 0.5, 0.5);
 		}
 		else if(lifetime < ticksPerFrame * 5){
-			tex5.bind();
+			setTextureCoords(0.5, 0, 0.5, 0.5, 0.625, 0, 0.625, 0.5);
 		}
 		else if(lifetime < ticksPerFrame * 6){
-			tex6.bind();
+			setTextureCoords(0.625, 0, 0.625, 0.5, 0.75, 0, 0.75, 0.5);
 		}
 		else if(lifetime < ticksPerFrame * 7){
-			tex7.bind();
+			setTextureCoords(0.75, 0, 0.75, 0.5, 0.875, 0, 0.875, 0.5);
 		}
 		else if(lifetime < ticksPerFrame * 8){
-			tex8.bind();
+			setTextureCoords(0.875, 0, 0.875, 0.5, 1, 0, 1, 0.5);
 		}
 		else if(lifetime < ticksPerFrame * 9){
-			tex9.bind();
+			setTextureCoords(0, 0.5, 0, 1, 0.125, 0.5, 0.125, 1);
 		}
 		else if(lifetime < ticksPerFrame * 10){
-			tex10.bind();
+			setTextureCoords(0.125, 0.5, 0.125, 1, 0.25, 0.5, 0.25, 1);
 		}
 		else if(lifetime < ticksPerFrame * 11){
-			tex11.bind();
+			setTextureCoords(0.25, 0.5, 0.25, 1, 0.375, 0.5, 0.375, 1);
 		}
 		else{
 			destroy();
 		}
+		model.setTextureCoords(textureCoords);
 	
 	}
 	
@@ -113,9 +105,19 @@ public class Explosion {
 		game.removeExplosion(this);
 	}
 	
-	
 	public void setTextureCoords(){
 		textureCoords = new double[]{0, 0, 0, 1, 1, 0, 1, 1};
+	}
+	
+	public void setTextureCoords(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4){
+		textureCoords[0] = x1;
+		textureCoords[1] = y1;
+		textureCoords[2] = x2;
+		textureCoords[3] = y2;
+		textureCoords[4] = x3;
+		textureCoords[5] = y3;
+		textureCoords[6] = x4;
+		textureCoords[7] = y4;
 	}
 	
 	public void setIndices(){

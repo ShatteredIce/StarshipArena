@@ -242,6 +242,17 @@ public class Starship {
 		textureCoords = new double[]{0, 1, 0.5, 0, 1, 1};
 	}
 	
+	public void setTextureCoords(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4){
+		textureCoords[0] = x1;
+		textureCoords[1] = y1;
+		textureCoords[2] = x2;
+		textureCoords[3] = y2;
+		textureCoords[4] = x3;
+		textureCoords[5] = y3;
+		textureCoords[6] = x4;
+		textureCoords[7] = y4;
+	}
+	
 	public void setIndices(){
 		indices = new int[]{0, 1, 2};
 	}
@@ -267,6 +278,7 @@ public class Starship {
 	}
 	
 	public void displayIcon(){
+		setTextureCoords(0, 0, 0, 1, 1, 0, 1, 1);
 		if(team == "blue"){
 			if(selected){
 				blueSelectedCircle.bind();
@@ -283,6 +295,7 @@ public class Starship {
 				redCircle.bind();
 			}
 		}
+		model.setTextureCoords(textureCoords);
 		model.render(vertices);
 	}
 

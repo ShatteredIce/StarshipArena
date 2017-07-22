@@ -4,14 +4,7 @@ public class Fighter extends Starship{
 	
 	int changeDirection = 0;
 	int changeDirectionCooldown = 0;
-	static Texture blue_tex1 = new Texture("blue_fighter1.png");
-	static Texture blue_tex2 = new Texture("blue_fighter2.png");
-	static Texture blue_tex3 = new Texture("blue_fighter3.png");
-	static Texture blue_tex4 = new Texture("blue_fighter4.png");
-	static Texture red_tex1 = new Texture("red_fighter1.png");
-	static Texture red_tex2 = new Texture("red_fighter2.png");
-	static Texture red_tex3 = new Texture("red_fighter3.png");
-	static Texture red_tex4 = new Texture("red_fighter4.png");
+	static Texture fighter_sprites = new Texture("fighter_sprites.png");
 	
 	//weaponry
 	static double primary_damage = 4;
@@ -68,50 +61,37 @@ public class Fighter extends Starship{
 	
 	
 	public void setTexture(){
-		if(team.equals("red")){
+		fighter_sprites.bind();
+		if(team.equals("blue")){
 			if(current_velocity > 4){
-				red_tex4.bind();
+				setTextureCoords(0.75, 0, 0.75, 0.5, 1, 0, 1, 0.5);
 			}
 			else if(current_velocity > 2){
-				red_tex3.bind();
+				setTextureCoords(0.5, 0, 0.5, 0.5, 0.75, 0, 0.75, 0.5);
 			}
 			else if(current_velocity > 0){
-				red_tex2.bind();
+				setTextureCoords(0.25, 0, 0.25, 0.5, 0.5, 0, 0.5, 0.5);
 			}
 			else{
-				red_tex1.bind();
+				setTextureCoords(0, 0, 0, 0.5, 0.25, 0, 0.25, 0.5);
 			}
 		}
 		else{
 			if(current_velocity > 4){
-				blue_tex4.bind();
+				setTextureCoords(0.75, 0.5, 0.75, 1, 1, 0.5, 1, 1);
 			}
 			else if(current_velocity > 2){
-				blue_tex3.bind();
+				setTextureCoords(0.5, 0.5, 0.5, 1, 0.75, 0.5, 0.75, 1);
 			}
 			else if(current_velocity > 0){
-				blue_tex2.bind();
-				
+				setTextureCoords(0.25, 0.5, 0.25, 1, 0.5, 0.5, 0.5, 1);
 			}
 			else{
-				blue_tex1.bind();
+				setTextureCoords(0, 0.5, 0, 1, 0.25, 0.5, 0.25, 1);
 			}
 		}
+		model.setTextureCoords(textureCoords);
 	}
-	
-//	public void setTextureCoords(){
-//		textureCoords = new double[]{0.1094, 0.5313, 0.1094, 0.6406, 0.375, 0.2188,
-//		0.375, 0.3906, 0.375, 0.5313, 0.375, 0.6406, 0.4063, 0.2188, 0.4063, 0.6406,
-//		0.4063, 0.7188, 0.4531, 0.125, 0.4531, 0.2188, 0.5469, 0.125, 0.5469, 0.2188,
-//		0.5938, 0.2188, 0.5938, 0.6406, 0.5938, 0.7188, 0.625, 0.2188, 0.625, 0.3906, 
-//		0.625, 0.5313, 0.625, 0.6406, 0.8906, 0.5313, 0.8906, 0.6406};
-//	}
-//	
-//	public void setIndices(){
-//		indices = new int[]{0, 1, 4, 1, 4, 5, 0, 3, 4, 2, 5, 19, 2, 16, 19, 
-//				6, 9, 10, 9, 10, 12, 9, 11, 12, 11, 12, 13, 5, 7, 8, 7, 8, 15,
-//				7, 14, 15, 14, 15, 19, 17, 18, 20, 18, 19, 21, 18, 20, 21};
-//	}
 	
 	
 	public void setTextureCoords(){
@@ -131,32 +111,6 @@ public class Fighter extends Starship{
 		};
 		return points;
 	}
-	
-//	public Point[] generateHitbox(){
-//		Point[] hitbox = new Point[]{
-//			new Point(-50, -4, true),
-//			new Point(-50, -18, true),
-//			new Point(-16, 36, true),
-//			new Point(-16, 14, true),
-//			new Point(-16, -18, true),
-//			new Point(-12, 36, true),
-//			new Point(-12, -18, true),
-//			new Point(-12, -28, true),
-//			new Point(-6, 48, true),
-//			new Point(-6, 36, true),
-//			new Point(6, 48, true),
-//			new Point(6, 36, true),
-//			new Point(12, 36, true),
-//			new Point(12, -18, true),
-//			new Point(12, -28, true),
-//			new Point(16, 36, true),
-//			new Point(16, 14, true),
-//			new Point(16, -18, true),
-//			new Point(50, -4, true),
-//			new Point(50, -18, true)
-//		};
-//		return hitbox;
-//	}
 	
 	public Point[] generateHitbox(){
 		Point[] hitbox = new Point[]{

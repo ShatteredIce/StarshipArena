@@ -52,6 +52,11 @@ public class Model {
 		glDeleteBuffers(i_id);
 	}
 	
+	public void setTextureCoords(double[] textureCoords){
+		glBindBuffer(GL_ARRAY_BUFFER, t_id);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, textureCoords);
+	}
+	
 	public void render(double[] vertices) {
 		
 		glBindBuffer(GL_ARRAY_BUFFER, v_id);

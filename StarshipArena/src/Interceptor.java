@@ -4,14 +4,7 @@ public class Interceptor extends Starship{
 	
 	int changeDirection = 0;
 	int changeDirectionCooldown = 0;
-	static Texture blue_tex1 = new Texture("blue_interceptor1.png");
-	static Texture blue_tex2 = new Texture("blue_interceptor2.png");
-	static Texture blue_tex3 = new Texture("blue_interceptor3.png");
-	static Texture blue_tex4 = new Texture("blue_interceptor4.png");
-	static Texture red_tex1 = new Texture("red_interceptor1.png");
-	static Texture red_tex2 = new Texture("red_interceptor2.png");
-	static Texture red_tex3 = new Texture("red_interceptor3.png");
-	static Texture red_tex4 = new Texture("red_interceptor4.png");
+	static Texture interceptor_sprites = new Texture("interceptor_sprites.png");
 	
 	//weaponry
 	static double primary_damage = 2;
@@ -91,53 +84,37 @@ public class Interceptor extends Starship{
 	
 	
 	public void setTexture(){
-		if(team.equals("red")){
-			if(current_velocity > 11){
-				red_tex4.bind();
+		interceptor_sprites.bind();
+		if(team.equals("blue")){
+			if(current_velocity > 4){
+				setTextureCoords(0.75, 0, 0.75, 0.5, 1, 0, 1, 0.5);
 			}
-			else if(current_velocity > 6){
-				red_tex3.bind();
+			else if(current_velocity > 2){
+				setTextureCoords(0.5, 0, 0.5, 0.5, 0.75, 0, 0.75, 0.5);
 			}
 			else if(current_velocity > 0){
-				red_tex2.bind();
+				setTextureCoords(0.25, 0, 0.25, 0.5, 0.5, 0, 0.5, 0.5);
 			}
 			else{
-				red_tex1.bind();
+				setTextureCoords(0, 0, 0, 0.5, 0.25, 0, 0.25, 0.5);
 			}
 		}
 		else{
-			if(current_velocity > 7){
-				blue_tex4.bind();
+			if(current_velocity > 4){
+				setTextureCoords(0.75, 0.5, 0.75, 1, 1, 0.5, 1, 1);
 			}
-			else if(current_velocity > 4){
-				blue_tex3.bind();
+			else if(current_velocity > 2){
+				setTextureCoords(0.5, 0.5, 0.5, 1, 0.75, 0.5, 0.75, 1);
 			}
 			else if(current_velocity > 0){
-				blue_tex2.bind();
+				setTextureCoords(0.25, 0.5, 0.25, 1, 0.5, 0.5, 0.5, 1);
 			}
 			else{
-				blue_tex1.bind();
+				setTextureCoords(0, 0.5, 0, 1, 0.25, 0.5, 0.25, 1);
 			}
 		}
+		model.setTextureCoords(textureCoords);
 	}
-	
-//	public void setTextureCoords(){
-//		textureCoords = new double[]{0.1875, 0.2031, 0.1875, 0.2968, 0.1875, 0.4843, 
-//		0.2343, 0.3281, 0.2968, 0.25, 0.2968, 0.3906, 0.3281, 0.25, 0.3281, 0.3125,
-//		0.4062, 0.4218, 0.4062, 0.6093, 0.4062, 0.6562, 0.4375, 0.1875, 0.4375, 0.4218,
-//		0.4687, 0.0781, 0.4687, 0.1875, 0.5312, 0.0781, 0.5312, 0.1875, 0.5625, 0.1875, 
-//		0.5625, 0.4218, 0.5937, 0.4218, 0.5937, 0.6093, 0.5937, 0.6562, 0.6718, 0.25, 
-//		0.6718, 0.3125, 0.7031, 0.25, 0.7031, 0.3906, 0.7656, 0.3281, 0.8125, 0.2031, 
-//		0.8125, 0.2968, 0.8125, 0.4843, 0.2188, 0.2344, 0.7813, 0.2344};
-//	}
-//	
-//	public void setIndices(){
-//		indices = new int[]{1, 2, 8, 2, 8, 9, 11, 12, 17, 12, 17, 18, 11, 13, 14, 
-//		13, 14, 15, 14, 15, 16, 15, 16, 17, 8, 9, 19, 9, 19, 20, 9, 10, 20,
-//		10, 20, 21, 19, 28, 29, 19, 20, 29, 4, 5, 7, 4, 6, 7, 5, 7, 8,
-//		19, 23, 25, 22, 23, 24, 23, 24, 25, 0, 1, 30, 1, 3, 30, 26, 31, 28,
-//		31, 27, 28};
-//	}
 	
 	public void setTextureCoords(){
 		textureCoords = new double[]{0, 0, 0, 1, 1, 0, 1, 1};
