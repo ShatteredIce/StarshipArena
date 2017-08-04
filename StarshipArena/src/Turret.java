@@ -93,6 +93,7 @@ public class Turret {
 		projectile_speed = newspeed;
 		projectile_lifetime = newlifetime / projectile_speed;
 		projectile_textureId = newid;
+		//TODO Change this to using powers of two (e.g. like in chmod)
 		if (modifier % 2 == 1) autoAiming = true;
 		if (modifier > 1) fireMissiles = true;
 		angle_offset = newangle_offset;

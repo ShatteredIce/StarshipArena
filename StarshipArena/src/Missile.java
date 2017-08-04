@@ -143,7 +143,8 @@ public class Missile extends Projectile {
 			for (int i = 0; i < scanned.size(); i++) {
 				Starship s = scanned.get(i);
 				//if fighter has no team, or scanned enemy is on another team or closer than current target
-				if((team.equals("none") || !s.getTeam().equals(team)) && (target == null ||
+				//Since Missile is homing, we must check that its team can even SEE the enemy that it's homing on.
+				if(game.isVisible(s, team) && (team.equals("none") || !s.getTeam().equals(team)) && (target == null ||
 					game.distance(center.X(), center.Y(), s.getX(), s.getY()) - getClosestBearing(s) < 
 					game.distance(center.X(), center.Y(), target.getX(), target.getY()) - getClosestBearing(target))){
 					 target = scanned.get(i);
