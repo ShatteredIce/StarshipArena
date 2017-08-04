@@ -131,6 +131,7 @@ public class Turret {
 		yOff = newy;
 	}
 	
+	//TODO Lag is possibly caused by the need for update() to for-loop through every single enemy ship.
 	public void update(){
 		if(current_cooldown == 0){
 			ArrayList<Starship> enemyShips = getEnemyShips();
