@@ -92,6 +92,7 @@ public class Projectile {
 	
 	public Point[] generatePoints(){
 		Point[] points = null;
+		//plasma
 		if(texId == 0 || texId == 1 || texId == 2){
 			points = new Point[]{
 				new Point(-7, 14, true),
@@ -100,6 +101,7 @@ public class Projectile {
 				new Point(7, -14, true),
 			};
 		}
+		//mgun
 		else if(texId == 3){
 			points = new Point[]{
 				new Point(-2, 10, true),
@@ -108,6 +110,7 @@ public class Projectile {
 				new Point(2, -10, true),
 			};
 		}
+		//missile
 		else if (texId == 4) {
 			points = new Point[]{
 				new Point(-16, 20, true),

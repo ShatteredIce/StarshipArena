@@ -2066,9 +2066,6 @@ public class StarshipArena {
 						//interceptor has a resistance to missiles
 						else if (p instanceof Missile && s instanceof Interceptor)
 							s.setHealth(s.getHealth()-p.getDamage()/2);
-//						//Battleships have resistance to plasma
-//						else if (p.texId < 3 && s instanceof Battleship)
-//							s.setHealth(s.getHealth()-p.getDamage() / 2);
 						//Battleships are vulnerable to machineguns
 						else if (p.texId == 3 && s instanceof Battleship)
 							s.setHealth(s.getHealth()-p.getDamage()*2);
