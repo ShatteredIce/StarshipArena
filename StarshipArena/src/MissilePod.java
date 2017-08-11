@@ -14,7 +14,7 @@ public class MissilePod extends BasicPod{
 	static int primary_lifetime = 2100;
 	static int primary_xoffset = 20;
 	static int primary_yoffset = 30;
-	int primary_id = 4;
+	static int primary_id = 4;
 	
 	
 	public MissilePod(StarshipArena mygame, int spawnx, int spawny){
@@ -52,11 +52,11 @@ public class MissilePod extends BasicPod{
 //			primary_id = 2;
 //		}
 		Turret primaryTurret1 = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
-				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, 4, 2, 0);
+				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id);
 		primaryTurret1.setOffset(primary_xoffset, primary_yoffset);
 		turrets.add(primaryTurret1);
 		Turret primaryTurret2 = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
-				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, 4, 2, 0);
+				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id);
 		primaryTurret2.setOffset(-primary_xoffset, primary_yoffset);
 		turrets.add(primaryTurret2);
 	}

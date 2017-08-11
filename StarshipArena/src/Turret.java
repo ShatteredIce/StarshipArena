@@ -1,10 +1,4 @@
-import java.io.File;
 import java.util.ArrayList;
-
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.FloatControl;
 
 public class Turret {
 	
@@ -21,7 +15,7 @@ public class Turret {
 	double projectile_damage;
 	int projectile_speed;
 	int projectile_lifetime;
-	int projectile_textureId;
+	int projectile_type;
 	Point center;
 	//turret turning variables
 	int turn_speed;
@@ -29,7 +23,6 @@ public class Turret {
 	double xOff = 0;
 	double yOff = 0;
 	boolean autoAiming = false;
-	boolean fireMissiles = false;
 	int angle_offset = 0;
 	
 	//Sound effects
@@ -49,7 +42,7 @@ public class Turret {
 		projectile_damage = newdamage / 4;
 		projectile_speed = newspeed;
 		projectile_lifetime = newlifetime / projectile_speed;
-		projectile_textureId = newid;
+		projectile_type = newid;
 		
 //		try {
 //			if (this.projectile_textureId < 3)
@@ -79,7 +72,7 @@ public class Turret {
 //		}
 	}
 	
-	Turret(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newangle, double newdamage, int newcooldown, int newspread, int newaccuracy, int newscanrange, int newspeed, int newlifetime, int newid, int modifier, int newangle_offset){
+	Turret(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newangle, double newdamage, int newcooldown, int newspread, int newaccuracy, int newscanrange, int newspeed, int newlifetime, int newid, int newangle_offset, boolean autoaim){
 		game = mygame;
 		owner = newowner;
 		team = myteam;
@@ -92,10 +85,8 @@ public class Turret {
 		projectile_damage = newdamage / 4;
 		projectile_speed = newspeed;
 		projectile_lifetime = newlifetime / projectile_speed;
-		projectile_textureId = newid;
-		//TODO Change this to using powers of two (e.g. like in chmod)
-		if (modifier % 2 == 1) autoAiming = true;
-		if (modifier > 1) fireMissiles = true;
+		projectile_type = newid;
+		autoAiming = autoaim;
 		angle_offset = newangle_offset;
 		
 //		try {
@@ -144,6 +135,7 @@ public class Turret {
 						fire(angle);
 						fired = true;
 					}
+					//fire projectile not based on turret angle
 					else if (enemyShips.get(i).equals(owner.target) || spread < 180) {
 						fire(relativeAngle);
 						fired = true;
@@ -161,13 +153,11 @@ public class Turret {
 	}
 	
 	public void fire(double newAngle){
-		if (!fireMissiles) {
-			new Projectile(game, owner, team, center.X(), center.Y(), projectile_damage, newAngle, accuracy, projectile_speed, projectile_lifetime, projectile_textureId);
-//			if (this.clip.isOpen()) {
-//				this.clip.setFramePosition(0);
-//				this.clip.start();
-//			}
-			if (projectile_textureId < 3) {
+		//launch plasma or mgun
+		if (projectile_type == 1 || projectile_type == 2 || projectile_type == 3) {
+			new Projectile(game, owner, team, center.X(), center.Y(), projectile_damage, newAngle, accuracy, projectile_speed, projectile_lifetime, projectile_type);
+			//plasma
+			if (projectile_type < 3) {
 				for (int i = 0; i < 5; i++) {
 					if (!game.soundEffects[i].isRunning()) {
 						game.soundEffects[i].setFramePosition(0);
@@ -176,7 +166,8 @@ public class Turret {
 					}
 				}
 			}
-			else if (projectile_textureId == 3) {
+			//mgun
+			else if (projectile_type == 3) {
 				for (int i = 5; i < 10; i++) {
 					if (game.soundEffects[i].getFramePosition() > 1000 || !game.soundEffects[i].isRunning()) {
 						game.soundEffects[i].setFramePosition(0);
@@ -186,12 +177,9 @@ public class Turret {
 				}
 			}
 		}
-		else {
-			new Missile(game, owner, team, center.X(), center.Y(), projectile_damage, newAngle, accuracy, projectile_speed, projectile_lifetime, projectile_textureId);
-//			if (this.clip.isOpen()) {
-//				this.clip.setFramePosition(0);
-//				this.clip.start();
-//			}
+		//launch missile
+		else if (projectile_type == 4){
+			new Missile(game, owner, team, center.X(), center.Y(), projectile_damage, newAngle, accuracy, projectile_speed, projectile_lifetime, projectile_type);
 			for (int i = 10; i < 15; i++) {
 				if (!game.soundEffects[i].isRunning()) {
 					game.soundEffects[i].setFramePosition(0);

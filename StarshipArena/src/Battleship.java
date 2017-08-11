@@ -54,22 +54,22 @@ public class Battleship extends Starship{
 //			primary_id = 2;
 //		}
 		Turret primaryTurret1 = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
-				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 3, 0);
+				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 0, true);
 		primaryTurret1.setOffset(primary_xoffset + 25, primary_yoffset + 20);
 		turrets.add(primaryTurret1);
 		
 		Turret primaryTurret2 = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
-				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 3, 0);
+				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 0, true);
 		primaryTurret2.setOffset(primary_xoffset - 25, primary_yoffset + 20);
 		turrets.add(primaryTurret2);
 		
 		Turret primaryTurret3 = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
-				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 3, 0);
+				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 0, true);
 		primaryTurret3.setOffset(primary_xoffset + 25, primary_yoffset - 20);
 		turrets.add(primaryTurret3);
 		
 		Turret primaryTurret4 = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
-				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 3, 0);
+				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 0, true);
 		primaryTurret4.setOffset(primary_xoffset - 25, primary_yoffset - 20);
 		turrets.add(primaryTurret4);
 	}

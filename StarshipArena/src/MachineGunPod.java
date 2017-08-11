@@ -45,11 +45,11 @@ public class MachineGunPod extends BasicPod{
 	
 	public void shipTurrets(){
 		Turret primaryTurret1 = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
-				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 1, 0);
+				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id);
 		primaryTurret1.setOffset(primary_xoffset, primary_yoffset);
 		turrets.add(primaryTurret1);
 		Turret primaryTurret2 = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
-				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 1, 0);
+				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id);
 		primaryTurret2.setOffset(-primary_xoffset, primary_yoffset);
 		turrets.add(primaryTurret2);
 	}
