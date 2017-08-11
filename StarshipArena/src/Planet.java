@@ -39,6 +39,7 @@ public class Planet {
 	int resourcesPerTick = 1;
 	int resourcesCooldown = 50;
 	int currentCooldown = 50;
+	ArrayList<String[]> buildOrders = new ArrayList<String[]>();
 	
 	
 	
@@ -221,6 +222,7 @@ public class Planet {
 		else if(currentCooldown == 0){
 			storedResources += resourcesPerTick;
 			currentCooldown = resourcesCooldown;
+			checkLoop();
 		}
 		else{
 			currentCooldown--;
@@ -289,6 +291,41 @@ public class Planet {
 	public void setTeam(String newTeam) {
 		team = newTeam;
 		captureTime = maxCaptureTime;
+	}
+	
+	public void setLoop(String team, String ship) {
+		String[] temp = new String[2];
+		temp[0] = team;
+		temp[1] = ship;
+		for (int i = 0; i < buildOrders.size(); i++) {
+			if (buildOrders.get(i)[0].equals(team)) {
+				buildOrders.remove(i);
+				i--;
+			}
+		}
+		buildOrders.add(temp);
+	}
+	
+	public void checkLoop() {
+		for (int i = 0; i < buildOrders.size(); i++) {
+			if (buildOrders.get(i)[0].equals(team)) {
+				if (team.equals("blue")) {
+					//This little "temp" workaround is required because buyShips references the planet that the player
+					//has selected
+					Planet temp = game.player.getSelectedPlanet();
+					game.player.setSelectedPlanet(this);
+					game.buyShips(game.player, Integer.parseInt(buildOrders.get(i)[1]));
+					game.player.setSelectedPlanet(temp);
+				}
+				else {
+					Planet temp = game.enemy.getPlayer().getSelectedPlanet();
+					game.enemy.getPlayer().setSelectedPlanet(this);
+					game.buyShips(game.enemy.getPlayer(), Integer.parseInt(buildOrders.get(i)[1]));
+					game.enemy.getPlayer().setSelectedPlanet(temp);
+				}
+				//I don't check for "none" player buying ships because they can't
+			}
+		}
 	}
 
 }

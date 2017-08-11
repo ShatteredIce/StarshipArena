@@ -30,34 +30,37 @@ public class AdvancedEnemy extends Enemy{
 		for (int i = 0; i < myPlanets.size(); i++) {
 			double rand = random.nextDouble();
 			if (rand < fighterProp + 0.05) {
-				if (myPlanets.get(i).getResources() >= 40) {
-					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
-					game.buyShips(enemyPlayer, 3);
-				}
-				else if (myPlanets.get(i).getResources() >= 5) {
+				myPlanets.get(i).setLoop(enemyPlayer.getTeam(), "3");
+//				if (myPlanets.get(i).getResources() >= 40) {
 //					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
-//					game.buyShips(enemyPlayer, 1);
-					if (attackDelay < 2000)
-						attackDelay += 1000;
-				}
+//					game.buyShips(enemyPlayer, 3);
+//				}
+//				else if (myPlanets.get(i).getResources() >= 5) {
+////					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
+////					game.buyShips(enemyPlayer, 1);
+//					if (attackDelay < 2000)
+//						attackDelay += 1000;
+//				}
 			}
 			else if (rand < fighterProp + interceptorProp - 0.05 || enemyPlayer.getControlledShips().size() == 0) {
-				if (myPlanets.get(i).getResources() >= 5) {
-					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
-					game.buyShips(enemyPlayer, 1);
-				}
-			}
-			else if (rand < fighterProp + interceptorProp + battleshipProp) {
-				if (myPlanets.get(i).getResources() >= 20) {
-					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
-					game.buyShips(enemyPlayer, 2);
-				}
-				else if (myPlanets.get(i).getResources() >= 5) {
+//				if (myPlanets.get(i).getResources() >= 5) {
 //					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
 //					game.buyShips(enemyPlayer, 1);
-					if (attackDelay < 2000)
-						attackDelay += 1000;
-				}
+//				}
+				myPlanets.get(i).setLoop(enemyPlayer.getTeam(), "1");
+			}
+			else if (rand < fighterProp + interceptorProp + battleshipProp) {
+//				if (myPlanets.get(i).getResources() >= 20) {
+//					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
+//					game.buyShips(enemyPlayer, 2);
+//				}
+//				else if (myPlanets.get(i).getResources() >= 5) {
+////					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
+////					game.buyShips(enemyPlayer, 1);
+//					if (attackDelay < 2000)
+//						attackDelay += 1000;
+//				}
+				myPlanets.get(i).setLoop(enemyPlayer.getTeam(), "2");
 			}
 		}
 	}
@@ -138,8 +141,8 @@ public class AdvancedEnemy extends Enemy{
 				}
 			}
 		}
-		//AI spends roughly between 10% and 50% of their ships (in cost) on attack
-		int costOfAttack = random.nextInt(costOfShips * 4 / 10 + 1) + costOfShips / 10;
+		//AI spends roughly between 30% and 80% of their ships (in cost) on attack
+		int costOfAttack = random.nextInt(costOfShips * 5 / 10 + 1) + costOfShips * 3 / 10;
 		for (int i = 0; i < myShips.size(); i++) {
 			if (costOfAttack <= 0) break;
 			if (myShips.get(i) instanceof Fighter && myShips.get(i).locationTarget == null) {

@@ -39,7 +39,7 @@ public class Battleship extends Starship{
 		max_turn_speed = 1;
 		//weaponry
 		scan_range = 1900;
-		radar_range = 1000;
+		radar_range = 1500;
 		//other
 		clickRadius = 55;
 		xOff = 0;
@@ -184,12 +184,15 @@ public class Battleship extends Starship{
 	
 	//gets the closest enemy and changes target accordingly
 	public void getClosestEnemy(){
+		if (target != null && game.distance(center.x, center.y, target.getX(), target.getY()) > scan_range) target = null;
 		ArrayList<Starship> scanned = scan();
 		if(scanned.size() != 0){
 			for (int i = 0; i < scanned.size(); i++) {
 				Starship s = scanned.get(i);
 				//if fighter has no team, or scanned enemy is on another team or closer than current target
-				if((team.equals("none") || !s.getTeam().equals(team)) && (target == null ||
+				//Battleship is a special case; it shoots further than it can see, so it is the only ship where
+				//we must check whether it can even see target.
+				if(game.isVisible(s, team) && (team.equals("none") || !s.getTeam().equals(team)) && (target == null ||
 					game.distance(center.X(), center.Y(), s.getX(), s.getY()) - getClosestBearing(s) < 
 					game.distance(center.X(), center.Y(), target.getX(), target.getY()) - getClosestBearing(target))){
 					 target = scanned.get(i);
