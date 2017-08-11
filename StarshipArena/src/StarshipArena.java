@@ -70,6 +70,7 @@ public class StarshipArena {
     boolean shiftPressed = false;
     boolean tPressed = false;
     boolean controlPressed = false;
+    boolean lPressed = false;
     
     DoubleBuffer oldMouseX;
     DoubleBuffer oldMouseY;
@@ -307,6 +308,11 @@ public class StarshipArena {
 				}
 			}
 			
+			if ( key == GLFW_KEY_L && action == GLFW_PRESS )
+				lPressed = true;
+			if ( key == GLFW_KEY_L && action == GLFW_RELEASE )
+				lPressed = false;
+			
 			//TODO Remove this testing thing for proximity groups after testing concludes
 			if( key == GLFW_KEY_P && action == GLFW_RELEASE ){
 				for (int s = 0; s < ships.size(); s++) {
@@ -416,7 +422,10 @@ public class StarshipArena {
 				else if(player.getSelectedPlanet() == null){
 					displayControlGroup(player, 1);
 				}
-				else{
+				else if (lPressed){
+					player.getSelectedPlanet().setLoop(player.getTeam(), "1");
+				}
+				else {
 					buyShips(player, 1);
 				}
 			}
@@ -427,7 +436,10 @@ public class StarshipArena {
 				else if(player.getSelectedPlanet() == null){
 					displayControlGroup(player, 2);
 				}
-				else{
+				else if (lPressed){
+					player.getSelectedPlanet().setLoop(player.getTeam(), "2");
+				}
+				else {
 					buyShips(player, 2);
 				}
 			if ( key == GLFW_KEY_3 && action == GLFW_PRESS)
@@ -437,7 +449,10 @@ public class StarshipArena {
 				else if(player.getSelectedPlanet() == null){
 					displayControlGroup(player, 3);
 				}
-				else{
+				else if (lPressed){
+					player.getSelectedPlanet().setLoop(player.getTeam(), "3");
+				}
+				else {
 					buyShips(player, 3);
 				}
 //			if ( key == GLFW_KEY_4 && action == GLFW_PRESS)
