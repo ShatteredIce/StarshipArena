@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 
 public class Missile extends Projectile {
-	double current_velocity = 0;
+	double current_velocity = 10;
 	double current_turn_speed;
 	
 	Starship target = null;
