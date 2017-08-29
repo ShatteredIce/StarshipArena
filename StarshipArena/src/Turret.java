@@ -22,13 +22,15 @@ public class Turret {
 	double angle;
 	double xOff = 0;
 	double yOff = 0;
+	double angleOff = 0;
 	boolean autoAiming = false;
 	int angle_offset = 0;
 	
 	//Sound effects
 //	Clip clip;
 //	AudioInputStream weapon;
-	
+	//TODO: Someone should make this function call this() instead of literally copy pasting the other constructor
+	//TODO: That would clean up code a bit.
 	Turret(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newangle, double newdamage, int newcooldown, int newspread, int newaccuracy, int newscanrange, int newspeed, int newlifetime, int newid){
 		game = mygame;
 		owner = newowner;
@@ -116,10 +118,13 @@ public class Turret {
 //			e.printStackTrace();
 //		}
 	}
-	
-	public void setOffset(double newx, double newy){
+	public void setOffset(double newx, double newy) {
+		setOffset(newx, newy, 0);
+	}
+	public void setOffset(double newx, double newy, double newAngle){
 		xOff = newx;
 		yOff = newy;
+		angleOff = newAngle;
 	}
 	
 	//TODO Lag is possibly caused by the need for update() to for-loop through every single enemy ship.
@@ -155,7 +160,7 @@ public class Turret {
 	public void fire(double newAngle){
 		//launch plasma or mgun
 		if (projectile_type == 1 || projectile_type == 2 || projectile_type == 3) {
-			new Projectile(game, owner, team, center.X(), center.Y(), projectile_damage, newAngle, accuracy, projectile_speed, projectile_lifetime, projectile_type);
+			new Projectile(game, owner, team, center.X(), center.Y(), projectile_damage, (newAngle + angleOff + 360) % 360, accuracy, projectile_speed, projectile_lifetime, projectile_type);
 			//plasma
 			if (projectile_type < 3) {
 				for (int i = 0; i < 5; i++) {
@@ -179,7 +184,7 @@ public class Turret {
 		}
 		//launch missile
 		else if (projectile_type == 4){
-			new Missile(game, owner, team, center.X(), center.Y(), projectile_damage, newAngle, accuracy, projectile_speed, projectile_lifetime, projectile_type);
+			new Missile(game, owner, team, center.X(), center.Y(), projectile_damage, (newAngle + angleOff + 360) % 360, accuracy, projectile_speed, projectile_lifetime, projectile_type);
 			for (int i = 10; i < 15; i++) {
 				if (!game.soundEffects[i].isRunning()) {
 					game.soundEffects[i].setFramePosition(0);
