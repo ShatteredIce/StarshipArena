@@ -989,10 +989,14 @@ public class StarshipArena {
 							}
 						}
 					}
-					//display radar of selected ships
+					for (int i = 0; i < ships.size(); i++) {
+						if (ships.get(i).getTeam().equals(player.getTeam()))
+							ships.get(i).showRadar();
+					}
+					//TODO Display weapons range of selected ships
 					if(f1Pressed){
 						for (int s = 0; s < ships.size(); s++) {
-							if(ships.get(s).isSelected()){
+							if(ships.get(s).isSelected() && !ships.get(s).getTeam().equals(player.getTeam())){
 								ships.get(s).showRadar();
 							}
 						}
