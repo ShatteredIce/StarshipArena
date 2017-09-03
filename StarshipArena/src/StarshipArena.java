@@ -915,6 +915,24 @@ public class StarshipArena {
 						backgroundTiles.get(t).display();
 					}
 					
+					//Show FOW
+//					glBlendFunc(GL_DST_COLOR, GL_ZERO);
+					GL14.glBlendEquation(GL14.GL_MAX);
+					for (int i = 0; i < ships.size(); i++) {
+						if (ships.get(i).getTeam().equals(player.getTeam()))
+							ships.get(i).showRadar();
+					}
+					//TODO Display weapons range of selected ships
+					if(f1Pressed){
+						for (int s = 0; s < ships.size(); s++) {
+							if(ships.get(s).isSelected() && !ships.get(s).getTeam().equals(player.getTeam())){
+								ships.get(s).showRadar();
+							}
+						}
+					}
+					GL14.glBlendEquation(GL14.GL_FUNC_ADD);
+					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+					
 					//Update planets
 					for(int p = 0; p < planets.size(); p++){
 						planets.get(p).checkCapturePoint();
@@ -966,7 +984,6 @@ public class StarshipArena {
 				    	explosions.get(e).update();
 					}
 					
-					
 					if(CAMERA_WIDTH < 5200 && CAMERA_HEIGHT < 3600){
 						//display ships
 						for(int s = 0; s < ships.size(); s++){
@@ -986,18 +1003,6 @@ public class StarshipArena {
 								if(isVisible(ships.get(s), player)){
 									ships.get(s).displayIcon();
 								}
-							}
-						}
-					}
-					for (int i = 0; i < ships.size(); i++) {
-						if (ships.get(i).getTeam().equals(player.getTeam()))
-							ships.get(i).showRadar();
-					}
-					//TODO Display weapons range of selected ships
-					if(f1Pressed){
-						for (int s = 0; s < ships.size(); s++) {
-							if(ships.get(s).isSelected() && !ships.get(s).getTeam().equals(player.getTeam())){
-								ships.get(s).showRadar();
 							}
 						}
 					}
