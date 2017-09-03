@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 
+import javax.sound.sampled.FloatControl;
+
 public class Turret {
 	
 	StarshipArena game;
@@ -158,23 +160,33 @@ public class Turret {
 	}
 	
 	public void fire(double newAngle){
+		//Get position of the center of the camera, to determine distance from the sound event
+		int cameraX = game.CURR_X + game.CAMERA_WIDTH / 2;
+		int cameraY = game.CURR_Y + game.CAMERA_HEIGHT / 2;
+		//This formula decrease the volume the further away the player is from the weapon event, but increase volume for high levels of zoom
+		float dbDiff = (float)(game.distance(cameraX, cameraY, center.X(), center.Y()) / game.CAMERA_WIDTH * -20 + 10000 / game.CAMERA_WIDTH);
 		//launch plasma or mgun
 		if (projectile_type == 1 || projectile_type == 2 || projectile_type == 3) {
 			new Projectile(game, owner, team, center.X(), center.Y(), projectile_damage, (newAngle + angleOff + 360) % 360, accuracy, projectile_speed, projectile_lifetime, projectile_type);
-			//plasma
+			//plasma sfx
 			if (projectile_type < 3) {
 				for (int i = 0; i < 5; i++) {
 					if (!game.soundEffects[i].isRunning()) {
+						FloatControl gainControl = (FloatControl) game.soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
+						gainControl.setValue(Math.max(-80, Math.min(6, game.PLASMA_DB + dbDiff))); // Increase volume by a number of decibels.
 						game.soundEffects[i].setFramePosition(0);
 						game.soundEffects[i].start();
+						
 						break;
 					}
 				}
 			}
-			//mgun
+			//mgun sfx
 			else if (projectile_type == 3) {
 				for (int i = 5; i < 10; i++) {
 					if (game.soundEffects[i].getFramePosition() > 1000 || !game.soundEffects[i].isRunning()) {
+						FloatControl gainControl = (FloatControl) game.soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
+						gainControl.setValue(Math.max(-80, Math.min(6, game.MGUN_DB + dbDiff))); // Increase volume by a number of decibels.
 						game.soundEffects[i].setFramePosition(0);
 						game.soundEffects[i].start();
 						break;
@@ -182,11 +194,13 @@ public class Turret {
 				}
 			}
 		}
-		//launch missile
+		//launch missile and sfx
 		else if (projectile_type == 4){
 			new Missile(game, owner, team, center.X(), center.Y(), projectile_damage, (newAngle + angleOff + 360) % 360, accuracy, projectile_speed, projectile_lifetime, projectile_type);
 			for (int i = 10; i < 15; i++) {
 				if (!game.soundEffects[i].isRunning()) {
+					FloatControl gainControl = (FloatControl) game.soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
+					gainControl.setValue(Math.max(-80, Math.min(6, game.MISSILE_DB + dbDiff))); // Increase volume by a number of decibels.
 					game.soundEffects[i].setFramePosition(0);
 					game.soundEffects[i].start();
 					break;

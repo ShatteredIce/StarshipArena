@@ -16,17 +16,17 @@ public class AdvancedEnemy extends Enemy{
 		ArrayList<Starship> playerShips = game.player.getControlledShips();
 		int fightersCost = 0;
 		int interceptorsCost = 0;
-		int battleshipsCost = 0;
+		int missileshipsCost = 0;
 		for (int i = 0; i < playerShips.size(); i++) {
 			if (playerShips.get(i) instanceof Fighter) fightersCost += 5;
 			else if (playerShips.get(i) instanceof Interceptor) interceptorsCost += 20;
-			else if (playerShips.get(i) instanceof Battleship) battleshipsCost += 40;
+			else if (playerShips.get(i) instanceof Missileship) missileshipsCost += 40;
 		}
-		int total = fightersCost + interceptorsCost + battleshipsCost;
+		int total = fightersCost + interceptorsCost + missileshipsCost;
 		//Find the proportion of each type of ship. This helps weight ship purchase probability by enemy ship proportion
 		double fighterProp = (double)fightersCost / total;
 		double interceptorProp = (double)interceptorsCost / total;
-		double battleshipProp = (double)battleshipsCost / total;
+		double missileshipProp = (double)missileshipsCost / total;
 		for (int i = 0; i < myPlanets.size(); i++) {
 			double rand = random.nextDouble();
 			if (rand < fighterProp + 0.05) {
@@ -49,7 +49,7 @@ public class AdvancedEnemy extends Enemy{
 //				}
 				myPlanets.get(i).setLoop(enemyPlayer.getTeam(), "1");
 			}
-			else if (rand < fighterProp + interceptorProp + battleshipProp) {
+			else if (rand < fighterProp + interceptorProp + missileshipProp) {
 //				if (myPlanets.get(i).getResources() >= 20) {
 //					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
 //					game.buyShips(enemyPlayer, 2);
@@ -81,7 +81,7 @@ public class AdvancedEnemy extends Enemy{
 		}
 		ArrayList<Starship> myShips = enemyPlayer.getControlledShips();
 		for (int i = 0; i < myShips.size(); i++) {
-			if (myShips.get(i) instanceof Battleship && myShips.get(i).target != null)
+			if (myShips.get(i) instanceof Missileship && myShips.get(i).target != null)
 				myShips.get(i).setLocationTarget(null);
 		}
 		if(enemyPlayer.getControlledPlanets().size() == 0){
@@ -126,7 +126,7 @@ public class AdvancedEnemy extends Enemy{
 		for (int i = 0; i < myShips.size(); i++) {
 			if (myShips.get(i) instanceof Fighter && myShips.get(i).locationTarget == null) costOfShips += 5;
 			else if (myShips.get(i) instanceof Interceptor && myShips.get(i).locationTarget == null) costOfShips += 20;
-			else if (myShips.get(i) instanceof Battleship && myShips.get(i).locationTarget == null) costOfShips += 40;
+			else if (myShips.get(i) instanceof Missileship && myShips.get(i).locationTarget == null) costOfShips += 40;
 			else if (myShips.get(i) instanceof Transport) {
 				myTransports.add(myShips.remove(i));
 				i--;
@@ -153,7 +153,7 @@ public class AdvancedEnemy extends Enemy{
 				attackGroup.add(myShips.get(i));
 				costOfAttack -= 20;
 			}
-			else if (myShips.get(i) instanceof Battleship && myShips.get(i).locationTarget == null) {
+			else if (myShips.get(i) instanceof Missileship && myShips.get(i).locationTarget == null) {
 				attackGroup.add(myShips.get(i));
 				costOfAttack -= 40;
 			}
