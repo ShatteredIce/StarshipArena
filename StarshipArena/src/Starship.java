@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.sound.sampled.FloatControl;
+
 public class Starship {
 	
 	int damageDisplayDelay = 0;
@@ -17,6 +19,7 @@ public class Starship {
 	Point[] radarPoints;
 	int haloSize = 80;
 	static Texture haloTexture = new Texture("ships_halo.png");
+	static Texture FOWTexture = new Texture("FOW_halo.png");
 	static Texture blueCircle = new Texture("blue_circle.png");
 	static Texture redCircle = new Texture("red_circle.png");
 	static Texture blueSelectedCircle = new Texture("blue_selected_circle.png");
@@ -215,7 +218,7 @@ public class Starship {
 	}
 	
 	public void destroy(){
-		if (this instanceof Battleship) {
+		if (this instanceof Missileship) {
 			new Explosion(game, center.X(), center.Y(), 220);
 			for (int i = 0; i < 4; i++) {
 				int x_rand = random.nextInt(5) - 2;
@@ -244,6 +247,12 @@ public class Starship {
 		for (int i = 20; i < 25; i++) {
 			if (game.mute) break;
 			if (!game.soundEffects[i].isRunning()) {
+				int cameraX = game.CURR_X + game.CAMERA_WIDTH / 2;
+				int cameraY = game.CURR_Y + game.CAMERA_HEIGHT / 2;
+				//This formula decrease the volume the further away the player is from the weapon event, but increase volume for high levels of zoom
+				float dbDiff = (float)(game.distance(cameraX, cameraY, center.X(), center.Y()) / game.CAMERA_WIDTH * -10 + 10000 / game.CAMERA_WIDTH);
+				FloatControl gainControl = (FloatControl) game.soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
+				gainControl.setValue(Math.max(-80, Math.min(6, game.DEATHEX_DB + dbDiff))); // Increase volume by a number of decibels.
 				game.soundEffects[i].setFramePosition(0);
 				game.soundEffects[i].start();
 				break;
@@ -302,7 +311,7 @@ public class Starship {
 	
 	public void showRadar(){
 		setRadarPoints();
-		haloTexture.bind();
+		FOWTexture.bind();
 		haloModel.render(radarVertices);
 	}
 	
@@ -431,7 +440,7 @@ public class Starship {
 			}
 			else if (lockPosition == false) {
 				if (distance > 50) {
-					if(this instanceof Battleship || this instanceof BasicPod){
+					if(this instanceof Missileship || this instanceof BasicPod){
 						targeted_velocity = max_velocity / 8;
 					}
 					else{
@@ -442,7 +451,7 @@ public class Starship {
 						current_turn_speed = 0;
 						targeted_velocity = max_velocity;
 					}
-					else if ((this instanceof Battleship || this instanceof BasicPod) && this.angle >= (relativeAngle + 359) % 360 && this.angle <= (relativeAngle + 1) % 360) {
+					else if ((this instanceof Missileship || this instanceof BasicPod) && this.angle >= (relativeAngle + 359) % 360 && this.angle <= (relativeAngle + 1) % 360) {
 						targeted_velocity = max_velocity;
 						move_angle = angle;
 					}

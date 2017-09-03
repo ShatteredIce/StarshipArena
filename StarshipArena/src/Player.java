@@ -52,7 +52,7 @@ public class Player {
 		for (int i = 0; i < myShips.size(); i++) {
 			if (myShips.get(i) instanceof Fighter && myShips.get(i).locationTarget == null) costOfShips += 5;
 			else if (myShips.get(i) instanceof Interceptor && myShips.get(i).locationTarget == null) costOfShips += 20;
-			else if (myShips.get(i) instanceof Battleship&& myShips.get(i).locationTarget == null) costOfShips += 40;
+			else if (myShips.get(i) instanceof Missileship&& myShips.get(i).locationTarget == null) costOfShips += 40;
 		}
 		return costOfShips;
 	}

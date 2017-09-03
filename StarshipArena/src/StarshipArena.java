@@ -4,30 +4,16 @@
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
-import org.lwjgl.system.*;
-
 import java.nio.*;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
-
 import java.util.ArrayList;
 import java.util.Random;
 
-
-
-
-
-
-
-
-//TODO Audio import, remove if it doesn't work
 import javax.sound.sampled.*;
 
-import java.applet.AudioClip;
 import java.io.File;
 import java.io.IOException;
 
@@ -81,12 +67,19 @@ public class StarshipArena {
     int FIGHTER_COST = 5;
     int INTERCEPTOR_COST = 20;
     int TRANSPORT_COST = 10;
-    int BATTLESHIP_COST = 40;
+    //TODO This should be MissileShip Cost
+    int MISSILESHIP_COST = 40;
     
     int PROXIMITY_SIZE = 150;
     
     int planetDisplayBorder = 400;
     int shipDisplayBorder = 100;
+    
+    float PLASMA_DB = -20.0f;
+    float MGUN_DB = -18.0f;
+    float MISSILE_DB = -4.0f;
+    float HITEX_DB = -8.0f;
+    float DEATHEX_DB = 1.0f;
     
 	Random random = new Random();
 	
@@ -212,37 +205,37 @@ public class StarshipArena {
 				soundEffects[i] = AudioSystem.getClip();
 				AudioInputStream plasmaSfx = AudioSystem.getAudioInputStream(new File("sounds/effects/plasma.wav"));
 				soundEffects[i].open(plasmaSfx);
-				FloatControl gainControl = (FloatControl) soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
-				gainControl.setValue(-20.0f); // Reduce volume by a number of decibels.
+//				FloatControl gainControl = (FloatControl) soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
+//				gainControl.setValue(-20.0f); // Reduce volume by a number of decibels.
 			}
 			for (int i = 5; i < 10; i++) {
 				soundEffects[i] = AudioSystem.getClip();
 				AudioInputStream mgunSfx = AudioSystem.getAudioInputStream(new File("sounds/effects/sd_emgv7.wav"));
 				soundEffects[i].open(mgunSfx);
-				FloatControl gainControl = (FloatControl) soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
-				gainControl.setValue(-18.0f); // Reduce volume by a number of decibels.
+//				FloatControl gainControl = (FloatControl) soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
+//				gainControl.setValue(-18.0f); // Reduce volume by a number of decibels.
 				
 			}
 			for (int i = 10; i < 15; i++) {
 				soundEffects[i] = AudioSystem.getClip();
 				AudioInputStream missileSfx = AudioSystem.getAudioInputStream(new File("sounds/effects/missile.wav"));
 				soundEffects[i].open(missileSfx);
-				FloatControl gainControl = (FloatControl) soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
-				gainControl.setValue(-4.0f); // Reduce volume by a number of decibels.
+//				FloatControl gainControl = (FloatControl) soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
+//				gainControl.setValue(-4.0f); // Reduce volume by a number of decibels.
 			}
 			for (int i = 15; i < 20; i++) {
 				soundEffects[i] = AudioSystem.getClip();
 				AudioInputStream mExplosionSfx = AudioSystem.getAudioInputStream(new File("sounds/effects/ex_med5.wav"));
 				soundEffects[i].open(mExplosionSfx);
-				FloatControl gainControl = (FloatControl) soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
-				gainControl.setValue(-8.0f); // Reduce volume by a number of decibels.
+//				FloatControl gainControl = (FloatControl) soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
+//				gainControl.setValue(-8.0f); // Reduce volume by a number of decibels.
 			}
 			for (int i = 20; i < 25; i++) {
 				soundEffects[i] = AudioSystem.getClip();
 				AudioInputStream deathSfx = AudioSystem.getAudioInputStream(new File("sounds/effects/ex_with_debri.wav"));
 				soundEffects[i].open(deathSfx);
-				FloatControl gainControl = (FloatControl) soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
-				gainControl.setValue(1.0f); // Increase volume by a number of decibels.
+//				FloatControl gainControl = (FloatControl) soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
+//				gainControl.setValue(1.0f); // Increase volume by a number of decibels.
 			}
 			
 		} catch (Exception e1) {
@@ -922,6 +915,24 @@ public class StarshipArena {
 						backgroundTiles.get(t).display();
 					}
 					
+					//Show FOW
+//					glBlendFunc(GL_DST_COLOR, GL_ZERO);
+					GL14.glBlendEquation(GL14.GL_MAX);
+					for (int i = 0; i < ships.size(); i++) {
+						if (ships.get(i).getTeam().equals(player.getTeam()))
+							ships.get(i).showRadar();
+					}
+					//TODO Display weapons range of selected ships
+					if(f1Pressed){
+						for (int s = 0; s < ships.size(); s++) {
+							if(ships.get(s).isSelected() && !ships.get(s).getTeam().equals(player.getTeam())){
+								ships.get(s).showRadar();
+							}
+						}
+					}
+					GL14.glBlendEquation(GL14.GL_FUNC_ADD);
+					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+					
 					//Update planets
 					for(int p = 0; p < planets.size(); p++){
 						planets.get(p).checkCapturePoint();
@@ -973,7 +984,6 @@ public class StarshipArena {
 				    	explosions.get(e).update();
 					}
 					
-					
 					if(CAMERA_WIDTH < 5200 && CAMERA_HEIGHT < 3600){
 						//display ships
 						for(int s = 0; s < ships.size(); s++){
@@ -993,14 +1003,6 @@ public class StarshipArena {
 								if(isVisible(ships.get(s), player)){
 									ships.get(s).displayIcon();
 								}
-							}
-						}
-					}
-					//display radar of selected ships
-					if(f1Pressed){
-						for (int s = 0; s < ships.size(); s++) {
-							if(ships.get(s).isSelected()){
-								ships.get(s).showRadar();
 							}
 						}
 					}
@@ -1099,7 +1101,7 @@ public class StarshipArena {
 					int numFightersSelected = 0;
 					int numInterceptorsSelected = 0;
 					int numTransportsSelected = 0;
-					int numBattleshipsSelected = 0;
+					int numMissileshipsSelected = 0;
 					int numPodsSelected = 0;
 					String shipStatus = "Idle";
 					Planet selectedPlanet = null;
@@ -1128,7 +1130,7 @@ public class StarshipArena {
 							if (ships.get(s) instanceof Fighter) numFightersSelected++;
 							else if (ships.get(s) instanceof Interceptor) numInterceptorsSelected++;
 							else if (ships.get(s) instanceof Transport) numTransportsSelected++;
-							else if (ships.get(s) instanceof Battleship) numBattleshipsSelected++;
+							else if (ships.get(s) instanceof Missileship) numMissileshipsSelected++;
 							else if (ships.get(s) instanceof BasicPod) {
 								numPodsSelected++;
 								if (ships.get(s) instanceof MissilePod) podTypeSelected = "Missile Turret";
@@ -1162,11 +1164,11 @@ public class StarshipArena {
 								writeText("???", 20, 80);
 							}
 						}
-						else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected + numBattleshipsSelected + numPodsSelected == 1) {
+						else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected + numMissileshipsSelected + numPodsSelected == 1) {
 							if (numFightersSelected == 1) writeText("Fighter", 400, 15, 30);
 							else if (numInterceptorsSelected == 1) writeText("Interceptor", 400, 15, 30);
 							else if (numTransportsSelected == 1) writeText("Transport", 400, 15, 30);
-							else if (numBattleshipsSelected == 1) writeText("Battleship", 400, 15, 30);
+							else if (numMissileshipsSelected == 1) writeText("Missileship", 400, 15, 30);
 							else if (numPodsSelected == 1) writeText(podTypeSelected, 300, 15, 30);
 //							if(shipsControllingTeam.equals(player.getTeam()))
 							if (sumCurrentHP - (int)sumCurrentHP > 0)		
@@ -1179,12 +1181,12 @@ public class StarshipArena {
 							writeText("Status:", 20, 40);
 							writeText(shipStatus, 20, 20);
 						}
-						else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected  + numBattleshipsSelected + numPodsSelected > 1) {
-							writeText("Starfleet(" + (numFightersSelected + numInterceptorsSelected + numTransportsSelected + numBattleshipsSelected + numPodsSelected) + ")", 400, 15, 30);
+						else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected  + numMissileshipsSelected + numPodsSelected > 1) {
+							writeText("Starfleet(" + (numFightersSelected + numInterceptorsSelected + numTransportsSelected + numMissileshipsSelected + numPodsSelected) + ")", 400, 15, 30);
 							writeText("Fighters:" + numFightersSelected, 1000, 120);
 							writeText("Interceptors:" + numInterceptorsSelected, 1000, 100);
 //							writeText("Transports:" + numTransportsSelected, 1000, 60);
-							writeText("Battleships:" + numBattleshipsSelected, 1000, 80);
+							writeText("Missileships:" + numMissileshipsSelected, 1000, 80);
 							writeText("Turrets:" + numPodsSelected, 1000, 60);
 //							if (shipsControllingTeam.equals(player.getTeam()))
 							if (sumCurrentHP - (int)sumCurrentHP > 0)		
@@ -1338,13 +1340,13 @@ public class StarshipArena {
 //				new Interceptor(this, "none", startx , starty, angle);
 //			}
 //		}
-		new Battleship(this, "red", 100, 450, 0);
+		new Missileship(this, "red", 100, 450, 0);
 //		new Transport(this, "red", 100, 450, 0);
 //		new Transport(this, "red", 5, 450, 0);
 //		new Transport(this, "red", 400, 600, 0);
 //		new Fighter(this, "blue", 200, 500, 270);
 //		new Interceptor(this, "blue", 600, 500, 90);
-//		new Battleship(this, "blue", 700, 500, 0);
+//		new Missileship(this, "blue", 700, 500, 0);
 //		new Fighter(this, "red", 1700, 400, 0);
 //		new Fighter(this, "red", 1750, 400, 0);
 //		new Fighter(this, "red", 1650, 400, 0);
@@ -1383,10 +1385,10 @@ public class StarshipArena {
 //						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), 0);
 //				
 //			}
-			//attempt to buy battleship
-			else if(type ==3 && p.getResources() >= BATTLESHIP_COST){
-				p.setResources(p.getResources() - BATTLESHIP_COST);
-				new Battleship(this, p.getTeam(), (int) p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(), 
+			//attempt to buy missileship
+			else if(type ==3 && p.getResources() >= MISSILESHIP_COST){
+				p.setResources(p.getResources() - MISSILESHIP_COST);
+				new Missileship(this, p.getTeam(), (int) p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(), 
 						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), spawnangle);
 				
 			}
@@ -1820,15 +1822,15 @@ public class StarshipArena {
 			new MissilePod(this, "red", 3700, 7300, 180);
 			new MissilePod(this, "red", 1800, 6500, 180);
 			
-			new Battleship(this, "red", 4200, 6500, 180);
+			new Missileship(this, "red", 4200, 6500, 180);
 			new Interceptor(this, "red", 4000, 6500, 180);
 			new Interceptor(this, "red", 4400, 6500, 180);
 			
-			new Battleship(this, "red", 5000, 6800, 180);
+			new Missileship(this, "red", 5000, 6800, 180);
 			new Interceptor(this, "red", 4800, 6800, 180);
 			new Interceptor(this, "red", 5200, 6800, 180);
 			
-			new Battleship(this, "red", 1500, 6900, 180);
+			new Missileship(this, "red", 1500, 6900, 180);
 			new Interceptor(this, "red", 1300, 6900, 180);
 			new Interceptor(this, "red", 1700, 6900, 180);
 			
@@ -1906,7 +1908,7 @@ public class StarshipArena {
 			
 			new Fighter(this, "red", 1500, 4000, 0);
 			
-			new Battleship(this, "red", 9500, 1500, 0);
+			new Missileship(this, "red", 9500, 1500, 0);
 			new Interceptor(this, "red", 9400, 1400, 0);
 			new Interceptor(this, "red", 9600, 1400, 0);
 			
@@ -1981,9 +1983,9 @@ public class StarshipArena {
 			new BasicPod(this, "red", 1100, 1240, 270);
 			
 			new Planet(this, 11900, 2700, 4).setTeam("red");
-			new Battleship(this, "red", 11900, 2700, 90);
+			new Missileship(this, "red", 11900, 2700, 90);
 			new Planet(this, 11900, 3600, 4).setTeam("red");
-			new Battleship(this, "red", 11900, 3600, 90);
+			new Missileship(this, "red", 11900, 3600, 90);
 			new Planet(this, 9600, 4100, 3).setTeam("red");
 			new Fighter(this, "red", 9600, 4160, 90);
 			new Fighter(this, "red", 9600, 4040, 90);
@@ -2096,11 +2098,11 @@ public class StarshipArena {
 						//interceptor has a resistance to missiles
 						else if (p instanceof Missile && s instanceof Interceptor)
 							s.setHealth(s.getHealth()-p.getDamage()/2);
-						//Battleships have resistance to plasma
-						else if (p.texId < 3 && s instanceof Battleship)
+						//Missileships have resistance to plasma
+						else if (p.texId < 3 && s instanceof Missileship)
 							s.setHealth(s.getHealth()-p.getDamage() / 2);
-						//Battleships are vulnerable to machineguns
-						else if (p.texId == 3 && s instanceof Battleship)
+						//Missileships are vulnerable to machineguns
+						else if (p.texId == 3 && s instanceof Missileship)
 							s.setHealth(s.getHealth()-p.getDamage()*2);
 						else
 							s.setHealth(s.getHealth()-p.getDamage());
@@ -2128,11 +2130,11 @@ public class StarshipArena {
 					//interceptor has a high resistance to missiles
 					else if (p instanceof Missile && s instanceof Interceptor)
 						s.setHealth(s.getHealth()-p.getDamage()/5);
-//					//Battleships have resistance to plasma
-//					else if (p.texId < 3 && s instanceof Battleship)
+//					//Missileships have resistance to plasma
+//					else if (p.texId < 3 && s instanceof Missileship)
 //						s.setHealth(s.getHealth()-p.getDamage() / 2);
-					//Battleships are vulnerable to machineguns
-					else if (p.texId == 3 && s instanceof Battleship)
+					//Missileships are vulnerable to machineguns
+					else if (p.texId == 3 && s instanceof Missileship)
 						s.setHealth(s.getHealth()-p.getDamage()*2);
 					else
 						s.setHealth(s.getHealth()-p.getDamage());

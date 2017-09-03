@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Battleship extends Starship{
+public class Missileship extends Starship{
 	
 	int changeDirection = 0;
 	int changeDirectionCooldown = 0;
@@ -17,15 +17,15 @@ public class Battleship extends Starship{
 	static int primary_yoffset = -50;
 	static int primary_id = 4;
 	
-	public Battleship(StarshipArena mygame, int spawnx, int spawny){
+	public Missileship(StarshipArena mygame, int spawnx, int spawny){
 		super(mygame, spawnx, spawny);
 	}
 	
-	public Battleship(StarshipArena mygame, int spawnx, int spawny, int spawnangle){
+	public Missileship(StarshipArena mygame, int spawnx, int spawny, int spawnangle){
 		super(mygame, "none", spawnx, spawny, spawnangle);
 	}
 
-	public Battleship(StarshipArena mygame, String newteam, int spawnx, int spawny, int spawnangle){
+	public Missileship(StarshipArena mygame, String newteam, int spawnx, int spawny, int spawnangle){
 		super(mygame, newteam, spawnx, spawny, spawnangle);
 	}
 	
@@ -194,7 +194,7 @@ public class Battleship extends Starship{
 			for (int i = 0; i < scanned.size(); i++) {
 				Starship s = scanned.get(i);
 				//if fighter has no team, or scanned enemy is on another team or closer than current target
-				//Battleship is a special case; it shoots further than it can see, so it is the only ship where
+				//Missileship is a special case; it shoots further than it can see, so it is the only ship where
 				//we must check whether it can even see target.
 				if(game.isVisible(s, team) && (team.equals("none") || !s.getTeam().equals(team)) && (target == null ||
 					game.distance(center.X(), center.Y(), s.getX(), s.getY()) - getClosestBearing(s) < 
