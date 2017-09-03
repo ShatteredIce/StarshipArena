@@ -10,9 +10,9 @@ public class Missileship extends Starship{
 	static int primary_cooldown = 560;
 	static int primary_spread = 360;
 	static int primary_accuracy = 95;
-	static int primary_range = 2000;
+	static int primary_range = 3000;
 	static int primary_speed = 15;
-	static int primary_lifetime = 2200;
+	static int primary_lifetime = 3300;
 	static int primary_xoffset = 0;
 	static int primary_yoffset = -50;
 	static int primary_id = 4;
@@ -38,7 +38,7 @@ public class Missileship extends Starship{
 		min_turn_velocity = 1;
 		max_turn_speed = 1;
 		//weaponry
-		scan_range = 1900;
+		scan_range = 3000;
 		radar_range = 1500;
 		//other
 		clickRadius = 55;
@@ -62,13 +62,13 @@ public class Missileship extends Starship{
 		Turret primaryTurret2 = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
 				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 0, true);
 //		primaryTurret2.setOffset(primary_xoffset - 25, primary_yoffset + 20, -5);
-		primaryTurret2.setOffset(primary_xoffset, primary_yoffset, -10);
+		primaryTurret2.setOffset(primary_xoffset, primary_yoffset, -14);
 		turrets.add(primaryTurret2);
 		
 		Turret primaryTurret3 = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
 				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 0, true);
 //		primaryTurret3.setOffset(primary_xoffset + 25, primary_yoffset - 20, 5);
-		primaryTurret3.setOffset(primary_xoffset, primary_yoffset, 10);
+		primaryTurret3.setOffset(primary_xoffset, primary_yoffset, 14);
 		turrets.add(primaryTurret3);
 		
 		Turret primaryTurret4 = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
@@ -181,6 +181,7 @@ public class Missileship extends Starship{
 		}
 		getClosestEnemy();
 		moveToLocation();
+			
 		moveTurrets();
 		edgeGuard();
 		getClosestEnemy();
@@ -199,7 +200,7 @@ public class Missileship extends Starship{
 				if(game.isVisible(s, team) && (team.equals("none") || !s.getTeam().equals(team)) && (target == null ||
 					game.distance(center.X(), center.Y(), s.getX(), s.getY()) - getClosestBearing(s) < 
 					game.distance(center.X(), center.Y(), target.getX(), target.getY()) - getClosestBearing(target))){
-					 target = scanned.get(i);
+					target = scanned.get(i);
 				}
 			}
 		}

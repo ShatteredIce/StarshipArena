@@ -1,6 +1,18 @@
 //Starship Arena - Created on 1/11/17 by Nathan Purwosumarto
 //Example of LWJGL 3, displays ships that move randomly in the window
 
+//ANGLE SYSTEM (DO NOT DELETE THESE, DUJIN NEEDS THESE FOR REFERENCE):
+//			 0
+//		  90 + 270
+//		    180
+//Up is 0 degrees, and increases counter clockwise
+//Standard/Java angle system:
+//
+//			90
+//		 180 + 0
+//		   270
+//Right is 0 degrees, and increases counter clockwise
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
@@ -707,7 +719,7 @@ public class StarshipArena {
 								else{
 									s.setAttackMove(true);
 								}
-								s.setLocationTarget(new Point(xpos.get(1), ypos.get(1)));
+								s.setLocationTarget(new Point(Math.max(Math.min(xpos.get(1), WORLD_WIDTH), 0), Math.max(Math.min(ypos.get(1), WORLD_HEIGHT), 0)));
 								//System.out.println(xpos.get(0) + ", " + ypos.get(0));
 							}
 						}
