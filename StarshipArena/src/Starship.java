@@ -12,7 +12,9 @@ public class Starship {
 	//halo rendering variables
 	Model haloModel;
 	double[] haloVertices;
+	double[] radarVertices;
 	Point[] haloPoints;
+	Point[] radarPoints;
 	int haloSize = 80;
 	static Texture haloTexture = new Texture("ships_halo.png");
 	static Texture blueCircle = new Texture("blue_circle.png");
@@ -97,10 +99,12 @@ public class Starship {
 		current_health = max_health;
 		locationTarget = null;
 		points = generatePoints();
-		haloPoints = generateHaloPoints();
+		haloPoints = generateEmptyPoints();
+		radarPoints = generateEmptyPoints();
 		hitbox = generateHitbox();
 		vertices = new double[points.length * 2];
 		haloVertices = new double[haloPoints.length * 2];
+		radarVertices = new double[radarPoints.length * 2];
 		setTextureCoords();
 		setIndices();
 		setPoints();
@@ -158,6 +162,25 @@ public class Starship {
 			v_index = 2*i;
 			haloVertices[v_index] = haloPoints[i].X();
 			haloVertices[v_index+1] = haloPoints[i].Y();	
+		}
+	}
+	
+	public void setRadarPoints(){
+		Point trueCenter = new Point(center.X() + xOff, center.Y() + yOff);
+		trueCenter.rotatePoint(center.X(), center.Y(), angle);
+		radarPoints[0].setX(trueCenter.X() - radar_range);
+		radarPoints[0].setY(trueCenter.Y() + radar_range);
+		radarPoints[1].setX(trueCenter.X() - radar_range);
+		radarPoints[1].setY(trueCenter.Y() - radar_range);
+		radarPoints[2].setX(trueCenter.X() + radar_range);
+		radarPoints[2].setY(trueCenter.Y() + radar_range);
+		radarPoints[3].setX(trueCenter.X() + radar_range);
+		radarPoints[3].setY(trueCenter.Y() - radar_range);
+		int v_index = 0;
+		for (int i = 0; i < radarPoints.length; i++) {
+			v_index = 2*i;
+			radarVertices[v_index] = radarPoints[i].X();
+			radarVertices[v_index+1] = radarPoints[i].Y();	
 		}
 	}
 	
@@ -277,6 +300,12 @@ public class Starship {
 		}
 	}
 	
+	public void showRadar(){
+		setRadarPoints();
+		haloTexture.bind();
+		haloModel.render(radarVertices);
+	}
+	
 	public void displayIcon(){
 		setTextureCoords(0, 0, 0, 1, 1, 0, 1, 1);
 		if(team == "blue"){
@@ -300,26 +329,7 @@ public class Starship {
 	}
 
 	public void doRandomMovement(){
-		int v = random.nextInt(4);
-		int t = random.nextInt(3);
-		if(v == 0){
-			targeted_velocity = max_velocity;
-		}
-		else if(v == 1){
-			targeted_velocity = 0;
-		}
-		if(t == 0){
-			current_turn_speed = max_turn_speed;
-		}
-		else if(t == 1){
-			current_turn_speed = -max_turn_speed;
-		}
-		if(current_turn_speed != 0 && targeted_velocity < min_turn_velocity){
-			targeted_velocity = min_turn_velocity;
-		}
-		edgeGuard();
-//		targeted_velocity = max_velocity;
-//		current_turn_speed = max_turn_speed;
+	
 	}
 	
 	public void edgeGuard(){
@@ -370,7 +380,7 @@ public class Starship {
 		return points;
 	}
 	
-	public Point[] generateHaloPoints(){
+	public Point[] generateEmptyPoints(){
 		Point[] points = new Point[]{
 			new Point(),
 			new Point(),
@@ -647,7 +657,7 @@ public class Starship {
 		return max_health;
 	}
 	
-	public boolean getSelected() {
+	public boolean isSelected() {
 		return selected;
 	}
 	public void setSelected(boolean newSelected) {

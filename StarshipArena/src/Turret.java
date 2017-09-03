@@ -159,7 +159,7 @@ public class Turret {
 	
 	public void fire(double newAngle){
 		//launch plasma or mgun
-		if (projectile_type == 1 || projectile_type == 2 || projectile_type == 3) {
+		if (projectile_type == 1 || projectile_type == 2 || projectile_type == 3 || projectile_type == 5 || projectile_type == 6) {
 			new Projectile(game, owner, team, center.X(), center.Y(), projectile_damage, (newAngle + angleOff + 360) % 360, accuracy, projectile_speed, projectile_lifetime, projectile_type);
 			//plasma
 			if (projectile_type < 3) {

@@ -11,7 +11,7 @@ public class Planet {
 	Point center;
 	Point[] points;
 	int planetSize = 200;
-	int radar_range = 1500;
+	int radar_range = 1000;
 	int texId = 0;
 	boolean selected = false;
 	static Texture tex0 = new Texture("planet0.png");

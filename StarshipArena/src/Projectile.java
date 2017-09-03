@@ -119,6 +119,15 @@ public class Projectile {
 				new Point(16, -20, true),
 			};
 		}
+		//laser
+		else if (texId == 5 || texId == 6) {
+			points = new Point[]{
+				new Point(-8, 124, true),
+				new Point(-8, -124, true),
+				new Point(8, 124, true),
+				new Point(8, -124, true),
+			};
+		}
 		return points;
 	}
 	
@@ -142,6 +151,12 @@ public class Projectile {
 		}
 		else if (texId == 4){
 			tex4.bind();
+		}
+		else if (texId == 5){
+			tex1.bind();
+		}
+		else if (texId == 6){
+			tex2.bind();
 		}
 		else{
 			tex0.bind();
@@ -174,5 +189,9 @@ public class Projectile {
 	
 	public double getDamage(){
 		return damage;
+	}
+	
+	public int getType(){
+		return texId;
 	}
 }
