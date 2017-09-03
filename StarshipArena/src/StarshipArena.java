@@ -56,6 +56,7 @@ public class StarshipArena {
     boolean shiftPressed = false;
     boolean tPressed = false;
     boolean controlPressed = false;
+    boolean f1Pressed = false;
     boolean lPressed = false;
     
     DoubleBuffer oldMouseX;
@@ -309,7 +310,7 @@ public class StarshipArena {
 			//TODO Remove this testing thing for proximity groups after testing concludes
 			if( key == GLFW_KEY_P && action == GLFW_RELEASE ){
 				for (int s = 0; s < ships.size(); s++) {
-					if(ships.get(s).getSelected()){
+					if(ships.get(s).isSelected()){
 						ArrayList<Starship> temp = new ArrayList<Starship>();
 						temp.add(ships.get(s));
 						proximityGroup(temp, ships, ships.get(s));
@@ -340,6 +341,10 @@ public class StarshipArena {
 				controlPressed = true;
 			if ( key == GLFW_KEY_RIGHT_CONTROL && action == GLFW_RELEASE )
 				controlPressed = false;
+			if ( key == GLFW_KEY_F1 && action == GLFW_PRESS )
+				f1Pressed = true;
+			if ( key == GLFW_KEY_F1 && action == GLFW_RELEASE )
+				f1Pressed = false;
 			
 			if ( key == GLFW_KEY_SPACE && action == GLFW_RELEASE ) {
 				for (int i = 0; i < planets.size(); i++) {
@@ -689,7 +694,7 @@ public class StarshipArena {
 					if ( button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
 						for (int i = 0; i < ships.size(); i++) {
 							Starship s = ships.get(i);
-							if (s.getSelected() && s.getTeam().equals(player.getTeam())) {
+							if (s.isSelected() && s.getTeam().equals(player.getTeam())) {
 								if(tPressed){
 									s.setLockPosition(true);
 								}
@@ -984,6 +989,14 @@ public class StarshipArena {
 							}
 						}
 					}
+					//display radar of selected ships
+					if(f1Pressed){
+						for (int s = 0; s < ships.size(); s++) {
+							if(ships.get(s).isSelected()){
+								ships.get(s).showRadar();
+							}
+						}
+					}
 					//display projectiles
 					for(int p = 0; p < projectiles.size(); p++){
 				    	projectiles.get(p).display();
@@ -1029,10 +1042,10 @@ public class StarshipArena {
 								newSecondX = Math.min(Math.max(second.center.x + Math.cos(angle), second.getClickRadius()), WORLD_WIDTH - second.getClickRadius());
 								newSecondY = Math.min(Math.max(second.center.y - Math.sin(angle), second.getClickRadius()), WORLD_HEIGHT - second.getClickRadius());
 							}
-							if(!(first instanceof MissilePod)){
+							if(!(first instanceof BasicPod || first instanceof PlanetRadar || first instanceof PlanetLaser)){
 								first.center = new Point(newFirstX, newFirstY);
 							}
-							if(!(second instanceof MissilePod)){
+							if(!(second instanceof BasicPod || second instanceof PlanetRadar || second instanceof PlanetLaser)){
 								second.center = new Point(newSecondX, newSecondY);
 							}
 //							if (first.locationTarget != null) {
@@ -1097,7 +1110,7 @@ public class StarshipArena {
 						}
 					}
 					for (int s = 0; s < ships.size(); s++) {
-						if (ships.get(s).getSelected()) {
+						if (ships.get(s).isSelected()) {
 							sidebarIsDisplayed = true;
 							sumCurrentHP += ships.get(s).current_health;
 							sumMaxHP += ships.get(s).max_health;
@@ -1376,7 +1389,7 @@ public class StarshipArena {
 	public void assignControlGroup(Player player, int group){
 		ArrayList<Starship> playerShips = player.getControlledShips();
 		for(int i = 0; i < playerShips.size(); i++){
-			if(playerShips.get(i).getSelected()){
+			if(playerShips.get(i).isSelected()){
 				playerShips.get(i).setControlGroup(group);
 			}
 		}
@@ -1519,7 +1532,9 @@ public class StarshipArena {
 			CURR_Y = 0;
 			enemy = new Enemy(this, new Player(this, "red"));
 			new Planet(this, 1350, 1000, 1);
+			new PlanetRadar(this, "blue", 1350, 1000, 45);
 			new Planet(this, 3000, 1500, 2).setTeam("red");
+			new PlanetLaser(this, "red", 3000, 1500, 45);
 			new Fighter(this, "blue", 500, 400, 0);
 			new Fighter(this, "blue", 600, 350, 0);
 			new Fighter(this, "blue", 400, 350, 0);
@@ -1531,7 +1546,7 @@ public class StarshipArena {
 //			new Fighter(this, "blue", 800, 350, 0);
 			
 			new Fighter(this, "red", 2800, 1500, 135);
-			new Fighter(this, "red", 3000, 1500, 90);
+			new Fighter(this, "red", 2900, 1500, 90);
 			new Fighter(this, "red", 3000, 1700, 80);
 			new Fighter(this, "red", 3200, 1500, 150);
 			new Fighter(this, "red", 3200, 1300, 160);
@@ -2087,9 +2102,15 @@ public class StarshipArena {
 		    				Missile m = (Missile)p;
 		    				m.destroy(s);
 		    			}
-		    			else
-		    				p.destroy();
-		    			projectiles.remove(p);
+		    			else{
+			    			if(p.getType() != 5 && p.getType() != 6){
+			    				p.destroy();
+			    				projectiles.remove(p);
+			    			}
+			    			else{
+			    				new Explosion(this, p.center.X()+random.nextInt(21)-10, p.center.Y()+random.nextInt(21)-10, 20);
+			    			}
+		    			}
 		    		}
 				}
 				else if ((!p.getTeam().equals(s.getTeam()) || p.getTeam().equals("none")) && 
@@ -2113,9 +2134,15 @@ public class StarshipArena {
 	    				Missile m = (Missile)p;
 	    				m.destroy(s);
 	    			}
-	    			else
-	    				p.destroy();
-	    			projectiles.remove(p);
+	    			else{
+		    			if(p.getType() != 5 && p.getType() != 6){
+		    				p.destroy();
+		    				projectiles.remove(p);
+		    			}
+		    			else{
+		    				new Explosion(this, p.center.X()+random.nextInt(21)-10, p.center.Y()+random.nextInt(21)-10, 20);
+		    			}
+	    			}
 				}
 			}
 		}
@@ -2182,6 +2209,29 @@ public class StarshipArena {
 	    return false;
     }
     
+    //Checks whether two lines intersect
+    //a1 and a2 are endpoints of line a and b1 and b2 are endpoints of line b
+    public double[] line_intersection_coordinate(Point a1, Point a2, Point b1, Point b2){
+    	double[] isct = {-1, -1};
+    	double intersect_calc = ((b2.Y() - b1.Y()) * (a2.X() - a1.X())) - ((b2.X() - b1.X()) * (a2.Y() - a1.Y()));
+	    if(intersect_calc == 0){
+	    	return isct;
+	    }
+
+	    else{
+	        double ua = (((b2.X() - b1.X())*(a1.Y() - b1.Y()) - (b2.Y() - b1.Y())*(a1.X() - b1.X()))
+	        		/ ((b2.Y() - b1.Y())*(a2.X() - a1.X()) - (b2.X() - b1.X())*(a2.Y() - a1.Y())));
+	        double ub = (((a2.X() - a1.X())*(a1.Y() - b1.Y()) - (a2.Y() - a1.Y())*(a1.X() - b1.X()))
+	              / ((b2.Y() - b1.Y())*(a2.X() - a1.X()) - (b2.X() - b1.X())*(a2.Y() - a1.Y())));
+	        if(ua >= 0 && ua <= 1 && ub >= 0 && ub <= 1){
+	        	isct[0] = (a1.X()*ua);
+	        	isct[1] = (a1.Y()*ua);
+	            return isct;
+	        }
+	    }
+	    return isct;
+    }
+    
     //Checks if two shapes are intersecting by checking all the lines for an intersection
     public boolean polygon_intersection(Point[] shapeA, Point[] shapeB){
     	int next_shapeA_index, next_shapeB_index;
@@ -2208,6 +2258,33 @@ public class StarshipArena {
 			}
 		}
         return false;
+    }
+    
+    public double[] polygon_intersection_coordinate(Point[] shapeA, Point[] shapeB){
+    	int next_shapeA_index, next_shapeB_index;
+    	for (int i = 0; i < shapeA.length; i++) {
+    		//set the index for the end point of the line being checked (shapeA)
+    		if(i == shapeA.length - 1){
+    			next_shapeA_index = 0;
+    		}
+    		else{
+    			next_shapeA_index = i + 1;
+    		}
+			for (int j = 0; j < shapeB.length; j++) {
+				//set the index for the end point of the line being checked (shapeB)
+	    		if(j == shapeB.length - 1){
+	    			next_shapeB_index = 0;
+	    		}
+	    		else{
+	    			next_shapeB_index = j + 1;
+	    		}
+				double[] hit = line_intersection_coordinate(shapeA[i], shapeA[next_shapeA_index], shapeB[j], shapeB[next_shapeB_index]);
+				if(hit[0] != -1){
+					return hit;
+				}
+			}
+		}
+        return null;
     }
     
     public void genTiles(){

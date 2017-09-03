@@ -166,7 +166,7 @@ public class Turret {
 		//This formula decrease the volume the further away the player is from the weapon event, but increase volume for high levels of zoom
 		float dbDiff = (float)(game.distance(cameraX, cameraY, center.X(), center.Y()) / game.CAMERA_WIDTH * -20 + 10000 / game.CAMERA_WIDTH);
 		//launch plasma or mgun
-		if (projectile_type == 1 || projectile_type == 2 || projectile_type == 3) {
+		if (projectile_type == 1 || projectile_type == 2 || projectile_type == 3 || projectile_type == 5 || projectile_type == 6) {
 			new Projectile(game, owner, team, center.X(), center.Y(), projectile_damage, (newAngle + angleOff + 360) % 360, accuracy, projectile_speed, projectile_lifetime, projectile_type);
 			//plasma sfx
 			if (projectile_type < 3) {
