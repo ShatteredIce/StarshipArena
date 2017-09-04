@@ -375,9 +375,9 @@ public class Starship {
 		else {
 			hitEdge = false;
 		}
-		if (hitEdge) {
-			locationTarget = null;
-		}
+//		if (hitEdge) {
+//			locationTarget = null;
+//		}
 	}
 	
 	public Point[] generatePoints(){

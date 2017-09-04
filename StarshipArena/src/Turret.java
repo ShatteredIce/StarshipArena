@@ -131,6 +131,12 @@ public class Turret {
 	
 	//TODO Lag is possibly caused by the need for update() to for-loop through every single enemy ship.
 	public void update(){
+		//TODO Debug:
+//		if (owner instanceof Missileship && owner.getTeam().equals("blue")) {
+//			System.out.println(owner.getClass() + " " + owner.target);
+//			System.out.println(owner.angle);
+//		}
+		//TODO End debug
 		if(current_cooldown == 0){
 			ArrayList<Starship> enemyShips = getEnemyShips();
 			int relativeAngle;
@@ -143,6 +149,8 @@ public class Turret {
 						fired = true;
 					}
 					//fire projectile not based on turret angle
+					//The spread < 180 check is to differentiate between targeted autoaim weapons and turrets with medium amounts of autoaim correction
+					//Any ship with > 180 spread is assumed to be targeted autoaim, while any wiht < 180 is assumed to be correction autoaim.
 					else if (enemyShips.get(i).equals(owner.target) || spread < 180) {
 						fire(relativeAngle);
 						fired = true;

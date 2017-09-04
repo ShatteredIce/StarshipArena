@@ -83,6 +83,12 @@ public class Missile extends Projectile {
 		for (int i = 15; i < 20; i++) {
 			if (game.mute) break;
 			if (!game.soundEffects[i].isRunning()) {
+				int cameraX = game.CURR_X + game.CAMERA_WIDTH / 2;
+				int cameraY = game.CURR_Y + game.CAMERA_HEIGHT / 2;
+				//This formula decrease the volume the further away the player is from the weapon event, but increase volume for high levels of zoom
+				float dbDiff = (float)(game.distance(cameraX, cameraY, center.X(), center.Y()) / game.CAMERA_WIDTH * -20 + 10000 / game.CAMERA_WIDTH);
+				FloatControl gainControl = (FloatControl) game.soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
+				gainControl.setValue(Math.max(-80, Math.min(6, game.HITEX_DB + dbDiff))); // Increase volume by a number of decibels.
 				game.soundEffects[i].setFramePosition(0);
 				game.soundEffects[i].start();
 				break;
@@ -108,16 +114,16 @@ public class Missile extends Projectile {
 			double distance = game.distance(center.x, center.y, target.center.x, target.center.y);
 			boolean positiveY = false;
 			if (target.center.y >=  center.y) positiveY = true;
-			double angle = Math.acos((target.center.x - center.x) / distance) * 180 / Math.PI;
+			double tempAngle = Math.acos((target.center.x - center.x) / distance) * 180 / Math.PI;
 			double targetAngle;
-			if (positiveY) targetAngle = (270 + angle) % 360;
-			else targetAngle = 270 - angle;
+			if (positiveY) targetAngle = (270 + tempAngle) % 360;
+			else targetAngle = 270 - tempAngle;
 			//System.out.println(targetAngle);
 			if (this.angle == Math.round(targetAngle)) {
 				current_turn_speed = 0;
 			}
-			else if ((Math.round(targetAngle) - this.angle + 360) % 360 < 180) current_turn_speed = Math.min(max_turn_speed, (Math.round(targetAngle) - this.angle + 360) % 360);
-			else current_turn_speed = Math.max(-max_turn_speed, -((this.angle - Math.round(targetAngle) + 360) % 360));
+			else if ((Math.round(targetAngle) - this.angle + 3600) % 360 < 180) current_turn_speed = Math.min(max_turn_speed, (Math.round(targetAngle) - this.angle + 3600) % 360);
+			else current_turn_speed = Math.max(-max_turn_speed, -((this.angle - Math.round(targetAngle) + 3600) % 360));
 		}
 		angle += current_turn_speed;
 		Point newcenter = new Point(center.X(), center.Y()+current_velocity);
