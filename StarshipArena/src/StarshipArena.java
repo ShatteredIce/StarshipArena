@@ -922,14 +922,11 @@ public class StarshipArena {
 					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 					projectRelativeCameraCoordinates();
 					
-					//Display background
-					for (int t = 0; t < backgroundTiles.size(); t++) {
-						backgroundTiles.get(t).display();
-					}
 					
 					//Show FOW
 //					glBlendFunc(GL_DST_COLOR, GL_ZERO);
-					GL14.glBlendEquation(GL14.GL_MAX);
+//					GL14.glBlendEquation(GL14.GL_MAX);
+					glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_ALPHA);
 					for (int i = 0; i < ships.size(); i++) {
 						if (ships.get(i).getTeam().equals(player.getTeam()))
 							ships.get(i).showRadar();
@@ -942,8 +939,15 @@ public class StarshipArena {
 							}
 						}
 					}
+					
 					GL14.glBlendEquation(GL14.GL_FUNC_ADD);
 					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+					
+					//Display background
+					for (int t = 0; t < backgroundTiles.size(); t++) {
+						backgroundTiles.get(t).display();
+					}
+					
 					
 					//Update planets
 					for(int p = 0; p < planets.size(); p++){

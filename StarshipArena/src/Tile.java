@@ -3,7 +3,7 @@ public class Tile {
 	
 	StarshipArena game;
 	Model model;
-	static Texture backgroundTexture = new Texture("background.png");
+	static Texture backgroundTexture = new Texture("background_semitransparent.png");
 	
 	double[] vertices;
 	double[] textureCoords; 
