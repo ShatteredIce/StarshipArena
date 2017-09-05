@@ -60,6 +60,15 @@ public class Player {
 	}
 	
 	public void checkVisible() {
+		for (int i = 0; i < visibleShips.size(); i++) {
+			//TODO If and when we implement static structures (e.g. buildings), don't remove them here, unless they are destroyed.
+			visibleShips.remove(i);
+			i--;
+		}
+		for (int i = 0; i < visiblePlanets.size(); i++) {
+			visiblePlanets.remove(i);
+			i--;
+		}
 		loop:
 		for (int i = 0; i < game.ships.size(); i++) {
 			Starship ship = game.ships.get(i);
