@@ -4,13 +4,13 @@ public class PlanetLaser extends Starship{
 	
 	static Texture tex1 = new Texture("WIP.png");
 	
-	static double primary_damage = 5;
+	static double primary_damage = 1;
 	static int primary_cooldown = 250;
 	static int primary_spread = 10;
-	static int primary_accuracy = 99;
-	static int primary_range = 1500;
-	static int primary_speed = 20;
-	static int primary_lifetime = 1500;
+	static int primary_accuracy = 100;
+	static int primary_range = 1400;
+	static int primary_speed = 100;
+	static int primary_lifetime = 1400;
 	static int primary_xoffset = 0;
 	static int primary_yoffset = 0;
 	int primary_id = 0;
@@ -50,7 +50,7 @@ public class PlanetLaser extends Starship{
 			primary_id = 6;
 		}
 		Turret primaryTurret = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
-				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id);
+				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 0, 6);
 		turrets.add(primaryTurret);
 	}
 	
@@ -75,10 +75,10 @@ public class PlanetLaser extends Starship{
 			double leftBearing = getTurnDistance(relativeAngle, true);
 			double rightBearing = getTurnDistance(relativeAngle, false);
 			if(leftBearing <= rightBearing){ //turn left
-				current_turn_speed = max_turn_speed;
+				current_turn_speed = Math.min(max_turn_speed, (Math.round(relativeAngle) - this.angle + 3600) % 360);
 			}
 			else{ //turn right
-				current_turn_speed = -max_turn_speed;
+				current_turn_speed = Math.max(-max_turn_speed, -((this.angle - Math.round(relativeAngle) + 3600) % 360));
 			}
 		}
 		else{

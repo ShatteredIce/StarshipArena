@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Projectile {
@@ -19,6 +20,7 @@ public class Projectile {
 	int[] indices;
 	Point center;
 	Point[] points;
+	ArrayList<Starship> pierced = new ArrayList<Starship>();
 	
 	double damage;
 	double angle;
@@ -27,7 +29,21 @@ public class Projectile {
 	double current_lifetime = 0;
 	int texId;
 	
-	Projectile(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newdamage, double spawnangle, int accuracy, double newspeed, double newlifetime, int id){
+	//Bonuses:
+	int PIERCING = 1;
+	boolean piercing = false;
+	
+	Projectile(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newdamage,
+			double spawnangle, int accuracy, double newspeed, double newlifetime, int id){
+		
+		this (mygame, newowner, myteam, spawnx, spawny, newdamage, spawnangle, accuracy, newspeed, newlifetime, id, 0);
+	}
+	
+	
+	//Bonuses for Projectiles work similarly to bonuses for turrets
+	Projectile(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newdamage,
+			double spawnangle, int accuracy, double newspeed, double newlifetime, int id, int bonuses){
+		
 		game = mygame;
 		owner = newowner;
 		team = myteam;
@@ -44,8 +60,13 @@ public class Projectile {
 		setIndices();
 		setPoints();
 		model = new Model(vertices, textureCoords, indices);
+		if (bonuses % PIERCING != bonuses) {
+			piercing = true;
+			bonuses %= PIERCING;
+		}
 		game.addProjectile(this);
 	}
+	
 	
 	public boolean setPoints(){
 		Point newcenter = new Point(center.X(), center.Y()+speed);
@@ -122,10 +143,10 @@ public class Projectile {
 		//laser
 		else if (texId == 5 || texId == 6) {
 			points = new Point[]{
-				new Point(-8, 124, true),
-				new Point(-8, -124, true),
-				new Point(8, 124, true),
-				new Point(8, -124, true),
+				new Point(-8, 100, true),
+				new Point(-8, -100, true),
+				new Point(8, 100, true),
+				new Point(8, -100, true),
 			};
 		}
 		return points;

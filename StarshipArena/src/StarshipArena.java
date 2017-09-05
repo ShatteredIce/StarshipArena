@@ -2081,18 +2081,18 @@ public class StarshipArena {
 					if(!p.getOwner().equals(s) && (!p.getTeam().equals(s.getTeam()) || p.getTeam().equals("none")) && 
 							polygon_intersection(p.getPoints(), s.getPoints())){
 						//fighters have a weakness to missiles
-						if (p instanceof Missile && s instanceof Fighter)
+						if (p instanceof Missile && s instanceof Fighter && !p.pierced.contains(s))
 							s.setHealth(s.getHealth()-p.getDamage()*8);
 						//interceptor has a resistance to missiles
-						else if (p instanceof Missile && s instanceof Interceptor)
+						else if (p instanceof Missile && s instanceof Interceptor && !p.pierced.contains(s))
 							s.setHealth(s.getHealth()-p.getDamage()/2);
 						//Missileships have resistance to plasma
-						else if (p.texId < 3 && s instanceof Missileship)
+						else if (p.texId < 3 && s instanceof Missileship && !p.pierced.contains(s))
 							s.setHealth(s.getHealth()-p.getDamage() / 2);
 						//Missileships are vulnerable to machineguns
-						else if (p.texId == 3 && s instanceof Missileship)
+						else if (p.texId == 3 && s instanceof Missileship && !p.pierced.contains(s))
 							s.setHealth(s.getHealth()-p.getDamage()*2);
-						else
+						else if (!p.pierced.contains(s))
 							s.setHealth(s.getHealth()-p.getDamage());
 		    			s.damageDisplayDelay = 1000;
 		    			if (p instanceof Missile) {
@@ -2100,12 +2100,13 @@ public class StarshipArena {
 		    				m.destroy(s);
 		    			}
 		    			else{
-			    			if(p.getType() != 5 && p.getType() != 6){
+			    			if(!p.piercing){
 			    				p.destroy();
 			    				projectiles.remove(p);
 			    			}
-			    			else{
-			    				new Explosion(this, p.center.X()+random.nextInt(21)-10, p.center.Y()+random.nextInt(21)-10, 20);
+			    			else if (!p.pierced.contains(s)){
+			    				new Explosion(this, p.center.X()+random.nextInt(21)-10, p.center.Y()+random.nextInt(21)-10, 30);
+			    				p.pierced.add(s);
 			    			}
 		    			}
 		    		}
@@ -2113,18 +2114,18 @@ public class StarshipArena {
 				else if ((!p.getTeam().equals(s.getTeam()) || p.getTeam().equals("none")) && 
 							polygon_intersection(p.getPoints(), s.getPoints())) {
 					//fighters have a weakness to missiles
-					if (p instanceof Missile && s instanceof Fighter)
+					if (p instanceof Missile && s instanceof Fighter && !p.pierced.contains(s))
 						s.setHealth(s.getHealth()-p.getDamage()*4);
 					//interceptor has a high resistance to missiles
-					else if (p instanceof Missile && s instanceof Interceptor)
+					else if (p instanceof Missile && s instanceof Interceptor && !p.pierced.contains(s))
 						s.setHealth(s.getHealth()-p.getDamage()/5);
 //					//Missileships have resistance to plasma
 //					else if (p.texId < 3 && s instanceof Missileship)
 //						s.setHealth(s.getHealth()-p.getDamage() / 2);
 					//Missileships are vulnerable to machineguns
-					else if (p.texId == 3 && s instanceof Missileship)
+					else if (p.texId == 3 && s instanceof Missileship && !p.pierced.contains(s))
 						s.setHealth(s.getHealth()-p.getDamage()*2);
-					else
+					else if (!p.pierced.contains(s))
 						s.setHealth(s.getHealth()-p.getDamage());
 	    			s.damageDisplayDelay = 1000;
 	    			if (p instanceof Missile) {
