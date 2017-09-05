@@ -922,6 +922,10 @@ public class StarshipArena {
 					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 					projectRelativeCameraCoordinates();
 					
+					//Precompute isVisible()
+					for (int i = 0; i < playerList.size(); i++) {
+						playerList.get(i).checkVisible();
+					}
 					
 					//Show FOW
 					for (int i = 0; i < ships.size(); i++) {
@@ -1352,7 +1356,7 @@ public class StarshipArena {
 //				new Interceptor(this, "none", startx , starty, angle);
 //			}
 //		}
-		new Missileship(this, "red", 100, 450, 0);
+//		new Missileship(this, "red", 100, 450, 0);
 //		new Transport(this, "red", 100, 450, 0);
 //		new Transport(this, "red", 5, 450, 0);
 //		new Transport(this, "red", 400, 600, 0);
@@ -1362,11 +1366,21 @@ public class StarshipArena {
 //		new Fighter(this, "red", 1700, 400, 0);
 //		new Fighter(this, "red", 1750, 400, 0);
 //		new Fighter(this, "red", 1650, 400, 0);
-		new Fighter(this, "red", 1700, 450, 0);
+//		new Fighter(this, "red", 1700, 450, 0);
 		
 		new MachineGunPod(this, "red", 300, 1500, 270);
 		new MachineGunPod(this, "red", 350, 1400, 270);
 		new MachineGunPod(this, "red", 300, 1300, 270);
+		
+		new MachineGunPod(this, "red", 400, 1500, 270);
+		new MachineGunPod(this, "red", 450, 1400, 270);
+		new MachineGunPod(this, "red", 400, 1300, 270);
+		new MachineGunPod(this, "red", 500, 1500, 270);
+		new MachineGunPod(this, "red", 550, 1400, 270);
+		new MachineGunPod(this, "red", 500, 1300, 270);
+		new MachineGunPod(this, "red", 600, 1500, 270);
+		new MachineGunPod(this, "red", 650, 1400, 270);
+		new MachineGunPod(this, "red", 600, 1300, 270);
 //		new Fighter(this, "blue", 200, 500, 270, 1);
 //		new Interceptor(this, 500, 700, 0, 1);
 	}
@@ -1430,26 +1444,7 @@ public class StarshipArena {
 	
 	//fog of war - planets
 	public boolean isVisible(Planet entity, Player p){
-		if(fog == false){
-			return true;
-		}
-		if(entity.getTeam().equals(p.getTeam())){
-			return true;
-		}
-		Planet currentPlanet;
-		for (int i = 0; i < p.getControlledPlanets().size(); i++) {
-			currentPlanet = p.getControlledPlanets().get(i);
-			if(distance(entity.getX(), entity.getY(), currentPlanet.getX(), currentPlanet.getY()) <= currentPlanet.getRadarRange()){
-				return true;
-			}
-		}
-		Starship currentShip;
-		for (int s = 0; s < p.getControlledShips().size(); s++) {
-			currentShip = p.getControlledShips().get(s);
-			if(distance(entity.getX(), entity.getY(), currentShip.getX(), currentShip.getY()) <= currentShip.getRadarRange()){
-				return true;
-			}
-		}
+		if (p.visiblePlanets.contains(entity)) return true;
 		return false;
 	}
 	public boolean isVisible(Planet entity, String team){
@@ -1461,26 +1456,7 @@ public class StarshipArena {
 	
 	//fog of war - ships
 		public boolean isVisible(Starship entity, Player p){
-			if(fog == false){
-				return true;
-			}
-			if(entity.getTeam().equals(p.getTeam())){
-				return true;
-			}
-			Planet currentPlanet;
-			for (int i = 0; i < p.getControlledPlanets().size(); i++) {
-				currentPlanet = p.getControlledPlanets().get(i);
-				if(distance(entity.getX(), entity.getY(), currentPlanet.getX(), currentPlanet.getY()) <= currentPlanet.getRadarRange()){
-					return true;
-				}
-			}
-			Starship currentShip;
-			for (int s = 0; s < p.getControlledShips().size(); s++) {
-				currentShip = p.getControlledShips().get(s);
-				if(distance(entity.getX(), entity.getY(), currentShip.getX(), currentShip.getY()) <= currentShip.getRadarRange()){
-					return true;
-				}
-			}
+			if (p.visibleShips.contains(entity)) return true;
 			return false;
 		}
 		public boolean isVisible(Starship entity, String team){
@@ -2105,18 +2081,18 @@ public class StarshipArena {
 					if(!p.getOwner().equals(s) && (!p.getTeam().equals(s.getTeam()) || p.getTeam().equals("none")) && 
 							polygon_intersection(p.getPoints(), s.getPoints())){
 						//fighters have a weakness to missiles
-						if (p instanceof Missile && s instanceof Fighter)
+						if (p instanceof Missile && s instanceof Fighter && !p.pierced.contains(s))
 							s.setHealth(s.getHealth()-p.getDamage()*8);
 						//interceptor has a resistance to missiles
-						else if (p instanceof Missile && s instanceof Interceptor)
+						else if (p instanceof Missile && s instanceof Interceptor && !p.pierced.contains(s))
 							s.setHealth(s.getHealth()-p.getDamage()/2);
 						//Missileships have resistance to plasma
-						else if (p.texId < 3 && s instanceof Missileship)
+						else if (p.texId < 3 && s instanceof Missileship && !p.pierced.contains(s))
 							s.setHealth(s.getHealth()-p.getDamage() / 2);
 						//Missileships are vulnerable to machineguns
-						else if (p.texId == 3 && s instanceof Missileship)
+						else if (p.texId == 3 && s instanceof Missileship && !p.pierced.contains(s))
 							s.setHealth(s.getHealth()-p.getDamage()*2);
-						else
+						else if (!p.pierced.contains(s))
 							s.setHealth(s.getHealth()-p.getDamage());
 		    			s.damageDisplayDelay = 1000;
 		    			if (p instanceof Missile) {
@@ -2124,12 +2100,13 @@ public class StarshipArena {
 		    				m.destroy(s);
 		    			}
 		    			else{
-			    			if(p.getType() != 5 && p.getType() != 6){
+			    			if(!p.piercing){
 			    				p.destroy();
 			    				projectiles.remove(p);
 			    			}
-			    			else{
-			    				new Explosion(this, p.center.X()+random.nextInt(21)-10, p.center.Y()+random.nextInt(21)-10, 20);
+			    			else if (!p.pierced.contains(s)){
+			    				new Explosion(this, p.center.X()+random.nextInt(21)-10, p.center.Y()+random.nextInt(21)-10, 30);
+			    				p.pierced.add(s);
 			    			}
 		    			}
 		    		}
@@ -2137,18 +2114,18 @@ public class StarshipArena {
 				else if ((!p.getTeam().equals(s.getTeam()) || p.getTeam().equals("none")) && 
 							polygon_intersection(p.getPoints(), s.getPoints())) {
 					//fighters have a weakness to missiles
-					if (p instanceof Missile && s instanceof Fighter)
+					if (p instanceof Missile && s instanceof Fighter && !p.pierced.contains(s))
 						s.setHealth(s.getHealth()-p.getDamage()*4);
 					//interceptor has a high resistance to missiles
-					else if (p instanceof Missile && s instanceof Interceptor)
+					else if (p instanceof Missile && s instanceof Interceptor && !p.pierced.contains(s))
 						s.setHealth(s.getHealth()-p.getDamage()/5);
 //					//Missileships have resistance to plasma
 //					else if (p.texId < 3 && s instanceof Missileship)
 //						s.setHealth(s.getHealth()-p.getDamage() / 2);
 					//Missileships are vulnerable to machineguns
-					else if (p.texId == 3 && s instanceof Missileship)
+					else if (p.texId == 3 && s instanceof Missileship && !p.pierced.contains(s))
 						s.setHealth(s.getHealth()-p.getDamage()*2);
-					else
+					else if (!p.pierced.contains(s))
 						s.setHealth(s.getHealth()-p.getDamage());
 	    			s.damageDisplayDelay = 1000;
 	    			if (p instanceof Missile) {

@@ -221,15 +221,15 @@ public class Missile extends Projectile {
 	//returns false if projectile is destroyed. Also creates explosion trail
 		public boolean updateLifetime(){
 			current_lifetime += 1;
-//			if (current_lifetime % 2 == 0) {
+			if (current_lifetime % 2 == 0) {
 //				boolean doExplosion = random.nextBoolean();
 //				int rand = random.nextInt(5) - 4;
 //				if (doExplosion) {
-					Explosion temp = new Explosion(game, center.x, center.y, 20);
+					Explosion temp = new Explosion(game, center.x, center.y, 25);
 //					temp.lifetime = -2;
 					temp.ticksPerFrame = random.nextInt(3);
 //				}
-//			}
+			}
 			if(current_lifetime >= lifetime){
 				return false;
 			}
