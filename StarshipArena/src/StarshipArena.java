@@ -924,20 +924,10 @@ public class StarshipArena {
 					
 					
 					//Show FOW
-//					glBlendFunc(GL_DST_COLOR, GL_ZERO);
-//					GL14.glBlendEquation(GL14.GL_MAX);
 					glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_ALPHA);
 					for (int i = 0; i < ships.size(); i++) {
 						if (ships.get(i).getTeam().equals(player.getTeam()))
-							ships.get(i).showRadar();
-					}
-					//TODO Display weapons range of selected ships
-					if(f1Pressed){
-						for (int s = 0; s < ships.size(); s++) {
-							if(ships.get(s).isSelected() && !ships.get(s).getTeam().equals(player.getTeam())){
-								ships.get(s).showRadar();
-							}
-						}
+							ships.get(i).showView();
 					}
 					
 					GL14.glBlendEquation(GL14.GL_FUNC_ADD);
@@ -1029,6 +1019,15 @@ public class StarshipArena {
 					//update explosions
 					for(int e = 0; e < explosions.size(); e++){
 				    	explosions.get(e).display();
+					}
+					
+					//display weapons range of selected ships
+					if(f1Pressed){
+						for (int s = 0; s < ships.size(); s++) {
+							if(ships.get(s).isSelected() && ships.get(s).getTeam().equals(player.getTeam())){
+								ships.get(s).showRadar();
+							}
+						}
 					}
 						
 					

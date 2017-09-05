@@ -20,6 +20,7 @@ public class Starship {
 	int haloSize = 80;
 	static Texture haloTexture = new Texture("ships_halo.png");
 	static Texture FOWTexture = new Texture("FOW_halo.png");
+	static Texture rangeTexture = new Texture("range_halo.png");
 	static Texture blueCircle = new Texture("blue_circle.png");
 	static Texture redCircle = new Texture("red_circle.png");
 	static Texture blueSelectedCircle = new Texture("blue_selected_circle.png");
@@ -309,9 +310,15 @@ public class Starship {
 		}
 	}
 	
-	public void showRadar(){
+	public void showView(){
 		setRadarPoints();
 		FOWTexture.bind();
+		haloModel.render(radarVertices);
+	}
+	
+	public void showRadar(){
+		setRadarPoints();
+		rangeTexture.bind();
 		haloModel.render(radarVertices);
 	}
 	
