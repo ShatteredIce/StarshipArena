@@ -922,6 +922,10 @@ public class StarshipArena {
 					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 					projectRelativeCameraCoordinates();
 					
+					//Precompute isVisible()
+					for (int i = 0; i < playerList.size(); i++) {
+						playerList.get(i).checkVisible();
+					}
 					
 					//Show FOW
 					glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_ALPHA);
@@ -1355,7 +1359,7 @@ public class StarshipArena {
 //				new Interceptor(this, "none", startx , starty, angle);
 //			}
 //		}
-		new Missileship(this, "red", 100, 450, 0);
+//		new Missileship(this, "red", 100, 450, 0);
 //		new Transport(this, "red", 100, 450, 0);
 //		new Transport(this, "red", 5, 450, 0);
 //		new Transport(this, "red", 400, 600, 0);
@@ -1365,11 +1369,21 @@ public class StarshipArena {
 //		new Fighter(this, "red", 1700, 400, 0);
 //		new Fighter(this, "red", 1750, 400, 0);
 //		new Fighter(this, "red", 1650, 400, 0);
-		new Fighter(this, "red", 1700, 450, 0);
+//		new Fighter(this, "red", 1700, 450, 0);
 		
 		new MachineGunPod(this, "red", 300, 1500, 270);
 		new MachineGunPod(this, "red", 350, 1400, 270);
 		new MachineGunPod(this, "red", 300, 1300, 270);
+		
+		new MachineGunPod(this, "red", 400, 1500, 270);
+		new MachineGunPod(this, "red", 450, 1400, 270);
+		new MachineGunPod(this, "red", 400, 1300, 270);
+		new MachineGunPod(this, "red", 500, 1500, 270);
+		new MachineGunPod(this, "red", 550, 1400, 270);
+		new MachineGunPod(this, "red", 500, 1300, 270);
+		new MachineGunPod(this, "red", 600, 1500, 270);
+		new MachineGunPod(this, "red", 650, 1400, 270);
+		new MachineGunPod(this, "red", 600, 1300, 270);
 //		new Fighter(this, "blue", 200, 500, 270, 1);
 //		new Interceptor(this, 500, 700, 0, 1);
 	}
@@ -1433,26 +1447,7 @@ public class StarshipArena {
 	
 	//fog of war - planets
 	public boolean isVisible(Planet entity, Player p){
-		if(fog == false){
-			return true;
-		}
-		if(entity.getTeam().equals(p.getTeam())){
-			return true;
-		}
-		Planet currentPlanet;
-		for (int i = 0; i < p.getControlledPlanets().size(); i++) {
-			currentPlanet = p.getControlledPlanets().get(i);
-			if(distance(entity.getX(), entity.getY(), currentPlanet.getX(), currentPlanet.getY()) <= currentPlanet.getRadarRange()){
-				return true;
-			}
-		}
-		Starship currentShip;
-		for (int s = 0; s < p.getControlledShips().size(); s++) {
-			currentShip = p.getControlledShips().get(s);
-			if(distance(entity.getX(), entity.getY(), currentShip.getX(), currentShip.getY()) <= currentShip.getRadarRange()){
-				return true;
-			}
-		}
+		if (p.visiblePlanets.contains(entity)) return true;
 		return false;
 	}
 	public boolean isVisible(Planet entity, String team){
@@ -1464,26 +1459,7 @@ public class StarshipArena {
 	
 	//fog of war - ships
 		public boolean isVisible(Starship entity, Player p){
-			if(fog == false){
-				return true;
-			}
-			if(entity.getTeam().equals(p.getTeam())){
-				return true;
-			}
-			Planet currentPlanet;
-			for (int i = 0; i < p.getControlledPlanets().size(); i++) {
-				currentPlanet = p.getControlledPlanets().get(i);
-				if(distance(entity.getX(), entity.getY(), currentPlanet.getX(), currentPlanet.getY()) <= currentPlanet.getRadarRange()){
-					return true;
-				}
-			}
-			Starship currentShip;
-			for (int s = 0; s < p.getControlledShips().size(); s++) {
-				currentShip = p.getControlledShips().get(s);
-				if(distance(entity.getX(), entity.getY(), currentShip.getX(), currentShip.getY()) <= currentShip.getRadarRange()){
-					return true;
-				}
-			}
+			if (p.visibleShips.contains(entity)) return true;
 			return false;
 		}
 		public boolean isVisible(Starship entity, String team){

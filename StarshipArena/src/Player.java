@@ -6,6 +6,8 @@ public class Player {
 	StarshipArena game;
 	String team;
 	Planet selectedPlanet = null;
+	ArrayList<Starship> visibleShips = new ArrayList<Starship>();
+	ArrayList<Planet> visiblePlanets = new ArrayList<Planet>();
 	
 	Player(StarshipArena mygame, String myteam){
 		game = mygame;
@@ -55,6 +57,65 @@ public class Player {
 			else if (myShips.get(i) instanceof Missileship&& myShips.get(i).locationTarget == null) costOfShips += 40;
 		}
 		return costOfShips;
+	}
+	
+	public void checkVisible() {
+		loop:
+		for (int i = 0; i < game.ships.size(); i++) {
+			Starship ship = game.ships.get(i);
+			if(game.fog == false){
+				visibleShips.add(ship);
+				continue;
+			}
+			if(ship.getTeam().equals(this.getTeam())){
+				visibleShips.add(ship);
+				continue;
+			}
+			Planet currentPlanet;
+			for (int j = 0; j < this.getControlledPlanets().size(); j++) {
+				currentPlanet = this.getControlledPlanets().get(j);
+				if(game.distance(ship.getX(), ship.getY(), currentPlanet.getX(), currentPlanet.getY()) <= currentPlanet.getRadarRange()){
+					visibleShips.add(ship);
+					continue loop;
+				}
+			}
+			Starship currentShip;
+			for (int s = 0; s < this.getControlledShips().size(); s++) {
+				currentShip = this.getControlledShips().get(s);
+				if(game.distance(ship.getX(), ship.getY(), currentShip.getX(), currentShip.getY()) <= currentShip.getRadarRange()){
+					visibleShips.add(ship);
+					continue loop;
+				}
+			}
+		}
+		loop2:
+		for (int i = 0; i < game.planets.size(); i++) {
+			Planet planet = game.planets.get(i);
+			if(game.fog == false){
+				visiblePlanets.add(planet);
+				continue;
+			}
+			if(planet.getTeam().equals(this.getTeam())){
+				visiblePlanets.add(planet);
+				continue;
+			}
+			Planet currentPlanet;
+			for (int j = 0; j < this.getControlledPlanets().size(); j++) {
+				currentPlanet = this.getControlledPlanets().get(j);
+				if(game.distance(planet.getX(), planet.getY(), currentPlanet.getX(), currentPlanet.getY()) <= currentPlanet.getRadarRange()){
+					visiblePlanets.add(planet);
+					continue loop2;
+				}
+			}
+			Starship currentShip;
+			for (int s = 0; s < this.getControlledShips().size(); s++) {
+				currentShip = this.getControlledShips().get(s);
+				if(game.distance(planet.getX(), planet.getY(), currentShip.getX(), currentShip.getY()) <= currentShip.getRadarRange()){
+					visiblePlanets.add(planet);
+					continue loop2;
+				}
+			}
+		}
 	}
 
 }
