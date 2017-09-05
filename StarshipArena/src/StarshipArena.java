@@ -924,14 +924,11 @@ public class StarshipArena {
 					
 					
 					//Show FOW
-					glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_ALPHA);
 					for (int i = 0; i < ships.size(); i++) {
 						if (ships.get(i).getTeam().equals(player.getTeam()))
 							ships.get(i).showView();
 					}
 					
-					GL14.glBlendEquation(GL14.GL_FUNC_ADD);
-					glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 					
 					//Display background
 					for (int t = 0; t < backgroundTiles.size(); t++) {
