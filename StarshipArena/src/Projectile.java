@@ -143,10 +143,10 @@ public class Projectile {
 		//laser
 		else if (texId == 5 || texId == 6) {
 			points = new Point[]{
-				new Point(-8, 100, true),
-				new Point(-8, -100, true),
-				new Point(8, 100, true),
-				new Point(8, -100, true),
+				new Point(-8, 34, true),
+				new Point(-8, -180, true),
+				new Point(8, 34, true),
+				new Point(8, -180, true),
 			};
 		}
 		return points;

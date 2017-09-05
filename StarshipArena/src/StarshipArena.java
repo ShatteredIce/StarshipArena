@@ -79,7 +79,6 @@ public class StarshipArena {
     int FIGHTER_COST = 5;
     int INTERCEPTOR_COST = 20;
     int TRANSPORT_COST = 10;
-    //TODO This should be MissileShip Cost
     int MISSILESHIP_COST = 40;
     
     int PROXIMITY_SIZE = 150;
@@ -90,6 +89,7 @@ public class StarshipArena {
     float PLASMA_DB = -20.0f;
     float MGUN_DB = -18.0f;
     float MISSILE_DB = -4.0f;
+    float LASER_DB = -8.0f;
     float HITEX_DB = -8.0f;
     float DEATHEX_DB = 1.0f;
     
@@ -102,13 +102,11 @@ public class StarshipArena {
 	ArrayList<Tile> backgroundTiles = new ArrayList<>();
 	ArrayList<Player> playerList = new ArrayList<>(); 
 	ArrayList<BitmapFontLetter> text = new ArrayList<>();
-	Clip[] soundEffects = new Clip[25];
+	Clip[] soundEffects = new Clip[50];
 	
-	//TODO I commented out old ingame BGM and replaced with Yin & Yang
 //	File temp = new File("sounds/music/Earth.wav");
 	File temp = new File("sounds/music/Yin & Yang.wav");
 	AudioInputStream BGM = AudioSystem.getAudioInputStream(temp);
-	//TODO I commente out old menu GBM and replaced with Vague
 //	File temp2 = new File("sounds/music/Journey to the Sky.wav");
 	File temp2 = new File("sounds/music/Vague.wav");
 	AudioInputStream menuBGM = AudioSystem.getAudioInputStream(temp2);
@@ -116,6 +114,7 @@ public class StarshipArena {
 	Clip menuMusic;
 	
 	//TODO it's not a true mute yet
+	//TODO Actually, it might be now. I forgot, check soon.
 	boolean mute = false;
 	boolean fog = true;
 	
@@ -246,6 +245,13 @@ public class StarshipArena {
 				soundEffects[i] = AudioSystem.getClip();
 				AudioInputStream deathSfx = AudioSystem.getAudioInputStream(new File("sounds/effects/ex_with_debri.wav"));
 				soundEffects[i].open(deathSfx);
+//				FloatControl gainControl = (FloatControl) soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
+//				gainControl.setValue(1.0f); // Increase volume by a number of decibels.
+			}
+			for (int i = 25; i < 30; i++) {
+				soundEffects[i] = AudioSystem.getClip();
+				AudioInputStream laserSfx = AudioSystem.getAudioInputStream(new File("sounds/effects/pulse_laser.wav"));
+				soundEffects[i].open(laserSfx);
 //				FloatControl gainControl = (FloatControl) soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
 //				gainControl.setValue(1.0f); // Increase volume by a number of decibels.
 			}
@@ -914,6 +920,8 @@ public class StarshipArena {
 					staticFrame = false;
 				}
 				slowCounter++;
+				//NOTE: This comment is here to make it easy to Ctrl-F to this part of the code
+				//Game loop
 				if (slowCounter >= SLOW) {
 					slowCounter = 0;
 					//System.out.println(counter);
@@ -1510,7 +1518,6 @@ public class StarshipArena {
 		destroyAllTiles();
 		playerList.clear();
 		mute = trueMuteState;
-		//TODO Audio here, remove if bad
 		menuMusic.stop();
 		if (!gameMusic.isActive()) {
 			gameMusic.setFramePosition(0);
@@ -1528,26 +1535,27 @@ public class StarshipArena {
 		    CURR_X = 0;
 			CURR_Y = 0;
 			enemy = new Enemy(this, new Player(this, "red"));
-			new Planet(this, 1350, 1000, 1);
+			//TODO Enemy Fighters are commented out so I can test PlanetLaser, and left Planet is auto-given to blue. Reverse these changes after testing concludes.
+			new Planet(this, 1350, 1000, 1).setTeam("blue");;
 			new PlanetRadar(this, "blue", 1350, 1000, 45);
 			new Planet(this, 3000, 1500, 2).setTeam("red");
 			new PlanetLaser(this, "red", 3000, 1500, 45);
-			new Fighter(this, "blue", 500, 400, 0);
-			new Fighter(this, "blue", 600, 350, 0);
-			new Fighter(this, "blue", 400, 350, 0);
-//			new Fighter(this, "blue", 700, 600, 0);
-//			new Fighter(this, "blue", 800, 550, 0);
-//			new Fighter(this, "blue", 600, 550, 0);
-//			new Fighter(this, "blue", 900, 400, 0);
-//			new Fighter(this, "blue", 1000, 350, 0);
-//			new Fighter(this, "blue", 800, 350, 0);
-			
-			new Fighter(this, "red", 2800, 1500, 135);
-			new Fighter(this, "red", 2900, 1500, 90);
-			new Fighter(this, "red", 3000, 1700, 80);
-			new Fighter(this, "red", 3200, 1500, 150);
-			new Fighter(this, "red", 3200, 1300, 160);
-			new Fighter(this, "red", 3000, 1300, 150);
+//			new Fighter(this, "blue", 500, 400, 0);
+//			new Fighter(this, "blue", 600, 350, 0);
+//			new Fighter(this, "blue", 400, 350, 0);
+////			new Fighter(this, "blue", 700, 600, 0);
+////			new Fighter(this, "blue", 800, 550, 0);
+////			new Fighter(this, "blue", 600, 550, 0);
+////			new Fighter(this, "blue", 900, 400, 0);
+////			new Fighter(this, "blue", 1000, 350, 0);
+////			new Fighter(this, "blue", 800, 350, 0);
+//			
+//			new Fighter(this, "red", 2800, 1500, 135);
+//			new Fighter(this, "red", 2900, 1500, 90);
+//			new Fighter(this, "red", 3000, 1700, 80);
+//			new Fighter(this, "red", 3200, 1500, 150);
+//			new Fighter(this, "red", 3200, 1300, 160);
+//			new Fighter(this, "red", 3000, 1300, 150);
 		}
 		else if(level == 2){
 			WORLD_WIDTH = 3900;

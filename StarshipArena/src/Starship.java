@@ -147,6 +147,7 @@ public class Starship {
 			hitbox[i].rotatePoint(center.X(), center.Y(), angle);
 		}
 		moveTurrets();
+		//TODO fireTurrets() is probably a useless function.
 		fireTurrets();
 	}
 	
@@ -212,6 +213,7 @@ public class Starship {
 		}
 	}
 	
+	//TODO This function is redundant; it comes right after moveTurrets, which already update()'s turrets
 	public void fireTurrets(){
 		for (int i = 0; i < turrets.size(); i++) {
 			turrets.get(i).update();
@@ -416,7 +418,14 @@ public class Starship {
 	}
 	
 	public ArrayList<Starship> scan(){
-		ArrayList<Starship> shipsList = game.getAllShips();
+		ArrayList<Starship> shipsList = null;
+		for (int i = 0; i < game.playerList.size(); i++) {
+			if (this.team.equals(game.playerList.get(i).team)) {
+				shipsList = game.playerList.get(i).visibleShips;
+				break;
+			}
+		}
+		if (shipsList == null) shipsList = game.getAllShips();
 		ArrayList<Starship> scanned = new ArrayList<Starship>();
 		for(int i = 0; i < shipsList.size(); i++){
 			if(!shipsList.get(i).equals(this) && (game.distance(center.X(), center.Y(), shipsList.get(i).getX(), shipsList.get(i).getY()) <= scan_range)){

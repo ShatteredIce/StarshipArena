@@ -56,9 +56,6 @@ public class Turret {
 	
 	//Sound effects
 //	Clip clip;
-//	AudioInputStream weapon;
-	//TODO: Someone should make this function call this() instead of literally copy pasting the other constructor
-	//TODO: That would clean up code a bit.
 	Turret(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newangle, double newdamage,
 			int newcooldown, int newspread, int newaccuracy, int newscanrange, int newspeed, int newlifetime, int newid){
 		
@@ -137,19 +134,14 @@ public class Turret {
 	
 	//TODO Lag is possibly caused by the need for update() to for-loop through every single enemy ship.
 	public void update(){
-		//TODO Debug:
-//		if (owner instanceof Missileship && owner.getTeam().equals("blue")) {
-//			System.out.println(owner.getClass() + " " + owner.target);
-//			System.out.println(owner.angle);
-//		}
-		//TODO End debug
+
 		if(current_cooldown <= 0){
 			ArrayList<Starship> enemyShips = getEnemyShips();
 			int relativeAngle;
+			boolean fired = false;
 			for (int i = 0; i < enemyShips.size(); i++) {
 				relativeAngle = game.angleToPoint(center.X(), center.Y(), enemyShips.get(i).getX(), enemyShips.get(i).getY());
 				if(Math.abs(relativeAngle - angle) < spread){
-					boolean fired = false;
 					if (!autoAiming) {
 						fire(angle);
 						fired = true;
@@ -157,7 +149,7 @@ public class Turret {
 					//fire projectile not based on turret angle
 					/*
 					 * The spread < 180 check is to differentiate between targeted autoaim weapons and turrets with medium amounts of autoaim correction
-					 * Any ship with > 180 spread is assumed to be targeted autoaim, while any with < 180 is assumed to be correction autoaim.
+					 * Any ship with > 180 spread is assu med to be targeted autoaim, while any with < 180 is assumed to be correction autoaim.
 					 * Ships with targeted autoaim are expected to fire at the owner's target (a.k.a. the closest target)
 					 * Ships with corrective autoaim can fire at any target they can see because the owner's angle matters more than distance to target
 					 */
@@ -166,7 +158,7 @@ public class Turret {
 						fired = true;
 					}
 					if (fired == true) {
-						if (pulse && current_cooldown > -20) {
+						if (pulse && current_cooldown > -200) {
 							current_cooldown--;
 							break;
 						}
@@ -174,6 +166,16 @@ public class Turret {
 						break;
 					}
 				}
+			}
+			//When a non-autoaiming pulse weapon starts discharging, it must fire off all its shots.
+			//Autoaiming pulse weapons must reload if no targets are found.
+			if (pulse && current_cooldown < 0 && !fired) {
+				if (current_cooldown > -200) {
+					if (!autoAiming)
+						fire(angle);
+					current_cooldown--;
+				}
+				else current_cooldown = cooldown;
 			}
 		}
 		else{
@@ -190,9 +192,10 @@ public class Turret {
 		//This formula decrease the volume the further away the player is from the weapon event, but increase volume for high levels of zoom
 		float dbDiff = (float)(game.distance(cameraX, cameraY, center.X(), center.Y()) / game.CAMERA_WIDTH * -20 + 10000 / game.CAMERA_WIDTH);
 		//launch plasma or mgun
-		if (projectile_type == 1 || projectile_type == 2 || projectile_type == 3 || projectile_type == 5 || projectile_type == 6) {
+		if (projectile_type < 4 || projectile_type == 5 || projectile_type == 6) {
 			new Projectile(game, owner, team, center.X(), center.Y(), projectile_damage, (newAngle + angleOff + 360) % 360, accuracy, projectile_speed, projectile_lifetime, projectile_type, projectileBonuses);
 			//plasma sfx
+			if (game.mute) return;
 			if (projectile_type < 3) {
 				for (int i = 0; i < 5; i++) {
 					if (!game.soundEffects[i].isRunning()) {
@@ -217,10 +220,24 @@ public class Turret {
 					}
 				}
 			}
+			
+			//laser sfx
+			else if (projectile_type == 5 || projectile_type == 6) {
+				for (int i = 25; i < 30; i++) {
+					if (game.soundEffects[i].getFramePosition() > 4001 || !game.soundEffects[i].isRunning()) {
+						FloatControl gainControl = (FloatControl) game.soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
+						gainControl.setValue(Math.max(-80, Math.min(6, game.LASER_DB + dbDiff))); // Increase volume by a number of decibels.
+						game.soundEffects[i].setFramePosition(4000);
+						game.soundEffects[i].start();
+						break;
+					}
+				}
+			}
 		}
 		//launch missile and sfx
 		else if (projectile_type == 4){
 			new Missile(game, owner, team, center.X(), center.Y(), projectile_damage, (newAngle + angleOff + 360) % 360, accuracy, projectile_speed, projectile_lifetime, projectile_type);
+			if (game.mute) return;
 			for (int i = 10; i < 15; i++) {
 				if (!game.soundEffects[i].isRunning()) {
 					FloatControl gainControl = (FloatControl) game.soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
