@@ -5,6 +5,11 @@ import javax.sound.sampled.FloatControl;
 
 public class Starship {
 	
+	//Command queues: String commands paired with Point and Starship arrays
+	ArrayList<String> commands = new ArrayList<String>();
+	ArrayList<Point> locationTargets = new ArrayList<Point>();
+	ArrayList<Starship> targets = new ArrayList<Starship>();
+	
 	int damageDisplayDelay = 0;
 	Starship target = null;
 	Random random = new Random();

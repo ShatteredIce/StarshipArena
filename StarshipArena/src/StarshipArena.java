@@ -314,7 +314,7 @@ public class StarshipArena {
 			
 			if( key == GLFW_KEY_Z && action == GLFW_RELEASE ){
 				for (int s = 0; s < ships.size(); s++) {
-					if(ships.get(s).getTeam().equals(player.getTeam())){
+					if(ships.get(s).isSelected() && ships.get(s).getTeam().equals(player.getTeam())){
 						ships.get(s).setLocationTarget(null);
 					}
 				}
@@ -719,6 +719,7 @@ public class StarshipArena {
 								else{
 									s.setLockPosition(false);
 								}
+								//TODO This needs to become altPressed only
 								if(controlPressed || shiftPressed){
 									s.setAttackMove(false);
 								}
