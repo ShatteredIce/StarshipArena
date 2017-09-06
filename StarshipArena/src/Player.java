@@ -70,18 +70,22 @@ public class Player {
 			i--;
 		}
 		loop:
+			//Loop through Starships
 		for (int i = 0; i < game.ships.size(); i++) {
 			Starship ship = game.ships.get(i);
+			//If Fog Of War is off, everything is visible
 			if(game.fog == false){
 				visibleShips.add(ship);
 				continue;
 			}
 			if(ship.getTeam().equals(this.getTeam())){
+				//If ship is on our team, it is visible
 				visibleShips.add(ship);
 				continue;
 			}
 			Planet currentPlanet;
 			for (int j = 0; j < this.getControlledPlanets().size(); j++) {
+				//If any of our planets can see it (distance from ship to planet < planet's radar range), ship is visible
 				currentPlanet = this.getControlledPlanets().get(j);
 				if(game.distance(ship.getX(), ship.getY(), currentPlanet.getX(), currentPlanet.getY()) <= currentPlanet.getRadarRange()){
 					visibleShips.add(ship);
@@ -89,6 +93,7 @@ public class Player {
 				}
 			}
 			Starship currentShip;
+			//If any of our starships can see it, ship is visible
 			for (int s = 0; s < this.getControlledShips().size(); s++) {
 				currentShip = this.getControlledShips().get(s);
 				if(game.distance(ship.getX(), ship.getY(), currentShip.getX(), currentShip.getY()) <= currentShip.getRadarRange()){
@@ -97,6 +102,7 @@ public class Player {
 				}
 			}
 		}
+		//Visibility of planets checked by similar argument
 		loop2:
 		for (int i = 0; i < game.planets.size(); i++) {
 			Planet planet = game.planets.get(i);
