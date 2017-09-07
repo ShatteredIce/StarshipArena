@@ -135,6 +135,7 @@ public class Fighter extends Starship{
 	}
 	
 	public void doRandomMovement(){
+		super.doRandomMovement();
 		changeDirection++;
 		//check if the target is already dead
 		if(target != null && target.getHealth() <= 0){

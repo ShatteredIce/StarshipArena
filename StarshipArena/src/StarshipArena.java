@@ -68,6 +68,8 @@ public class StarshipArena {
     boolean shiftPressed = false;
     boolean tPressed = false;
     boolean controlPressed = false;
+    //TODO Not finished alt implement
+    boolean altPressed = false;
     boolean f1Pressed = false;
     boolean lPressed = false;
     
@@ -359,6 +361,15 @@ public class StarshipArena {
 				controlPressed = true;
 			if ( key == GLFW_KEY_RIGHT_CONTROL && action == GLFW_RELEASE )
 				controlPressed = false;
+			
+			if ( key == GLFW_KEY_LEFT_ALT && action == GLFW_PRESS )
+				altPressed = true;
+			if ( key == GLFW_KEY_LEFT_ALT && action == GLFW_RELEASE )
+				altPressed = false;
+			if ( key == GLFW_KEY_RIGHT_ALT && action == GLFW_PRESS )
+				altPressed = true;
+			if ( key == GLFW_KEY_RIGHT_ALT && action == GLFW_RELEASE )
+				altPressed = false;
 			if ( key == GLFW_KEY_F1 && action == GLFW_PRESS )
 				f1Pressed = true;
 			if ( key == GLFW_KEY_F1 && action == GLFW_RELEASE )
@@ -713,6 +724,11 @@ public class StarshipArena {
 						for (int i = 0; i < ships.size(); i++) {
 							Starship s = ships.get(i);
 							if (s.isSelected() && s.getTeam().equals(player.getTeam())) {
+								//TODO controlPressed can be used for other commands
+								//shiftPressed will be used here for command queue
+								if (shiftPressed) {
+									
+								}
 								if(tPressed){
 									s.setLockPosition(true);
 								}
@@ -720,12 +736,15 @@ public class StarshipArena {
 									s.setLockPosition(false);
 								}
 								//TODO This needs to become altPressed only
-								if(controlPressed || shiftPressed){
-									s.setAttackMove(false);
-								}
-								else{
+								//TODO Also, I'll change this to attack move is with alt, to conform to other RTS's
+								if(altPressed){
 									s.setAttackMove(true);
 								}
+								else{
+									s.setAttackMove(false);
+								}
+								//TODO Here, if I want to enable ships to target other ships with right click
+								//TODO I would need to check if the click location is over a ship
 								s.setLocationTarget(new Point(Math.max(Math.min(xpos.get(1), WORLD_WIDTH), 0), Math.max(Math.min(ypos.get(1), WORLD_HEIGHT), 0)));
 								//System.out.println(xpos.get(0) + ", " + ypos.get(0));
 							}
@@ -1061,7 +1080,7 @@ public class StarshipArena {
 					Starship first = ships.get(s);
 					for (int s1 = s + 1; s1 < ships.size(); s1++) {
 						Starship second = ships.get(s1);
-						if (first.getTeam().equals(second.getTeam()) && distance(first.getX(), first.getY(), second.getX(), second.getY()) < first.getClickRadius() + second.getClickRadius()) {
+						if (first.getTeam().equals(second.getTeam()) && distance(first.getX(), first.getY(), second.getX(), second.getY()) < first.getClickRadius() * 2 + second.getClickRadius() * 2) {
 							double angle = Math.acos((second.getX() - first.getX()) / distance(first.getX(), first.getY(), second.getX(), second.getY()));
 							double newFirstX, newFirstY, newSecondX, newSecondY;
 							if (second.getY() > first.getY()) {

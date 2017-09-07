@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-
+//TODO Once Static is created, this should extend Static
 public class PlanetRadar extends Starship{
 	
 	static Texture tex1 = new Texture("WIP.png");

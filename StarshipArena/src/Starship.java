@@ -6,7 +6,7 @@ import javax.sound.sampled.FloatControl;
 public class Starship {
 	
 	//Command queues: String commands paired with Point and Starship arrays
-	ArrayList<String> commands = new ArrayList<String>();
+	ArrayList<Command> commands = new ArrayList<Command>();
 	ArrayList<Point> locationTargets = new ArrayList<Point>();
 	ArrayList<Starship> targets = new ArrayList<Starship>();
 	
@@ -350,9 +350,17 @@ public class Starship {
 		model.setTextureCoords(textureCoords);
 		model.render(vertices);
 	}
-
+	//TODO Process command queue here
+	//The superclass' doRandomMovement makes sure every ship processes its command queue before executing its default behavior.
 	public void doRandomMovement(){
-	
+		if (!commands.isEmpty()) {
+			if (commands.get(0).isLocationTarget) {
+				//Check if locationTarget is reached (if so remove the command from the queue), otherwise set it as target
+			}
+			else {
+				//Check if target is dead/out of radar, otherwise target it
+			}
+		}
 	}
 	
 	public void edgeGuard(){
@@ -736,5 +744,10 @@ public class Starship {
 	
 	public int getControlGroup(){
 		return control_group;
+	}
+	//TODO Idk if we need to know whether the control key is pressed
+	//TODO When calling this command, put a Starship/Point as input and null for the other one
+	public void addCommand(boolean shift, boolean alt, boolean control, Starship newTarget, Point newLocation) {
+		
 	}
 }

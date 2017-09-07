@@ -57,6 +57,7 @@ public class BasicPod extends Starship{
 	}
 	
 	public void doRandomMovement(){
+		super.doRandomMovement();
 		if(locationTarget != null){
 			moveToLocation();
 		}
