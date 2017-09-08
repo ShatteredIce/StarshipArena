@@ -69,6 +69,7 @@ public class Starship {
 	boolean selected = false;
 	boolean lockPosition = false;
 	boolean attackMove = true;
+	boolean directTarget = false;
 	
 	static Texture blueHalo = new Texture("blue_halo.png");
 	static Texture redHalo = new Texture("red_halo.png");
@@ -351,13 +352,22 @@ public class Starship {
 		model.render(vertices);
 	}
 	//TODO Process command queue here
-	//The superclass' doRandomMovement makes sure every ship processes its command queue before executing its default behavior.
+	//The superclass' doRandomMovement makes sure every ship class processes its command queue before executing its default behavior.
 	public void doRandomMovement(){
 		if (!commands.isEmpty()) {
-			if (commands.get(0).isLocationTarget) {
-				//Check if locationTarget is reached (if so remove the command from the queue), otherwise set it as target
+			Command command = commands.get(0);
+			if (command.isLocationTarget) {
+				locationTarget = command.locationTarget;
+				setAttackMove(command.alt);
+				if (distance(this.getX(), this.getY(), locationTarget.X(), locationTarget.Y()) < 50)
+					commands.remove(0);
 			}
 			else {
+				target = command.target;
+				isDirectTarget(true);
+				setAttackMove(command.alt);
+				if (target == null || target.getHealth() <= 0 || !game.isVisible(target, this.getTeam()))
+					commands.remove(0);
 				//Check if target is dead/out of radar, otherwise target it
 			}
 		}
@@ -736,6 +746,12 @@ public class Starship {
 	
 	public void setAttackMove(boolean b){
 		attackMove = b;
+	}
+	
+	//This boolean is set to true if the target was acquired by a direct right click.
+	//If this is true, ships do not lose target as long as target is within radar range
+	public void isDirectTarget(boolean b){
+		directTarget = b;
 	}
 	
 	public void setControlGroup(int group){
