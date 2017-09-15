@@ -476,6 +476,8 @@ public class Starship {
 				else{ //turn right
 					current_turn_speed = Math.max(-((angle - relativeAngle + 360) % 360), -max_turn_speed);
 				}
+				//Missileship and similar thinks that drifting like crazy is cool. It's not.
+				targeted_velocity = 0;
 			}
 			else if (lockPosition == false) {
 				if (distance > 50) {

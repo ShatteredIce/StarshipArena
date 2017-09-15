@@ -8,7 +8,7 @@ import javax.sound.sampled.FloatControl;
  * - Bonuses function somewhat like chmod:
  * Autoaim: 1
  * Piercing: 2
- * Pulse =  4 (pulse weapons fire multiple projectiles (default 20, for Pulse Laser), one after another, each time they attack)
+ * Pulse: 4 (pulse weapons fire multiple projectiles (default 200, for Pulse Laser), one after another, each time they attack)
  * (any additional bonuses): 8, 16, 32, etc
  * 
  * For example, a turret with the bonus piercing:
@@ -17,7 +17,9 @@ import javax.sound.sampled.FloatControl;
  * - bonuses = 3;
  * 
  * By calling modulo in descending order, the bonuses that the turret has can be reverse-engineered!
- *
+ * 
+ * Later, add commands (like setPulseSize(int)) to make adjustments to bonuses with values
+ * e.g. setPulseSize can change the number of projectiles in each pulse.
  */
 
 public class Turret {
