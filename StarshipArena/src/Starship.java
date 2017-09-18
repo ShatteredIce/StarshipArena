@@ -353,6 +353,8 @@ public class Starship {
 	}
 	//TODO Process command queue here
 	//The superclass' doRandomMovement makes sure every ship class processes its command queue before executing its default behavior.
+	
+	//TODO For every ship, I must teach it how to deal with directTarget
 	public void doRandomMovement(){
 		if (!commands.isEmpty()) {
 			Command command = commands.get(0);
@@ -766,6 +768,6 @@ public class Starship {
 	//TODO Idk if we need to know whether the control key is pressed
 	//TODO When calling this command, put a Starship/Point as input and null for the other one
 	public void addCommand(boolean shift, boolean alt, boolean control, Starship newTarget, Point newLocation) {
-		
+		commands.add(new Command(shift, alt, control, newTarget, newLocation));
 	}
 }

@@ -12,6 +12,8 @@ public class Command {
 		shift = newShift;
 		alt = newAlt;
 		control = newControl;
+		target = newTarget;
+		locationTarget = newLocation;
 	}
 
 }

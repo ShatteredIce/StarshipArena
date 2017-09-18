@@ -727,26 +727,64 @@ public class StarshipArena {
 								//TODO controlPressed can be used for other commands
 								//shiftPressed will be used here for command queue
 								if (shiftPressed) {
-									
+									//TODO Check if clicked on ship, then create command
+									ArrayList<Starship> visibleShips = player.visibleShips;
+									Starship targetShip = null;
+									for (int j = 0; j < visibleShips.size(); j++) {
+										Starship ship = visibleShips.get(j);
+										if (ship.team == player.team) continue;
+										Point clickCenter = new Point(s.getX() + s.getXOff(), s.getY() + s.getYOff());
+										clickCenter.rotatePoint(s.getX(), s.getY(), s.getAngle());
+										if (distance(xpos.get(1), ypos.get(1), clickCenter.X(), clickCenter.Y()) < ship.getClickRadius()) {
+											targetShip = ship;
+											break;
+										}
+									}
+									if (targetShip == null) {
+										s.addCommand(shiftPressed, altPressed, controlPressed, null, new Point(Math.max(Math.min(xpos.get(1), WORLD_WIDTH), 0), Math.max(Math.min(ypos.get(1), WORLD_HEIGHT), 0)));
+									}
+									else {
+										s.addCommand(shiftPressed, altPressed, controlPressed, targetShip, null);
+									}
 								}
-								if(tPressed){
-									s.setLockPosition(true);
+								else {
+									s.commands.clear();
+									if(tPressed){
+										s.setLockPosition(true);
+									}
+									else{
+										s.setLockPosition(false);
+									}
+									//TODO This needs to become altPressed only
+									//TODO Also, I'll change this to attack move is with alt, to conform to other RTS's
+									if(altPressed){
+										s.setAttackMove(true);
+									}
+									else{
+										s.setAttackMove(false);
+									}
+									//TODO Here, if I want to enable ships to target other ships with right click
+									//TODO I would need to check if the click location is over a ship
+									ArrayList<Starship> visibleShips = player.visibleShips;
+									Starship targetShip = null;
+									for (int j = 0; j < visibleShips.size(); j++) {
+										Starship ship = visibleShips.get(j);
+										if (ship.team == player.team) continue;
+										Point clickCenter = new Point(s.getX() + s.getXOff(), s.getY() + s.getYOff());
+										clickCenter.rotatePoint(s.getX(), s.getY(), s.getAngle());
+										if (distance(xpos.get(1), ypos.get(1), clickCenter.X(), clickCenter.Y()) < ship.getClickRadius()) {
+											targetShip = ship;
+											break;
+										}
+									}
+									if (targetShip == null)
+										s.setLocationTarget(new Point(Math.max(Math.min(xpos.get(1), WORLD_WIDTH), 0), Math.max(Math.min(ypos.get(1), WORLD_HEIGHT), 0)));
+									else {
+										s.isDirectTarget(true);
+										s.target = targetShip;
+									}
+									//System.out.println(xpos.get(0) + ", " + ypos.get(0));
 								}
-								else{
-									s.setLockPosition(false);
-								}
-								//TODO This needs to become altPressed only
-								//TODO Also, I'll change this to attack move is with alt, to conform to other RTS's
-								if(altPressed){
-									s.setAttackMove(true);
-								}
-								else{
-									s.setAttackMove(false);
-								}
-								//TODO Here, if I want to enable ships to target other ships with right click
-								//TODO I would need to check if the click location is over a ship
-								s.setLocationTarget(new Point(Math.max(Math.min(xpos.get(1), WORLD_WIDTH), 0), Math.max(Math.min(ypos.get(1), WORLD_HEIGHT), 0)));
-								//System.out.println(xpos.get(0) + ", " + ypos.get(0));
 							}
 						}
 					}
