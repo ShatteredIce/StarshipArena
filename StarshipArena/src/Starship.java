@@ -360,18 +360,27 @@ public class Starship {
 			Command command = commands.get(0);
 			if (command.isLocationTarget) {
 				locationTarget = command.locationTarget;
+				isDirectTarget(false);
 				setAttackMove(command.alt);
+				setLockPosition(command.t);
 				if (distance(this.getX(), this.getY(), locationTarget.X(), locationTarget.Y()) < 50)
 					commands.remove(0);
 			}
 			else {
+				System.out.println("Direct attack command");
 				target = command.target;
 				isDirectTarget(true);
 				setAttackMove(command.alt);
+				setLockPosition(command.t);
 				if (target == null || target.getHealth() <= 0 || !game.isVisible(target, this.getTeam()))
 					commands.remove(0);
 				//Check if target is dead/out of radar, otherwise target it
 			}
+		}
+		else {
+			setAttackMove(false);
+			setLockPosition(false);
+			isDirectTarget(false);
 		}
 	}
 	
@@ -473,10 +482,10 @@ public class Starship {
 				}
 				//adjust angle
 				else if(leftBearing <= rightBearing){ //turn left
-					current_turn_speed = Math.min((relativeAngle - angle + 360) % 360, max_turn_speed);
+					current_turn_speed = Math.min((relativeAngle - angle + 3600) % 360, max_turn_speed);
 				}
 				else{ //turn right
-					current_turn_speed = Math.max(-((angle - relativeAngle + 360) % 360), -max_turn_speed);
+					current_turn_speed = Math.max(-((angle - relativeAngle + 3600) % 360), -max_turn_speed);
 				}
 				//Missileship and similar thinks that drifting like crazy is cool. It's not.
 				targeted_velocity = 0;
@@ -767,7 +776,7 @@ public class Starship {
 	}
 	//TODO Idk if we need to know whether the control key is pressed
 	//TODO When calling this command, put a Starship/Point as input and null for the other one
-	public void addCommand(boolean shift, boolean alt, boolean control, Starship newTarget, Point newLocation) {
-		commands.add(new Command(shift, alt, control, newTarget, newLocation));
+	public void addCommand(boolean shift, boolean alt, boolean control, boolean t, Starship newTarget, Point newLocation) {
+		commands.add(new Command(shift, alt, control, t, newTarget, newLocation));
 	}
 }

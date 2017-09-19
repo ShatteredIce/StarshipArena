@@ -7,11 +7,13 @@ public class Command {
 	boolean shift;
 	boolean alt;
 	boolean control;
-	public Command(boolean newShift, boolean newAlt, boolean newControl, Starship newTarget, Point newLocation) {
+	boolean t;
+	public Command(boolean newShift, boolean newAlt, boolean newControl, boolean newT, Starship newTarget, Point newLocation) {
 		isLocationTarget = newTarget == null;
 		shift = newShift;
 		alt = newAlt;
 		control = newControl;
+		t = newT;
 		target = newTarget;
 		locationTarget = newLocation;
 	}

@@ -115,10 +115,9 @@ public class StarshipArena {
 	Clip gameMusic;
 	Clip menuMusic;
 	
-	//TODO it's not a true mute yet
-	//TODO Actually, it might be now. I forgot, check soon.
-	boolean mute = false;
-	boolean fog = true;
+	boolean mute = true;
+	//TODO Disabled fog for testing direct attack
+	boolean fog = false;
 	
 	
 
@@ -314,10 +313,16 @@ public class StarshipArena {
 			if ( key == GLFW_KEY_S && action == GLFW_RELEASE )
 				panDown = false;
 			
+			//Stop a ship's movement
 			if( key == GLFW_KEY_Z && action == GLFW_RELEASE ){
 				for (int s = 0; s < ships.size(); s++) {
 					if(ships.get(s).isSelected() && ships.get(s).getTeam().equals(player.getTeam())){
-						ships.get(s).setLocationTarget(null);
+						ships.get(s).commands.clear();
+						ships.get(s).locationTarget = null;
+						ships.get(s).setAttackMove(false);
+						ships.get(s).setLockPosition(false);
+						ships.get(s).isDirectTarget(false);
+						
 					}
 				}
 			}
@@ -721,71 +726,35 @@ public class StarshipArena {
 						}
 					}
 					if ( button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+						//For each ship, if it is selected and owned by player...
 						for (int i = 0; i < ships.size(); i++) {
 							Starship s = ships.get(i);
-							if (s.isSelected() && s.getTeam().equals(player.getTeam())) {
-								//TODO controlPressed can be used for other commands
-								//shiftPressed will be used here for command queue
-								if (shiftPressed) {
-									//TODO Check if clicked on ship, then create command
-									ArrayList<Starship> visibleShips = player.visibleShips;
-									Starship targetShip = null;
-									for (int j = 0; j < visibleShips.size(); j++) {
-										Starship ship = visibleShips.get(j);
-										if (ship.team == player.team) continue;
-										Point clickCenter = new Point(s.getX() + s.getXOff(), s.getY() + s.getYOff());
-										clickCenter.rotatePoint(s.getX(), s.getY(), s.getAngle());
-										if (distance(xpos.get(1), ypos.get(1), clickCenter.X(), clickCenter.Y()) < ship.getClickRadius()) {
-											targetShip = ship;
-											break;
-										}
+							//TODO Temporarily I allow all ships to be moved by player, to test direct attack
+							if (s.isSelected() /*&& s.getTeam().equals(player.getTeam())*/) {
+								//If shift is not pressed, player is not queueing commands. Clear the current queue
+								if (!shiftPressed) s.commands.clear();
+								ArrayList<Starship> visibleShips = player.visibleShips;
+								Starship targetShip = null;
+								//Check if the right click was on top of a ship
+								for (int j = 0; j < visibleShips.size(); j++) {
+									Starship ship = visibleShips.get(j);
+									if (ship.team == player.team) continue;
+									Point clickCenter = new Point(ship.getX() + ship.getXOff(), ship.getY() + ship.getYOff());
+									clickCenter.rotatePoint(ship.getX(), ship.getY(), ship.getAngle());
+									if (distance(xpos.get(1), ypos.get(1), clickCenter.X(), clickCenter.Y()) < ship.getClickRadius()) {
+										targetShip = ship;
+										break;
 									}
-									if (targetShip == null) {
-										s.addCommand(shiftPressed, altPressed, controlPressed, null, new Point(Math.max(Math.min(xpos.get(1), WORLD_WIDTH), 0), Math.max(Math.min(ypos.get(1), WORLD_HEIGHT), 0)));
-									}
-									else {
-										s.addCommand(shiftPressed, altPressed, controlPressed, targetShip, null);
-									}
+								}
+								//If the click was on a ship, attack that ship. Else, move to point clicked
+								if (targetShip == null) {
+									s.addCommand(shiftPressed, altPressed, controlPressed, tPressed, null, new Point(Math.max(Math.min(xpos.get(1), WORLD_WIDTH), 0), Math.max(Math.min(ypos.get(1), WORLD_HEIGHT), 0)));
 								}
 								else {
-									s.commands.clear();
-									if(tPressed){
-										s.setLockPosition(true);
-									}
-									else{
-										s.setLockPosition(false);
-									}
-									//TODO This needs to become altPressed only
-									//TODO Also, I'll change this to attack move is with alt, to conform to other RTS's
-									if(altPressed){
-										s.setAttackMove(true);
-									}
-									else{
-										s.setAttackMove(false);
-									}
-									//TODO Here, if I want to enable ships to target other ships with right click
-									//TODO I would need to check if the click location is over a ship
-									ArrayList<Starship> visibleShips = player.visibleShips;
-									Starship targetShip = null;
-									for (int j = 0; j < visibleShips.size(); j++) {
-										Starship ship = visibleShips.get(j);
-										if (ship.team == player.team) continue;
-										Point clickCenter = new Point(s.getX() + s.getXOff(), s.getY() + s.getYOff());
-										clickCenter.rotatePoint(s.getX(), s.getY(), s.getAngle());
-										if (distance(xpos.get(1), ypos.get(1), clickCenter.X(), clickCenter.Y()) < ship.getClickRadius()) {
-											targetShip = ship;
-											break;
-										}
-									}
-									if (targetShip == null)
-										s.setLocationTarget(new Point(Math.max(Math.min(xpos.get(1), WORLD_WIDTH), 0), Math.max(Math.min(ypos.get(1), WORLD_HEIGHT), 0)));
-									else {
-										s.isDirectTarget(true);
-										s.target = targetShip;
-									}
-									//System.out.println(xpos.get(0) + ", " + ypos.get(0));
+									s.addCommand(shiftPressed, altPressed, controlPressed, tPressed, targetShip, null);
 								}
-							}
+							}	
+							//System.out.println(xpos.get(0) + ", " + ypos.get(0));
 						}
 					}
 				}
