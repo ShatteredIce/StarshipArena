@@ -9,9 +9,9 @@ public class MissilePod extends BasicPod{
 	static int primary_cooldown = 200;
 	static int primary_spread = 55;
 	static int primary_accuracy = 95;
-	static int primary_range = 2000;
+	static int primary_range = 3000;
 	static int primary_speed = 15;
-	static int primary_lifetime = 2100;
+	static int primary_lifetime = 3300;
 	static int primary_xoffset = 20;
 	static int primary_yoffset = 30;
 	static int primary_id = 4;

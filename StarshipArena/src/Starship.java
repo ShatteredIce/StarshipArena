@@ -363,11 +363,18 @@ public class Starship {
 				isDirectTarget(false);
 				setAttackMove(command.alt);
 				setLockPosition(command.t);
-				if (distance(this.getX(), this.getY(), locationTarget.X(), locationTarget.Y()) < 50)
+				if (!lockPosition && distance(this.getX(), this.getY(), locationTarget.X(), locationTarget.Y()) < 50)
 					commands.remove(0);
+				else if (lockPosition) {
+					double relativeAngle = game.angleToPoint(this.getX(), this.getY(), locationTarget.X(), locationTarget.Y());
+					double leftBearing = getTurnDistance(relativeAngle, true);
+					double rightBearing = getTurnDistance(relativeAngle, false);
+					if(leftBearing < max_turn_speed || rightBearing < max_turn_speed){
+						commands.remove(0);
+					}
+				}
 			}
 			else {
-				System.out.println("Direct attack command");
 				target = command.target;
 				isDirectTarget(true);
 				setAttackMove(command.alt);

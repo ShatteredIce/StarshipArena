@@ -148,7 +148,7 @@ public class Fighter extends Starship{
 				getClosestEnemy();
 			}
 		}
-		//if we have a location and attack move is false and ship is not shooting anything right now
+		//if we have a location and attack move is false
 		if(locationTarget != null && attackMove == false){
 			moveToLocation();
 		}

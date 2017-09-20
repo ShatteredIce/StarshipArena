@@ -172,13 +172,16 @@ public class Interceptor extends Starship{
 	public void doRandomMovement(){
 		super.doRandomMovement();
 		changeDirection++;
-		//check if the target is already dead
-		if(target != null && target.getHealth() <= 0){
-			target = null;
-		}
-		//get a new target if fighter has no target or target is far away
-		if(target == null || game.distance(center.X(), center.Y(), target.getX(), target.getY()) >= scan_range / 2){
-			getClosestEnemy();
+		//Ignore checks if the target is directTarget
+		if (!directTarget) {
+			//check if the target is already dead
+			if(target != null && target.getHealth() <= 0){
+				target = null;
+			}
+			//get a new target if fighter has no target or target is far away
+			if(target == null || game.distance(center.X(), center.Y(), target.getX(), target.getY()) >= scan_range / 2){
+				getClosestEnemy();
+			}
 		}
 		//if we have a location and attack move is false
 		if(locationTarget != null && attackMove == false){

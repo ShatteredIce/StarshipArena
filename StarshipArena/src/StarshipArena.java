@@ -115,7 +115,7 @@ public class StarshipArena {
 	Clip gameMusic;
 	Clip menuMusic;
 	
-	boolean mute = true;
+	boolean mute = false;
 	//TODO Disabled fog for testing direct attack
 	boolean fog = false;
 	
@@ -729,8 +729,7 @@ public class StarshipArena {
 						//For each ship, if it is selected and owned by player...
 						for (int i = 0; i < ships.size(); i++) {
 							Starship s = ships.get(i);
-							//TODO Temporarily I allow all ships to be moved by player, to test direct attack
-							if (s.isSelected() /*&& s.getTeam().equals(player.getTeam())*/) {
+							if (s.isSelected() && s.getTeam().equals(player.getTeam())) {
 								//If shift is not pressed, player is not queueing commands. Clear the current queue
 								if (!shiftPressed) s.commands.clear();
 								ArrayList<Starship> visibleShips = player.visibleShips;
@@ -751,7 +750,10 @@ public class StarshipArena {
 									s.addCommand(shiftPressed, altPressed, controlPressed, tPressed, null, new Point(Math.max(Math.min(xpos.get(1), WORLD_WIDTH), 0), Math.max(Math.min(ypos.get(1), WORLD_HEIGHT), 0)));
 								}
 								else {
-									s.addCommand(shiftPressed, altPressed, controlPressed, tPressed, targetShip, null);
+									s.addCommand(shiftPressed, false, controlPressed, false, targetShip, null);
+									s.target = null;
+									s.locationTarget = null;
+									
 								}
 							}	
 							//System.out.println(xpos.get(0) + ", " + ypos.get(0));
