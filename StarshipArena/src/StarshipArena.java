@@ -35,12 +35,15 @@ public class StarshipArena {
 	
 	int WINDOW_WIDTH = 1300;
 	int WINDOW_HEIGHT = 900;
+	//TODO Downsized window to see if it works on Chromebook now
+//	int WINDOW_WIDTH = 1011;
+//	int WINDOW_HEIGHT = 700;
 	
 	int windowXOffset;
 	int windowYOffset;
 	
-	int WORLD_WIDTH = 26000;
-    int WORLD_HEIGHT = 18000;
+	int WORLD_WIDTH = 260000;
+    int WORLD_HEIGHT = 180000;
 
     int CURR_X = 0;
 	int CURR_Y = 0;
@@ -115,7 +118,7 @@ public class StarshipArena {
 	Clip gameMusic;
 	Clip menuMusic;
 	
-	boolean mute = false;
+	boolean mute = true;
 	//TODO Disabled fog for testing direct attack
 	boolean fog = false;
 	
@@ -124,6 +127,8 @@ public class StarshipArena {
 	Sidebar sidebar;
 	Layer titlePage;
 	Layer levelSelect;
+	//Would this work:
+//	Button levelSelectButton = new Button(550 + (1300 - WINDOW_WIDTH) / 2, 555 - (900 - WINDOW_HEIGHT) / 2, 760 - (1300 - WINDOW_WIDTH) / 2, 465 + (900 - WINDOW_HEIGHT) / 2);
 	Button levelSelectButton = new Button(550, 555, 760, 465);
 	Button[] levelButtons = {
 		new Button(300, 650, 400, 550),
@@ -445,6 +450,9 @@ public class StarshipArena {
 			if ( key == GLFW_KEY_0 && action == GLFW_PRESS){
 				if(shiftPressed){
 					assignControlGroup(player, 0);
+				}
+				else if (lPressed){
+					player.getSelectedPlanet().setLoop(player.getTeam(), "0");
 				}
 			}
 			if ( key == GLFW_KEY_1 && action == GLFW_PRESS){
@@ -1406,18 +1414,18 @@ public class StarshipArena {
 //		new Fighter(this, "red", 1700, 450, 0);
 		
 		new MachineGunPod(this, "red", 300, 1500, 270);
-		new MachineGunPod(this, "red", 350, 1400, 270);
-		new MachineGunPod(this, "red", 300, 1300, 270);
-		
-		new MachineGunPod(this, "red", 400, 1500, 270);
-		new MachineGunPod(this, "red", 450, 1400, 270);
-		new MachineGunPod(this, "red", 400, 1300, 270);
-		new MachineGunPod(this, "red", 500, 1500, 270);
-		new MachineGunPod(this, "red", 550, 1400, 270);
-		new MachineGunPod(this, "red", 500, 1300, 270);
-		new MachineGunPod(this, "red", 600, 1500, 270);
-		new MachineGunPod(this, "red", 650, 1400, 270);
-		new MachineGunPod(this, "red", 600, 1300, 270);
+//		new MachineGunPod(this, "red", 350, 1400, 270);
+//		new MachineGunPod(this, "red", 300, 1300, 270);
+//		
+//		new MachineGunPod(this, "red", 400, 1500, 270);
+//		new MachineGunPod(this, "red", 450, 1400, 270);
+//		new MachineGunPod(this, "red", 400, 1300, 270);
+//		new MachineGunPod(this, "red", 500, 1500, 270);
+//		new MachineGunPod(this, "red", 550, 1400, 270);
+//		new MachineGunPod(this, "red", 500, 1300, 270);
+//		new MachineGunPod(this, "red", 600, 1500, 270);
+//		new MachineGunPod(this, "red", 650, 1400, 270);
+//		new MachineGunPod(this, "red", 600, 1300, 270);
 //		new Fighter(this, "blue", 200, 500, 270, 1);
 //		new Interceptor(this, 500, 700, 0, 1);
 	}
@@ -1457,13 +1465,16 @@ public class StarshipArena {
 			}
 		}
 	}
-	
+	//TODO Right now each ship can only be in one control group. Fix that
 	public void assignControlGroup(Player player, int group){
 		ArrayList<Starship> playerShips = player.getControlledShips();
 		for(int i = 0; i < playerShips.size(); i++){
 			if(playerShips.get(i).isSelected()){
 				playerShips.get(i).setControlGroup(group);
 			}
+			//Ships not selected are removed from the group
+			else if (playerShips.get(i).getControlGroup() == group)
+				playerShips.get(i).setControlGroup(0);
 		}
 	}
 	
@@ -1538,6 +1549,7 @@ public class StarshipArena {
 		}
 	}
 	public void loadLevel(int level){
+		//TODO Scaling the size up of combat by 10 seems to be making it more cool. Ranges of weapons and radar may need to be scaled too
 		boolean trueMuteState = mute;
 		mute = true;
 		destroyAllShips();
@@ -1559,216 +1571,219 @@ public class StarshipArena {
 		CAMERA_WIDTH = 2600;
 		CAMERA_HEIGHT = 1800;
 		if(level == 1){
-			WORLD_WIDTH = 3900;
-		    WORLD_HEIGHT = 2700;
+			WORLD_WIDTH = 39000;
+		    WORLD_HEIGHT = 27000;
 		    CURR_X = 0;
 			CURR_Y = 0;
+			CAMERA_WIDTH = 26000;
+			CAMERA_HEIGHT = 18000;
 			enemy = new Enemy(this, new Player(this, "red"));
 			//TODO Enemy Fighters are commented out so I can test PlanetLaser, and left Planet is auto-given to blue. Reverse these changes after testing concludes.
-			new Planet(this, 1350, 1000, 1).setTeam("blue");;
-			new PlanetRadar(this, "blue", 1350, 1000, 45);
-			new Planet(this, 3000, 1500, 2).setTeam("red");
-			new PlanetLaser(this, "red", 3000, 1500, 45);
-//			new Fighter(this, "blue", 500, 400, 0);
-//			new Fighter(this, "blue", 600, 350, 0);
-//			new Fighter(this, "blue", 400, 350, 0);
-////			new Fighter(this, "blue", 700, 600, 0);
-////			new Fighter(this, "blue", 800, 550, 0);
-////			new Fighter(this, "blue", 600, 550, 0);
-////			new Fighter(this, "blue", 900, 400, 0);
-////			new Fighter(this, "blue", 1000, 350, 0);
-////			new Fighter(this, "blue", 800, 350, 0);
+			new Planet(this, 13500, 10000, 1).setTeam("blue");;
+			new PlanetRadar(this, "blue", 13500, 10000, 45);
+			new Planet(this, 30000, 15000, 2).setTeam("red");
+			new PlanetLaser(this, "red", 30000, 15000, 45);
+//			new Fighter(this, "blue", 5000, 4000, 0);
+//			new Fighter(this, "blue", 6000, 3500, 0);
+//			new Fighter(this, "blue", 4000, 3500, 0);
+////			new Fighter(this, "blue", 7000, 6000, 0);
+////			new Fighter(this, "blue", 8000, 5500, 0);
+////			new Fighter(this, "blue", 6000, 5500, 0);
+////			new Fighter(this, "blue", 9000, 4000, 0);
+////			new Fighter(this, "blue", 10000, 3500, 0);
+////			new Fighter(this, "blue", 8000, 3500, 0);
 //			
-//			new Fighter(this, "red", 2800, 1500, 135);
-//			new Fighter(this, "red", 2900, 1500, 90);
-//			new Fighter(this, "red", 3000, 1700, 80);
-//			new Fighter(this, "red", 3200, 1500, 150);
-//			new Fighter(this, "red", 3200, 1300, 160);
-//			new Fighter(this, "red", 3000, 1300, 150);
+//			new Fighter(this, "red", 28000, 15000, 135);
+//			new Fighter(this, "red", 29000, 15000, 90);
+//			new Fighter(this, "red", 30000, 17000, 80);
+//			new Fighter(this, "red", 32000, 15000, 150);
+//			new Fighter(this, "red", 32000, 13000, 160);
+//			new Fighter(this, "red", 30000, 13000, 150);
 		}
 		else if(level == 2){
-			WORLD_WIDTH = 3900;
-		    WORLD_HEIGHT = 2700;
+			WORLD_WIDTH = 39000;
+		    WORLD_HEIGHT = 27000;
 		    CURR_X = 0;
 			CURR_Y = 0;
+			CAMERA_WIDTH = 26000;
+			CAMERA_HEIGHT = 18000;
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
-			new Planet(this, 1350, 1000, 1);
-			new Planet(this, 3000, 1500, 2).setTeam("red");
-			new Fighter(this, "blue", 500, 400, 0);
-			new Fighter(this, "blue", 600, 350, 0);
-			new Fighter(this, "blue", 400, 350, 0);
-			new Fighter(this, "blue", 700, 600, 0);
-//			new Fighter(this, "blue", 800, 550, 0);
-//			new Fighter(this, "blue", 600, 550, 0);
-			new Fighter(this, "blue", 900, 400, 0);
-			new Fighter(this, "blue", 1000, 350, 0);
-			new Fighter(this, "blue", 800, 350, 0);
+			new Planet(this, 13500, 10000, 1);
+			new Planet(this, 30000, 15000, 2).setTeam("red");
+			new Fighter(this, "blue", 5000, 4000, 0);
+			new Fighter(this, "blue", 6000, 3500, 0);
+			new Fighter(this, "blue", 4000, 3500, 0);
+			new Fighter(this, "blue", 7000, 6000, 0);
+//			new Fighter(this, "blue", 8000, 5500, 0);
+//			new Fighter(this, "blue", 6000, 5500, 0);
+			new Fighter(this, "blue", 9000, 4000, 0);
+			new Fighter(this, "blue", 10000, 3500, 0);
+			new Fighter(this, "blue", 8000, 3500, 0);
 			
-			new Fighter(this, "red", 2800, 1500, 135);
-			new Fighter(this, "red", 3000, 1500, 90);
-			new Fighter(this, "red", 3000, 1700, 80);
-			new Fighter(this, "red", 3200, 1500, 150);
-			new Fighter(this, "red", 3200, 1300, 160);
-			new Fighter(this, "red", 3000, 1300, 150);
+			new Fighter(this, "red", 28000, 15000, 135);
+			new Fighter(this, "red", 30000, 15000, 90);
+			new Fighter(this, "red", 30000, 17000, 80);
+			new Fighter(this, "red", 32000, 15000, 150);
+			new Fighter(this, "red", 32000, 13000, 160);
+			new Fighter(this, "red", 30000, 13000, 150);
 		}
 		
 		else if (level == 3) {
-			WORLD_WIDTH = 5000;
-		    WORLD_HEIGHT = 4000;
-		    CURR_X = 200;
-			CURR_Y = 200;
+			WORLD_WIDTH = 50000;
+		    WORLD_HEIGHT = 40000;
+		    CURR_X = 2000;
+			CURR_Y = 2000;
 			zoomLevel = 2;
 			
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
 			Planet temp;
-			temp = new Planet(this, 1350, 1000, 1);
+			temp = new Planet(this, 13500, 10000, 1);
 			temp.setTeam("blue"); temp.setResources(40);
-			temp = new Planet(this, 3000, 1500, 2);
+			temp = new Planet(this, 30000, 15000, 2);
 			temp.setTeam("blue"); temp.setResources(40);		
-			temp = new Planet(this, 2250, 3000, 3);		
+			temp = new Planet(this, 22500, 30000, 3);		
 			temp.setTeam("red"); temp.setResources(40);		
-			temp = new Planet(this, 4700, 2300, 4);		
+			temp = new Planet(this, 47000, 23000, 4);		
 			temp.setTeam("red"); temp.setResources(40);
-			new Fighter(this, "blue", 1350, 1000, 0);
-			new Fighter(this, "blue", 1450, 950, 0);
-			new Fighter(this, "blue", 1250, 950, 0);
+			new Fighter(this, "blue", 13500, 10000, 0);
+			new Fighter(this, "blue", 14500, 9500, 0);
+			new Fighter(this, "blue", 12500, 9500, 0);
 			
-			new Fighter(this, "blue", 3000, 1500, 0);
-			new Fighter(this, "blue", 3100, 1450, 0);
-			new Fighter(this, "blue", 2900, 1450, 0);
+			new Fighter(this, "blue", 30000, 15000, 0);
+			new Fighter(this, "blue", 31000, 14500, 0);
+			new Fighter(this, "blue", 29000, 14500, 0);
 			
-			new Fighter(this, "red", 2250, 3000, 180);
-			new Fighter(this, "red", 2350, 2950, 180);
-			new Fighter(this, "red", 2150, 2950, 180);
+			new Fighter(this, "red", 22500, 30000, 180);
+			new Fighter(this, "red", 23500, 29500, 180);
+			new Fighter(this, "red", 21500, 29500, 180);
 			
-			new Fighter(this, "red", 4700, 2300, 180);
-			new Fighter(this, "red", 4800, 2250, 180);
-			new Fighter(this, "red", 4600, 2250, 180);
+			new Fighter(this, "red", 47000, 23000, 180);
+			new Fighter(this, "red", 48000, 22500, 180);
+			new Fighter(this, "red", 46000, 22500, 180);
 		}
 		
 		else if (level == 4) {
-			WORLD_WIDTH = 10000;
-		    WORLD_HEIGHT = 8000;
-		    CURR_X = 200;
-			CURR_Y = 200;
+			WORLD_WIDTH = 100000;
+		    WORLD_HEIGHT = 80000;
+		    CURR_X = 2000;
+			CURR_Y = 2000;
 			zoomLevel = 3;
-			CAMERA_WIDTH = 5200;
-			CAMERA_HEIGHT = 3600;
+			CAMERA_WIDTH = 52000;
+			CAMERA_HEIGHT = 36000;
 			
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
-			new Planet(this, 1350, 1000, 1).setTeam("blue");
-			new Planet(this, 3000, 1500, 2).setTeam("blue");
-			new Planet(this, 2250, 3000, 3).setTeam("blue");
-			new Planet(this, 4700, 2300, 4).setTeam("blue");
+			new Planet(this, 13500, 10000, 1).setTeam("blue");
+			new Planet(this, 30000, 15000, 2).setTeam("blue");
+			new Planet(this, 22500, 30000, 3).setTeam("blue");
+			new Planet(this, 47000, 23000, 4).setTeam("blue");
 			
-			new Planet(this, 4350, 4200, 5).setTeam("red");
-			new Planet(this, 9500, 1500, 6).setTeam("red");
-			new Planet(this, 1500, 4000, 4).setTeam("red");
-			new Planet(this, 2700, 6300, 3).setTeam("red");
-			new Planet(this, 6700, 7500, 2).setTeam("red");
+			new Planet(this, 43500, 42000, 5).setTeam("red");
+			new Planet(this, 95000, 15000, 6).setTeam("red");
+			new Planet(this, 15000, 40000, 4).setTeam("red");
+			new Planet(this, 27000, 63000, 3).setTeam("red");
+			new Planet(this, 67000, 75000, 2).setTeam("red");
 			
-			new Fighter(this, "blue", 1350, 1000, 0);
-			new Fighter(this, "blue", 1450, 950, 0);
-			new Fighter(this, "blue", 1250, 950, 0);
-			new Interceptor(this, "blue", 1150, 900, 0);
-			new Interceptor(this, "blue", 1550, 900, 0);
+			new Fighter(this, "blue", 13500, 10000, 0);
+			new Fighter(this, "blue", 14500, 9500, 0);
+			new Fighter(this, "blue", 12500, 9500, 0);
+			new Interceptor(this, "blue", 11500, 9000, 0);
+			new Interceptor(this, "blue", 15500, 9000, 0);
 			
-			new Interceptor(this, "blue", 3000, 1500, 0);
-			new Fighter(this, "blue", 3100, 1450, 0);
-			new Fighter(this, "blue", 2900, 1450, 0);
+			new Interceptor(this, "blue", 30000, 15000, 0);
+			new Fighter(this, "blue", 31000, 14500, 0);
+			new Fighter(this, "blue", 29000, 14500, 0);
 			
-			new Fighter(this, "blue", 2250, 3000, 0);
-			new Fighter(this, "blue", 2350, 2950, 0);
-			new Fighter(this, "blue", 2150, 2950, 0);
+			new Fighter(this, "blue", 22500, 30000, 0);
+			new Fighter(this, "blue", 23500, 29500, 0);
+			new Fighter(this, "blue", 21500, 29500, 0);
 			
-			new Fighter(this, "blue", 4800, 2250, 0);
-			new Fighter(this, "blue", 4600, 2250, 0);
-			new Interceptor(this, "blue", 4900, 2050, 0);
-			new Interceptor(this, "blue", 4700, 2050, 0);
-			new Interceptor(this, "blue", 4500, 2050, 0);
+			new Fighter(this, "blue", 48000, 22500, 0);
+			new Fighter(this, "blue", 46000, 22500, 0);
+			new Interceptor(this, "blue", 49000, 20500, 0);
+			new Interceptor(this, "blue", 47000, 20500, 0);
+			new Interceptor(this, "blue", 45000, 20500, 0);
 			
 			
-			new Fighter(this, "red", 6700, 7500, 180);
-			new Fighter(this, "red", 6800, 7450, 180);
-			new Fighter(this, "red", 6600, 7450, 180);
-			new Interceptor(this, "red", 6500, 7400, 180);
-			new Interceptor(this, "red", 6900, 7400, 180);
+			new Fighter(this, "red", 67000, 75000, 180);
+			new Fighter(this, "red", 68000, 74500, 180);
+			new Fighter(this, "red", 66000, 74500, 180);
+			new Interceptor(this, "red", 65000, 74000, 180);
+			new Interceptor(this, "red", 69000, 74000, 180);
 			
-			new Interceptor(this, "red", 1500, 4000, 180);
-			new Interceptor(this, "red", 1600, 3950, 180);
-			new Interceptor(this, "red", 1400, 3950, 180);
+			new Interceptor(this, "red", 15000, 40000, 180);
+			new Interceptor(this, "red", 16000, 39500, 180);
+			new Interceptor(this, "red", 14000, 39500, 180);
 			
-			new Fighter(this, "red", 9500, 1500, 180);
-			new Fighter(this, "red", 9600, 1450, 180);
-			new Fighter(this, "red", 9400, 1450, 180);
-			new Interceptor(this, "red", 9700, 1400, 180);
-			new Interceptor(this, "red", 9300, 1400, 180);
+			new Fighter(this, "red", 95000, 15000, 180);
+			new Fighter(this, "red", 96000, 14500, 180);
+			new Fighter(this, "red", 94000, 14500, 180);
+			new Interceptor(this, "red", 97000, 14000, 180);
+			new Interceptor(this, "red", 93000, 14000, 180);
 		}
-		
 		else if (level == 5) {
-			WORLD_WIDTH = 10000;
-		    WORLD_HEIGHT = 8000;
-		    CURR_X = 1750;
-			CURR_Y = 2400;
+			WORLD_WIDTH = 100000;
+		    WORLD_HEIGHT = 80000;
+		    CURR_X = 17500;
+			CURR_Y = 24000;
 			zoomLevel = 3;
-			CAMERA_WIDTH = 5200;
-			CAMERA_HEIGHT = 3600;
+			CAMERA_WIDTH = 52000;
+			CAMERA_HEIGHT = 36000;
 			
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
-			new Planet(this, 1350, 1000, 1).setTeam("blue");
-			new Planet(this, 3000, 1500, 2).setTeam("blue");
-			new Planet(this, 2250, 3000, 3).setTeam("blue");
-			new Planet(this, 4700, 2300, 4).setTeam("blue");
+			new Planet(this, 13500, 10000, 1).setTeam("blue");
+			new Planet(this, 30000, 15000, 2).setTeam("blue");
+			new Planet(this, 22500, 30000, 3).setTeam("blue");
+			new Planet(this, 47000, 23000, 4).setTeam("blue");
 			
-			new Planet(this, 4350, 4200, 5).setTeam("red");
+			new Planet(this, 43500, 42000, 5).setTeam("red");
 			
-			new Planet(this, 9500, 1500, 6).setTeam("blue");
-			new Planet(this, 1500, 4000, 4).setTeam("blue");
-			new Planet(this, 2700, 6300, 3).setTeam("blue");
-			new Planet(this, 6700, 7500, 2).setTeam("blue");
+			new Planet(this, 95000, 15000, 6).setTeam("blue");
+			new Planet(this, 15000, 40000, 4).setTeam("blue");
+			new Planet(this, 27000, 63000, 3).setTeam("blue");
+			new Planet(this, 67000, 75000, 2).setTeam("blue");
 			
-			new Fighter(this, "blue", 1350, 1000, 0);
+			new Fighter(this, "blue", 13500, 10000, 0);
 			
-			new Interceptor(this, "blue", 3000, 1500, 0);
+			new Interceptor(this, "blue", 30000, 15000, 0);
 			
-			new Fighter(this, "blue", 2250, 3000, 0);
+			new Fighter(this, "blue", 22500, 30000, 0);
 			
-			new Interceptor(this, "blue", 4700, 2300, 0);
-			new Interceptor(this, "blue", 4700, 2100, 0);
-			
-			
-			new Fighter(this, "blue", 6700, 7500, 0);
-			
-			new Fighter(this, "blue", 1500, 4000, 0);
+			new Interceptor(this, "blue", 47000, 23000, 0);
+			new Interceptor(this, "blue", 47000, 21000, 0);
 			
 			
-			new Interceptor(this, "red", 4350, 4200, 0);
-			new Interceptor(this, "red", 4450, 4200, 0);
-			new Interceptor(this, "red", 4350, 4100, 0);
-			new Interceptor(this, "red", 4250, 4200, 0);
-			new Interceptor(this, "red", 4350, 4300, 0);
-			new Interceptor(this, "red", (int)(4350 + 50 * Math.sqrt(2)), (int)(4200 + 50 * Math.sqrt(2)), 315);
-			new Interceptor(this, "red", (int)(4350 - 50 * Math.sqrt(2)), (int)(4200 + 50 * Math.sqrt(2)), 45);
-			new Interceptor(this, "red", (int)(4350 - 50 * Math.sqrt(2)), (int)(4200 - 50 * Math.sqrt(2)), 135);
-			new Interceptor(this, "red", (int)(4350 + 50 * Math.sqrt(2)), (int)(4200 - 50 * Math.sqrt(2)), 225);
-			new Fighter(this, "red", 4550, 4200, 0);
-			new Fighter(this, "red", 4350, 4000, 0);
-			new Fighter(this, "red", 4150, 4200, 0);
-			new Fighter(this, "red", 4350, 4400, 0);
-			new Fighter(this, "red", (int)(4350 + 100 * Math.sqrt(2)), (int)(4200 + 100 * Math.sqrt(2)), 315);
-			new Fighter(this, "red", (int)(4350 - 100 * Math.sqrt(2)), (int)(4200 + 100 * Math.sqrt(2)), 45);
-			new Fighter(this, "red", (int)(4350 - 100 * Math.sqrt(2)), (int)(4200 - 100 * Math.sqrt(2)), 135);
-			new Fighter(this, "red", (int)(4350 + 100 * Math.sqrt(2)), (int)(4200 - 100 * Math.sqrt(2)), 225);
-			new Fighter(this, "red", 4650, 4200, 0);
-			new Fighter(this, "red", 4350, 3900, 0);
-			new Fighter(this, "red", 4050, 4200, 0);
-			new Fighter(this, "red", 4350, 4500, 0);
-			new Fighter(this, "red", (int)(4350 + 150 * Math.sqrt(2)), (int)(4200 + 150 * Math.sqrt(2)), 315);
-			new Fighter(this, "red", (int)(4350 - 150 * Math.sqrt(2)), (int)(4200 + 150 * Math.sqrt(2)), 45);
-			new Fighter(this, "red", (int)(4350 - 150 * Math.sqrt(2)), (int)(4200 - 150 * Math.sqrt(2)), 135);
-			new Fighter(this, "red", (int)(4350 + 150 * Math.sqrt(2)), (int)(4200 - 150 * Math.sqrt(2)), 225);
+			new Fighter(this, "blue", 67000, 75000, 0);
+			
+			new Fighter(this, "blue", 15000, 40000, 0);
+			
+			
+			new Interceptor(this, "red", 43500, 42000, 0);
+			new Interceptor(this, "red", 44500, 42000, 0);
+			new Interceptor(this, "red", 43500, 41000, 0);
+			new Interceptor(this, "red", 42500, 42000, 0);
+			new Interceptor(this, "red", 43500, 43000, 0);
+			new Interceptor(this, "red", (int)(43500 + 500 * Math.sqrt(2)), (int)(42000 + 500 * Math.sqrt(2)), 315);
+			new Interceptor(this, "red", (int)(43500 - 500 * Math.sqrt(2)), (int)(42000 + 500 * Math.sqrt(2)), 45);
+			new Interceptor(this, "red", (int)(43500 - 500 * Math.sqrt(2)), (int)(42000 - 500 * Math.sqrt(2)), 135);
+			new Interceptor(this, "red", (int)(43500 + 500 * Math.sqrt(2)), (int)(42000 - 500 * Math.sqrt(2)), 225);
+			new Fighter(this, "red", 45500, 42000, 0);
+			new Fighter(this, "red", 43500, 40000, 0);
+			new Fighter(this, "red", 41500, 42000, 0);
+			new Fighter(this, "red", 43500, 44000, 0);
+			new Fighter(this, "red", (int)(43500 + 1000 * Math.sqrt(2)), (int)(42000 + 1000 * Math.sqrt(2)), 315);
+			new Fighter(this, "red", (int)(43500 - 1000 * Math.sqrt(2)), (int)(42000 + 1000 * Math.sqrt(2)), 45);
+			new Fighter(this, "red", (int)(43500 - 1000 * Math.sqrt(2)), (int)(42000 - 1000 * Math.sqrt(2)), 135);
+			new Fighter(this, "red", (int)(43500 + 1000 * Math.sqrt(2)), (int)(42000 - 1000 * Math.sqrt(2)), 225);
+			new Fighter(this, "red", 46500, 42000, 0);
+			new Fighter(this, "red", 43500, 39000, 0);
+			new Fighter(this, "red", 40500, 42000, 0);
+			new Fighter(this, "red", 43500, 45000, 0);
+			new Fighter(this, "red", (int)(43500 + 1500 * Math.sqrt(2)), (int)(42000 + 1500 * Math.sqrt(2)), 315);
+			new Fighter(this, "red", (int)(43500 - 1500 * Math.sqrt(2)), (int)(42000 + 1500 * Math.sqrt(2)), 45);
+			new Fighter(this, "red", (int)(43500 - 1500 * Math.sqrt(2)), (int)(42000 - 1500 * Math.sqrt(2)), 135);
+			new Fighter(this, "red", (int)(43500 + 1500 * Math.sqrt(2)), (int)(42000 - 1500 * Math.sqrt(2)), 225);
 		}
-		
+		//TODO Scaled upwards up to here.
 		else if(level == 6){
 			WORLD_WIDTH = 7500;
 		    WORLD_HEIGHT = 6000;
@@ -2323,8 +2338,8 @@ public class StarshipArena {
     }
     
     public void genTiles(){
-    	for (int x = -360; x <= WORLD_WIDTH + 720; x+=720) {
-			for (int y = -360; y <= WORLD_HEIGHT + 720; y+=720) {
+    	for (int x = -3600; x <= WORLD_WIDTH + 7200; x+=7200) {
+			for (int y = -3600; y <= WORLD_HEIGHT + 7200; y+=7200) {
 				new Tile(this, x, y);
 			}
 		}

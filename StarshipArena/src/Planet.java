@@ -10,7 +10,7 @@ public class Planet {
 	int[] indices;
 	Point center;
 	Point[] points;
-	int planetSize = 200;
+	int planetSize = 2000;
 	int radar_range = 1000;
 	int texId = 0;
 	boolean selected = false;
@@ -25,7 +25,7 @@ public class Planet {
 	Model haloModel;
 	double[] haloVertices;
 	Point[] haloPoints;
-	int haloSize = 400;
+	int haloSize = 4000;
 	static Texture blueHalo = new Texture("blue_halo.png");
 	static Texture redHalo = new Texture("red_halo.png");
 	static Texture whiteHalo = new Texture("white_halo.png");
@@ -303,7 +303,8 @@ public class Planet {
 				i--;
 			}
 		}
-		buildOrders.add(temp);
+		if (!temp.equals("0"))
+			buildOrders.add(temp);
 	}
 	
 	public void checkLoop() {
