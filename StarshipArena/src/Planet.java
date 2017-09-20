@@ -11,7 +11,7 @@ public class Planet {
 	Point center;
 	Point[] points;
 	int planetSize = 2000;
-	int radar_range = 1000;
+	int radar_range = 5000;
 	int texId = 0;
 	boolean selected = false;
 	static Texture tex0 = new Texture("planet0.png");
@@ -21,14 +21,17 @@ public class Planet {
 	static Texture tex4 = new Texture("planet4.png");
 	static Texture tex5 = new Texture("planet5.png");
 	static Texture tex6 = new Texture("planet6.png");
-	//halo rendering variables
+	//halo and FOW rendering variables
 	Model haloModel;
 	double[] haloVertices;
+	double[] radarVertices;
 	Point[] haloPoints;
-	int haloSize = 4000;
+	Point[] radarPoints;
+	int haloSize = 3000;
 	static Texture blueHalo = new Texture("blue_halo.png");
 	static Texture redHalo = new Texture("red_halo.png");
 	static Texture whiteHalo = new Texture("white_halo.png");
+	static Texture FOWTexture = new Texture("FOW_halo.png");
 	//planet ingame variables
 	String team = "none";
 	String capturingTeam = "none";
@@ -53,9 +56,11 @@ public class Planet {
 		setIndices();
 		setPoints();
 		model = new Model(vertices, textureCoords, indices);
-		//set up halo around the planet
+		//set up halo and FOW around the planet
 		haloPoints = generatePoints(haloSize);
 		haloVertices = new double[haloPoints.length * 2];
+		radarPoints = generatePoints(radar_range);
+		radarVertices = new double[radarPoints.length * 2];
 		setHaloPoints();
 		haloModel = new Model(haloVertices, textureCoords, indices);
 		game.addPlanet(this);
@@ -157,6 +162,17 @@ public class Planet {
 		}
 	}
 	
+	public void setRadarPoints(){
+		int v_index = 0;
+		for (int i = 0; i < radarPoints.length; i++) {
+			radarPoints[i].setX(center.X() + radarPoints[i].getXOffset());
+			radarPoints[i].setY(center.Y() + radarPoints[i].getYOffset());
+			v_index = 2*i;
+			radarVertices[v_index] = radarPoints[i].X();
+			radarVertices[v_index+1] = radarPoints[i].Y();	
+		}
+	}
+	
 	public void setHaloPoints(){
 		int v_index = 0;
 		for (int i = 0; i < haloPoints.length; i++) {
@@ -245,6 +261,12 @@ public class Planet {
 			setHaloTexture();
 			haloModel.render(haloVertices);
 		}
+	}
+	
+	public void showView(){
+		setRadarPoints();
+		FOWTexture.bind();
+		haloModel.render(radarVertices);
 	}
 	
 	public void destroy(){
