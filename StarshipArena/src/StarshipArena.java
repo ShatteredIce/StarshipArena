@@ -1063,7 +1063,7 @@ public class StarshipArena {
 					if(f1Pressed){
 						for (int s = 0; s < ships.size(); s++) {
 							if(ships.get(s).isSelected() && ships.get(s).getTeam().equals(player.getTeam())){
-								ships.get(s).showRadar();
+								ships.get(s).showScan();
 							}
 						}
 					}

@@ -20,8 +20,10 @@ public class Starship {
 	Model haloModel;
 	double[] haloVertices;
 	double[] radarVertices;
+	double[] scanVertices;
 	Point[] haloPoints;
 	Point[] radarPoints;
+	Point[] scanPoints;
 	int haloSize = 80;
 	static Texture haloTexture = new Texture("ships_halo.png");
 	static Texture FOWTexture = new Texture("FOW_halo.png");
@@ -111,10 +113,12 @@ public class Starship {
 		points = generatePoints();
 		haloPoints = generateEmptyPoints();
 		radarPoints = generateEmptyPoints();
+		scanPoints = generateEmptyPoints();
 		hitbox = generateHitbox();
 		vertices = new double[points.length * 2];
 		haloVertices = new double[haloPoints.length * 2];
 		radarVertices = new double[radarPoints.length * 2];
+		scanVertices = new double[scanPoints.length * 2];
 		setTextureCoords();
 		setIndices();
 		setPoints();
@@ -192,6 +196,25 @@ public class Starship {
 			v_index = 2*i;
 			radarVertices[v_index] = radarPoints[i].X();
 			radarVertices[v_index+1] = radarPoints[i].Y();	
+		}
+	}
+	
+	public void setScanPoints(){
+		Point trueCenter = new Point(center.X() + xOff, center.Y() + yOff);
+		trueCenter.rotatePoint(center.X(), center.Y(), angle);
+		scanPoints[0].setX(trueCenter.X() - scan_range);
+		scanPoints[0].setY(trueCenter.Y() + scan_range);
+		scanPoints[1].setX(trueCenter.X() - scan_range);
+		scanPoints[1].setY(trueCenter.Y() - scan_range);
+		scanPoints[2].setX(trueCenter.X() + scan_range);
+		scanPoints[2].setY(trueCenter.Y() + scan_range);
+		scanPoints[3].setX(trueCenter.X() + scan_range);
+		scanPoints[3].setY(trueCenter.Y() - scan_range);
+		int v_index = 0;
+		for (int i = 0; i < scanPoints.length; i++) {
+			v_index = 2*i;
+			scanVertices[v_index] = scanPoints[i].X();
+			scanVertices[v_index+1] = scanPoints[i].Y();	
 		}
 	}
 	
@@ -324,10 +347,10 @@ public class Starship {
 		haloModel.render(radarVertices);
 	}
 	
-	public void showRadar(){
-		setRadarPoints();
+	public void showScan(){
+		setScanPoints();
 		rangeTexture.bind();
-		haloModel.render(radarVertices);
+		haloModel.render(scanVertices);
 	}
 	
 	public void displayIcon(){
