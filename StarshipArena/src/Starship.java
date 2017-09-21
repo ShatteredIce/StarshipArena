@@ -40,7 +40,8 @@ public class Starship {
 	Point[] points;
 	Point[] hitbox;
 	
-	static int scaleFactor = 2;
+	//Change scale of ships
+	static double scaleFactor = 2;
 	
 	String team;
 	int control_group = 0;
