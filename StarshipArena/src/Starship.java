@@ -41,7 +41,7 @@ public class Starship {
 	Point[] hitbox;
 	
 	//Change scale of ships
-	static double scaleFactor = 2;
+	static double scaleFactor = 1;
 	
 	String team;
 	int control_group = 0;
@@ -63,6 +63,8 @@ public class Starship {
 	int scan_range;
 	int radar_range;
 	int clickRadius;
+	//Weight determines how much a ship drifts when drifting. The lower the weight, the higher the drift speed
+	double weight = 0.25;
 	
 	ArrayList<Turret> turrets = new ArrayList<>();
 	

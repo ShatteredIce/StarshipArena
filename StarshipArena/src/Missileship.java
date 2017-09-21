@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 
 public class Missileship extends Starship{
-	
+	//I have doubled all Missileship dimensions to create a larger ship
 	int changeDirection = 0;
 	int changeDirectionCooldown = 0;
 	static Texture missileship_sprites = new Texture("missileship_sprites.png");
@@ -14,7 +14,7 @@ public class Missileship extends Starship{
 	static int primary_speed = 15;
 	static int primary_lifetime = 4300;
 	static int primary_xoffset = 0;
-	static int primary_yoffset = -50;
+	static int primary_yoffset = -100;
 	static int primary_id = 4;
 	
 	public Missileship(StarshipArena mygame, int spawnx, int spawny){
@@ -41,9 +41,13 @@ public class Missileship extends Starship{
 		scan_range = 4000;
 		radar_range = 2500;
 		//other
-		clickRadius = 55;
+		clickRadius = 110;
 		xOff = 0;
 		yOff = 0;
+		
+		//TODO Missileship needs a bigger halo and bigger weight. The new classes might need this too
+		haloSize = 160;
+		weight = 2;
 	}
 	
 	public void shipTurrets(){
@@ -134,40 +138,41 @@ public class Missileship extends Starship{
 	
 	public Point[] generatePoints(){
 		Point[] points = new Point[]{
-			new Point(-96, 144, true),
-			new Point(-96, -144, true),
-			new Point(96, 144, true),
-			new Point(96, -144, true)
+			new Point(-192, 288, true),
+			new Point(-192, -288, true),
+			new Point(192, 288, true),
+			new Point(192, -288, true)
 		};
 		return points;
 	}
 	
 	public Point[] generateHitbox(){
 		Point[] hitbox = new Point[]{
-			new Point(-9, 120, true),
-			new Point(-18, 114, true),
-			new Point(-24, 90, true),
-			new Point(-30, 66, true),
+			//Why is this -18, but at the button it's +12 and not +18?
+			new Point(-18, 240, true),
+			new Point(-36, 228, true),
+			new Point(-48, 180, true),
+			new Point(-60, 132, true),
 			
-			new Point(-30, 45, true),
-			new Point(-36, 39, true),
-			new Point(-39, 12, true),
-			new Point(-39, -57, true),
+			new Point(-60, 90, true),
+			new Point(-72, 78, true),
+			new Point(-78, 24, true),
+			new Point(-78, -104, true),
 			
-			new Point(-39, -81, true),
-			new Point(-18, -90, true),
-			new Point(18, -90, true),
-			new Point(36, -81, true),
+			new Point(-78, -162, true),
+			new Point(-36, -180, true),
+			new Point(36, -180, true),
+			new Point(72, -162, true),
 			
-			new Point(39, -57, true),
-			new Point(39, 12, true),
-			new Point(36, 39, true),
-			new Point(30, 45, true),
+			new Point(78, -104, true),
+			new Point(78, 24, true),
+			new Point(72, 78, true),
+			new Point(60, 90, true),
 			
-			new Point(30, 66, true),
-			new Point(24, 90, true),
-			new Point(18, 114, true),
-			new Point(6, 120, true),
+			new Point(60, 132, true),
+			new Point(48, 180, true),
+			new Point(36, 228, true),
+			new Point(12, 240, true),
 			
 		};
 		return hitbox;

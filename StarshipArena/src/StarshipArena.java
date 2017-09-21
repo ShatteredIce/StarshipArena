@@ -1106,16 +1106,16 @@ public class StarshipArena {
 							double angle = Math.acos((second.getX() - first.getX()) / distance(first.getX(), first.getY(), second.getX(), second.getY()));
 							double newFirstX, newFirstY, newSecondX, newSecondY;
 							if (second.getY() > first.getY()) {
-								newFirstX = Math.min(Math.max(first.center.x - Math.cos(angle), first.getClickRadius()), WORLD_WIDTH - first.getClickRadius());
-								newFirstY = Math.min(Math.max(first.center.y - Math.sin(angle), first.getClickRadius()), WORLD_HEIGHT - first.getClickRadius());
-								newSecondX = Math.min(Math.max(second.center.x + Math.cos(angle), second.getClickRadius()), WORLD_WIDTH - second.getClickRadius());
-								newSecondY = Math.min(Math.max(second.center.y + Math.sin(angle), second.getClickRadius()), WORLD_HEIGHT - second.getClickRadius());
+								newFirstX = Math.min(Math.max(first.center.x - Math.cos(angle) / first.weight, first.getClickRadius()), WORLD_WIDTH - first.getClickRadius());
+								newFirstY = Math.min(Math.max(first.center.y - Math.sin(angle) / first.weight, first.getClickRadius()), WORLD_HEIGHT - first.getClickRadius());
+								newSecondX = Math.min(Math.max(second.center.x + Math.cos(angle) / second.weight, second.getClickRadius()), WORLD_WIDTH - second.getClickRadius());
+								newSecondY = Math.min(Math.max(second.center.y + Math.sin(angle) / second.weight, second.getClickRadius()), WORLD_HEIGHT - second.getClickRadius());
 							}
 							else {
-								newFirstX = Math.min(Math.max(first.center.x - Math.cos(angle), first.getClickRadius()), WORLD_WIDTH - first.getClickRadius());
-								newFirstY = Math.min(Math.max(first.center.y + Math.sin(angle), first.getClickRadius()), WORLD_HEIGHT - first.getClickRadius());
-								newSecondX = Math.min(Math.max(second.center.x + Math.cos(angle), second.getClickRadius()), WORLD_WIDTH - second.getClickRadius());
-								newSecondY = Math.min(Math.max(second.center.y - Math.sin(angle), second.getClickRadius()), WORLD_HEIGHT - second.getClickRadius());
+								newFirstX = Math.min(Math.max(first.center.x - Math.cos(angle) / first.weight, first.getClickRadius()), WORLD_WIDTH - first.getClickRadius());
+								newFirstY = Math.min(Math.max(first.center.y + Math.sin(angle) / first.weight, first.getClickRadius()), WORLD_HEIGHT - first.getClickRadius());
+								newSecondX = Math.min(Math.max(second.center.x + Math.cos(angle) / second.weight, second.getClickRadius()), WORLD_WIDTH - second.getClickRadius());
+								newSecondY = Math.min(Math.max(second.center.y - Math.sin(angle) / second.weight, second.getClickRadius()), WORLD_HEIGHT - second.getClickRadius());
 							}
 							if(!(first instanceof BasicPod || first instanceof PlanetRadar || first instanceof PlanetLaser)){
 								first.center = new Point(newFirstX, newFirstY);
@@ -1138,12 +1138,14 @@ public class StarshipArena {
 //									second.setLocationTarget(new Point(first.center.x + newSecondX - second.center.x
 //										, first.center.y + newSecondY - second.center.y));
 //							}
-							
-							if (first.locationTarget != null 
-									&& distance(first.center.x, first.center.y, first.locationTarget.x, first.locationTarget.y) < first.getClickRadius() * 4)
+							//This change involving the command queue has the potential to be buggy
+							if (first.locationTarget != null && distance(first.center.x, first.center.y, first.locationTarget.x, first.locationTarget.y) < first.getClickRadius() * 4) {
+								first.commands.remove(0);
 								first.locationTarget = null;
-							if (second.locationTarget != null 
-									&& distance(second.center.x, second.center.y, second.locationTarget.x, second.locationTarget.y) < second.getClickRadius() * 4)
+							}
+
+							if (second.locationTarget != null && distance(second.center.x, second.center.y, second.locationTarget.x, second.locationTarget.y) < second.getClickRadius() * 4)
+								second.commands.remove(0);
 								second.locationTarget = null;
 							}
 						}
