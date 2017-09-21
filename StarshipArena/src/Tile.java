@@ -10,7 +10,7 @@ public class Tile {
 	int[] indices;
 	Point center;
 	Point[] points;
-	int size = 360;
+	int size = 3600;
 	
 	Tile(StarshipArena mygame, int spawnx, int spawny){
 		game = mygame;

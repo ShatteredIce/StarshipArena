@@ -8,7 +8,7 @@ import javax.sound.sampled.FloatControl;
  * - Bonuses function somewhat like chmod:
  * Autoaim: 1
  * Piercing: 2
- * Pulse =  4 (pulse weapons fire multiple projectiles (default 20, for Pulse Laser), one after another, each time they attack)
+ * Pulse: 4 (pulse weapons fire multiple projectiles (default 200, for Pulse Laser), one after another, each time they attack)
  * (any additional bonuses): 8, 16, 32, etc
  * 
  * For example, a turret with the bonus piercing:
@@ -17,7 +17,9 @@ import javax.sound.sampled.FloatControl;
  * - bonuses = 3;
  * 
  * By calling modulo in descending order, the bonuses that the turret has can be reverse-engineered!
- *
+ * 
+ * Later, add commands (like setPulseSize(int)) to make adjustments to bonuses with values
+ * e.g. setPulseSize can change the number of projectiles in each pulse.
  */
 
 public class Turret {
@@ -82,6 +84,7 @@ public class Turret {
 		projectile_type = newid;
 		//Bonuses are here. See top of this file for explanation of bonuses
 		//WARNING: Bonuses must be modulo'ed in DESCENDING ORDER!
+		//TODO To save a tiny bit of time, try using bitwise AND (e.g. bonuses & PULSE > 0) and bitwise XOR (e.g. bonuses = bonuses ^ PULSE)
 		if (bonuses % PULSE != bonuses) {
 			pulse = true;
 			bonuses %= PULSE;
@@ -96,32 +99,6 @@ public class Turret {
 		}
 		angle_offset = newangle_offset;
 		
-//		try {
-//			if (this.projectile_textureId < 3)
-//				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/plasma.wav"));
-//			else if (this.projectile_textureId == 3)
-//				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/sd_emgv7.wav"));
-//			else
-//				weapon = AudioSystem.getAudioInputStream(new File("sounds/effects/missile.wav"));
-//				
-//			clip = AudioSystem.getClip();
-//			clip.open(weapon);
-//			if (this.projectile_textureId < 3) {
-//				FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-//				gainControl.setValue(-20.0f); // Reduce volume by a number of decibels.
-//			}
-//			else if (this.projectile_textureId == 3) {
-//				FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-//				gainControl.setValue(-15.0f); // Reduce volume by a number of decibels.
-//			}
-//			else {
-//				FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-//				gainControl.setValue(-12.0f); // Reduce volume by a number of decibels.
-//			}
-//		}
-//		catch (Exception e) {
-//			e.printStackTrace();
-//		}
 	}
 	public void setOffset(double newx, double newy) {
 		setOffset(newx, newy, 0);
@@ -190,7 +167,7 @@ public class Turret {
 		int cameraX = game.CURR_X + game.CAMERA_WIDTH / 2;
 		int cameraY = game.CURR_Y + game.CAMERA_HEIGHT / 2;
 		//This formula decrease the volume the further away the player is from the weapon event, but increase volume for high levels of zoom
-		float dbDiff = (float)(game.distance(cameraX, cameraY, center.X(), center.Y()) / game.CAMERA_WIDTH * -20 + 10000 / game.CAMERA_WIDTH);
+		float dbDiff = (float)(game.distance(cameraX, cameraY, center.X(), center.Y()) / game.CAMERA_WIDTH * -10 + 5 - game.CAMERA_WIDTH / 5000);
 		//launch plasma or mgun
 		if (projectile_type < 4 || projectile_type == 5 || projectile_type == 6) {
 			new Projectile(game, owner, team, center.X(), center.Y(), projectile_damage, (newAngle + angleOff + 360) % 360, accuracy, projectile_speed, projectile_lifetime, projectile_type, projectileBonuses);

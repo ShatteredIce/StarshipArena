@@ -140,6 +140,7 @@ public class Transport extends Starship{
 	
 	
 	public void doRandomMovement(){
+		super.doRandomMovement();
 		if (locationTarget != null) {
 			double distance = distance(this.getX(), this.getY(), locationTarget.x, locationTarget.y);
 			if (distance > 50) {

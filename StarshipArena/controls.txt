@@ -20,76 +20,142 @@ Objective: In each level, the player controls the blue faction while an enemy AI
 Ships can be purchased at your controlled planets for resources. They can be used to blow up enemy ships
 and to capture enemy planets (by moving ships to them).
 There are three ship types in the game:
+
  1: Fighters. These are the basic combat starship. Costing 5 resources, they have 20 armor and are mounted with a medium-damage plasma cannon.
     They move fairly slowly and are not very maneuverable, but en masse they will melt anything in their path.
      - Counters: Interceptor
-     - Countered by: Battleship
+     - Countered by: Missileship
+
  2: Interceptors. These are advanced starships designed for quick and effective penetration into enemy territory. Costing 20 resources, they have 30 armor
-    and are mounted with not only a plasma cannon but also two high-damage machine guns. They are quick and agile and are great for raiding.
+    and are mounted with not only a plasma cannon but also two high-damage machine guns. They are quick and agile and are great for raiding
     and ambushing troops.
-     - Counters: Battleship
+     - Counters: Missileship
      - Countered by: Fighter
- 3: Battleships. These are heavy behemoths suited with long-range harassment and defense. Costing 40 resources, they have 50 armor and are mounted with four
-    long-range missile launcher. Although they are slow and unwieldy, their missiles have excellent range and are great for creating no-fly zones.
+
+ 3: Missileships. These heavy behemoths are well-suited with long-range harassment and defense. Costing 40 resources, they have 50 armor and are mounted with four
+    long-range missile launchers. Although they are slow and unwieldy, their missiles have excellent range and are great for creating no-fly zones.
      - Counters: Fighter
      - Countered by: Interceptor
+
+ Future ship classes: Sniper (long-range ship that can one-shot many things), Battleship (well-armed frontline unit), and Wallship (a flying pool of HP).
+
 
 Ships begin to slowly regenerate HP if they are out of combat for about 10 seconds. This regeneration is faster if the ships are near an allied planet.
 
 A player should use these three ship types to build an effective army to conquer more planets. Planets provide resource production, so the player with more planets
 will be able to build more ships and perform better in the long run. The enemy will be building these ships too, so you must build smartly to counter them.
 
+Not everything on the map is immediately visible (although fog of war may have been toggled, so perhaps everything is immediately visible).
+The player will need to scout areas and keep intelligence coverage over many locations on the map in order to perform optimally.
+
 **NOTE** Every planet produces and stores resources independently! So, you will need to build ships on all of your planets in order to be spending all your resources.
 
-There are also an assortment of turrets in the game. These currently cannot be purchased.
+
+There are also an assortment of weapon pods (aka turrets) in the game:
+
+ Basic Pod: Fires plasma.
+ Machinegun Pod: Fires dual machineguns.
+ Missile Pod: Fires dual missile lanchers.
+ Laser Pod: Fires a dangerous piercing laser.
+
+Currently, weapon pods cannot be purchased.
+
+
+Static structures do not exist yet, although work is beginning on them. Currently, there is one static structure (and it cannot be purchased):
+
+ Planet Radar: Immobile radar stationed over a planet that grants a large amount of vision to the controller.
 
 *****HOTKEYS*****:
 ---ESSENTIAL---
  - Left click:
        * In menu: Navigate the menus and select levels to play.
-       * In game: Click on planets or ships to select them, or draw a box to select multiple ships.
+
+         Clicking on the 'X' in the top right corner will exit the game.
+
+       * In game: Click on planets or ships to select them, or click and drag (box-select) to select multiple ships.
          Selecting ships or planets will show the player more information about them.
-         Using this to select ships will also deselect all currently-selected ships.
+         Newly selected ships will override the existing selection.
+
          Clicking on the 'X' in the top right corner will exit the level and return to main menu.
+
  - Right click:
-       * In game: With ships selected, right click to attack-move the selected ships to the location of the mouse.
-         Ships will automatically engage and chase enemies while en route.
-         Allied turrets can be moved, but at a glacially-slow pace.
+       * In game: With ships selected, right click to move the selected ships to the location of the mouse.
+         Ships will engage enemies that are in their direct line of fire, but will not break off their movement path to engage enemies.
+         Allied weapon pods can be moved, but at a glacially-slow pace.
+
+         If the player right clicks on an enemy ship/pod/structure, the selected units will attack that target until it is dead or until it leaves radar range.
+
+         If a ship already has a move command, issuing another one will override the inital move command (unless Shift is pressed, see below).
+
+
  - Space:
        * In game: If no ships are selected, select all allied ships.
          Otherwise, select all ships that are in the same faction and of the same type as the current selection.
+
  - +/- OR Mouse scroll:
        * In game: Zoom the camera in or out.
+
  - Arrow keys OR WASD:
        * In game: Pan the camera to see more of the battlefield.
- - Numbers (1, 2, 3):
-       * In game: With an allied planet selected, build Fighters (number 1), Interceptors (number 2), or Battleships (number 3) if resources are sufficient.
+
+ - Numbers (1, 2, 3, [later, after new ships added: 4, 5, 6]):
+       * In game: With an allied planet selected, build Fighters (number 1), Interceptors (number 2), or Missileships (number 3) if resources are sufficient.
+
+         If command groups were previously created (see Shift, below), pressing a number (1-3) without a planet selected will select the given command group.
+
  - Esc:
-       * In menu: Close the game.
-       * In game: Close the game.
+       * In menu: Exit the game.
+
+       * In game: Exit the game.
+
 
 ---ADVANCED---
- - Ctrl OR Shift:
-       * In game: Holding 'ctrl' or 'shift' while issuing an attack-move command (right click) will instead issue a move command.
-         Ships will engage enemies that are in their direct line of fire, but will continue to move towards the destination.
-       * In game: Holding 'ctrl' or 'shift' while selecting ships (with left click) will instead perform "addition-selection".
+ - Alt:
+       * In game: Holding 'alt' while issuing a move command (right click) will instead issue an attack-move command.
+         Ships will automatically engage and chase enemies while en route.
+
+ - Shift OR Control:
+       * In game: Holding 'shift' or 'control' while selecting ships (with left click) will instead perform "addition-selection".
          The ships selected will be added to the current selection instead of overriding the current selection.
+
+         Holding 'shift' while issuing move commands (with right click) will instead issue these commands into the command queue.
+         Ships will finish executing the other commands in its queue, then execute the newly queued command.
+         All sorts of commands can be queued: Attack-move, turn, direct attack, and normal move can all be queued.
+
+         Holding 'shift' while pressing a number (1-3 currently) with ships selected will add the selected ships to the numbered command group.
+         Ships can only be in one command group at a time, so adding a ship already in a command group to another command group will remove it
+         from its initial command group.
+         
  - T:
-       * In game: Holding 'T' while issuing an attack-move command (right click) will instead issue a turn command.
-         Ships and turrets will turn to face the cursor but will not move towards it.
+       * In game: Holding 'T' while issuing a move command (right click) will instead issue a turn command.
+         Ships and weapon pods will turn to face the cursor but will not move towards it.
+
  - Z:
        * In game: With ships selected, issue a stop command.
-         Ships selected will cancel movement commands.
+         Ships selected will clear their command queues and cease movement.
+
+ - L:
+       * In game: Holding 'L' while building ships (selecting a planet and pressing a number) will issue a "loop-build" order.
+         The planet will build the given ship type (see Numbers, above) whenever it has enough resources.
+
+ - F1:
+       * In game: Holding 'F1' with ships selected will show the "engage ranges" (usually the same as weapon range) of the selected ships.
+         Red circles will be drawn showing the range at which these ships can and will attack other ships (assuming they can see the enemy ships).
+
+         Pressing 'F1' with a planet selected, however, is a Cheat (see below).
 
 
 
 
 
----CHEATS---
+---CHEATS/DEV TOOLS---
  - Enter:
-       * In menu: Enter the test world. This is used for demonstration only.
-       If another level is loaded at any point, pressing 'Enter' will enter that level in the state it was.
+       * In menu: Enter the test world. This is used for demonstration and testing of new features/ships.
+
+       If another level is loaded at any point, pressing 'Enter' will instead enter that level in its current state.
+
  - '[' and ']':
        * In game: Slow the game down with '[' and use ']' to speed it back up to normal.
+
  - F1:
-       * In game: Instantly add 100 resources to the selected planet.
+       * In game: With a planet selected, instantly add 100 resources to the selected planet.

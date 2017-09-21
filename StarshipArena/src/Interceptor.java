@@ -170,14 +170,18 @@ public class Interceptor extends Starship{
 	}
 	
 	public void doRandomMovement(){
+		super.doRandomMovement();
 		changeDirection++;
-		//check if the target is already dead
-		if(target != null && target.getHealth() <= 0){
-			target = null;
-		}
-		//get a new target if fighter has no target or target is far away
-		if(target == null || game.distance(center.X(), center.Y(), target.getX(), target.getY()) >= scan_range / 2){
-			getClosestEnemy();
+		//Ignore checks if the target is directTarget
+		if (!directTarget) {
+			//check if the target is already dead
+			if(target != null && target.getHealth() <= 0){
+				target = null;
+			}
+			//get a new target if fighter has no target or target is far away
+			if(target == null || game.distance(center.X(), center.Y(), target.getX(), target.getY()) >= scan_range / 2){
+				getClosestEnemy();
+			}
 		}
 		//if we have a location and attack move is false
 		if(locationTarget != null && attackMove == false){
@@ -190,7 +194,8 @@ public class Interceptor extends Starship{
 		else{
 			//If ship has no location target and it locks onto an enemy,
 			//give it a location target so it returns to where it was before it was attacked (so defensive line is unbroken)
-			if (locationTarget == null) locationTarget = new Point(center.x, center.y);
+			//Nvm, that's not going to work out
+//			if (locationTarget == null) locationTarget = new Point(center.x, center.y);
 			double relativeAngle = game.angleToPoint(center.X(), center.Y(), target.getX(), target.getY());
 			double distanceToTarget = game.distance(center.X(), center.Y(), target.getX(), target.getY());
 			double leftBearing = getTurnDistance(relativeAngle, true);

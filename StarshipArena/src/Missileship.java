@@ -10,9 +10,9 @@ public class Missileship extends Starship{
 	static int primary_cooldown = 560;
 	static int primary_spread = 360;
 	static int primary_accuracy = 95;
-	static int primary_range = 3000;
+	static int primary_range = 4000;
 	static int primary_speed = 15;
-	static int primary_lifetime = 3300;
+	static int primary_lifetime = 4300;
 	static int primary_xoffset = 0;
 	static int primary_yoffset = -50;
 	static int primary_id = 4;
@@ -38,8 +38,8 @@ public class Missileship extends Starship{
 		min_turn_velocity = 1;
 		max_turn_speed = 1;
 		//weaponry
-		scan_range = 3000;
-		radar_range = 1500;
+		scan_range = 4000;
+		radar_range = 2500;
 		//other
 		clickRadius = 55;
 		xOff = 0;
@@ -176,6 +176,7 @@ public class Missileship extends Starship{
 	
 	
 	public void doRandomMovement(){
+		super.doRandomMovement();
 		if(target != null && target.getHealth() <= 0){
 			target = null;
 		}

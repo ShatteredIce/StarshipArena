@@ -193,8 +193,6 @@ public class AdvancedEnemy extends Enemy{
 			}
 			if (!attackPlanet) {
 				ArrayList<Starship> playerShips = game.player.getControlledShips();
-				//TODO Remove this temporary workaround that exists to prevent game from crashing.
-				//TODO Instead, make the level end when one side or the other is wiped out.
 				if(playerShips.size() > 0) {
 					int targetShip = random.nextInt(playerShips.size());
 					for (int i = 0; i < attackGroup.size(); i++) {

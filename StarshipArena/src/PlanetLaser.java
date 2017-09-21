@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-
+//TODO Should this extend BasicPod?
 public class PlanetLaser extends Starship{
 	
 	static Texture tex1 = new Texture("WIP.png");
@@ -55,6 +55,7 @@ public class PlanetLaser extends Starship{
 	}
 	
 	public void doRandomMovement(){
+		super.doRandomMovement();
 		Starship target = null;
 		double closestBearing = 360;
 		ArrayList<Starship> scanned = scan();

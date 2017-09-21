@@ -5,6 +5,11 @@ import javax.sound.sampled.FloatControl;
 
 public class Starship {
 	
+	//Command queues: String commands paired with Point and Starship arrays
+	ArrayList<Command> commands = new ArrayList<Command>();
+	ArrayList<Point> locationTargets = new ArrayList<Point>();
+	ArrayList<Starship> targets = new ArrayList<Starship>();
+	
 	int damageDisplayDelay = 0;
 	Starship target = null;
 	Random random = new Random();
@@ -15,8 +20,10 @@ public class Starship {
 	Model haloModel;
 	double[] haloVertices;
 	double[] radarVertices;
+	double[] scanVertices;
 	Point[] haloPoints;
 	Point[] radarPoints;
+	Point[] scanPoints;
 	int haloSize = 80;
 	static Texture haloTexture = new Texture("ships_halo.png");
 	static Texture FOWTexture = new Texture("FOW_halo.png");
@@ -64,6 +71,7 @@ public class Starship {
 	boolean selected = false;
 	boolean lockPosition = false;
 	boolean attackMove = true;
+	boolean directTarget = false;
 	
 	static Texture blueHalo = new Texture("blue_halo.png");
 	static Texture redHalo = new Texture("red_halo.png");
@@ -105,10 +113,12 @@ public class Starship {
 		points = generatePoints();
 		haloPoints = generateEmptyPoints();
 		radarPoints = generateEmptyPoints();
+		scanPoints = generateEmptyPoints();
 		hitbox = generateHitbox();
 		vertices = new double[points.length * 2];
 		haloVertices = new double[haloPoints.length * 2];
 		radarVertices = new double[radarPoints.length * 2];
+		scanVertices = new double[scanPoints.length * 2];
 		setTextureCoords();
 		setIndices();
 		setPoints();
@@ -186,6 +196,25 @@ public class Starship {
 			v_index = 2*i;
 			radarVertices[v_index] = radarPoints[i].X();
 			radarVertices[v_index+1] = radarPoints[i].Y();	
+		}
+	}
+	
+	public void setScanPoints(){
+		Point trueCenter = new Point(center.X() + xOff, center.Y() + yOff);
+		trueCenter.rotatePoint(center.X(), center.Y(), angle);
+		scanPoints[0].setX(trueCenter.X() - scan_range);
+		scanPoints[0].setY(trueCenter.Y() + scan_range);
+		scanPoints[1].setX(trueCenter.X() - scan_range);
+		scanPoints[1].setY(trueCenter.Y() - scan_range);
+		scanPoints[2].setX(trueCenter.X() + scan_range);
+		scanPoints[2].setY(trueCenter.Y() + scan_range);
+		scanPoints[3].setX(trueCenter.X() + scan_range);
+		scanPoints[3].setY(trueCenter.Y() - scan_range);
+		int v_index = 0;
+		for (int i = 0; i < scanPoints.length; i++) {
+			v_index = 2*i;
+			scanVertices[v_index] = scanPoints[i].X();
+			scanVertices[v_index+1] = scanPoints[i].Y();	
 		}
 	}
 	
@@ -318,10 +347,10 @@ public class Starship {
 		haloModel.render(radarVertices);
 	}
 	
-	public void showRadar(){
-		setRadarPoints();
+	public void showScan(){
+		setScanPoints();
 		rangeTexture.bind();
-		haloModel.render(radarVertices);
+		haloModel.render(scanVertices);
 	}
 	
 	public void displayIcon(){
@@ -345,9 +374,44 @@ public class Starship {
 		model.setTextureCoords(textureCoords);
 		model.render(vertices);
 	}
-
-	public void doRandomMovement(){
+	//TODO Process command queue here
+	//The superclass' doRandomMovement makes sure every ship class processes its command queue before executing its default behavior.
 	
+	//TODO For every ship, I must teach it how to deal with directTarget
+	public void doRandomMovement(){
+		if (!commands.isEmpty()) {
+			Command command = commands.get(0);
+			if (command.isLocationTarget) {
+				locationTarget = command.locationTarget;
+				isDirectTarget(false);
+				setAttackMove(command.alt);
+				setLockPosition(command.t);
+				if (!lockPosition && distance(this.getX(), this.getY(), locationTarget.X(), locationTarget.Y()) < 50)
+					commands.remove(0);
+				else if (lockPosition) {
+					double relativeAngle = game.angleToPoint(this.getX(), this.getY(), locationTarget.X(), locationTarget.Y());
+					double leftBearing = getTurnDistance(relativeAngle, true);
+					double rightBearing = getTurnDistance(relativeAngle, false);
+					if(leftBearing < max_turn_speed || rightBearing < max_turn_speed){
+						commands.remove(0);
+					}
+				}
+			}
+			else {
+				target = command.target;
+				isDirectTarget(true);
+				setAttackMove(command.alt);
+				setLockPosition(command.t);
+				if (target == null || target.getHealth() <= 0 || !game.isVisible(target, this.getTeam()))
+					commands.remove(0);
+				//Check if target is dead/out of radar, otherwise target it
+			}
+		}
+		else {
+			setAttackMove(false);
+			setLockPosition(false);
+			isDirectTarget(false);
+		}
 	}
 	
 	public void edgeGuard(){
@@ -448,11 +512,13 @@ public class Starship {
 				}
 				//adjust angle
 				else if(leftBearing <= rightBearing){ //turn left
-					current_turn_speed = Math.min((relativeAngle - angle + 360) % 360, max_turn_speed);
+					current_turn_speed = Math.min((relativeAngle - angle + 3600) % 360, max_turn_speed);
 				}
 				else{ //turn right
-					current_turn_speed = Math.max(-((angle - relativeAngle + 360) % 360), -max_turn_speed);
+					current_turn_speed = Math.max(-((angle - relativeAngle + 3600) % 360), -max_turn_speed);
 				}
+				//Missileship and similar thinks that drifting like crazy is cool. It's not.
+				targeted_velocity = 0;
 			}
 			else if (lockPosition == false) {
 				if (distance > 50) {
@@ -725,11 +791,22 @@ public class Starship {
 		attackMove = b;
 	}
 	
+	//This boolean is set to true if the target was acquired by a direct right click.
+	//If this is true, ships do not lose target as long as target is within radar range
+	public void isDirectTarget(boolean b){
+		directTarget = b;
+	}
+	
 	public void setControlGroup(int group){
 		control_group = group;
 	}
 	
 	public int getControlGroup(){
 		return control_group;
+	}
+	//TODO Idk if we need to know whether the control key is pressed
+	//TODO When calling this command, put a Starship/Point as input and null for the other one
+	public void addCommand(boolean shift, boolean alt, boolean control, boolean t, Starship newTarget, Point newLocation) {
+		commands.add(new Command(shift, alt, control, t, newTarget, newLocation));
 	}
 }
