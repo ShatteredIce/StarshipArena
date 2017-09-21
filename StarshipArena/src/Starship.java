@@ -40,6 +40,8 @@ public class Starship {
 	Point[] points;
 	Point[] hitbox;
 	
+	static int scaleFactor = 2;
+	
 	String team;
 	int control_group = 0;
 	double angle;
@@ -115,6 +117,7 @@ public class Starship {
 		radarPoints = generateEmptyPoints();
 		scanPoints = generateEmptyPoints();
 		hitbox = generateHitbox();
+		applyScaleFactor();
 		vertices = new double[points.length * 2];
 		haloVertices = new double[haloPoints.length * 2];
 		radarVertices = new double[radarPoints.length * 2];
@@ -808,5 +811,18 @@ public class Starship {
 	//TODO When calling this command, put a Starship/Point as input and null for the other one
 	public void addCommand(boolean shift, boolean alt, boolean control, boolean t, Starship newTarget, Point newLocation) {
 		commands.add(new Command(shift, alt, control, t, newTarget, newLocation));
+	}
+	
+	public void applyScaleFactor(){
+		for (int i = 0; i < points.length; i++) {
+			Point p = points[i];
+			p.setXOffset(p.getXOffset()*scaleFactor);
+			p.setYOffset(p.getYOffset()*scaleFactor);
+		}
+		for (int i = 0; i < hitbox.length; i++) {
+			Point p = hitbox[i];
+			p.setXOffset(p.getXOffset()*scaleFactor);
+			p.setYOffset(p.getYOffset()*scaleFactor);
+		}
 	}
 }

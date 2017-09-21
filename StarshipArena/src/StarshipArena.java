@@ -2,6 +2,7 @@
 //Example of LWJGL 3, displays ships that move randomly in the window
 
 //ANGLE SYSTEM (DO NOT DELETE THESE, DUJIN NEEDS THESE FOR REFERENCE):
+//I find these comments very useful, will not delete - Nathan
 //			 0
 //		  90 + 270
 //		    180
@@ -1040,7 +1041,7 @@ public class StarshipArena {
 				    	explosions.get(e).update();
 					}
 					
-					if(CAMERA_WIDTH < 5200 && CAMERA_HEIGHT < 3600){
+					if(CAMERA_WIDTH < 10400 && CAMERA_HEIGHT < 7200){
 						//display ships
 						for(int s = 0; s < ships.size(); s++){
 							if(ships.get(s).getX() > CURR_X - (shipDisplayBorder * getWidthScalar()) && ships.get(s).getX() < CURR_X + CAMERA_WIDTH + (shipDisplayBorder * getWidthScalar())
