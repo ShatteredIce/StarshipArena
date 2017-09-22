@@ -17,15 +17,15 @@ public class MissilePod extends BasicPod{
 	static int primary_id = 4;
 	
 	
-	public MissilePod(StarshipArena mygame, int spawnx, int spawny){
+	public MissilePod(StarshipArena mygame, double spawnx, double spawny){
 		super(mygame, spawnx, spawny);
 	}
 	
-	public MissilePod(StarshipArena mygame, int spawnx, int spawny, double spawnangle){
+	public MissilePod(StarshipArena mygame, double spawnx, double spawny, double spawnangle){
 		super(mygame, "none", spawnx, spawny, spawnangle);
 	}
 
-	public MissilePod(StarshipArena mygame, String newteam, int spawnx, int spawny, double spawnangle){
+	public MissilePod(StarshipArena mygame, String newteam, double spawnx, double spawny, double spawnangle){
 		super(mygame, newteam, spawnx, spawny, spawnangle);
 	}
 	

@@ -43,15 +43,18 @@ public class StarshipArena {
 	int windowXOffset;
 	int windowYOffset;
 	
-	int WORLD_WIDTH = 260000;
-    int WORLD_HEIGHT = 180000;
+	double WORLD_WIDTH = 260000;
+    double WORLD_HEIGHT = 180000;
 
-    int CURR_X = 0;
-	int CURR_Y = 0;
-	int CAMERA_SPEED = 10;
-	int CAMERA_WIDTH = 2600;
-	int CAMERA_HEIGHT = 1800;
+    double CURR_X = 0;
+	double CURR_Y = 0;
+	double CAMERA_SPEED = 10;
+	double CAMERA_WIDTH = 2600;
+	double CAMERA_HEIGHT = 1800;
 	int zoomLevel = 3;
+	
+	//Game scale: In future, it can be changed in an options menu
+	double levelScale = 1;
 	
 	int gameState = 1;
 	int SLOW = 1;
@@ -1376,8 +1379,8 @@ public class StarshipArena {
         glMatrixMode(GL_MODELVIEW);
 	}
 	
-	public int[] getScreenBounds(){
-    	int[] bounds = new int[4];
+	public double[] getScreenBounds(){
+    	double[] bounds = new double[4];
     	bounds[0] = 0;
     	bounds[1] = WORLD_WIDTH;
     	bounds[2] = 0;
@@ -1424,6 +1427,8 @@ public class StarshipArena {
 //		new MachineGunPod(this, "red", 3500, 14000, 270);
 //		new MachineGunPod(this, "red", 3000, 13000, 270);
 //		
+		new Wallship(this, "blue", 20000, 10000, 270);
+		
 //		new MachineGunPod(this, "red", 4000, 15000, 270);
 //		new MachineGunPod(this, "red", 4500, 14000, 270);
 //		new MachineGunPod(this, "red", 4000, 13000, 270);
@@ -1433,7 +1438,7 @@ public class StarshipArena {
 //		new MachineGunPod(this, "red", 6000, 15000, 270);
 //		new MachineGunPod(this, "red", 6500, 14000, 270);
 //		new MachineGunPod(this, "red", 6000, 13000, 270);
-//		new Fighter(this, "blue", 200, 5000, 2700, 1);
+//		new Fighter(this, "blue", 2000, 5000, 270, 1);
 //		new Interceptor(this, 500, 700, 0, 1);
 	}
 	
@@ -1588,7 +1593,6 @@ public class StarshipArena {
 		}
 	}
 	public void loadLevel(int level){
-		//TODO Scaling the size up of combat by 10 seems to be making it more cool. Ranges of weapons and radar may need to be scaled too
 		//TODO Add new variable double scale and add it to each variable that needs scaling
 		boolean trueMuteState = mute;
 		mute = true;
@@ -1608,556 +1612,556 @@ public class StarshipArena {
 		
 		currentLevel = level;
 		zoomLevel = 3;
-		CAMERA_WIDTH = 2600;
-		CAMERA_HEIGHT = 1800;
+		CAMERA_WIDTH = 26000 * levelScale;
+		CAMERA_HEIGHT = 18000 * levelScale;
 		if(level == 1){
-			WORLD_WIDTH = 39000;
-		    WORLD_HEIGHT = 27000;
-		    CURR_X = 0;
-			CURR_Y = 0;
-			CAMERA_WIDTH = 26000;
-			CAMERA_HEIGHT = 18000;
+			WORLD_WIDTH = 39000 * levelScale;
+		    WORLD_HEIGHT = 27000 * levelScale;
+		    CURR_X = 0 * levelScale;
+			CURR_Y = 0 * levelScale;
+			CAMERA_WIDTH = 26000 * levelScale;
+			CAMERA_HEIGHT = 18000 * levelScale;
 			enemy = new Enemy(this, new Player(this, "red"));
 			//TODO Enemy Fighters are commented out so I can test PlanetLaser, and left Planet is auto-given to blue. Reverse these changes after testing concludes.
-			new Planet(this, 13500, 10000, 1).setTeam("blue");;
-			new PlanetRadar(this, "blue", 13500, 10000, 45);
-			new Planet(this, 30000, 15000, 2).setTeam("red");
-			new PlanetLaser(this, "red", 30000, 15000, 45);
-//			new Fighter(this, "blue", 5000, 4000, 0);
-//			new Fighter(this, "blue", 6000, 3500, 0);
-//			new Fighter(this, "blue", 4000, 3500, 0);
-////			new Fighter(this, "blue", 7000, 6000, 0);
-////			new Fighter(this, "blue", 8000, 5500, 0);
-////			new Fighter(this, "blue", 6000, 5500, 0);
-////			new Fighter(this, "blue", 9000, 4000, 0);
-////			new Fighter(this, "blue", 10000, 3500, 0);
-////			new Fighter(this, "blue", 8000, 3500, 0);
+			new Planet(this, 13500 * levelScale, 10000 * levelScale, 1).setTeam("blue");;
+			new PlanetRadar(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
+			new Planet(this, 30000 * levelScale, 15000 * levelScale, 2).setTeam("red");
+			new PlanetLaser(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+//			new Fighter(this, "blue", 5000 * levelScale, 4000 * levelScale, 0);
+//			new Fighter(this, "blue", 6000 * levelScale, 3500 * levelScale, 0);
+//			new Fighter(this, "blue", 4000 * levelScale, 3500 * levelScale, 0);
+////			new Fighter(this, "blue", 7000 * levelScale, 6000 * levelScale, 0);
+////			new Fighter(this, "blue", 8000 * levelScale, 5500 * levelScale, 0);
+////			new Fighter(this, "blue", 6000 * levelScale, 5500 * levelScale, 0);
+////			new Fighter(this, "blue", 9000 * levelScale, 4000 * levelScale, 0);
+////			new Fighter(this, "blue", 10000 * levelScale, 3500 * levelScale, 0);
+////			new Fighter(this, "blue", 8000 * levelScale, 3500 * levelScale, 0);
 //			
-//			new Fighter(this, "red", 28000, 15000, 135);
-//			new Fighter(this, "red", 29000, 15000, 90);
-//			new Fighter(this, "red", 30000, 17000, 80);
-//			new Fighter(this, "red", 32000, 15000, 150);
-//			new Fighter(this, "red", 32000, 13000, 160);
-//			new Fighter(this, "red", 30000, 13000, 150);
+//			new Fighter(this, "red", 28000 * levelScale, 15000 * levelScale, 135);
+//			new Fighter(this, "red", 29000 * levelScale, 15000 * levelScale, 90);
+//			new Fighter(this, "red", 30000 * levelScale, 17000 * levelScale, 80);
+//			new Fighter(this, "red", 32000 * levelScale, 15000 * levelScale, 150);
+//			new Fighter(this, "red", 32000 * levelScale, 13000 * levelScale, 160);
+//			new Fighter(this, "red", 30000 * levelScale, 13000 * levelScale, 150);
 		}
 		else if(level == 2){
-			WORLD_WIDTH = 39000;
-		    WORLD_HEIGHT = 27000;
-		    CURR_X = 0;
-			CURR_Y = 0;
-			CAMERA_WIDTH = 26000;
-			CAMERA_HEIGHT = 18000;
+			WORLD_WIDTH = 39000 * levelScale;
+		    WORLD_HEIGHT = 27000 * levelScale;
+		    CURR_X = 0 * levelScale;
+			CURR_Y = 0 * levelScale;
+			CAMERA_WIDTH = 26000 * levelScale;
+			CAMERA_HEIGHT = 18000 * levelScale;
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
-			new Planet(this, 13500, 10000, 1);
-			new Planet(this, 30000, 15000, 2).setTeam("red");
-			new Fighter(this, "blue", 5000, 4000, 0);
-			new Fighter(this, "blue", 6000, 3500, 0);
-			new Fighter(this, "blue", 4000, 3500, 0);
-			new Fighter(this, "blue", 7000, 6000, 0);
-//			new Fighter(this, "blue", 8000, 5500, 0);
-//			new Fighter(this, "blue", 6000, 5500, 0);
-			new Fighter(this, "blue", 9000, 4000, 0);
-			new Fighter(this, "blue", 10000, 3500, 0);
-			new Fighter(this, "blue", 8000, 3500, 0);
+			new Planet(this, 13500 * levelScale, 10000 * levelScale, 1);
+			new Planet(this, 30000 * levelScale, 15000 * levelScale, 2).setTeam("red");
+			new Fighter(this, "blue", 5000 * levelScale, 4000 * levelScale, 0);
+			new Fighter(this, "blue", 6000 * levelScale, 3500 * levelScale, 0);
+			new Fighter(this, "blue", 4000 * levelScale, 3500 * levelScale, 0);
+			new Fighter(this, "blue", 7000 * levelScale, 6000 * levelScale, 0);
+//			new Fighter(this, "blue", 8000 * levelScale, 5500 * levelScale, 0);
+//			new Fighter(this, "blue", 6000 * levelScale, 5500 * levelScale, 0);
+			new Fighter(this, "blue", 9000 * levelScale, 4000 * levelScale, 0);
+			new Fighter(this, "blue", 10000 * levelScale, 3500 * levelScale, 0);
+			new Fighter(this, "blue", 8000 * levelScale, 3500 * levelScale, 0);
 			
-			new Fighter(this, "red", 28000, 15000, 135);
-			new Fighter(this, "red", 30000, 15000, 90);
-			new Fighter(this, "red", 30000, 17000, 80);
-			new Fighter(this, "red", 32000, 15000, 150);
-			new Fighter(this, "red", 32000, 13000, 160);
-			new Fighter(this, "red", 30000, 13000, 150);
+			new Fighter(this, "red", 28000 * levelScale, 15000 * levelScale, 135);
+			new Fighter(this, "red", 30000 * levelScale, 15000 * levelScale, 90);
+			new Fighter(this, "red", 30000 * levelScale, 17000 * levelScale, 80);
+			new Fighter(this, "red", 32000 * levelScale, 15000 * levelScale, 150);
+			new Fighter(this, "red", 32000 * levelScale, 13000 * levelScale, 160);
+			new Fighter(this, "red", 30000 * levelScale, 13000 * levelScale, 150);
 		}
 		
 		else if (level == 3) {
-			WORLD_WIDTH = 50000;
-		    WORLD_HEIGHT = 40000;
-		    CURR_X = 2000;
-			CURR_Y = 2000;
+			WORLD_WIDTH = 50000 * levelScale;
+		    WORLD_HEIGHT = 40000 * levelScale;
+		    CURR_X = 2000 * levelScale;
+			CURR_Y = 2000 * levelScale;
 			zoomLevel = 2;
 			
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
 			Planet temp;
-			temp = new Planet(this, 13500, 10000, 1);
+			temp = new Planet(this, 13500 * levelScale, 10000 * levelScale, 1);
 			temp.setTeam("blue"); temp.setResources(40);
-			temp = new Planet(this, 30000, 15000, 2);
+			temp = new Planet(this, 30000 * levelScale, 15000 * levelScale, 2);
 			temp.setTeam("blue"); temp.setResources(40);		
-			temp = new Planet(this, 22500, 30000, 3);		
+			temp = new Planet(this, 22500 * levelScale, 30000 * levelScale, 3);		
 			temp.setTeam("red"); temp.setResources(40);		
-			temp = new Planet(this, 47000, 23000, 4);		
+			temp = new Planet(this, 47000 * levelScale, 23000 * levelScale, 4);		
 			temp.setTeam("red"); temp.setResources(40);
-			new Fighter(this, "blue", 13500, 10000, 0);
-			new Fighter(this, "blue", 14500, 9500, 0);
-			new Fighter(this, "blue", 12500, 9500, 0);
+			new Fighter(this, "blue", 13500 * levelScale, 10000 * levelScale, 0);
+			new Fighter(this, "blue", 14500 * levelScale, 9500 * levelScale, 0);
+			new Fighter(this, "blue", 12500 * levelScale, 9500 * levelScale, 0);
 			
-			new Fighter(this, "blue", 30000, 15000, 0);
-			new Fighter(this, "blue", 31000, 14500, 0);
-			new Fighter(this, "blue", 29000, 14500, 0);
+			new Fighter(this, "blue", 30000 * levelScale, 15000 * levelScale, 0);
+			new Fighter(this, "blue", 31000 * levelScale, 14500 * levelScale, 0);
+			new Fighter(this, "blue", 29000 * levelScale, 14500 * levelScale, 0);
 			
-			new Fighter(this, "red", 22500, 30000, 180);
-			new Fighter(this, "red", 23500, 29500, 180);
-			new Fighter(this, "red", 21500, 29500, 180);
+			new Fighter(this, "red", 22500 * levelScale, 30000 * levelScale, 180);
+			new Fighter(this, "red", 23500 * levelScale, 29500 * levelScale, 180);
+			new Fighter(this, "red", 21500 * levelScale, 29500 * levelScale, 180);
 			
-			new Fighter(this, "red", 47000, 23000, 180);
-			new Fighter(this, "red", 48000, 22500, 180);
-			new Fighter(this, "red", 46000, 22500, 180);
+			new Fighter(this, "red", 47000 * levelScale, 23000 * levelScale, 180);
+			new Fighter(this, "red", 48000 * levelScale, 22500 * levelScale, 180);
+			new Fighter(this, "red", 46000 * levelScale, 22500 * levelScale, 180);
 		}
 		
 		else if (level == 4) {
-			WORLD_WIDTH = 100000;
-		    WORLD_HEIGHT = 80000;
-		    CURR_X = 2000;
-			CURR_Y = 2000;
+			WORLD_WIDTH = 100000 * levelScale;
+		    WORLD_HEIGHT = 80000 * levelScale;
+		    CURR_X = 2000 * levelScale;
+			CURR_Y = 2000 * levelScale;
 			zoomLevel = 3;
-			CAMERA_WIDTH = 52000;
-			CAMERA_HEIGHT = 36000;
+			CAMERA_WIDTH = 52000 * levelScale;
+			CAMERA_HEIGHT = 36000 * levelScale;
 			
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
-			new Planet(this, 13500, 10000, 1).setTeam("blue");
-			new Planet(this, 30000, 15000, 2).setTeam("blue");
-			new Planet(this, 22500, 30000, 3).setTeam("blue");
-			new Planet(this, 47000, 23000, 4).setTeam("blue");
+			new Planet(this, 13500 * levelScale, 10000 * levelScale, 1).setTeam("blue");
+			new Planet(this, 30000 * levelScale, 15000 * levelScale, 2).setTeam("blue");
+			new Planet(this, 22500 * levelScale, 30000 * levelScale, 3).setTeam("blue");
+			new Planet(this, 47000 * levelScale, 23000 * levelScale, 4).setTeam("blue");
 			
-			new Planet(this, 43500, 42000, 5).setTeam("red");
-			new Planet(this, 95000, 15000, 6).setTeam("red");
-			new Planet(this, 15000, 40000, 4).setTeam("red");
-			new Planet(this, 27000, 63000, 3).setTeam("red");
-			new Planet(this, 67000, 75000, 2).setTeam("red");
+			new Planet(this, 43500 * levelScale, 42000 * levelScale, 5).setTeam("red");
+			new Planet(this, 95000 * levelScale, 15000 * levelScale, 6).setTeam("red");
+			new Planet(this, 15000 * levelScale, 40000 * levelScale, 4).setTeam("red");
+			new Planet(this, 27000 * levelScale, 63000 * levelScale, 3).setTeam("red");
+			new Planet(this, 67000 * levelScale, 75000 * levelScale, 2).setTeam("red");
 			
-			new Fighter(this, "blue", 13500, 10000, 0);
-			new Fighter(this, "blue", 14500, 9500, 0);
-			new Fighter(this, "blue", 12500, 9500, 0);
-			new Interceptor(this, "blue", 11500, 9000, 0);
-			new Interceptor(this, "blue", 15500, 9000, 0);
+			new Fighter(this, "blue", 13500 * levelScale, 10000 * levelScale, 0);
+			new Fighter(this, "blue", 14500 * levelScale, 9500 * levelScale, 0);
+			new Fighter(this, "blue", 12500 * levelScale, 9500 * levelScale, 0);
+			new Interceptor(this, "blue", 11500 * levelScale, 9000 * levelScale, 0);
+			new Interceptor(this, "blue", 15500 * levelScale, 9000 * levelScale, 0);
 			
-			new Interceptor(this, "blue", 30000, 15000, 0);
-			new Fighter(this, "blue", 31000, 14500, 0);
-			new Fighter(this, "blue", 29000, 14500, 0);
+			new Interceptor(this, "blue", 30000 * levelScale, 15000 * levelScale, 0);
+			new Fighter(this, "blue", 31000 * levelScale, 14500 * levelScale, 0);
+			new Fighter(this, "blue", 29000 * levelScale, 14500 * levelScale, 0);
 			
-			new Fighter(this, "blue", 22500, 30000, 0);
-			new Fighter(this, "blue", 23500, 29500, 0);
-			new Fighter(this, "blue", 21500, 29500, 0);
+			new Fighter(this, "blue", 22500 * levelScale, 30000 * levelScale, 0);
+			new Fighter(this, "blue", 23500 * levelScale, 29500 * levelScale, 0);
+			new Fighter(this, "blue", 21500 * levelScale, 29500 * levelScale, 0);
 			
-			new Fighter(this, "blue", 48000, 22500, 0);
-			new Fighter(this, "blue", 46000, 22500, 0);
-			new Interceptor(this, "blue", 49000, 20500, 0);
-			new Interceptor(this, "blue", 47000, 20500, 0);
-			new Interceptor(this, "blue", 45000, 20500, 0);
+			new Fighter(this, "blue", 48000 * levelScale, 22500 * levelScale, 0);
+			new Fighter(this, "blue", 46000 * levelScale, 22500 * levelScale, 0);
+			new Interceptor(this, "blue", 49000 * levelScale, 20500 * levelScale, 0);
+			new Interceptor(this, "blue", 47000 * levelScale, 20500 * levelScale, 0);
+			new Interceptor(this, "blue", 45000 * levelScale, 20500 * levelScale, 0);
 			
 			
-			new Fighter(this, "red", 67000, 75000, 180);
-			new Fighter(this, "red", 68000, 74500, 180);
-			new Fighter(this, "red", 66000, 74500, 180);
-			new Interceptor(this, "red", 65000, 74000, 180);
-			new Interceptor(this, "red", 69000, 74000, 180);
+			new Fighter(this, "red", 67000 * levelScale, 75000 * levelScale, 180);
+			new Fighter(this, "red", 68000 * levelScale, 74500 * levelScale, 180);
+			new Fighter(this, "red", 66000 * levelScale, 74500 * levelScale, 180);
+			new Interceptor(this, "red", 65000 * levelScale, 74000 * levelScale, 180);
+			new Interceptor(this, "red", 69000 * levelScale, 74000 * levelScale, 180);
 			
-			new Interceptor(this, "red", 15000, 40000, 180);
-			new Interceptor(this, "red", 16000, 39500, 180);
-			new Interceptor(this, "red", 14000, 39500, 180);
+			new Interceptor(this, "red", 15000 * levelScale, 40000 * levelScale, 180);
+			new Interceptor(this, "red", 16000 * levelScale, 39500 * levelScale, 180);
+			new Interceptor(this, "red", 14000 * levelScale, 39500 * levelScale, 180);
 			
-			new Fighter(this, "red", 95000, 15000, 180);
-			new Fighter(this, "red", 96000, 14500, 180);
-			new Fighter(this, "red", 94000, 14500, 180);
-			new Interceptor(this, "red", 97000, 14000, 180);
-			new Interceptor(this, "red", 93000, 14000, 180);
+			new Fighter(this, "red", 95000 * levelScale, 15000 * levelScale, 180);
+			new Fighter(this, "red", 96000 * levelScale, 14500 * levelScale, 180);
+			new Fighter(this, "red", 94000 * levelScale, 14500 * levelScale, 180);
+			new Interceptor(this, "red", 97000 * levelScale, 14000 * levelScale, 180);
+			new Interceptor(this, "red", 93000 * levelScale, 14000 * levelScale, 180);
 		}
 		else if (level == 5) {
-			WORLD_WIDTH = 100000;
-		    WORLD_HEIGHT = 80000;
-		    CURR_X = 17500;
-			CURR_Y = 24000;
+			WORLD_WIDTH = 100000 * levelScale;
+		    WORLD_HEIGHT = 80000 * levelScale;
+		    CURR_X = 17500 * levelScale;
+			CURR_Y = 24000 * levelScale;
 			zoomLevel = 3;
-			CAMERA_WIDTH = 52000;
-			CAMERA_HEIGHT = 36000;
+			CAMERA_WIDTH = 52000 * levelScale;
+			CAMERA_HEIGHT = 36000 * levelScale;
 			
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
-			new Planet(this, 13500, 10000, 1).setTeam("blue");
-			new Planet(this, 30000, 15000, 2).setTeam("blue");
-			new Planet(this, 22500, 30000, 3).setTeam("blue");
-			new Planet(this, 47000, 23000, 4).setTeam("blue");
+			new Planet(this, 13500 * levelScale, 10000 * levelScale, 1).setTeam("blue");
+			new Planet(this, 30000 * levelScale, 15000 * levelScale, 2).setTeam("blue");
+			new Planet(this, 22500 * levelScale, 30000 * levelScale, 3).setTeam("blue");
+			new Planet(this, 47000 * levelScale, 23000 * levelScale, 4).setTeam("blue");
 			
-			new Planet(this, 43500, 42000, 5).setTeam("red");
+			new Planet(this, 43500 * levelScale, 42000 * levelScale, 5).setTeam("red");
 			
-			new Planet(this, 95000, 15000, 6).setTeam("blue");
-			new Planet(this, 15000, 40000, 4).setTeam("blue");
-			new Planet(this, 27000, 63000, 3).setTeam("blue");
-			new Planet(this, 67000, 75000, 2).setTeam("blue");
+			new Planet(this, 95000 * levelScale, 15000 * levelScale, 6).setTeam("blue");
+			new Planet(this, 15000 * levelScale, 40000 * levelScale, 4).setTeam("blue");
+			new Planet(this, 27000 * levelScale, 63000 * levelScale, 3).setTeam("blue");
+			new Planet(this, 67000 * levelScale, 75000 * levelScale, 2).setTeam("blue");
 			
-			new Fighter(this, "blue", 13500, 10000, 0);
+			new Fighter(this, "blue", 13500 * levelScale, 10000 * levelScale, 0);
 			
-			new Interceptor(this, "blue", 30000, 15000, 0);
+			new Interceptor(this, "blue", 30000 * levelScale, 15000 * levelScale, 0);
 			
-			new Fighter(this, "blue", 22500, 30000, 0);
+			new Fighter(this, "blue", 22500 * levelScale, 30000 * levelScale, 0);
 			
-			new Interceptor(this, "blue", 47000, 23000, 0);
-			new Interceptor(this, "blue", 47000, 21000, 0);
-			
-			
-			new Fighter(this, "blue", 67000, 75000, 0);
-			
-			new Fighter(this, "blue", 15000, 40000, 0);
+			new Interceptor(this, "blue", 47000 * levelScale, 23000 * levelScale, 0);
+			new Interceptor(this, "blue", 47000 * levelScale, 21000 * levelScale, 0);
 			
 			
-			new Interceptor(this, "red", 43500, 42000, 0);
-			new Interceptor(this, "red", 44500, 42000, 0);
-			new Interceptor(this, "red", 43500, 41000, 0);
-			new Interceptor(this, "red", 42500, 42000, 0);
-			new Interceptor(this, "red", 43500, 43000, 0);
-			new Interceptor(this, "red", (int)(43500 + 500 * Math.sqrt(2)), (int)(42000 + 500 * Math.sqrt(2)), 315);
-			new Interceptor(this, "red", (int)(43500 - 500 * Math.sqrt(2)), (int)(42000 + 500 * Math.sqrt(2)), 45);
-			new Interceptor(this, "red", (int)(43500 - 500 * Math.sqrt(2)), (int)(42000 - 500 * Math.sqrt(2)), 135);
-			new Interceptor(this, "red", (int)(43500 + 500 * Math.sqrt(2)), (int)(42000 - 500 * Math.sqrt(2)), 225);
-			new Fighter(this, "red", 45500, 42000, 0);
-			new Fighter(this, "red", 43500, 40000, 0);
-			new Fighter(this, "red", 41500, 42000, 0);
-			new Fighter(this, "red", 43500, 44000, 0);
-			new Fighter(this, "red", (int)(43500 + 1000 * Math.sqrt(2)), (int)(42000 + 1000 * Math.sqrt(2)), 315);
-			new Fighter(this, "red", (int)(43500 - 1000 * Math.sqrt(2)), (int)(42000 + 1000 * Math.sqrt(2)), 45);
-			new Fighter(this, "red", (int)(43500 - 1000 * Math.sqrt(2)), (int)(42000 - 1000 * Math.sqrt(2)), 135);
-			new Fighter(this, "red", (int)(43500 + 1000 * Math.sqrt(2)), (int)(42000 - 1000 * Math.sqrt(2)), 225);
-			new Fighter(this, "red", 46500, 42000, 0);
-			new Fighter(this, "red", 43500, 39000, 0);
-			new Fighter(this, "red", 40500, 42000, 0);
-			new Fighter(this, "red", 43500, 45000, 0);
-			new Fighter(this, "red", (int)(43500 + 1500 * Math.sqrt(2)), (int)(42000 + 1500 * Math.sqrt(2)), 315);
-			new Fighter(this, "red", (int)(43500 - 1500 * Math.sqrt(2)), (int)(42000 + 1500 * Math.sqrt(2)), 45);
-			new Fighter(this, "red", (int)(43500 - 1500 * Math.sqrt(2)), (int)(42000 - 1500 * Math.sqrt(2)), 135);
-			new Fighter(this, "red", (int)(43500 + 1500 * Math.sqrt(2)), (int)(42000 - 1500 * Math.sqrt(2)), 225);
+			new Fighter(this, "blue", 67000 * levelScale, 75000 * levelScale, 0);
+			
+			new Fighter(this, "blue", 15000 * levelScale, 40000 * levelScale, 0);
+			
+			
+			new Interceptor(this, "red", 43500 * levelScale, 42000 * levelScale, 0);
+			new Interceptor(this, "red", 44500 * levelScale, 42000 * levelScale, 0);
+			new Interceptor(this, "red", 43500 * levelScale, 41000 * levelScale, 0);
+			new Interceptor(this, "red", 42500 * levelScale, 42000 * levelScale, 0);
+			new Interceptor(this, "red", 43500 * levelScale, 43000 * levelScale, 0);
+			new Interceptor(this, "red", (43500 * levelScale + 500 * levelScale * Math.sqrt(2)), (42000 * levelScale + 500 * levelScale * Math.sqrt(2)), 315);
+			new Interceptor(this, "red", (43500 * levelScale - 500 * levelScale * Math.sqrt(2)), (42000 * levelScale + 500 * levelScale * Math.sqrt(2)), 45);
+			new Interceptor(this, "red", (43500 * levelScale - 500 * levelScale * Math.sqrt(2)), (42000 * levelScale - 500 * levelScale * Math.sqrt(2)), 135);
+			new Interceptor(this, "red", (43500 * levelScale + 500 * levelScale * Math.sqrt(2)), (42000 * levelScale - 500 * levelScale * Math.sqrt(2)), 225);
+			new Fighter(this, "red", 45500 * levelScale, 42000 * levelScale, 0);
+			new Fighter(this, "red", 43500 * levelScale, 40000 * levelScale, 0);
+			new Fighter(this, "red", 41500 * levelScale, 42000 * levelScale, 0);
+			new Fighter(this, "red", 43500 * levelScale, 44000 * levelScale, 0);
+			new Fighter(this, "red", (43500 * levelScale + 1000 * levelScale * Math.sqrt(2)), (42000 * levelScale + 1000 * levelScale * Math.sqrt(2)), 315);
+			new Fighter(this, "red", (43500 * levelScale - 1000 * levelScale * Math.sqrt(2)), (42000 * levelScale + 1000 * levelScale * Math.sqrt(2)), 45);
+			new Fighter(this, "red", (43500 * levelScale - 1000 * levelScale * Math.sqrt(2)), (42000 * levelScale - 1000 * levelScale * Math.sqrt(2)), 135);
+			new Fighter(this, "red", (43500 * levelScale + 1000 * levelScale * Math.sqrt(2)), (42000 * levelScale - 1000 * levelScale * Math.sqrt(2)), 225);
+			new Fighter(this, "red", 46500 * levelScale, 42000 * levelScale, 0);
+			new Fighter(this, "red", 43500 * levelScale, 39000 * levelScale, 0);
+			new Fighter(this, "red", 40500 * levelScale, 42000 * levelScale, 0);
+			new Fighter(this, "red", 43500 * levelScale, 45000 * levelScale, 0);
+			new Fighter(this, "red", (43500 * levelScale + 1500 * levelScale * Math.sqrt(2)), (42000 * levelScale + 1500 * levelScale * Math.sqrt(2)), 315);
+			new Fighter(this, "red", (43500 * levelScale - 1500 * levelScale * Math.sqrt(2)), (42000 * levelScale + 1500 * levelScale * Math.sqrt(2)), 45);
+			new Fighter(this, "red", (43500 * levelScale - 1500 * levelScale * Math.sqrt(2)), (42000 * levelScale - 1500 * levelScale * Math.sqrt(2)), 135);
+			new Fighter(this, "red", (43500 * levelScale + 1500 * levelScale * Math.sqrt(2)), (42000 * levelScale - 1500 * levelScale * Math.sqrt(2)), 225);
 		}
 
 		else if(level == 6){
-			WORLD_WIDTH = 75000;
-		    WORLD_HEIGHT = 60000;
-		    CURR_X = 16000;
-			CURR_Y = 7000;
+			WORLD_WIDTH = 75000 * levelScale;
+		    WORLD_HEIGHT = 60000 * levelScale;
+		    CURR_X = 16000 * levelScale;
+			CURR_Y = 7000 * levelScale;
 			zoomLevel = 2;
-			CAMERA_WIDTH = 45500;
-			CAMERA_HEIGHT = 31500;
+			CAMERA_WIDTH = 45500 * levelScale;
+			CAMERA_HEIGHT = 31500 * levelScale;
 			
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
 			
-			new Planet(this, 35000, 40000, 4).setTeam("red");
-			new Fighter(this, "red", 34000, 39500, 180);
-			new Fighter(this, "red", 36000, 39500, 180);
-			new Planet(this, 53000, 50000, 4).setTeam("red");
-			new Fighter(this, "red", 52000, 49500, 180);
-			new Fighter(this, "red", 54000, 49500, 180);
+			new Planet(this, 35000 * levelScale, 40000 * levelScale, 4).setTeam("red");
+			new Fighter(this, "red", 34000 * levelScale, 39500 * levelScale, 180);
+			new Fighter(this, "red", 36000 * levelScale, 39500 * levelScale, 180);
+			new Planet(this, 53000 * levelScale, 50000 * levelScale, 4).setTeam("red");
+			new Fighter(this, "red", 52000 * levelScale, 49500 * levelScale, 180);
+			new Fighter(this, "red", 54000 * levelScale, 49500 * levelScale, 180);
 			
-			new MissilePod(this, "red", 33000, 36000, 180);
-			new MissilePod(this, "red", 35000, 36000, 180);
-			new MissilePod(this, "red", 37000, 36000, 180);
+			new MissilePod(this, "red", 33000 * levelScale, 36000 * levelScale, 180);
+			new MissilePod(this, "red", 35000 * levelScale, 36000 * levelScale, 180);
+			new MissilePod(this, "red", 37000 * levelScale, 36000 * levelScale, 180);
 			
-			new MissilePod(this, "red", 31000, 38000, 90);
-			new MissilePod(this, "red", 31000, 40000, 90);
-			new MissilePod(this, "red", 31000, 42000, 90);
+			new MissilePod(this, "red", 31000 * levelScale, 38000 * levelScale, 90);
+			new MissilePod(this, "red", 31000 * levelScale, 40000 * levelScale, 90);
+			new MissilePod(this, "red", 31000 * levelScale, 42000 * levelScale, 90);
 			
-			new MissilePod(this, "red", 39000, 38000, 270);
-			new MissilePod(this, "red", 39000, 40000, 270);
-			new MissilePod(this, "red", 39000, 42000, 270);
+			new MissilePod(this, "red", 39000 * levelScale, 38000 * levelScale, 270);
+			new MissilePod(this, "red", 39000 * levelScale, 40000 * levelScale, 270);
+			new MissilePod(this, "red", 39000 * levelScale, 42000 * levelScale, 270);
 			
-			new MissilePod(this, "red", 33000, 44000, 0);
-			new MissilePod(this, "red", 35000, 44000, 0);
-			new MissilePod(this, "red", 37000, 44000, 0);
+			new MissilePod(this, "red", 33000 * levelScale, 44000 * levelScale, 0);
+			new MissilePod(this, "red", 35000 * levelScale, 44000 * levelScale, 0);
+			new MissilePod(this, "red", 37000 * levelScale, 44000 * levelScale, 0);
 	
-			new Planet(this, 34000, 10000, 2).setTeam("blue");
+			new Planet(this, 34000 * levelScale, 10000 * levelScale, 2).setTeam("blue");
 			
-			new Interceptor(this, "blue", 33000, 11000, 0);
-			new Interceptor(this, "blue", 33000, 9000, 0);
-			new Interceptor(this, "blue", 35000, 11000, 0);
-			new Interceptor(this, "blue", 35000, 9000, 0);
+			new Interceptor(this, "blue", 33000 * levelScale, 11000 * levelScale, 0);
+			new Interceptor(this, "blue", 33000 * levelScale, 9000 * levelScale, 0);
+			new Interceptor(this, "blue", 35000 * levelScale, 11000 * levelScale, 0);
+			new Interceptor(this, "blue", 35000 * levelScale, 9000 * levelScale, 0);
 			
-			new Planet(this, 63000, 13000, 3);
+			new Planet(this, 63000 * levelScale, 13000 * levelScale, 3);
 			
-			new Planet(this, 17500, 19000, 5);
+			new Planet(this, 17500 * levelScale, 19000 * levelScale, 5);
 			
 		}
 
 		else if(level == 7){
-			WORLD_WIDTH = 60000;
-		    WORLD_HEIGHT = 80000;
-		    CURR_X = 4000;
-			CURR_Y = 3000;
+			WORLD_WIDTH = 60000 * levelScale;
+		    WORLD_HEIGHT = 80000 * levelScale;
+		    CURR_X = 4000 * levelScale;
+			CURR_Y = 3000 * levelScale;
 			zoomLevel = 3;
-			CAMERA_WIDTH = 52000;
-			CAMERA_HEIGHT = 36000;
+			CAMERA_WIDTH = 52000 * levelScale;
+			CAMERA_HEIGHT = 36000 * levelScale;
 			
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
 			
-			new Planet(this, 31000, 70000, 6).setTeam("red");
-			new Fighter(this, "red", 31000, 69000, 180);
-			new Fighter(this, "red", 29500, 70000, 180);
-			new Fighter(this, "red", 32500, 70000, 180);
+			new Planet(this, 31000 * levelScale, 70000 * levelScale, 6).setTeam("red");
+			new Fighter(this, "red", 31000 * levelScale, 69000 * levelScale, 180);
+			new Fighter(this, "red", 29500 * levelScale, 70000 * levelScale, 180);
+			new Fighter(this, "red", 32500 * levelScale, 70000 * levelScale, 180);
 			
-			new Planet(this, 50000, 60000, 6).setTeam("red");
-			new Fighter(this, "red", 50000, 59000, 180);
-			new Fighter(this, "red", 48500, 60000, 180);
-			new Fighter(this, "red", 51500, 60000, 180);
+			new Planet(this, 50000 * levelScale, 60000 * levelScale, 6).setTeam("red");
+			new Fighter(this, "red", 50000 * levelScale, 59000 * levelScale, 180);
+			new Fighter(this, "red", 48500 * levelScale, 60000 * levelScale, 180);
+			new Fighter(this, "red", 51500 * levelScale, 60000 * levelScale, 180);
 			
-			new Planet(this, 24000, 65000, 6).setTeam("red");
-			new Fighter(this, "red", 24000, 64000, 180);
-			new Fighter(this, "red", 22500, 65000, 180);
-			new Fighter(this, "red", 25500, 65000, 180);
+			new Planet(this, 24000 * levelScale, 65000 * levelScale, 6).setTeam("red");
+			new Fighter(this, "red", 24000 * levelScale, 64000 * levelScale, 180);
+			new Fighter(this, "red", 22500 * levelScale, 65000 * levelScale, 180);
+			new Fighter(this, "red", 25500 * levelScale, 65000 * levelScale, 180);
 			
-			new Planet(this, 34000, 60000, 6).setTeam("red");
-			new Fighter(this, "red", 34000, 59000, 180);
-			new Fighter(this, "red", 32500, 60000, 180);
-			new Fighter(this, "red", 35500, 60000, 180);
+			new Planet(this, 34000 * levelScale, 60000 * levelScale, 6).setTeam("red");
+			new Fighter(this, "red", 34000 * levelScale, 59000 * levelScale, 180);
+			new Fighter(this, "red", 32500 * levelScale, 60000 * levelScale, 180);
+			new Fighter(this, "red", 35500 * levelScale, 60000 * levelScale, 180);
 			
-			new MissilePod(this, "red", 37000, 73000, 180);
-			new MissilePod(this, "red", 18000, 65000, 180);
+			new MissilePod(this, "red", 37000 * levelScale, 73000 * levelScale, 180);
+			new MissilePod(this, "red", 18000 * levelScale, 65000 * levelScale, 180);
 			
-			new Missileship(this, "red", 42000, 65000, 180);
-			new Interceptor(this, "red", 40000, 65000, 180);
-			new Interceptor(this, "red", 44000, 65000, 180);
+			new Missileship(this, "red", 42000 * levelScale, 65000 * levelScale, 180);
+			new Interceptor(this, "red", 40000 * levelScale, 65000 * levelScale, 180);
+			new Interceptor(this, "red", 44000 * levelScale, 65000 * levelScale, 180);
 			
-			new Missileship(this, "red", 50000, 68000, 180);
-			new Interceptor(this, "red", 48000, 68000, 180);
-			new Interceptor(this, "red", 52000, 68000, 180);
+			new Missileship(this, "red", 50000 * levelScale, 68000 * levelScale, 180);
+			new Interceptor(this, "red", 48000 * levelScale, 68000 * levelScale, 180);
+			new Interceptor(this, "red", 52000 * levelScale, 68000 * levelScale, 180);
 			
-			new Missileship(this, "red", 15000, 69000, 180);
-			new Interceptor(this, "red", 13000, 69000, 180);
-			new Interceptor(this, "red", 17000, 69000, 180);
+			new Missileship(this, "red", 15000 * levelScale, 69000 * levelScale, 180);
+			new Interceptor(this, "red", 13000 * levelScale, 69000 * levelScale, 180);
+			new Interceptor(this, "red", 17000 * levelScale, 69000 * levelScale, 180);
 			
-			new Planet(this, 19000, 45000, 2);
-			new Planet(this, 28000, 45000, 2);
-			new Planet(this, 51000, 39000, 1);
+			new Planet(this, 19000 * levelScale, 45000 * levelScale, 2);
+			new Planet(this, 28000 * levelScale, 45000 * levelScale, 2);
+			new Planet(this, 51000 * levelScale, 39000 * levelScale, 1);
 			
-			new Planet(this, 30000, 20000, 5).setTeam("blue");
-			new Interceptor(this, "blue", 28000, 14500, 0);
-			new Interceptor(this, "blue", 30000, 14500, 0);
-			new Interceptor(this, "blue", 32000, 14500, 0);
-			new Fighter(this, "blue", 29000, 16000, 0);
-			new Fighter(this, "blue", 31000, 16000, 0);
-			new MissilePod(this, "blue", 27000, 23000, 0);
-			new MissilePod(this, "blue", 33000, 23000, 0);
+			new Planet(this, 30000 * levelScale, 20000 * levelScale, 5).setTeam("blue");
+			new Interceptor(this, "blue", 28000 * levelScale, 14500 * levelScale, 0);
+			new Interceptor(this, "blue", 30000 * levelScale, 14500 * levelScale, 0);
+			new Interceptor(this, "blue", 32000 * levelScale, 14500 * levelScale, 0);
+			new Fighter(this, "blue", 29000 * levelScale, 16000 * levelScale, 0);
+			new Fighter(this, "blue", 31000 * levelScale, 16000 * levelScale, 0);
+			new MissilePod(this, "blue", 27000 * levelScale, 23000 * levelScale, 0);
+			new MissilePod(this, "blue", 33000 * levelScale, 23000 * levelScale, 0);
 			
-			new Planet(this, 14000, 15000, 5).setTeam("blue");
-			new Fighter(this, "blue", 22000, 14000, 0);
-			new Fighter(this, "blue", 20500, 13000, 0);
-			new Fighter(this, "blue", 23500, 13000, 0);
-			new Fighter(this, "blue", 22000, 19000, 0);
-			new Fighter(this, "blue", 20500, 18000, 0);
-			new Fighter(this, "blue", 23500, 18000, 0);
-			new MissilePod(this, "blue", 11000, 18000, 0);
-			new MissilePod(this, "blue", 17000, 18000, 0);
+			new Planet(this, 14000 * levelScale, 15000 * levelScale, 5).setTeam("blue");
+			new Fighter(this, "blue", 22000 * levelScale, 14000 * levelScale, 0);
+			new Fighter(this, "blue", 20500 * levelScale, 13000 * levelScale, 0);
+			new Fighter(this, "blue", 23500 * levelScale, 13000 * levelScale, 0);
+			new Fighter(this, "blue", 22000 * levelScale, 19000 * levelScale, 0);
+			new Fighter(this, "blue", 20500 * levelScale, 18000 * levelScale, 0);
+			new Fighter(this, "blue", 23500 * levelScale, 18000 * levelScale, 0);
+			new MissilePod(this, "blue", 11000 * levelScale, 18000 * levelScale, 0);
+			new MissilePod(this, "blue", 17000 * levelScale, 18000 * levelScale, 0);
 			
-			new Planet(this, 46000, 15000, 5).setTeam("blue");
-			new Fighter(this, "blue", 38000, 14000, 0);
-			new Fighter(this, "blue", 36500, 13000, 0);
-			new Fighter(this, "blue", 39500, 13000, 0);
-			new Fighter(this, "blue", 38000, 19000, 0);
-			new Fighter(this, "blue", 36500, 18000, 0);
-			new Fighter(this, "blue", 39500, 18000, 0);
-			new MissilePod(this, "blue", 43000, 18000, 0);
-			new MissilePod(this, "blue", 49000, 18000, 0);
+			new Planet(this, 46000 * levelScale, 15000 * levelScale, 5).setTeam("blue");
+			new Fighter(this, "blue", 38000 * levelScale, 14000 * levelScale, 0);
+			new Fighter(this, "blue", 36500 * levelScale, 13000 * levelScale, 0);
+			new Fighter(this, "blue", 39500 * levelScale, 13000 * levelScale, 0);
+			new Fighter(this, "blue", 38000 * levelScale, 19000 * levelScale, 0);
+			new Fighter(this, "blue", 36500 * levelScale, 18000 * levelScale, 0);
+			new Fighter(this, "blue", 39500 * levelScale, 18000 * levelScale, 0);
+			new MissilePod(this, "blue", 43000 * levelScale, 18000 * levelScale, 0);
+			new MissilePod(this, "blue", 49000 * levelScale, 18000 * levelScale, 0);
 			
 			
 		}
 		
 		else if (level == 8) {
-			WORLD_WIDTH = 100000;
-		    WORLD_HEIGHT = 80000;
-		    CURR_X = 17500;
-			CURR_Y = 24000;
+			WORLD_WIDTH = 100000 * levelScale;
+		    WORLD_HEIGHT = 80000 * levelScale;
+		    CURR_X = 17500 * levelScale;
+			CURR_Y = 24000 * levelScale;
 			zoomLevel = 3;
-			CAMERA_WIDTH = 52000;
-			CAMERA_HEIGHT = 36000;
+			CAMERA_WIDTH = 52000 * levelScale;
+			CAMERA_HEIGHT = 36000 * levelScale;
 			
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
-			new Planet(this, 13500, 10000, 1).setTeam("red");
-			new Planet(this, 30000, 15000, 2).setTeam("red");
-			new Planet(this, 22500, 30000, 3).setTeam("red");
-			new Planet(this, 47000, 23000, 4).setTeam("red");
+			new Planet(this, 13500 * levelScale, 10000 * levelScale, 1).setTeam("red");
+			new Planet(this, 30000 * levelScale, 15000 * levelScale, 2).setTeam("red");
+			new Planet(this, 22500 * levelScale, 30000 * levelScale, 3).setTeam("red");
+			new Planet(this, 47000 * levelScale, 23000 * levelScale, 4).setTeam("red");
 			
-			new Planet(this, 43500, 42000, 5).setTeam("blue");
+			new Planet(this, 43500 * levelScale, 42000 * levelScale, 5).setTeam("blue");
 			
-			new Planet(this, 95000, 15000, 6).setTeam("red");
-			new Planet(this, 15000, 40000, 4).setTeam("red");
-			new Planet(this, 27000, 63000, 3).setTeam("red");
-			new Planet(this, 67000, 75000, 2).setTeam("red");
+			new Planet(this, 95000 * levelScale, 15000 * levelScale, 6).setTeam("red");
+			new Planet(this, 15000 * levelScale, 40000 * levelScale, 4).setTeam("red");
+			new Planet(this, 27000 * levelScale, 63000 * levelScale, 3).setTeam("red");
+			new Planet(this, 67000 * levelScale, 75000 * levelScale, 2).setTeam("red");
 			
-			new Fighter(this, "red", 13500, 10000, 0);
-			new Fighter(this, "red", 12500, 9500, 0);
-			new Fighter(this, "red", 14500, 9500, 0);
+			new Fighter(this, "red", 13500 * levelScale, 10000 * levelScale, 0);
+			new Fighter(this, "red", 12500 * levelScale, 9500 * levelScale, 0);
+			new Fighter(this, "red", 14500 * levelScale, 9500 * levelScale, 0);
 			
-			new Interceptor(this, "red", 30000, 15000, 0);
+			new Interceptor(this, "red", 30000 * levelScale, 15000 * levelScale, 0);
 			
-			new Fighter(this, "red", 22500, 30000, 0);
+			new Fighter(this, "red", 22500 * levelScale, 30000 * levelScale, 0);
 			
-			new Interceptor(this, "red", 47000, 23000, 0);
-			new Interceptor(this, "red", 47000, 21000, 0);
-			
-			
-			new Fighter(this, "red", 67000, 75000, 0);
-			
-			new Fighter(this, "red", 15000, 40000, 0);
-			
-			new Missileship(this, "red", 95000, 15000, 0);
-			new Interceptor(this, "red", 94000, 14000, 0);
-			new Interceptor(this, "red", 96000, 14000, 0);
+			new Interceptor(this, "red", 47000 * levelScale, 23000 * levelScale, 0);
+			new Interceptor(this, "red", 47000 * levelScale, 21000 * levelScale, 0);
 			
 			
-			new Interceptor(this, "blue", 43500, 42000, 0);
-			new Interceptor(this, "blue", 44500, 42000, 0);
-			new Interceptor(this, "blue", 43500, 41000, 0);
-			new Interceptor(this, "blue", 42500, 42000, 0);
-			new Interceptor(this, "blue", 43500, 43000, 0);
-			new Interceptor(this, "blue", (int)(43500 + 500 * Math.sqrt(2)), (int)(42000 + 500 * Math.sqrt(2)), 315);
-			new Interceptor(this, "blue", (int)(43500 - 500 * Math.sqrt(2)), (int)(42000 + 500 * Math.sqrt(2)), 45);
-			new Interceptor(this, "blue", (int)(43500 - 500 * Math.sqrt(2)), (int)(42000 - 500 * Math.sqrt(2)), 135);
-			new Interceptor(this, "blue", (int)(43500 + 500 * Math.sqrt(2)), (int)(42000 - 500 * Math.sqrt(2)), 225);
-			new Fighter(this, "blue", 45500, 42000, 0);
-			new Fighter(this, "blue", 41500, 42000, 0);
-			new Fighter(this, "blue", (int)(43500 + 1000 * Math.sqrt(2)), (int)(42000 + 1000 * Math.sqrt(2)), 315);
-			new Fighter(this, "blue", (int)(43500 - 1000 * Math.sqrt(2)), (int)(42000 + 1000 * Math.sqrt(2)), 45);
-			new Fighter(this, "blue", (int)(43500 - 1000 * Math.sqrt(2)), (int)(42000 - 1000 * Math.sqrt(2)), 135);
-			new Fighter(this, "blue", (int)(43500 + 1000 * Math.sqrt(2)), (int)(42000 - 1000 * Math.sqrt(2)), 225);
-			new Fighter(this, "blue", 46500, 42000, 0);
-			new Fighter(this, "blue", 43500, 45000, 0);
-			new Fighter(this, "blue", (int)(43500 + 1500 * Math.sqrt(2)), (int)(42000 + 1500 * Math.sqrt(2)), 315);
-			new Fighter(this, "blue", (int)(43500 - 1500 * Math.sqrt(2)), (int)(42000 + 1500 * Math.sqrt(2)), 45);
-			new Fighter(this, "blue", (int)(43500 - 1500 * Math.sqrt(2)), (int)(42000 - 1500 * Math.sqrt(2)), 135);
-			new Fighter(this, "blue", (int)(43500 + 1500 * Math.sqrt(2)), (int)(42000 - 1500 * Math.sqrt(2)), 225);
+			new Fighter(this, "red", 67000 * levelScale, 75000 * levelScale, 0);
+			
+			new Fighter(this, "red", 15000 * levelScale, 40000 * levelScale, 0);
+			
+			new Missileship(this, "red", 95000 * levelScale, 15000 * levelScale, 0);
+			new Interceptor(this, "red", 94000 * levelScale, 14000 * levelScale, 0);
+			new Interceptor(this, "red", 96000 * levelScale, 14000 * levelScale, 0);
+			
+			
+			new Interceptor(this, "blue", 43500 * levelScale, 42000 * levelScale, 0);
+			new Interceptor(this, "blue", 44500 * levelScale, 42000 * levelScale, 0);
+			new Interceptor(this, "blue", 43500 * levelScale, 41000 * levelScale, 0);
+			new Interceptor(this, "blue", 42500 * levelScale, 42000 * levelScale, 0);
+			new Interceptor(this, "blue", 43500 * levelScale, 43000 * levelScale, 0);
+			new Interceptor(this, "blue", (43500 * levelScale + 500 * levelScale * Math.sqrt(2)), (42000 * levelScale + 500 * levelScale * Math.sqrt(2)), 315);
+			new Interceptor(this, "blue", (43500 * levelScale - 500 * levelScale * Math.sqrt(2)), (42000 * levelScale + 500 * levelScale * Math.sqrt(2)), 45);
+			new Interceptor(this, "blue", (43500 * levelScale - 500 * levelScale * Math.sqrt(2)), (42000 * levelScale - 500 * levelScale * Math.sqrt(2)), 135);
+			new Interceptor(this, "blue", (43500 * levelScale + 500 * levelScale * Math.sqrt(2)), (42000 * levelScale - 500 * levelScale * Math.sqrt(2)), 225);
+			new Fighter(this, "blue", 45500 * levelScale, 42000 * levelScale, 0);
+			new Fighter(this, "blue", 41500 * levelScale, 42000 * levelScale, 0);
+			new Fighter(this, "blue", (43500 * levelScale + 1000 * levelScale * Math.sqrt(2)), (42000 * levelScale + 1000 * levelScale * Math.sqrt(2)), 315);
+			new Fighter(this, "blue", (43500 * levelScale - 1000 * levelScale * Math.sqrt(2)), (42000 * levelScale + 1000 * levelScale * Math.sqrt(2)), 45);
+			new Fighter(this, "blue", (43500 * levelScale - 1000 * levelScale * Math.sqrt(2)), (42000 * levelScale - 1000 * levelScale * Math.sqrt(2)), 135);
+			new Fighter(this, "blue", (43500 * levelScale + 1000 * levelScale * Math.sqrt(2)), (42000 * levelScale - 1000 * levelScale * Math.sqrt(2)), 225);
+			new Fighter(this, "blue", 46500 * levelScale, 42000 * levelScale, 0);
+			new Fighter(this, "blue", 43500 * levelScale, 45000 * levelScale, 0);
+			new Fighter(this, "blue", (43500 * levelScale + 1500 * levelScale * Math.sqrt(2)), (42000 * levelScale + 1500 * levelScale * Math.sqrt(2)), 315);
+			new Fighter(this, "blue", (43500 * levelScale - 1500 * levelScale * Math.sqrt(2)), (42000 * levelScale + 1500 * levelScale * Math.sqrt(2)), 45);
+			new Fighter(this, "blue", (43500 * levelScale - 1500 * levelScale * Math.sqrt(2)), (42000 * levelScale - 1500 * levelScale * Math.sqrt(2)), 135);
+			new Fighter(this, "blue", (43500 * levelScale + 1500 * levelScale * Math.sqrt(2)), (42000 * levelScale - 1500 * levelScale * Math.sqrt(2)), 225);
 		}
 
 		else if(level == 9){
-			WORLD_WIDTH = 125000;
-		    WORLD_HEIGHT = 50000;
-		    CURR_X = 37250;
-			CURR_Y = 9250;
+			WORLD_WIDTH = 125000 * levelScale;
+		    WORLD_HEIGHT = 50000 * levelScale;
+		    CURR_X = 37250 * levelScale;
+			CURR_Y = 9250 * levelScale;
 			zoomLevel = 3;
-			CAMERA_WIDTH = 45500;
-			CAMERA_HEIGHT = 31500;
+			CAMERA_WIDTH = 45500 * levelScale;
+			CAMERA_HEIGHT = 31500 * levelScale;
 			
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
-			new Planet(this, 57500, 30000, 3).setTeam("blue");
-			new MachineGunPod(this, "blue", 62000, 31000, 270);
-			new MachineGunPod(this, "blue", 62000, 29000, 270);
-			new MachineGunPod(this, "blue", 53000, 31000, 90);
-			new MachineGunPod(this, "blue", 53000, 29000, 90);
-			new Fighter(this, "blue", 56800, 30700, 45);
-			new Fighter(this, "blue", 56800, 29300, 135);
-			new Fighter(this, "blue", 58200, 30700, 315);
-			new Fighter(this, "blue", 58200, 29300, 225);
-			new Planet(this, 62500, 20000, 4).setTeam("blue");
-			new MachineGunPod(this, "blue", 67000, 21000, 270);
-			new MachineGunPod(this, "blue", 67000, 19000, 270);
-			new MachineGunPod(this, "blue", 58000, 21000, 90);
-			new MachineGunPod(this, "blue", 58000, 19000, 90);
-			new Fighter(this, "blue", 61800, 20700, 45);
-			new Fighter(this, "blue", 61800, 19300, 135);
-			new Fighter(this, "blue", 63200, 20700, 315);
-			new Fighter(this, "blue", 63200, 19300, 225);
-			new Planet(this, 40000, 25000, 3);
-			new Planet(this, 75000, 25000, 6);
+			new Planet(this, 57500 * levelScale, 30000 * levelScale, 3).setTeam("blue");
+			new MachineGunPod(this, "blue", 62000 * levelScale, 31000 * levelScale, 270);
+			new MachineGunPod(this, "blue", 62000 * levelScale, 29000 * levelScale, 270);
+			new MachineGunPod(this, "blue", 53000 * levelScale, 31000 * levelScale, 90);
+			new MachineGunPod(this, "blue", 53000 * levelScale, 29000 * levelScale, 90);
+			new Fighter(this, "blue", 56800 * levelScale, 30700 * levelScale, 45);
+			new Fighter(this, "blue", 56800 * levelScale, 29300 * levelScale, 135);
+			new Fighter(this, "blue", 58200 * levelScale, 30700 * levelScale, 315);
+			new Fighter(this, "blue", 58200 * levelScale, 29300 * levelScale, 225);
+			new Planet(this, 62500 * levelScale, 20000 * levelScale, 4).setTeam("blue");
+			new MachineGunPod(this, "blue", 67000 * levelScale, 21000 * levelScale, 270);
+			new MachineGunPod(this, "blue", 67000 * levelScale, 19000 * levelScale, 270);
+			new MachineGunPod(this, "blue", 58000 * levelScale, 21000 * levelScale, 90);
+			new MachineGunPod(this, "blue", 58000 * levelScale, 19000 * levelScale, 90);
+			new Fighter(this, "blue", 61800 * levelScale, 20700 * levelScale, 45);
+			new Fighter(this, "blue", 61800 * levelScale, 19300 * levelScale, 135);
+			new Fighter(this, "blue", 63200 * levelScale, 20700 * levelScale, 315);
+			new Fighter(this, "blue", 63200 * levelScale, 19300 * levelScale, 225);
+			new Planet(this, 40000 * levelScale, 25000 * levelScale, 3);
+			new Planet(this, 75000 * levelScale, 25000 * levelScale, 6);
 			
-			new Planet(this, 10000, 38000, 3).setTeam("red");
-			new Fighter(this, "red", 10000, 38600, 270);
-			new Fighter(this, "red", 10000, 37400, 270);
-			new BasicPod(this, "red", 12000, 38600, 270);
-			new BasicPod(this, "red", 12000, 37400, 270);
-			new Planet(this, 12000, 26000, 4).setTeam("red");
-			new Fighter(this, "red", 12000, 26600, 270);
-			new Fighter(this, "red", 12000, 25400, 270);
-			new BasicPod(this, "red", 14000, 26600, 270);
-			new BasicPod(this, "red", 14000, 25400, 270);
-			new Planet(this, 9000, 13000, 5).setTeam("red");
-			new Fighter(this, "red", 9000, 13600, 270);
-			new Fighter(this, "red", 9000, 12400, 270);
-			new BasicPod(this, "red", 11000, 13600, 270);
-			new BasicPod(this, "red", 11000, 12400, 270);
+			new Planet(this, 10000 * levelScale, 38000 * levelScale, 3).setTeam("red");
+			new Fighter(this, "red", 10000 * levelScale, 38600 * levelScale, 270);
+			new Fighter(this, "red", 10000 * levelScale, 37400 * levelScale, 270);
+			new BasicPod(this, "red", 12000 * levelScale, 38600 * levelScale, 270);
+			new BasicPod(this, "red", 12000 * levelScale, 37400 * levelScale, 270);
+			new Planet(this, 12000 * levelScale, 26000 * levelScale, 4).setTeam("red");
+			new Fighter(this, "red", 12000 * levelScale, 26600 * levelScale, 270);
+			new Fighter(this, "red", 12000 * levelScale, 25400 * levelScale, 270);
+			new BasicPod(this, "red", 14000 * levelScale, 26600 * levelScale, 270);
+			new BasicPod(this, "red", 14000 * levelScale, 25400 * levelScale, 270);
+			new Planet(this, 9000 * levelScale, 13000 * levelScale, 5).setTeam("red");
+			new Fighter(this, "red", 9000 * levelScale, 13600 * levelScale, 270);
+			new Fighter(this, "red", 9000 * levelScale, 12400 * levelScale, 270);
+			new BasicPod(this, "red", 11000 * levelScale, 13600 * levelScale, 270);
+			new BasicPod(this, "red", 11000 * levelScale, 12400 * levelScale, 270);
 			
-			new Planet(this, 119000, 27000, 4).setTeam("red");
-			new Missileship(this, "red", 119000, 27000, 90);
-			new Planet(this, 119000, 36000, 4).setTeam("red");
-			new Missileship(this, "red", 119000, 36000, 90);
-			new Planet(this, 96000, 41000, 3).setTeam("red");
-			new Fighter(this, "red", 96000, 41600, 90);
-			new Fighter(this, "red", 96000, 40400, 90);
-			new Planet(this, 94600, 31500, 5).setTeam("red");
-			new Fighter(this, "red", 94600, 32100, 90);
-			new Fighter(this, "red", 94600, 30900, 90);
-			new Planet(this, 110000, 16000, 3).setTeam("red");
-			new Interceptor(this, "red", 109500, 16500, 80);
-			new Interceptor(this, "red", 109500, 15500, 80);
-			new Interceptor(this, "red", 110500, 16500, 80);
-			new Interceptor(this, "red", 110500, 15500, 80);
+			new Planet(this, 119000 * levelScale, 27000 * levelScale, 4).setTeam("red");
+			new Missileship(this, "red", 119000 * levelScale, 27000 * levelScale, 90);
+			new Planet(this, 119000 * levelScale, 36000 * levelScale, 4).setTeam("red");
+			new Missileship(this, "red", 119000 * levelScale, 36000 * levelScale, 90);
+			new Planet(this, 96000 * levelScale, 41000 * levelScale, 3).setTeam("red");
+			new Fighter(this, "red", 96000 * levelScale, 41600 * levelScale, 90);
+			new Fighter(this, "red", 96000 * levelScale, 40400 * levelScale, 90);
+			new Planet(this, 94600 * levelScale, 31500 * levelScale, 5).setTeam("red");
+			new Fighter(this, "red", 94600 * levelScale, 32100 * levelScale, 90);
+			new Fighter(this, "red", 94600 * levelScale, 30900 * levelScale, 90);
+			new Planet(this, 110000 * levelScale, 16000 * levelScale, 3).setTeam("red");
+			new Interceptor(this, "red", 109500 * levelScale, 16500 * levelScale, 80);
+			new Interceptor(this, "red", 109500 * levelScale, 15500 * levelScale, 80);
+			new Interceptor(this, "red", 110500 * levelScale, 16500 * levelScale, 80);
+			new Interceptor(this, "red", 110500 * levelScale, 15500 * levelScale, 80);
 			
 			
 		}
 		//TODO Scaled upwards up to here.
 		else if(level == 10){
-			WORLD_WIDTH = 120000;
-		    WORLD_HEIGHT = 40000;
-		    CURR_X = 250;
-			CURR_Y = 0;
+			WORLD_WIDTH = 120000 * levelScale;
+		    WORLD_HEIGHT = 40000 * levelScale;
+		    CURR_X = 250 * levelScale;
+			CURR_Y = 0 * levelScale;
 			zoomLevel = 3;
-			CAMERA_WIDTH = 45500;
-			CAMERA_HEIGHT = 31500;
-			new Planet(this, 13000, 25000, 2).setTeam("blue");
-			new Planet(this, 12000, 13000, 2).setTeam("blue");
-			new Planet(this, 56000, 32000, 2).setTeam("red");
-			new Planet(this, 100000, 30000, 2).setTeam("red");
-			new Planet(this, 90000, 7000, 2).setTeam("red");
+			CAMERA_WIDTH = 45500 * levelScale;
+			CAMERA_HEIGHT = 31500 * levelScale;
+			new Planet(this, 13000 * levelScale, 25000 * levelScale, 2).setTeam("blue");
+			new Planet(this, 12000 * levelScale, 13000 * levelScale, 2).setTeam("blue");
+			new Planet(this, 56000 * levelScale, 32000 * levelScale, 2).setTeam("red");
+			new Planet(this, 100000 * levelScale, 30000 * levelScale, 2).setTeam("red");
+			new Planet(this, 90000 * levelScale, 7000 * levelScale, 2).setTeam("red");
 			
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
 
-			new MachineGunPod(this, "red", 37000, 24000, 90);
-			new MachineGunPod(this, "red", 37000, 26000, 90);
-			new MachineGunPod(this, "red", 37000, 28000, 90);
-			new MissilePod(this, "red", 39000, 24000, 90);
-			new MissilePod(this, "red", 39000, 26000, 90);
-			new MissilePod(this, "red", 39000, 28000, 90);
-			new MachineGunPod(this, "red", 38500, 31000, 90);
-			new MachineGunPod(this, "red", 38500, 33000, 90);
-			new MachineGunPod(this, "red", 38500, 35000, 90);
-			new MissilePod(this, "red", 40500, 31000, 90);
-			new MissilePod(this, "red", 40500, 33000, 90);
-			new MissilePod(this, "red", 40500, 35000, 90);
-			new MachineGunPod(this, "red", 38500, 21000, 90);
-			new MachineGunPod(this, "red", 38500, 19000, 90);
-			new MachineGunPod(this, "red", 38500, 17000, 90);
-			new MissilePod(this, "red", 40500, 21000, 90);
-			new MissilePod(this, "red", 40500, 19000, 90);
-			new MissilePod(this, "red", 40500, 17000, 90);
+			new MachineGunPod(this, "red", 37000 * levelScale, 24000 * levelScale, 90);
+			new MachineGunPod(this, "red", 37000 * levelScale, 26000 * levelScale, 90);
+			new MachineGunPod(this, "red", 37000 * levelScale, 28000 * levelScale, 90);
+			new MissilePod(this, "red", 39000 * levelScale, 24000 * levelScale, 90);
+			new MissilePod(this, "red", 39000 * levelScale, 26000 * levelScale, 90);
+			new MissilePod(this, "red", 39000 * levelScale, 28000 * levelScale, 90);
+			new MachineGunPod(this, "red", 38500 * levelScale, 31000 * levelScale, 90);
+			new MachineGunPod(this, "red", 38500 * levelScale, 33000 * levelScale, 90);
+			new MachineGunPod(this, "red", 38500 * levelScale, 35000 * levelScale, 90);
+			new MissilePod(this, "red", 40500 * levelScale, 31000 * levelScale, 90);
+			new MissilePod(this, "red", 40500 * levelScale, 33000 * levelScale, 90);
+			new MissilePod(this, "red", 40500 * levelScale, 35000 * levelScale, 90);
+			new MachineGunPod(this, "red", 38500 * levelScale, 21000 * levelScale, 90);
+			new MachineGunPod(this, "red", 38500 * levelScale, 19000 * levelScale, 90);
+			new MachineGunPod(this, "red", 38500 * levelScale, 17000 * levelScale, 90);
+			new MissilePod(this, "red", 40500 * levelScale, 21000 * levelScale, 90);
+			new MissilePod(this, "red", 40500 * levelScale, 19000 * levelScale, 90);
+			new MissilePod(this, "red", 40500 * levelScale, 17000 * levelScale, 90);
 			
 			
-			new MachineGunPod(this, "red", 55000, 10000, 90);
-			new MachineGunPod(this, "red", 55000, 12000, 90);
-			new MachineGunPod(this, "red", 55000, 14000, 90);
-			new MissilePod(this, "red", 57000, 10000, 90);
-			new MissilePod(this, "red", 57000, 12000, 90);
-			new MissilePod(this, "red", 57000, 14000, 90);
-			new MachineGunPod(this, "red", 56500, 17000, 90);
-			new MachineGunPod(this, "red", 56500, 19000, 90);
-			new MachineGunPod(this, "red", 56500, 21000, 90);
-			new MissilePod(this, "red", 58500, 17000, 90);
-			new MissilePod(this, "red", 58500, 19000, 90);
-			new MissilePod(this, "red", 58500, 21000, 90);
-			new MachineGunPod(this, "red", 56500, 7000, 90);
-			new MachineGunPod(this, "red", 56500, 5000, 90);
-			new MachineGunPod(this, "red", 56500, 3000, 90);
-			new MissilePod(this, "red", 58500, 7000, 90);
-			new MissilePod(this, "red", 58500, 5000, 90);
-			new MissilePod(this, "red", 58500, 3000, 90);
+			new MachineGunPod(this, "red", 55000 * levelScale, 10000 * levelScale, 90);
+			new MachineGunPod(this, "red", 55000 * levelScale, 12000 * levelScale, 90);
+			new MachineGunPod(this, "red", 55000 * levelScale, 14000 * levelScale, 90);
+			new MissilePod(this, "red", 57000 * levelScale, 10000 * levelScale, 90);
+			new MissilePod(this, "red", 57000 * levelScale, 12000 * levelScale, 90);
+			new MissilePod(this, "red", 57000 * levelScale, 14000 * levelScale, 90);
+			new MachineGunPod(this, "red", 56500 * levelScale, 17000 * levelScale, 90);
+			new MachineGunPod(this, "red", 56500 * levelScale, 19000 * levelScale, 90);
+			new MachineGunPod(this, "red", 56500 * levelScale, 21000 * levelScale, 90);
+			new MissilePod(this, "red", 58500 * levelScale, 17000 * levelScale, 90);
+			new MissilePod(this, "red", 58500 * levelScale, 19000 * levelScale, 90);
+			new MissilePod(this, "red", 58500 * levelScale, 21000 * levelScale, 90);
+			new MachineGunPod(this, "red", 56500 * levelScale, 7000 * levelScale, 90);
+			new MachineGunPod(this, "red", 56500 * levelScale, 5000 * levelScale, 90);
+			new MachineGunPod(this, "red", 56500 * levelScale, 3000 * levelScale, 90);
+			new MissilePod(this, "red", 58500 * levelScale, 7000 * levelScale, 90);
+			new MissilePod(this, "red", 58500 * levelScale, 5000 * levelScale, 90);
+			new MissilePod(this, "red", 58500 * levelScale, 3000 * levelScale, 90);
 			
-			new MachineGunPod(this, "red", 73000, 24000, 90);
-			new MachineGunPod(this, "red", 73000, 26000, 90);
-			new MachineGunPod(this, "red", 73000, 28000, 90);
-			new MissilePod(this, "red", 75000, 24000, 90);
-			new MissilePod(this, "red", 75000, 26000, 90);
-			new MissilePod(this, "red", 75000, 28000, 90);
-			new MachineGunPod(this, "red", 74500, 31000, 90);
-			new MachineGunPod(this, "red", 74500, 33000, 90);
-			new MachineGunPod(this, "red", 74500, 35000, 90);
-			new MissilePod(this, "red", 76500, 31000, 90);
-			new MissilePod(this, "red", 76500, 33000, 90);
-			new MissilePod(this, "red", 76500, 35000, 90);
-			new MachineGunPod(this, "red", 74500, 21000, 90);
-			new MachineGunPod(this, "red", 74500, 19000, 90);
-			new MachineGunPod(this, "red", 74500, 17000, 90);
-			new MissilePod(this, "red", 76500, 21000, 90);
-			new MissilePod(this, "red", 76500, 19000, 90);
-			new MissilePod(this, "red", 76500, 17000, 90);
+			new MachineGunPod(this, "red", 73000 * levelScale, 24000 * levelScale, 90);
+			new MachineGunPod(this, "red", 73000 * levelScale, 26000 * levelScale, 90);
+			new MachineGunPod(this, "red", 73000 * levelScale, 28000 * levelScale, 90);
+			new MissilePod(this, "red", 75000 * levelScale, 24000 * levelScale, 90);
+			new MissilePod(this, "red", 75000 * levelScale, 26000 * levelScale, 90);
+			new MissilePod(this, "red", 75000 * levelScale, 28000 * levelScale, 90);
+			new MachineGunPod(this, "red", 74500 * levelScale, 31000 * levelScale, 90);
+			new MachineGunPod(this, "red", 74500 * levelScale, 33000 * levelScale, 90);
+			new MachineGunPod(this, "red", 74500 * levelScale, 35000 * levelScale, 90);
+			new MissilePod(this, "red", 76500 * levelScale, 31000 * levelScale, 90);
+			new MissilePod(this, "red", 76500 * levelScale, 33000 * levelScale, 90);
+			new MissilePod(this, "red", 76500 * levelScale, 35000 * levelScale, 90);
+			new MachineGunPod(this, "red", 74500 * levelScale, 21000 * levelScale, 90);
+			new MachineGunPod(this, "red", 74500 * levelScale, 19000 * levelScale, 90);
+			new MachineGunPod(this, "red", 74500 * levelScale, 17000 * levelScale, 90);
+			new MissilePod(this, "red", 76500 * levelScale, 21000 * levelScale, 90);
+			new MissilePod(this, "red", 76500 * levelScale, 19000 * levelScale, 90);
+			new MissilePod(this, "red", 76500 * levelScale, 17000 * levelScale, 90);
 			
 
 			
@@ -2488,19 +2492,19 @@ public class StarshipArena {
 		text.remove(l);
 	}
 	
-	public int getCameraX(){
+	public double getCameraX(){
 		return CURR_X;
 	}
 	
-	public int getCameraY(){
+	public double getCameraY(){
 		return CURR_Y;
 	}
 	
-	public int getCameraWidth(){
+	public double getCameraWidth(){
 		return CAMERA_WIDTH;
 	}
 	
-	public int getCameraHeight(){
+	public double getCameraHeight(){
 		return CAMERA_HEIGHT;
 	}
 	

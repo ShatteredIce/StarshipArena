@@ -83,20 +83,20 @@ public class Starship {
 	static Texture whiteHalo = new Texture("white_halo.png");
 	
 	//Screen bounds
-	int x_min;
-	int x_max;
-	int y_min;
-	int y_max;
+	double x_min;
+	double x_max;
+	double y_min;
+	double y_max;
 	
-	Starship(StarshipArena mygame, int spawnx, int spawny){
+	Starship(StarshipArena mygame, double spawnx, double spawny){
 		this(mygame, "none", spawnx, spawny, 0);
 	}
 	
-	Starship(StarshipArena mygame, int spawnx, int spawny, double spawnangle){
+	Starship(StarshipArena mygame, double spawnx, double spawny, double spawnangle){
 		this(mygame, "none", spawnx, spawny, spawnangle);
 	}
 	
-	Starship(StarshipArena mygame, String newteam, int spawnx, int spawny, double spawnangle){
+	Starship(StarshipArena mygame, String newteam, double spawnx, double spawny, double spawnangle){
 		game = mygame;
 		team = newteam;
 		setScreenBounds(game.getScreenBounds());
@@ -285,8 +285,8 @@ public class Starship {
 		for (int i = 20; i < 25; i++) {
 			if (game.mute) break;
 			if (!game.soundEffects[i].isRunning()) {
-				int cameraX = game.CURR_X + game.CAMERA_WIDTH / 2;
-				int cameraY = game.CURR_Y + game.CAMERA_HEIGHT / 2;
+				double cameraX = game.CURR_X + game.CAMERA_WIDTH / 2;
+				double cameraY = game.CURR_Y + game.CAMERA_HEIGHT / 2;
 				//This formula decrease the volume the further away the player is from the weapon event, but increase volume for high levels of zoom
 				float dbDiff = (float)(game.distance(cameraX, cameraY, center.X(), center.Y()) / game.CAMERA_WIDTH * -10 + 10000 / game.CAMERA_WIDTH);
 				FloatControl gainControl = (FloatControl) game.soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
@@ -581,7 +581,7 @@ public class Starship {
 		
 	}
 	
-	public void setScreenBounds(int[] bounds){
+	public void setScreenBounds(double[] bounds){
 		x_min = bounds[0];
 		x_max = bounds[1];
 		y_min = bounds[2];

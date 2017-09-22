@@ -31,15 +31,15 @@ public class Interceptor extends Starship{
 	static int secondary_id = 3;
 
 	
-	public Interceptor(StarshipArena mygame, int spawnx, int spawny){
+	public Interceptor(StarshipArena mygame, double spawnx, double spawny){
 		super(mygame, spawnx, spawny);
 	}
 	
-	public Interceptor(StarshipArena mygame, int spawnx, int spawny, double spawnangle){
+	public Interceptor(StarshipArena mygame, double spawnx, double spawny, double spawnangle){
 		super(mygame, "none", spawnx, spawny, spawnangle);
 	}
 
-	public Interceptor(StarshipArena mygame, String newteam, int spawnx, int spawny, double spawnangle){
+	public Interceptor(StarshipArena mygame, String newteam, double spawnx, double spawny, double spawnangle){
 		super(mygame, newteam, spawnx, spawny, spawnangle);
 	}
 	

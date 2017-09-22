@@ -24,6 +24,8 @@ import javax.sound.sampled.FloatControl;
 
 public class Turret {
 	
+	//TODO What is the difference between angle_offset and angleOff???
+	
 	StarshipArena game;
 	Starship owner;
 	String team;
@@ -73,7 +75,7 @@ public class Turret {
 		owner = newowner;
 		team = myteam;
 		center = new Point(spawnx, spawny);
-		angle = (newangle + newangle_offset) % 360;
+		angle = (newangle + newangle_offset + 3600) % 360;
 		cooldown = newcooldown;
 		spread = newspread;
 		accuracy = newaccuracy;
@@ -126,7 +128,7 @@ public class Turret {
 					//fire projectile not based on turret angle
 					/*
 					 * The spread < 180 check is to differentiate between targeted autoaim weapons and turrets with medium amounts of autoaim correction
-					 * Any ship with > 180 spread is assu med to be targeted autoaim, while any with < 180 is assumed to be correction autoaim.
+					 * Any ship with > 180 spread is assumed to be targeted autoaim, while any with < 180 is assumed to be correction autoaim.
 					 * Ships with targeted autoaim are expected to fire at the owner's target (a.k.a. the closest target)
 					 * Ships with corrective autoaim can fire at any target they can see because the owner's angle matters more than distance to target
 					 */
@@ -164,8 +166,8 @@ public class Turret {
 		int projectileBonuses = 0;
 		if (piercing) projectileBonuses++;
 		//Get position of the center of the camera, to determine distance from the sound event
-		int cameraX = game.CURR_X + game.CAMERA_WIDTH / 2;
-		int cameraY = game.CURR_Y + game.CAMERA_HEIGHT / 2;
+		double cameraX = game.CURR_X + game.CAMERA_WIDTH / 2;
+		double cameraY = game.CURR_Y + game.CAMERA_HEIGHT / 2;
 		//This formula decrease the volume the further away the player is from the weapon event, but increase volume for high levels of zoom
 		float dbDiff = (float)(game.distance(cameraX, cameraY, center.X(), center.Y()) / game.CAMERA_WIDTH * -10 + 5 - game.CAMERA_WIDTH / 5000);
 		//launch plasma or mgun

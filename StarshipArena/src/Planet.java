@@ -46,7 +46,7 @@ public class Planet {
 	
 	
 	
-	Planet(StarshipArena mygame, int spawnx, int spawny, int newTexId){
+	Planet(StarshipArena mygame, double spawnx, double spawny, int newTexId){
 		game = mygame;
 		texId = newTexId;
 		center = new Point(spawnx, spawny);
