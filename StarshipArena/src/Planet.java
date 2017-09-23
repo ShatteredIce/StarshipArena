@@ -10,8 +10,8 @@ public class Planet {
 	int[] indices;
 	Point center;
 	Point[] points;
-	int planetSize = 2000;
-	int radar_range = 5000;
+	int planetSize;
+	int radar_range;
 	int texId = 0;
 	boolean selected = false;
 	static Texture tex0 = new Texture("planet0.png");
@@ -27,7 +27,7 @@ public class Planet {
 	double[] radarVertices;
 	Point[] haloPoints;
 	Point[] radarPoints;
-	int haloSize = 3000;
+	int haloSize;
 	static Texture blueHalo = new Texture("blue_halo.png");
 	static Texture redHalo = new Texture("red_halo.png");
 	static Texture whiteHalo = new Texture("white_halo.png");
@@ -36,8 +36,8 @@ public class Planet {
 	String team = "none";
 	String capturingTeam = "none";
 	int captureStrength = 0;
-	int captureTime = 500;
-	int maxCaptureTime = 500;
+	int captureTime;
+	int maxCaptureTime;
 	int storedResources = 0;
 	int resourcesPerTick = 1;
 	int resourcesCooldown = 50;
@@ -47,6 +47,13 @@ public class Planet {
 	
 	
 	Planet(StarshipArena mygame, double spawnx, double spawny, int newTexId){
+		//Define planet size variables:
+		planetSize = (int)(2000 * game.levelScale);
+		radar_range = (int)(5000 * game.levelScale);
+		haloSize = (int)(3000 * game.levelScale);
+		captureTime = (int)(5000 * game.levelScale);
+		maxCaptureTime = (int)(5000 * game.levelScale);
+		
 		game = mygame;
 		texId = newTexId;
 		center = new Point(spawnx, spawny);

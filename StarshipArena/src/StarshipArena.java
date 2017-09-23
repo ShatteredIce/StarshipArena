@@ -54,7 +54,7 @@ public class StarshipArena {
 	int zoomLevel = 3;
 	
 	//Game scale: In future, it can be changed in an options menu
-	double levelScale = 1;
+	static double levelScale = 0.3;
 	
 	int gameState = 1;
 	int SLOW = 1;
@@ -124,7 +124,7 @@ public class StarshipArena {
 	
 	boolean mute = false;
 	//TODO Disabled fog for testing direct attack
-	boolean fog = false;
+	boolean fog = true;
 	
 	
 
@@ -1142,12 +1142,12 @@ public class StarshipArena {
 //										, first.center.y + newSecondY - second.center.y));
 //							}
 							//This change involving the command queue has the potential to be buggy
-							if (first.locationTarget != null && distance(first.center.x, first.center.y, first.locationTarget.x, first.locationTarget.y) < first.getClickRadius() * 4) {
+							if (first.locationTarget != null && distance(first.center.x, first.center.y, first.locationTarget.x, first.locationTarget.y) < first.getClickRadius() * 4 && !first.commands.isEmpty()) {
 								first.commands.remove(0);
 								first.locationTarget = null;
 							}
 
-							if (second.locationTarget != null && distance(second.center.x, second.center.y, second.locationTarget.x, second.locationTarget.y) < second.getClickRadius() * 4)
+							if (second.locationTarget != null && distance(second.center.x, second.center.y, second.locationTarget.x, second.locationTarget.y) < second.getClickRadius() * 4 && !second.commands.isEmpty())
 								second.commands.remove(0);
 								second.locationTarget = null;
 							}
@@ -2387,8 +2387,8 @@ public class StarshipArena {
     }
     
     public void genTiles(){
-    	for (int x = -3600; x <= WORLD_WIDTH + 7200; x+=7200) {
-			for (int y = -3600; y <= WORLD_HEIGHT + 7200; y+=7200) {
+    	for (int x = (int)(-3600 * levelScale); x <= WORLD_WIDTH + 7200 * levelScale; x+=7200 * levelScale) {
+			for (int y = (int)(-3600 * levelScale); y <= WORLD_HEIGHT + 7200 * levelScale; y+=7200 * levelScale) {
 				new Tile(this, x, y);
 			}
 		}
