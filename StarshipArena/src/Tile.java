@@ -10,10 +10,11 @@ public class Tile {
 	int[] indices;
 	Point center;
 	Point[] points;
-	int size = (int)(3600 * game.levelScale);
+	int size;
 	
 	Tile(StarshipArena mygame, int spawnx, int spawny){
 		game = mygame;
+		size = (int)(3600 * game.levelScale);
 		center = new Point(spawnx, spawny);
 		points = generatePoints();
 		vertices = new double[points.length * 2];
