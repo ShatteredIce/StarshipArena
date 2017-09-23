@@ -54,7 +54,7 @@ public class StarshipArena {
 	int zoomLevel = 3;
 	
 	//Game scale: In future, it can be changed in an options menu
-	static double levelScale = 0.3;
+	static double levelScale = 1;
 	
 	int gameState = 1;
 	int SLOW = 1;
@@ -124,7 +124,7 @@ public class StarshipArena {
 	
 	boolean mute = false;
 	//TODO Disabled fog for testing direct attack
-	boolean fog = true;
+	boolean fog = false;
 	
 	
 
@@ -1398,7 +1398,7 @@ public class StarshipArena {
 	//Creates the number of ships specified by the user
 	//Each ship has a random starting location and angle
 	public void createShips(int num){
-		new Planet(this, 23000, 10000, 1).setTeam("blue");
+		new Planet(this, 23000 * levelScale, 10000 * levelScale, 1).setTeam("blue");
 		int startx;
 		int starty;
 		int angle;
@@ -1423,11 +1423,11 @@ public class StarshipArena {
 //		new Fighter(this, "red", 1650, 400, 0);
 //		new Fighter(this, "red", 1700, 450, 0);
 		
-		new MachineGunPod(this, "red", 3000, 15000, 270);
+		new MachineGunPod(this, "red", 3000 * levelScale, 15000 * levelScale, 270);
 //		new MachineGunPod(this, "red", 3500, 14000, 270);
 //		new MachineGunPod(this, "red", 3000, 13000, 270);
 //		
-		new Wallship(this, "blue", 20000, 10000, 270);
+		new Wallship(this, "blue", 20000 * levelScale, 10000 * levelScale, 270);
 		
 //		new MachineGunPod(this, "red", 4000, 15000, 270);
 //		new MachineGunPod(this, "red", 4500, 14000, 270);
