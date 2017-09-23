@@ -54,7 +54,7 @@ public class StarshipArena {
 	int zoomLevel = 3;
 	
 	//Game scale: In future, it can be changed in an options menu
-	static double levelScale = 1;
+	double levelScale = 1;
 	
 	int gameState = 1;
 	int SLOW = 1;
@@ -892,6 +892,7 @@ public class StarshipArena {
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
 		int slowCounter = 0;
+		//Will counter be used for game time???
 		int counter = 0;
 		while ( !window.shouldClose()) {
 			if(glfwGetWindowAttrib(window.getWindowHandle(), GLFW_FOCUSED) == GLFW_FALSE){
@@ -1399,9 +1400,9 @@ public class StarshipArena {
 	//Each ship has a random starting location and angle
 	public void createShips(int num){
 		new Planet(this, 23000 * levelScale, 10000 * levelScale, 1).setTeam("blue");
-		int startx;
-		int starty;
-		int angle;
+//		int startx;
+//		int starty;
+//		int angle;
 //		for(int i = 0; i < num; i++){
 //			startx = random.nextInt(WORLD_WIDTH - 100) + 50;
 //			starty = random.nextInt(WORLD_HEIGHT - 100) + 50;
@@ -2531,7 +2532,7 @@ public class StarshipArena {
 	
 	public void writeText(String newText, int startx, int starty, int textSize) {
 		for (int i = 0; i < newText.length(); i++) {
-			BitmapFontLetter newLetter = new BitmapFontLetter(this, newText.charAt(i), startx + i * textSize, starty, textSize);
+			new BitmapFontLetter(this, newText.charAt(i), startx + i * textSize, starty, textSize);
 		 }
 	}
 	

@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 //TODO Once Static is created, this should extend Static
 public class PlanetRadar extends Starship{
 	

@@ -47,14 +47,17 @@ public class Planet {
 	
 	
 	Planet(StarshipArena mygame, double spawnx, double spawny, int newTexId){
+		
+		game = mygame;
+		
 		//Define planet size variables:
 		planetSize = (int)(2000 * game.levelScale);
 		radar_range = (int)(5000 * game.levelScale);
 		haloSize = (int)(3000 * game.levelScale);
 		captureTime = (int)(5000 * game.levelScale);
 		maxCaptureTime = (int)(5000 * game.levelScale);
-		
-		game = mygame;
+				
+				
 		texId = newTexId;
 		center = new Point(spawnx, spawny);
 		points = generatePoints(planetSize);

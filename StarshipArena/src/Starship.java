@@ -163,8 +163,6 @@ public class Starship {
 			hitbox[i].rotatePoint(center.X(), center.Y(), angle);
 		}
 		moveTurrets();
-		//TODO fireTurrets() is probably a useless function.
-		fireTurrets();
 	}
 	
 	public void setHaloPoints(){
@@ -248,12 +246,6 @@ public class Starship {
 		}
 	}
 	
-	//TODO This function is redundant; it comes right after moveTurrets, which already update()'s turrets
-	public void fireTurrets(){
-		for (int i = 0; i < turrets.size(); i++) {
-			turrets.get(i).update();
-		}
-	}
 	
 	public void destroy(){
 		if (this instanceof Missileship) {
@@ -422,7 +414,6 @@ public class Starship {
 	
 	public void edgeGuard(){
 		int BORDER = 100;
-		boolean hitEdge = true;
 		//left edge
 		if(center.X() < BORDER && angle <= 90){
 			current_turn_speed = -max_turn_speed;
@@ -450,9 +441,6 @@ public class Starship {
 		}
 		else if(center.Y() > y_max - BORDER && angle >= 270){
 			current_turn_speed = -max_turn_speed;
-		}
-		else {
-			hitEdge = false;
 		}
 //		if (hitEdge) {
 //			locationTarget = null;
