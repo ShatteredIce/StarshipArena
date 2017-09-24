@@ -40,7 +40,8 @@ public class Starship {
 	Point[] points;
 	Point[] hitbox;
 	
-	static int scaleFactor = 2;
+	//Change scale of ships
+	static double scaleFactor = 1;
 	
 	String team;
 	int control_group = 0;
@@ -62,6 +63,8 @@ public class Starship {
 	int scan_range;
 	int radar_range;
 	int clickRadius;
+	//Weight determines how much a ship drifts when drifting. The lower the weight, the higher the drift speed
+	double weight = 0.25;
 	
 	ArrayList<Turret> turrets = new ArrayList<>();
 	
@@ -80,20 +83,20 @@ public class Starship {
 	static Texture whiteHalo = new Texture("white_halo.png");
 	
 	//Screen bounds
-	int x_min;
-	int x_max;
-	int y_min;
-	int y_max;
+	double x_min;
+	double x_max;
+	double y_min;
+	double y_max;
 	
-	Starship(StarshipArena mygame, int spawnx, int spawny){
+	Starship(StarshipArena mygame, double spawnx, double spawny){
 		this(mygame, "none", spawnx, spawny, 0);
 	}
 	
-	Starship(StarshipArena mygame, int spawnx, int spawny, double spawnangle){
+	Starship(StarshipArena mygame, double spawnx, double spawny, double spawnangle){
 		this(mygame, "none", spawnx, spawny, spawnangle);
 	}
 	
-	Starship(StarshipArena mygame, String newteam, int spawnx, int spawny, double spawnangle){
+	Starship(StarshipArena mygame, String newteam, double spawnx, double spawny, double spawnangle){
 		game = mygame;
 		team = newteam;
 		setScreenBounds(game.getScreenBounds());
@@ -160,8 +163,6 @@ public class Starship {
 			hitbox[i].rotatePoint(center.X(), center.Y(), angle);
 		}
 		moveTurrets();
-		//TODO fireTurrets() is probably a useless function.
-		fireTurrets();
 	}
 	
 	public void setHaloPoints(){
@@ -245,12 +246,6 @@ public class Starship {
 		}
 	}
 	
-	//TODO This function is redundant; it comes right after moveTurrets, which already update()'s turrets
-	public void fireTurrets(){
-		for (int i = 0; i < turrets.size(); i++) {
-			turrets.get(i).update();
-		}
-	}
 	
 	public void destroy(){
 		if (this instanceof Missileship) {
@@ -282,8 +277,8 @@ public class Starship {
 		for (int i = 20; i < 25; i++) {
 			if (game.mute) break;
 			if (!game.soundEffects[i].isRunning()) {
-				int cameraX = game.CURR_X + game.CAMERA_WIDTH / 2;
-				int cameraY = game.CURR_Y + game.CAMERA_HEIGHT / 2;
+				double cameraX = game.CURR_X + game.CAMERA_WIDTH / 2;
+				double cameraY = game.CURR_Y + game.CAMERA_HEIGHT / 2;
 				//This formula decrease the volume the further away the player is from the weapon event, but increase volume for high levels of zoom
 				float dbDiff = (float)(game.distance(cameraX, cameraY, center.X(), center.Y()) / game.CAMERA_WIDTH * -10 + 10000 / game.CAMERA_WIDTH);
 				FloatControl gainControl = (FloatControl) game.soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
@@ -419,7 +414,6 @@ public class Starship {
 	
 	public void edgeGuard(){
 		int BORDER = 100;
-		boolean hitEdge = true;
 		//left edge
 		if(center.X() < BORDER && angle <= 90){
 			current_turn_speed = -max_turn_speed;
@@ -447,9 +441,6 @@ public class Starship {
 		}
 		else if(center.Y() > y_max - BORDER && angle >= 270){
 			current_turn_speed = -max_turn_speed;
-		}
-		else {
-			hitEdge = false;
 		}
 //		if (hitEdge) {
 //			locationTarget = null;
@@ -578,7 +569,7 @@ public class Starship {
 		
 	}
 	
-	public void setScreenBounds(int[] bounds){
+	public void setScreenBounds(double[] bounds){
 		x_min = bounds[0];
 		x_max = bounds[1];
 		y_min = bounds[2];

@@ -15,15 +15,15 @@ public class PlanetLaser extends Starship{
 	static int primary_yoffset = 0;
 	int primary_id = 0;
 	
-	public PlanetLaser(StarshipArena mygame, int spawnx, int spawny){
+	public PlanetLaser(StarshipArena mygame, double spawnx, double spawny){
 		super(mygame, spawnx, spawny);
 	}
 	
-	public PlanetLaser(StarshipArena mygame, int spawnx, int spawny, double spawnangle){
+	public PlanetLaser(StarshipArena mygame, double spawnx, double spawny, double spawnangle){
 		super(mygame, "none", spawnx, spawny, spawnangle);
 	}
 
-	public PlanetLaser(StarshipArena mygame, String newteam, int spawnx, int spawny, double spawnangle){
+	public PlanetLaser(StarshipArena mygame, String newteam, double spawnx, double spawny, double spawnangle){
 		super(mygame, newteam, spawnx, spawny, spawnangle);
 	}
 	

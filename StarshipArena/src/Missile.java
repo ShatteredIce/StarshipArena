@@ -60,8 +60,8 @@ public class Missile extends Projectile {
 		for (int i = 15; i < 20; i++) {
 			if (game.mute) break;
 			if (!game.soundEffects[i].isRunning()) {
-				int cameraX = game.CURR_X + game.CAMERA_WIDTH / 2;
-				int cameraY = game.CURR_Y + game.CAMERA_HEIGHT / 2;
+				double cameraX = game.CURR_X + game.CAMERA_WIDTH / 2;
+				double cameraY = game.CURR_Y + game.CAMERA_HEIGHT / 2;
 				//This formula decrease the volume the further away the player is from the weapon event, but increase volume for high levels of zoom
 				float dbDiff = (float)(game.distance(cameraX, cameraY, center.X(), center.Y()) / game.CAMERA_WIDTH * -20 + 10000 / game.CAMERA_WIDTH);
 				FloatControl gainControl = (FloatControl) game.soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
@@ -83,8 +83,8 @@ public class Missile extends Projectile {
 		for (int i = 15; i < 20; i++) {
 			if (game.mute) break;
 			if (!game.soundEffects[i].isRunning()) {
-				int cameraX = game.CURR_X + game.CAMERA_WIDTH / 2;
-				int cameraY = game.CURR_Y + game.CAMERA_HEIGHT / 2;
+				double cameraX = game.CURR_X + game.CAMERA_WIDTH / 2;
+				double cameraY = game.CURR_Y + game.CAMERA_HEIGHT / 2;
 				//This formula decrease the volume the further away the player is from the weapon event, but increase volume for high levels of zoom
 				float dbDiff = (float)(game.distance(cameraX, cameraY, center.X(), center.Y()) / game.CAMERA_WIDTH * -20 + 10000 / game.CAMERA_WIDTH);
 				FloatControl gainControl = (FloatControl) game.soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);

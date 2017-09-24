@@ -18,15 +18,15 @@ public class Fighter extends Starship{
 	static int primary_yoffset = 10;
 	int primary_id = 0;
 	
-	public Fighter(StarshipArena mygame, int spawnx, int spawny){
+	public Fighter(StarshipArena mygame, double spawnx, double spawny){
 		super(mygame, spawnx, spawny);
 	}
 	
-	public Fighter(StarshipArena mygame, int spawnx, int spawny, double spawnangle){
+	public Fighter(StarshipArena mygame, double spawnx, double spawny, double spawnangle){
 		super(mygame, "none", spawnx, spawny, spawnangle);
 	}
 
-	public Fighter(StarshipArena mygame, String newteam, int spawnx, int spawny, double spawnangle){
+	public Fighter(StarshipArena mygame, String newteam, double spawnx, double spawny, double spawnangle){
 		super(mygame, newteam, spawnx, spawny, spawnangle);
 	}
 	

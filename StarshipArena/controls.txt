@@ -6,6 +6,9 @@
 				\____/ \__, |___/\__\___|_| |_| |_|___/ \_| |_/_| |_|_|  \___|
 				        __/ |                                                 
 				       |___/                                                  
+This controls manual is accurate as of September 20, 2017.
+
+
 =====HOW TO PLAY=====
 Systems Afire is a 2D space-based RTS written in Java using the LWJGL game library.
 

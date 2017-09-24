@@ -4,7 +4,7 @@ public class MachineGunPod extends BasicPod{
 	static Texture tex1 = new Texture("red_machinegunpod.png");
 	static Texture tex2 = new Texture("blue_machinegunpod.png");
 	
-	static double primary_damage = 0.5;
+	static double primary_damage = 1;
 	static int primary_cooldown = 15;
 	static int primary_spread = 20;
 	static int primary_accuracy = 95;
@@ -16,15 +16,15 @@ public class MachineGunPod extends BasicPod{
 	static int primary_id = 3;
 	
 	
-	public MachineGunPod(StarshipArena mygame, int spawnx, int spawny){
+	public MachineGunPod(StarshipArena mygame, double spawnx, double spawny){
 		super(mygame, spawnx, spawny);
 	}
 	
-	public MachineGunPod(StarshipArena mygame, int spawnx, int spawny, double spawnangle){
+	public MachineGunPod(StarshipArena mygame, double spawnx, double spawny, double spawnangle){
 		super(mygame, "none", spawnx, spawny, spawnangle);
 	}
 
-	public MachineGunPod(StarshipArena mygame, String newteam, int spawnx, int spawny, double spawnangle){
+	public MachineGunPod(StarshipArena mygame, String newteam, double spawnx, double spawny, double spawnangle){
 		super(mygame, newteam, spawnx, spawny, spawnangle);
 	}
 	

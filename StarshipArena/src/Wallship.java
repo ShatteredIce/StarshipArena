@@ -7,44 +7,49 @@ public class Wallship extends Starship{
 	//TODO Wrong sprites
 	static Texture missileship_sprites = new Texture("missileship_sprites.png");
 	
-	static double primary_damage = 5;
-	static int primary_cooldown = 560;
-	static int primary_spread = 360;
-	static int primary_accuracy = 95;
-	static int primary_range = 3000;
-	static int primary_speed = 15;
-	static int primary_lifetime = 3300;
-	static int primary_xoffset = 0;
-	static int primary_yoffset = -50;
-	static int primary_id = 4;
+	//TODO Wallship should have two Interceptor-type 180 degree autoaim mguns
+	static double primary_damage = 1;
+	static int primary_cooldown = 20;
+	static int primary_spread = 150;
+	static int primary_accuracy = 97;
+	static int primary_range = 500;
+	static int primary_speed = 20; 
+	static int primary_lifetime = 600;
+	static int primary_xoffset = -50;
+	static int primary_yoffset = 30;
+	static int primary_id = 3;
 	
-	public Wallship(StarshipArena mygame, int spawnx, int spawny){
+	public Wallship(StarshipArena mygame, double spawnx, double spawny){
 		super(mygame, spawnx, spawny);
 	}
 	
-	public Wallship(StarshipArena mygame, int spawnx, int spawny, int spawnangle){
+	public Wallship(StarshipArena mygame, double spawnx, double spawny, double spawnangle){
 		super(mygame, "none", spawnx, spawny, spawnangle);
 	}
 
-	public Wallship(StarshipArena mygame, String newteam, int spawnx, int spawny, int spawnangle){
+	public Wallship(StarshipArena mygame, String newteam, double spawnx, double spawny, double spawnangle){
 		super(mygame, newteam, spawnx, spawny, spawnangle);
 	}
-	//TODO Change stats
+	//Stats were modified
 	public void shipStats(){
-		max_health = 50;
+		max_health = 500;
 		//movement
 		acceleration = 0.1;
-		max_velocity = 5;
+		max_velocity = 6;
 		max_reverse_velocity = -2;
 		min_turn_velocity = 1;
-		max_turn_speed = 1;
+		max_turn_speed = 2;
 		//weaponry
-		scan_range = 3000;
-		radar_range = 1500;
+		scan_range = 500;
+		radar_range = 1000;
 		//other
-		clickRadius = 55;
+		clickRadius = 110;
 		xOff = 0;
 		yOff = 0;
+		
+		//Wallship has larger halo and weight
+		haloSize = 160;
+		weight = 3;
 	}
 	//TODO Different turrets
 	public void shipTurrets(){
@@ -57,26 +62,14 @@ public class Wallship extends Starship{
 		Turret primaryTurret1 = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
 				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 0, 1);
 //		primaryTurret1.setOffset(primary_xoffset + 25, primary_yoffset + 20, -15);
-		primaryTurret1.setOffset(primary_xoffset, primary_yoffset, -20);
+		primaryTurret1.setOffset(-primary_xoffset, primary_yoffset);
 		turrets.add(primaryTurret1);
 		
 		Turret primaryTurret2 = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
 				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 0, 1);
 //		primaryTurret2.setOffset(primary_xoffset - 25, primary_yoffset + 20, -5);
-		primaryTurret2.setOffset(primary_xoffset, primary_yoffset, -14);
+		primaryTurret2.setOffset(primary_xoffset, primary_yoffset);
 		turrets.add(primaryTurret2);
-		
-		Turret primaryTurret3 = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
-				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 0, 1);
-//		primaryTurret3.setOffset(primary_xoffset + 25, primary_yoffset - 20, 5);
-		primaryTurret3.setOffset(primary_xoffset, primary_yoffset, 14);
-		turrets.add(primaryTurret3);
-		
-		Turret primaryTurret4 = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
-				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 0, 1);
-//		primaryTurret4.setOffset(primary_xoffset - 25, primary_yoffset - 20, 15);
-		primaryTurret4.setOffset(primary_xoffset, primary_yoffset, 20);
-		turrets.add(primaryTurret4);
 	}
 	
 	public void moveTurrets(){
@@ -132,43 +125,23 @@ public class Wallship extends Starship{
 	public void setIndices(){
 		indices = new int[]{0, 1, 2, 2, 1, 3};
 	}
-	//TODO Idk, this is probably wrong?
+	//TODO Idk, this is probably wrong? Rouhgly using the large Missileship size
 	public Point[] generatePoints(){
 		Point[] points = new Point[]{
-			new Point(-96, 144, true),
-			new Point(-96, -144, true),
-			new Point(96, 144, true),
-			new Point(96, -144, true)
+			new Point(288, -192, true),
+			new Point(-288, -192, true),
+			new Point(288, 192, true),
+			new Point(-288, 192, true)
 		};
 		return points;
 	}
-	//TODO Hitbox is wrong
+	//TODO Hitbox is wrong. Using same as size for now
 	public Point[] generateHitbox(){
 		Point[] hitbox = new Point[]{
-			new Point(-9, 120, true),
-			new Point(-18, 114, true),
-			new Point(-24, 90, true),
-			new Point(-30, 66, true),
-			
-			new Point(-30, 45, true),
-			new Point(-36, 39, true),
-			new Point(-39, 12, true),
-			new Point(-39, -57, true),
-			
-			new Point(-39, -81, true),
-			new Point(-18, -90, true),
-			new Point(18, -90, true),
-			new Point(36, -81, true),
-			
-			new Point(39, -57, true),
-			new Point(39, 12, true),
-			new Point(36, 39, true),
-			new Point(30, 45, true),
-			
-			new Point(30, 66, true),
-			new Point(24, 90, true),
-			new Point(18, 114, true),
-			new Point(6, 120, true),
+			new Point(288, -192, true),
+			new Point(-288, -192, true),
+			new Point(288, 192, true),
+			new Point(-288, 192, true)
 			
 		};
 		return hitbox;

@@ -11,7 +11,6 @@ public class AdvancedEnemy extends Enemy{
 	}
 	
 	public void buyShips(){
-		int shipType;
 		ArrayList<Planet> myPlanets = enemyPlayer.getControlledPlanets();
 		ArrayList<Starship> playerShips = game.player.getControlledShips();
 		int fightersCost = 0;

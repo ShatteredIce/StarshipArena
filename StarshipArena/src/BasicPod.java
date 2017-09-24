@@ -16,15 +16,15 @@ public class BasicPod extends Starship{
 	static int primary_yoffset = 20;
 	int primary_id = 0;
 	
-	public BasicPod(StarshipArena mygame, int spawnx, int spawny){
+	public BasicPod(StarshipArena mygame, double spawnx, double spawny){
 		super(mygame, spawnx, spawny);
 	}
 	
-	public BasicPod(StarshipArena mygame, int spawnx, int spawny, double spawnangle){
+	public BasicPod(StarshipArena mygame, double spawnx, double spawny, double spawnangle){
 		super(mygame, "none", spawnx, spawny, spawnangle);
 	}
 
-	public BasicPod(StarshipArena mygame, String newteam, int spawnx, int spawny, double spawnangle){
+	public BasicPod(StarshipArena mygame, String newteam, double spawnx, double spawny, double spawnangle){
 		super(mygame, newteam, spawnx, spawny, spawnangle);
 	}
 	

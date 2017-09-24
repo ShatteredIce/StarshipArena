@@ -18,15 +18,15 @@ public class Sniper extends Starship{
 	static int primary_yoffset = -50;
 	static int primary_id = 4;
 	
-	public Sniper(StarshipArena mygame, int spawnx, int spawny){
+	public Sniper(StarshipArena mygame, double spawnx, double spawny){
 		super(mygame, spawnx, spawny);
 	}
 	
-	public Sniper(StarshipArena mygame, int spawnx, int spawny, int spawnangle){
+	public Sniper(StarshipArena mygame, double spawnx, double spawny, double spawnangle){
 		super(mygame, "none", spawnx, spawny, spawnangle);
 	}
 
-	public Sniper(StarshipArena mygame, String newteam, int spawnx, int spawny, int spawnangle){
+	public Sniper(StarshipArena mygame, String newteam, double spawnx, double spawny, double spawnangle){
 		super(mygame, newteam, spawnx, spawny, spawnangle);
 	}
 	//TODO Change stats
