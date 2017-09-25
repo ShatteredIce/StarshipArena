@@ -7,7 +7,8 @@ public class Missileship extends Starship{
 	static Texture missileship_sprites = new Texture("missileship_sprites.png");
 	
 	static double primary_damage = 5;
-	static int primary_cooldown = 560;
+//	static int primary_cooldown = 560;
+	static int primary_cooldown = 200;
 	static int primary_spread = 360;
 	static int primary_accuracy = 95;
 	static int primary_range = 4000;
@@ -82,17 +83,17 @@ public class Missileship extends Starship{
 		turrets.add(primaryTurret4);
 	}
 	
-	public void moveTurrets(){
-		for (int i = 0; i < turrets.size(); i++) {
-			Point p = new Point();
-			p.setX(turrets.get(i).getXOffset() + center.X());
-			p.setY(turrets.get(i).getYOffset() + center.Y());
-			p.rotatePoint(center.X(), center.Y(), angle);
-			turrets.get(i).setCenter(p);
-			turrets.get(i).setAngle(angle);
-			turrets.get(i).update();
-		}
-	}
+//	public void moveTurrets(){
+//		for (int i = 0; i < turrets.size(); i++) {
+//			Point p = new Point();
+//			p.setX(turrets.get(i).getXOffset() + center.X());
+//			p.setY(turrets.get(i).getYOffset() + center.Y());
+//			p.rotatePoint(center.X(), center.Y(), angle);
+//			turrets.get(i).setCenter(p);
+//			turrets.get(i).setAngle(angle);
+//			turrets.get(i).update();
+//		}
+//	}
 	
 	public void setTexture(){
 		missileship_sprites.bind();
@@ -188,7 +189,7 @@ public class Missileship extends Starship{
 		getClosestEnemy();
 		moveToLocation();
 			
-		moveTurrets();
+//		moveTurrets();
 		edgeGuard();
 		getClosestEnemy();
 	}
