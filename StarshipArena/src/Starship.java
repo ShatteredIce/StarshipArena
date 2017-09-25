@@ -33,6 +33,11 @@ public class Starship {
 	static Texture blueSelectedCircle = new Texture("blue_selected_circle.png");
 	static Texture redSelectedCircle = new Texture("red_selected_circle.png");
 	
+	//TODO Attempting HP bars
+	Layer maxHp = new Layer(2);
+	Layer currHp = new Layer(1);
+	//TODO We will need new layer textures of solid red and solid green (red for maxHP, green for currHP).
+	
 	double[] vertices;
 	double[] textureCoords; 
 	int[] indices;
@@ -336,6 +341,24 @@ public class Starship {
 			setHaloPoints();
 			haloTexture.bind();
 			haloModel.render(haloVertices);
+			
+			/* 
+			 * If showing ships HP bars, set topRight point of both maxHP and currHP to be x = ship.centerx() - max_health * 1 (2 pixels per HP, thus start the bar there
+			 * Set topRight point of maxHP and currHP to be y = ship.centery() - shipRadius.
+			 * Set bottomLeft point of maxHP to be x = ship.centerx() + max_health * 1 and y = ship.centery() - clickradius - 5;
+			 * Set bottomLeft point of currHP to be x = ship.centerx() + max_health / 2 * 1 and y = ship.centery() - clickradius - 5;
+			 */
+			//We want each HP to have 3 pixels
+			maxHp.setTopLeft(center.x - (max_health / 2) * 3, center.y - clickRadius);
+			maxHp.setBottomRight(center.x + (max_health / 2) * 3, center.y - clickRadius - 10);
+			maxHp.setPoints();
+			maxHp.display();
+			
+			currHp.setTopLeft(center.x - (max_health / 2) * 3, center.y - clickRadius);
+			currHp.setBottomRight(center.x + (current_health - max_health / 2) * 3, center.y - clickRadius - 10);
+			currHp.setPoints();
+			currHp.display();
+			
 		}
 	}
 	
