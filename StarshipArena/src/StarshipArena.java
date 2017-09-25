@@ -63,6 +63,7 @@ public class StarshipArena {
 	
 	//Game scale: In future, it can be changed in an options menu
 	//TODO Reduce the default numbers by 10x, then set default levelScale to 10
+	//Right now game scale is causing lag, I suspect because of the double multiplication. Thus, try ^
 	double levelScale = 1;
 	
 	int gameState = 1;
