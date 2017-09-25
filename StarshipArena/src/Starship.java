@@ -221,18 +221,18 @@ public class Starship {
 			scanVertices[v_index+1] = scanPoints[i].Y();	
 		}
 	}
-	
-	public void setHaloTexture(){
-		if(team.equals("blue")){
-			blueHalo.bind();
-		}
-		else if(team.equals("red")){
-			redHalo.bind();
-		}
-		else{
-			whiteHalo.bind();
-		}
-	}
+	//TODO This function is never called
+//	public void setHaloTexture(){
+//		if(team.equals("blue")){
+//			blueHalo.bind();
+//		}
+//		else if(team.equals("red")){
+//			redHalo.bind();
+//		}
+//		else{
+//			whiteHalo.bind();
+//		}
+//	}
 	
 	public void moveTurrets(){
 		for (int i = 0; i < turrets.size(); i++) {

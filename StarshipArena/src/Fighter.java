@@ -230,7 +230,7 @@ public class Fighter extends Starship{
 
 		//System.out.println(team + " " +relativeAngle + " " + leftBearing + " " + rightBearing);
 		}
-		moveTurrets();
+//		moveTurrets();
 		edgeGuard();
 		if(current_turn_speed != 0 && targeted_velocity < min_turn_velocity){
 			targeted_velocity = min_turn_velocity;

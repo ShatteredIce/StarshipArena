@@ -14,6 +14,14 @@
 //		   270
 //Right is 0 degrees, and increases counter clockwise
 
+/**
+ * USEFUL SHORTCUTS/FUNCTIONS
+ * Right-clicking on a method in Outline, then try Open Call Hierarchy and Open Type Hierarchy. Useful for determining
+ * inheritance and function redundancy
+ * Press CTRL+SHIFT+L for a list of shortcuts, and press it twice to search for shortcuts and/or change them
+ * 
+ */
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
