@@ -1569,6 +1569,30 @@ public class StarshipArena {
 //				CURR_Y += ZOOM_HEIGHT / 2;
 //			}
 //		}
+		DoubleBuffer xpos = BufferUtils.createDoubleBuffer(3);
+		DoubleBuffer ypos = BufferUtils.createDoubleBuffer(3);
+		glfwGetCursorPos(window.getWindowHandle(), xpos, ypos);
+		xpos.put(0, Math.min(Math.max(xpos.get(0), windowXOffset), WINDOW_WIDTH + windowXOffset));
+		ypos.put(0, Math.min(Math.max(ypos.get(0), windowYOffset), WINDOW_HEIGHT + windowYOffset));
+		//relative camera coordinates
+		xpos.put(1, getWidthScalar() * (xpos.get(0) - windowXOffset) + CURR_X);
+		ypos.put(1, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0) + windowYOffset) + CURR_Y));
+		//true window coordinates
+		xpos.put(2, xpos.get(0) - windowXOffset);
+		ypos.put(2, (WINDOW_HEIGHT - ypos.get(0) + windowYOffset));
+		boolean mouseInFrame = false;
+		
+		double oldX = xpos.get(1);
+		double oldY = ypos.get(1);
+		double xAxisDistance = 0;
+		double yAxisDistance = 0;
+		
+		if(xpos.get(2) > 0 && xpos.get(2) < WINDOW_WIDTH && ypos.get(2) > 0 && ypos.get(2) < WINDOW_HEIGHT){
+			mouseInFrame = true;
+			xAxisDistance = xpos.get(2)/WINDOW_WIDTH;
+			yAxisDistance = ypos.get(2)/WINDOW_HEIGHT;
+		}
+		
 		int MIN_WIDTH = 650;
 		int MIN_HEIGHT = 450;
 		if(zoomOut){
@@ -1576,8 +1600,14 @@ public class StarshipArena {
 				zoomLevel++;
 				CAMERA_WIDTH *= 1.5;
 				CAMERA_HEIGHT *= 1.5;
-				CURR_X -= CAMERA_WIDTH / 6;
-				CURR_Y -= CAMERA_WIDTH / 6;
+				if(mouseInFrame){
+					CURR_X = oldX - CAMERA_WIDTH * xAxisDistance;
+					CURR_Y = oldY - CAMERA_HEIGHT * yAxisDistance;
+				}
+				else{
+					CURR_X -= CAMERA_WIDTH / 6;
+					CURR_Y -= CAMERA_WIDTH / 6;
+				}
 				if(CURR_X + CAMERA_WIDTH > WORLD_WIDTH){
 					CURR_X = WORLD_WIDTH - CAMERA_WIDTH;
 				}
@@ -1597,8 +1627,14 @@ public class StarshipArena {
 				zoomLevel--;
 				CAMERA_WIDTH /= 1.5;
 				CAMERA_HEIGHT /= 1.5;
-				CURR_X += CAMERA_WIDTH / 4;
-				CURR_Y += CAMERA_HEIGHT / 4;
+				if(mouseInFrame){
+					CURR_X = oldX - CAMERA_WIDTH * xAxisDistance;
+					CURR_Y = oldY - CAMERA_HEIGHT * yAxisDistance;
+				}
+				else{
+					CURR_X += CAMERA_WIDTH / 4;
+					CURR_Y += CAMERA_HEIGHT / 4;
+				}
 			}
 		}
 	}
