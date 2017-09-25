@@ -72,17 +72,17 @@ public class Wallship extends Starship{
 		turrets.add(primaryTurret2);
 	}
 	
-	public void moveTurrets(){
-		for (int i = 0; i < turrets.size(); i++) {
-			Point p = new Point();
-			p.setX(turrets.get(i).getXOffset() + center.X());
-			p.setY(turrets.get(i).getYOffset() + center.Y());
-			p.rotatePoint(center.X(), center.Y(), angle);
-			turrets.get(i).setCenter(p);
-			turrets.get(i).setAngle(angle);
-			turrets.get(i).update();
-		}
-	}
+//	public void moveTurrets(){
+//		for (int i = 0; i < turrets.size(); i++) {
+//			Point p = new Point();
+//			p.setX(turrets.get(i).getXOffset() + center.X());
+//			p.setY(turrets.get(i).getYOffset() + center.Y());
+//			p.rotatePoint(center.X(), center.Y(), angle);
+//			turrets.get(i).setCenter(p);
+//			turrets.get(i).setAngle(angle);
+//			turrets.get(i).update();
+//		}
+//	}
 	//TODO This should be roughly right?
 	public void setTexture(){
 		missileship_sprites.bind();
@@ -157,7 +157,7 @@ public class Wallship extends Starship{
 		getClosestEnemy();
 		moveToLocation();
 			
-		moveTurrets();
+//		moveTurrets();
 		edgeGuard();
 		getClosestEnemy();
 	}
