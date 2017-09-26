@@ -32,7 +32,7 @@ public class Wallship extends Starship{
 	}
 	//Stats were modified
 	public void shipStats(){
-		max_health = 500;
+		max_health = 120;
 		//movement
 		acceleration = 0.1;
 		max_velocity = 6;
@@ -51,7 +51,6 @@ public class Wallship extends Starship{
 		haloSize = 160;
 		weight = 3;
 	}
-	//TODO Different turrets
 	public void shipTurrets(){
 //		if(team.equals("blue")){
 //			primary_id = 1;

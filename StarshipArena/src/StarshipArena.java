@@ -1118,6 +1118,7 @@ public class StarshipArena {
 						Starship second = ships.get(s1);
 						if (first.getTeam().equals(second.getTeam()) && distance(first.getX(), first.getY(), second.getX(), second.getY()) < first.getClickRadius() * 2 + second.getClickRadius() * 2) {
 							double angle = Math.acos((second.getX() - first.getX()) / distance(first.getX(), first.getY(), second.getX(), second.getY()));
+							if (Double.isNaN(angle)) angle = 180;
 							double newFirstX, newFirstY, newSecondX, newSecondY;
 							if (second.getY() > first.getY()) {
 								newFirstX = Math.min(Math.max(first.center.x - Math.cos(angle) / first.weight, first.getClickRadius()), WORLD_WIDTH - first.getClickRadius());
@@ -1435,20 +1436,28 @@ public class StarshipArena {
 //		new Fighter(this, "red", 1700, 450, 0);
 		
 		new MachineGunPod(this, "red", 3000 * levelScale, 15000 * levelScale, 270);
-//		new MachineGunPod(this, "red", 3500, 14000, 270);
-//		new MachineGunPod(this, "red", 3000, 13000, 270);
+		new MachineGunPod(this, "red", 3500, 14000, 270);
+		new MachineGunPod(this, "red", 3000, 13000, 270);
 //		
 		new Wallship(this, "blue", 20000 * levelScale, 10000 * levelScale, 270);
+		new Wallship(this, "blue", 20000 * levelScale, 10000 * levelScale, 270);
+		new Wallship(this, "blue", 20000 * levelScale, 10000 * levelScale, 270);
+		new Sniper(this, "blue", 20000 * levelScale, 10000 * levelScale, 270);
+		new Sniper(this, "blue", 20000 * levelScale, 10000 * levelScale, 270);
+		new Sniper(this, "blue", 20000 * levelScale, 10000 * levelScale, 270);
+		new Battleship(this, "blue", 20000 * levelScale, 10000 * levelScale, 270);
+		new Battleship(this, "blue", 20000 * levelScale, 10000 * levelScale, 270);
+		new Battleship(this, "blue", 20000 * levelScale, 10000 * levelScale, 270);
 		
-//		new MachineGunPod(this, "red", 4000, 15000, 270);
-//		new MachineGunPod(this, "red", 4500, 14000, 270);
-//		new MachineGunPod(this, "red", 4000, 13000, 270);
-//		new MachineGunPod(this, "red", 5000, 15000, 270);
-//		new MachineGunPod(this, "red", 5500, 14000, 270);
-//		new MachineGunPod(this, "red", 5000, 13000, 270);
-//		new MachineGunPod(this, "red", 6000, 15000, 270);
-//		new MachineGunPod(this, "red", 6500, 14000, 270);
-//		new MachineGunPod(this, "red", 6000, 13000, 270);
+		new MachineGunPod(this, "red", 4000, 15000, 270);
+		new MachineGunPod(this, "red", 4500, 14000, 270);
+		new MachineGunPod(this, "red", 4000, 13000, 270);
+		new MachineGunPod(this, "red", 5000, 15000, 270);
+		new MachineGunPod(this, "red", 5500, 14000, 270);
+		new MachineGunPod(this, "red", 5000, 13000, 270);
+		new MachineGunPod(this, "red", 6000, 15000, 270);
+		new MachineGunPod(this, "red", 6500, 14000, 270);
+		new MachineGunPod(this, "red", 6000, 13000, 270);
 //		new Fighter(this, "blue", 2000, 5000, 270, 1);
 //		new Interceptor(this, 500, 700, 0, 1);
 	}
