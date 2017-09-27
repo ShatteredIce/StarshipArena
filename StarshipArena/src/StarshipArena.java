@@ -1678,11 +1678,24 @@ public class StarshipArena {
 			CAMERA_WIDTH = 26000 * levelScale;
 			CAMERA_HEIGHT = 18000 * levelScale;
 			enemy = new Enemy(this, new Player(this, "red"));
-			//TODO Enemy Fighters are commented out so I can test PlanetLaser, and left Planet is auto-given to blue. Reverse these changes after testing concludes.
+			//TODO Enemy Fighters are commented out so I can test new ships, and left Planet is auto-given to blue. Reverse these changes after testing concludes.
 			new Planet(this, 13500 * levelScale, 10000 * levelScale, 1).setTeam("blue");;
 			new PlanetRadar(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
 			new Planet(this, 30000 * levelScale, 15000 * levelScale, 2).setTeam("red");
 			new PlanetLaser(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			
+			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			
+			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			
+			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			
 //			new Fighter(this, "blue", 5000 * levelScale, 4000 * levelScale, 0);
 //			new Fighter(this, "blue", 6000 * levelScale, 3500 * levelScale, 0);
 //			new Fighter(this, "blue", 4000 * levelScale, 3500 * levelScale, 0);
