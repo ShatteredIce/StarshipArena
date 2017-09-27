@@ -8,10 +8,20 @@ public class HealthbarRenderer {
 	
 	public void drawHPBar(Starship s){		
 		setColor(-1); //base color
-		setModel(s.getX() - (s.getMaxHealth() / 2) * 3, s.getY() - s.getClickRadius(), s.getX() + (s.getMaxHealth() / 2) * 3, s.getY() - s.getClickRadius() - 10);
+		int numPixels = 4;
+		int width = 10;
+		if (s.max_health >= 50) {
+			numPixels /= 2;
+			width *= 2;
+			if (s.max_health >= 100) {
+				numPixels /= 2;
+				width *= 2;
+			}
+		}
+		setModel(s.getX() - (s.getMaxHealth() / 2) * numPixels, s.getY() - s.getClickRadius(), s.getX() + (s.getMaxHealth() / 2) * numPixels, s.getY() - s.getClickRadius() - width);
 	
 		setColor(s.getHealth()/s.getMaxHealth()); //color based on hp remaining
-		setModel(s.getX() - (s.getMaxHealth() / 2) * 3, s.getY() - s.getClickRadius(), s.getX() + (s.getHealth() - s.getMaxHealth() / 2) * 3, s.getY() - s.getClickRadius() - 10);
+		setModel(s.getX() - (s.getMaxHealth() / 2) * numPixels, s.getY() - s.getClickRadius(), s.getX() + (s.getHealth() - s.getMaxHealth() / 2) * numPixels, s.getY() - s.getClickRadius() - width);
 	}
 	
 	public void setColor(double percentage){
