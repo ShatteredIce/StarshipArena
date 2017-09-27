@@ -25,7 +25,6 @@ public class Starship {
 	Point[] radarPoints;
 	Point[] scanPoints;
 	int haloSize = 80;
-	static Texture haloTexture = new Texture("ships_halo.png");
 	static Texture FOWTexture = new Texture("FOW_halo.png");
 	static Texture rangeTexture = new Texture("range_halo.png");
 	static Texture blueCircle = new Texture("blue_circle.png");
@@ -33,10 +32,6 @@ public class Starship {
 	static Texture blueSelectedCircle = new Texture("blue_selected_circle.png");
 	static Texture redSelectedCircle = new Texture("red_selected_circle.png");
 	
-	static HealthbarRenderer healthbars = new HealthbarRenderer();
-	
-	Layer maxHp = new Layer(2);
-	Layer currHp = new Layer(1);
 	//TODO We will need new layer textures of solid red and solid green (red for maxHP, green for currHP).
 	
 	double[] vertices;
@@ -84,9 +79,6 @@ public class Starship {
 	boolean attackMove = true;
 	boolean directTarget = false;
 	
-	static Texture blueHalo = new Texture("blue_halo.png");
-	static Texture redHalo = new Texture("red_halo.png");
-	static Texture whiteHalo = new Texture("white_halo.png");
 	
 	//Screen bounds
 	double x_min;
@@ -338,12 +330,6 @@ public class Starship {
 	public void display(){
 		setTexture();
 		model.render(vertices);
-		if(selected){
-			setHaloPoints();
-			haloTexture.bind();
-			haloModel.render(haloVertices);
-			healthbars.drawHPBar(this);	
-		}
 	}
 	
 	public void showView(){
@@ -774,6 +760,11 @@ public class Starship {
 	public int getRadarRange(){
 		return radar_range;
 	}
+	
+	public int getHaloSize(){
+		return haloSize;
+	}
+	
 	
     public double distance(double x1, double y1, double x2, double y2){
     	return Math.sqrt(Math.pow((x2-x1),2) + Math.pow((y2-y1),2));

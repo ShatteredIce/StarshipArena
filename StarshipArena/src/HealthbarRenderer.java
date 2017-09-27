@@ -1,17 +1,42 @@
+import java.util.ArrayList;
 
 public class HealthbarRenderer {
 	
 	double[] vertices = new double[8];
 	double[] textureCoords = new double[8];
+	Point currentShipTrueCenter = new Point();
 	static Texture colors = new Texture("hpbar_colors.png");
+	static Texture haloTexture = new Texture("ships_halo.png");
 	Model box = new Model(vertices, textureCoords, new int[]{0, 1, 2, 2, 1, 3});
 	
-	public void drawHPBar(Starship s){		
+	public void drawAllHPBars(ArrayList<Starship> selected){
+		bindHealthTexture();
+		for (Starship s : selected) {
+			updateTrueCenter(s);
+			drawHPBar(s);
+		}
+	}
+	
+	public void drawHPBar(Starship s){	
 		setColor(-1); //base color
-		setModel(s.getX() - (s.getMaxHealth() / 2) * 3, s.getY() - s.getClickRadius(), s.getX() + (s.getMaxHealth() / 2) * 3, s.getY() - s.getClickRadius() - 10);
+		setModel(currentShipTrueCenter.X() - (s.getMaxHealth() / 2) * 3, currentShipTrueCenter.Y() - s.getClickRadius(), currentShipTrueCenter.X() + (s.getMaxHealth() / 2) * 3, currentShipTrueCenter.Y() - s.getClickRadius() - 10);
 	
 		setColor(s.getHealth()/s.getMaxHealth()); //color based on hp remaining
-		setModel(s.getX() - (s.getMaxHealth() / 2) * 3, s.getY() - s.getClickRadius(), s.getX() + (s.getHealth() - s.getMaxHealth() / 2) * 3, s.getY() - s.getClickRadius() - 10);
+		setModel(currentShipTrueCenter.X() - (s.getMaxHealth() / 2) * 3, currentShipTrueCenter.Y() - s.getClickRadius(), currentShipTrueCenter.X() + (s.getHealth() - s.getMaxHealth() / 2) * 3, currentShipTrueCenter.Y() - s.getClickRadius() - 10);
+	}
+	
+	public void drawAllShipHalos(ArrayList<Starship> selected){
+		bindShipHaloTexture();
+		for (Starship s : selected) {
+			updateTrueCenter(s);
+			drawShipHalo(s);
+		}
+	}
+	
+	public void drawShipHalo(Starship s){
+		setTextureCoords(0, 0, 1, 1);
+		setModel(currentShipTrueCenter.X() - s.getHaloSize(), currentShipTrueCenter.Y() + s.getHaloSize(),
+				currentShipTrueCenter.X() + s.getHaloSize(), currentShipTrueCenter.Y() - s.getHaloSize());
 	}
 	
 	public void setColor(double percentage){
@@ -56,8 +81,21 @@ public class HealthbarRenderer {
 		vertices[5] = y1;
 		vertices[6] = x2;
 		vertices[7] = y2;
-		colors.bind();
 		box.render(vertices);
+	}
+	
+	public void updateTrueCenter(Starship s){
+		currentShipTrueCenter.setX(s.getX() + s.getXOff());
+		currentShipTrueCenter.setY(s.getY() + s.getYOff());
+		currentShipTrueCenter.rotatePoint(s.getX(), s.getY(), s.getAngle());
+	}
+	
+	public void bindHealthTexture(){
+		colors.bind();
+	}
+	
+	public void bindShipHaloTexture(){
+		haloTexture.bind();
 	}
 	
 

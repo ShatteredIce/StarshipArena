@@ -40,6 +40,8 @@ import java.io.IOException;
 
 public class StarshipArena {
 	
+	static HealthbarRenderer healthbars;
+	
 	Window window;
 	
 	int WINDOW_WIDTH = 1300;
@@ -896,6 +898,8 @@ public class StarshipArena {
 		defeatMessage.setTopLeft(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 + 70);
 		defeatMessage.setBottomRight(WINDOW_WIDTH / 2 + 100, WINDOW_HEIGHT / 2 - 70);
 		defeatMessage.setPoints();
+		
+		healthbars = new HealthbarRenderer();
 				
 		genTiles();
 
@@ -1062,6 +1066,9 @@ public class StarshipArena {
 									&& ships.get(s).getY() > CURR_Y - (shipDisplayBorder * getHeightScalar()) && ships.get(s).getY() < CURR_Y + CAMERA_HEIGHT + (shipDisplayBorder * getHeightScalar())){
 								if(isVisible(ships.get(s), player)){
 									ships.get(s).display();
+									ArrayList<Starship> selectedShips = player.getSelectedShips();
+									healthbars.drawAllShipHalos(selectedShips);
+									healthbars.drawAllHPBars(selectedShips);
 								}
 							}
 						}

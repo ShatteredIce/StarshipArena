@@ -26,6 +26,17 @@ public class Player {
 		return team;
 	}
 	
+	public ArrayList<Starship> getSelectedShips(){
+		ArrayList<Starship> selectedShips = new ArrayList<>();
+		ArrayList<Starship> allShips = game.getAllShips();
+		for (int i = 0; i < allShips.size(); i++) {
+			if(allShips.get(i).isSelected()){
+				selectedShips.add(allShips.get(i));
+			}
+		}
+		return selectedShips;
+	}
+	
 	public ArrayList<Starship> getControlledShips(){
 		ArrayList<Starship> myShips = new ArrayList<>();
 		ArrayList<Starship> allShips = game.getAllShips();
