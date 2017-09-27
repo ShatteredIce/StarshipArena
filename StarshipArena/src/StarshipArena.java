@@ -56,7 +56,7 @@ public class StarshipArena {
 	//Game scale: In future, it can be changed in an options menu
 	//TODO Reduce the default numbers by 10x, then set default levelScale to 10
 	//Right now game scale is causing lag, I suspect because of the double multiplication. Thus, try ^
-	double levelScale = 1;
+	double levelScale = 0.2;
 	
 	int gameState = 1;
 	int SLOW = 1;
@@ -1348,13 +1348,13 @@ public class StarshipArena {
 					
 					//Check which direction the camera should move, and move accordingly
 					if (panLeft)
-						CURR_X = Math.max(0, CURR_X - CAMERA_WIDTH / 20);
+						CURR_X = Math.max(0, CURR_X - CAMERA_WIDTH / 30);
 					if (panRight)
-						CURR_X = Math.min(WORLD_WIDTH - CAMERA_WIDTH, CURR_X + CAMERA_WIDTH / 20);
+						CURR_X = Math.min(WORLD_WIDTH - CAMERA_WIDTH, CURR_X + CAMERA_WIDTH / 30);
 					if (panDown)
-						CURR_Y = Math.max((int) (-150 * getHeightScalar()), CURR_Y - CAMERA_HEIGHT / 20);
+						CURR_Y = Math.max((int) (-150 * getHeightScalar()), CURR_Y - CAMERA_HEIGHT / 30);
 					if (panUp)
-						CURR_Y = Math.min(WORLD_HEIGHT - CAMERA_HEIGHT, CURR_Y + CAMERA_HEIGHT / 20);
+						CURR_Y = Math.min(WORLD_HEIGHT - CAMERA_HEIGHT, CURR_Y + CAMERA_HEIGHT / 30);
 					
 					
 					window.swapBuffers();
