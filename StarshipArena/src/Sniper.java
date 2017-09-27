@@ -1,22 +1,24 @@
 import java.util.ArrayList;
 
-
+//TODO Couldn't I base sniper off of Turret? It's supposed to turn and target enemies like a turret.
 public class Sniper extends Starship{
 	int changeDirection = 0;
 	int changeDirectionCooldown = 0;
 	//TODO Wrong sprites
 	static Texture missileship_sprites = new Texture("missileship_sprites.png");
 	
-	static double primary_damage = 5;
-	static int primary_cooldown = 560;
+//	static double primary_damage = 45;
+	static double primary_damage = 180;
+	static int primary_cooldown = 300;
+//	static int primary_cooldown = 56;
 	static int primary_spread = 360;
-	static int primary_accuracy = 95;
-	static int primary_range = 3000;
-	static int primary_speed = 15;
-	static int primary_lifetime = 3300;
+	static int primary_accuracy = 99;
+	static int primary_range = 8000;
+	static int primary_speed = 200;
+	static int primary_lifetime = 8000;
 	static int primary_xoffset = 0;
 	static int primary_yoffset = -50;
-	static int primary_id = 4;
+	static int primary_id = 7;
 	
 	public Sniper(StarshipArena mygame, double spawnx, double spawny){
 		super(mygame, spawnx, spawny);
@@ -31,20 +33,24 @@ public class Sniper extends Starship{
 	}
 	//TODO Change stats
 	public void shipStats(){
-		max_health = 50;
+		max_health = 45;
 		//movement
 		acceleration = 0.1;
-		max_velocity = 5;
+//		max_velocity = 4.5;
+		max_velocity = 10;
 		max_reverse_velocity = -2;
 		min_turn_velocity = 1;
-		max_turn_speed = 1;
+		max_turn_speed = 3;
 		//weaponry
-		scan_range = 3000;
+		scan_range = 8000;
 		radar_range = 1500;
 		//other
-		clickRadius = 55;
+		clickRadius = 110;
 		xOff = 0;
 		yOff = 0;
+		
+		haloSize = 160;
+		weight = 1;
 	}
 	//TODO Different turrets
 	public void shipTurrets(){
@@ -57,26 +63,8 @@ public class Sniper extends Starship{
 		Turret primaryTurret1 = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
 				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 0, 1);
 //		primaryTurret1.setOffset(primary_xoffset + 25, primary_yoffset + 20, -15);
-		primaryTurret1.setOffset(primary_xoffset, primary_yoffset, -20);
+		primaryTurret1.setOffset(primary_xoffset, primary_yoffset);
 		turrets.add(primaryTurret1);
-		
-		Turret primaryTurret2 = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
-				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 0, 1);
-//		primaryTurret2.setOffset(primary_xoffset - 25, primary_yoffset + 20, -5);
-		primaryTurret2.setOffset(primary_xoffset, primary_yoffset, -14);
-		turrets.add(primaryTurret2);
-		
-		Turret primaryTurret3 = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
-				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 0, 1);
-//		primaryTurret3.setOffset(primary_xoffset + 25, primary_yoffset - 20, 5);
-		primaryTurret3.setOffset(primary_xoffset, primary_yoffset, 14);
-		turrets.add(primaryTurret3);
-		
-		Turret primaryTurret4 = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
-				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 0, 1);
-//		primaryTurret4.setOffset(primary_xoffset - 25, primary_yoffset - 20, 15);
-		primaryTurret4.setOffset(primary_xoffset, primary_yoffset, 20);
-		turrets.add(primaryTurret4);
 	}
 	
 //	public void moveTurrets(){
@@ -135,10 +123,10 @@ public class Sniper extends Starship{
 	//TODO Idk, this is probably wrong?
 	public Point[] generatePoints(){
 		Point[] points = new Point[]{
-			new Point(-96, 144, true),
-			new Point(-96, -144, true),
-			new Point(96, 144, true),
-			new Point(96, -144, true)
+			new Point(-192, 288, true),
+			new Point(-192, -288, true),
+			new Point(192, 288, true),
+			new Point(192, -288, true)
 		};
 		return points;
 	}

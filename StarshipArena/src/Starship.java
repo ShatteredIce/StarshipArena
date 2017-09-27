@@ -33,7 +33,8 @@ public class Starship {
 	static Texture blueSelectedCircle = new Texture("blue_selected_circle.png");
 	static Texture redSelectedCircle = new Texture("red_selected_circle.png");
 	
-	//TODO Attempting HP bars
+	static HealthbarRenderer healthbars = new HealthbarRenderer();
+	
 	Layer maxHp = new Layer(2);
 	Layer currHp = new Layer(1);
 	//TODO We will need new layer textures of solid red and solid green (red for maxHP, green for currHP).
@@ -226,18 +227,18 @@ public class Starship {
 			scanVertices[v_index+1] = scanPoints[i].Y();	
 		}
 	}
-	
-	public void setHaloTexture(){
-		if(team.equals("blue")){
-			blueHalo.bind();
-		}
-		else if(team.equals("red")){
-			redHalo.bind();
-		}
-		else{
-			whiteHalo.bind();
-		}
-	}
+	//TODO This function is never called
+//	public void setHaloTexture(){
+//		if(team.equals("blue")){
+//			blueHalo.bind();
+//		}
+//		else if(team.equals("red")){
+//			redHalo.bind();
+//		}
+//		else{
+//			whiteHalo.bind();
+//		}
+//	}
 	
 	public void moveTurrets(){
 		for (int i = 0; i < turrets.size(); i++) {
@@ -341,24 +342,7 @@ public class Starship {
 			setHaloPoints();
 			haloTexture.bind();
 			haloModel.render(haloVertices);
-			
-			/* 
-			 * If showing ships HP bars, set topRight point of both maxHP and currHP to be x = ship.centerx() - max_health * 1 (2 pixels per HP, thus start the bar there
-			 * Set topRight point of maxHP and currHP to be y = ship.centery() - shipRadius.
-			 * Set bottomLeft point of maxHP to be x = ship.centerx() + max_health * 1 and y = ship.centery() - clickradius - 5;
-			 * Set bottomLeft point of currHP to be x = ship.centerx() + max_health / 2 * 1 and y = ship.centery() - clickradius - 5;
-			 */
-			//We want each HP to have 3 pixels
-			maxHp.setTopLeft(center.x - (max_health / 2) * 3, center.y - clickRadius);
-			maxHp.setBottomRight(center.x + (max_health / 2) * 3, center.y - clickRadius - 10);
-			maxHp.setPoints();
-			maxHp.display();
-			
-			currHp.setTopLeft(center.x - (max_health / 2) * 3, center.y - clickRadius);
-			currHp.setBottomRight(center.x + (current_health - max_health / 2) * 3, center.y - clickRadius - 10);
-			currHp.setPoints();
-			currHp.display();
-			
+			healthbars.drawHPBar(this);	
 		}
 	}
 	
@@ -395,9 +379,8 @@ public class Starship {
 		model.setTextureCoords(textureCoords);
 		model.render(vertices);
 	}
-	//TODO Process command queue here
-	//The superclass' doRandomMovement makes sure every ship class processes its command queue before executing its default behavior.
 	
+	//The superclass' doRandomMovement makes sure every ship class processes its command queue before executing its default behavior.
 	//TODO For every ship, I must teach it how to deal with directTarget
 	public void doRandomMovement(){
 		if (!commands.isEmpty()) {
@@ -821,8 +804,8 @@ public class Starship {
 	public int getControlGroup(){
 		return control_group;
 	}
-	//TODO Idk if we need to know whether the control key is pressed
-	//TODO When calling this command, put a Starship/Point as input and null for the other one
+	
+	//When calling this command, put a valid Starship/Point as one input and null for the other one
 	public void addCommand(boolean shift, boolean alt, boolean control, boolean t, Starship newTarget, Point newLocation) {
 		commands.add(new Command(shift, alt, control, t, newTarget, newLocation));
 	}
