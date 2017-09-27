@@ -58,6 +58,9 @@ public class Turret {
 	int PIERCING = 2;
 	int AUTOAIM = 1;
 	
+	//Bonuses values:
+	int pulseSize = 200;
+	
 	//Sound effects
 //	Clip clip;
 	Turret(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newangle, double newdamage,
@@ -111,7 +114,6 @@ public class Turret {
 		angleOff = newAngle;
 	}
 	
-	//TODO Lag is possibly caused by the need for update() to for-loop through every single enemy ship.
 	public void update(){
 
 		if(current_cooldown <= 0){
@@ -137,7 +139,7 @@ public class Turret {
 						fired = true;
 					}
 					if (fired == true) {
-						if (pulse && current_cooldown > -200) {
+						if (pulse && current_cooldown > -pulseSize) {
 							current_cooldown--;
 							break;
 						}
@@ -149,7 +151,7 @@ public class Turret {
 			//When a non-autoaiming pulse weapon starts discharging, it must fire off all its shots.
 			//Autoaiming pulse weapons must reload if no targets are found.
 			if (pulse && current_cooldown < 0 && !fired) {
-				if (current_cooldown > -200) {
+				if (current_cooldown > -pulseSize) {
 					if (!autoAiming)
 						fire(angle);
 					current_cooldown--;
@@ -170,8 +172,8 @@ public class Turret {
 		double cameraY = game.CURR_Y + game.CAMERA_HEIGHT / 2;
 		//This formula decrease the volume the further away the player is from the weapon event, but increase volume for high levels of zoom
 		float dbDiff = (float)(game.distance(cameraX, cameraY, center.X(), center.Y()) / game.CAMERA_WIDTH * -10 + 5 - game.CAMERA_WIDTH / 5000);
-		//launch plasma or mgun
-		if (projectile_type < 4 || projectile_type == 5 || projectile_type == 6) {
+		//launch a non-homing projectile
+		if (projectile_type != 4) {
 			new Projectile(game, owner, team, center.X(), center.Y(), projectile_damage, (newAngle + angleOff + 360) % 360, accuracy, projectile_speed, projectile_lifetime, projectile_type, projectileBonuses);
 			//plasma sfx
 			if (game.mute) return;
@@ -188,7 +190,8 @@ public class Turret {
 				}
 			}
 			//mgun sfx
-			else if (projectile_type == 3) {
+			//TODO This sound effect is also temporary sniper sfx
+			else if (projectile_type == 3 || projectile_type == 7) {
 				for (int i = 5; i < 10; i++) {
 					if (game.soundEffects[i].getFramePosition() > 1000 || !game.soundEffects[i].isRunning()) {
 						FloatControl gainControl = (FloatControl) game.soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
@@ -270,6 +273,10 @@ public class Turret {
 	
 	public void setY(double newy){
 		center.setY(newy);
+	}
+	
+	public void setPulseSize(int newPulseSize) {
+		pulseSize = newPulseSize;
 	}
 	
 	public double getXOffset(){

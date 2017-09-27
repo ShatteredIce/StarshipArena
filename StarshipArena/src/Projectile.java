@@ -149,6 +149,15 @@ public class Projectile {
 				new Point(8, -180, true),
 			};
 		}
+		//Sniper shot
+		else if(texId == 7){
+			points = new Point[]{
+				new Point(-2, 200, true),
+				new Point(-2, -200, true),
+				new Point(2, 200, true),
+				new Point(2, -200, true),
+			};
+		}
 		return points;
 	}
 	
@@ -173,11 +182,15 @@ public class Projectile {
 		else if (texId == 4){
 			tex4.bind();
 		}
+		//TODO Some weapons are using other weapon's textures right now.
 		else if (texId == 5){
 			tex1.bind();
 		}
 		else if (texId == 6){
 			tex2.bind();
+		}
+		else if (texId == 7) {
+			tex3.bind();
 		}
 		else{
 			tex0.bind();
