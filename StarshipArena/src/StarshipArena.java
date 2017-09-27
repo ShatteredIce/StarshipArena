@@ -1682,19 +1682,29 @@ public class StarshipArena {
 			new Planet(this, 13500 * levelScale, 10000 * levelScale, 1).setTeam("blue");;
 			new PlanetRadar(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
 			new Planet(this, 30000 * levelScale, 15000 * levelScale, 2).setTeam("red");
-			new PlanetLaser(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+//			new PlanetLaser(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
 			
-			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+//			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+//			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+//			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+//			
+//			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+//			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+//			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+//			
+//			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+//			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+//			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
 			
-			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
 			
-			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			for (int i = 0; i < 320; i++) {
+				if (i % 16 == 0) {
+					new Missileship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+				}
+				new Fighter(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
+			}
+			
+			
 			
 //			new Fighter(this, "blue", 5000 * levelScale, 4000 * levelScale, 0);
 //			new Fighter(this, "blue", 6000 * levelScale, 3500 * levelScale, 0);
