@@ -992,9 +992,7 @@ public class StarshipArena {
 					}
 					
 					//Show FOW
-					for (int i = 0; i < ships.size(); i++) {
-						shiprenderer.drawAllFOW(player.getControlledShips());
-					}
+					shiprenderer.drawAllFOW(player.getControlledShips());
 					for (int i = 0; i < planets.size(); i++) {
 						if (planets.get(i).getTeam().equals(player.getTeam()))
 							planets.get(i).showView();
