@@ -17,23 +17,12 @@ public class Starship {
 	Model model;
 	static Texture tex = new Texture("WIP.png");
 	//halo rendering variables
-	Model haloModel;
-	double[] haloVertices;
-	double[] radarVertices;
-	double[] scanVertices;
-	Point[] haloPoints;
-	Point[] radarPoints;
-	Point[] scanPoints;
 	int haloSize = 80;
-	static Texture FOWTexture = new Texture("FOW_halo.png");
-	static Texture rangeTexture = new Texture("range_halo.png");
 	static Texture blueCircle = new Texture("blue_circle.png");
 	static Texture redCircle = new Texture("red_circle.png");
 	static Texture blueSelectedCircle = new Texture("blue_selected_circle.png");
 	static Texture redSelectedCircle = new Texture("red_selected_circle.png");
-	
-	//TODO We will need new layer textures of solid red and solid green (red for maxHP, green for currHP).
-	
+		
 	double[] vertices;
 	double[] textureCoords; 
 	int[] indices;
@@ -114,20 +103,13 @@ public class Starship {
 		current_health = max_health;
 		locationTarget = null;
 		points = generatePoints();
-		haloPoints = generateEmptyPoints();
-		radarPoints = generateEmptyPoints();
-		scanPoints = generateEmptyPoints();
 		hitbox = generateHitbox();
 		applyScaleFactor();
 		vertices = new double[points.length * 2];
-		haloVertices = new double[haloPoints.length * 2];
-		radarVertices = new double[radarPoints.length * 2];
-		scanVertices = new double[scanPoints.length * 2];
 		setTextureCoords();
 		setIndices();
 		setPoints();
 		model = new Model(vertices, textureCoords, indices);
-		haloModel = new Model(haloVertices, textureCoords, indices);
 		game.addShip(this);
 	}
 	
@@ -162,75 +144,6 @@ public class Starship {
 		}
 		moveTurrets();
 	}
-	
-	public void setHaloPoints(){
-		Point trueCenter = new Point(center.X() + xOff, center.Y() + yOff);
-		trueCenter.rotatePoint(center.X(), center.Y(), angle);
-		haloPoints[0].setX(trueCenter.X() - haloSize);
-		haloPoints[0].setY(trueCenter.Y() + haloSize);
-		haloPoints[1].setX(trueCenter.X() - haloSize);
-		haloPoints[1].setY(trueCenter.Y() - haloSize);
-		haloPoints[2].setX(trueCenter.X() + haloSize);
-		haloPoints[2].setY(trueCenter.Y() + haloSize);
-		haloPoints[3].setX(trueCenter.X() + haloSize);
-		haloPoints[3].setY(trueCenter.Y() - haloSize);
-		int v_index = 0;
-		for (int i = 0; i < haloPoints.length; i++) {
-			v_index = 2*i;
-			haloVertices[v_index] = haloPoints[i].X();
-			haloVertices[v_index+1] = haloPoints[i].Y();	
-		}
-	}
-	
-	public void setRadarPoints(){
-		Point trueCenter = new Point(center.X() + xOff, center.Y() + yOff);
-		trueCenter.rotatePoint(center.X(), center.Y(), angle);
-		radarPoints[0].setX(trueCenter.X() - radar_range);
-		radarPoints[0].setY(trueCenter.Y() + radar_range);
-		radarPoints[1].setX(trueCenter.X() - radar_range);
-		radarPoints[1].setY(trueCenter.Y() - radar_range);
-		radarPoints[2].setX(trueCenter.X() + radar_range);
-		radarPoints[2].setY(trueCenter.Y() + radar_range);
-		radarPoints[3].setX(trueCenter.X() + radar_range);
-		radarPoints[3].setY(trueCenter.Y() - radar_range);
-		int v_index = 0;
-		for (int i = 0; i < radarPoints.length; i++) {
-			v_index = 2*i;
-			radarVertices[v_index] = radarPoints[i].X();
-			radarVertices[v_index+1] = radarPoints[i].Y();	
-		}
-	}
-	
-	public void setScanPoints(){
-		Point trueCenter = new Point(center.X() + xOff, center.Y() + yOff);
-		trueCenter.rotatePoint(center.X(), center.Y(), angle);
-		scanPoints[0].setX(trueCenter.X() - scan_range);
-		scanPoints[0].setY(trueCenter.Y() + scan_range);
-		scanPoints[1].setX(trueCenter.X() - scan_range);
-		scanPoints[1].setY(trueCenter.Y() - scan_range);
-		scanPoints[2].setX(trueCenter.X() + scan_range);
-		scanPoints[2].setY(trueCenter.Y() + scan_range);
-		scanPoints[3].setX(trueCenter.X() + scan_range);
-		scanPoints[3].setY(trueCenter.Y() - scan_range);
-		int v_index = 0;
-		for (int i = 0; i < scanPoints.length; i++) {
-			v_index = 2*i;
-			scanVertices[v_index] = scanPoints[i].X();
-			scanVertices[v_index+1] = scanPoints[i].Y();	
-		}
-	}
-	//TODO This function is never called
-//	public void setHaloTexture(){
-//		if(team.equals("blue")){
-//			blueHalo.bind();
-//		}
-//		else if(team.equals("red")){
-//			redHalo.bind();
-//		}
-//		else{
-//			whiteHalo.bind();
-//		}
-//	}
 	
 	public void moveTurrets(){
 		for (int i = 0; i < turrets.size(); i++) {
@@ -330,18 +243,6 @@ public class Starship {
 	public void display(){
 		setTexture();
 		model.render(vertices);
-	}
-	
-	public void showView(){
-		setRadarPoints();
-		FOWTexture.bind();
-		haloModel.render(radarVertices);
-	}
-	
-	public void showScan(){
-		setScanPoints();
-		rangeTexture.bind();
-		haloModel.render(scanVertices);
 	}
 	
 	public void displayIcon(){
@@ -759,6 +660,10 @@ public class Starship {
 	
 	public int getRadarRange(){
 		return radar_range;
+	}
+	
+	public int getScanRange(){
+		return scan_range;
 	}
 	
 	public int getHaloSize(){

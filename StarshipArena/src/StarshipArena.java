@@ -40,7 +40,7 @@ import java.io.IOException;
 
 public class StarshipArena {
 	
-	static HealthbarRenderer healthbars;
+	static ShipRenderer shiprenderer;
 	
 	Window window;
 	
@@ -899,7 +899,7 @@ public class StarshipArena {
 		defeatMessage.setBottomRight(WINDOW_WIDTH / 2 + 100, WINDOW_HEIGHT / 2 - 70);
 		defeatMessage.setPoints();
 		
-		healthbars = new HealthbarRenderer();
+		shiprenderer = new ShipRenderer();
 				
 		genTiles();
 
@@ -993,8 +993,7 @@ public class StarshipArena {
 					
 					//Show FOW
 					for (int i = 0; i < ships.size(); i++) {
-						if (ships.get(i).getTeam().equals(player.getTeam()))
-							ships.get(i).showView();
+						shiprenderer.drawAllFOW(player.getControlledShips());
 					}
 					for (int i = 0; i < planets.size(); i++) {
 						if (planets.get(i).getTeam().equals(player.getTeam()))
@@ -1067,8 +1066,8 @@ public class StarshipArena {
 								if(isVisible(ships.get(s), player)){
 									ships.get(s).display();
 									ArrayList<Starship> selectedShips = player.getSelectedShips();
-									healthbars.drawAllShipHalos(selectedShips);
-									healthbars.drawAllHPBars(selectedShips);
+									shiprenderer.drawAllShipHalos(selectedShips);
+									shiprenderer.drawAllHPBars(selectedShips);
 								}
 							}
 						}
@@ -1095,11 +1094,7 @@ public class StarshipArena {
 					
 					//display weapons range of selected ships
 					if(f1Pressed){
-						for (int s = 0; s < ships.size(); s++) {
-							if(ships.get(s).isSelected() && ships.get(s).getTeam().equals(player.getTeam())){
-								ships.get(s).showScan();
-							}
-						}
+						shiprenderer.drawAllScan(player.getControlledShips());
 					}
 						
 					

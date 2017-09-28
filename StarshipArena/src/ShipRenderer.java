@@ -1,16 +1,18 @@
 import java.util.ArrayList;
 
-public class HealthbarRenderer {
+public class ShipRenderer {
 	
 	double[] vertices = new double[8];
 	double[] textureCoords = new double[8];
 	Point currentShipTrueCenter = new Point();
-	static Texture colors = new Texture("hpbar_colors.png");
+	static Texture HPColors = new Texture("hpbar_colors.png");
 	static Texture haloTexture = new Texture("ships_halo.png");
+	static Texture FOWTexture = new Texture("FOW_halo.png");
+	static Texture rangeTexture = new Texture("range_halo.png");
 	Model box = new Model(vertices, textureCoords, new int[]{0, 1, 2, 2, 1, 3});
 	
 	public void drawAllHPBars(ArrayList<Starship> selected){
-		bindHealthTexture();
+		HPColors.bind();
 		for (Starship s : selected) {
 			updateTrueCenter(s);
 			drawHPBar(s);
@@ -26,17 +28,33 @@ public class HealthbarRenderer {
 	}
 	
 	public void drawAllShipHalos(ArrayList<Starship> selected){
-		bindShipHaloTexture();
+		haloTexture.bind();
+		setTextureCoords(0, 0, 1, 1);
 		for (Starship s : selected) {
 			updateTrueCenter(s);
-			drawShipHalo(s);
+			setModel(currentShipTrueCenter.X() - s.getHaloSize(), currentShipTrueCenter.Y() + s.getHaloSize(),
+					currentShipTrueCenter.X() + s.getHaloSize(), currentShipTrueCenter.Y() - s.getHaloSize());
 		}
 	}
 	
-	public void drawShipHalo(Starship s){
+	public void drawAllFOW(ArrayList<Starship> ships){
+		FOWTexture.bind();
 		setTextureCoords(0, 0, 1, 1);
-		setModel(currentShipTrueCenter.X() - s.getHaloSize(), currentShipTrueCenter.Y() + s.getHaloSize(),
-				currentShipTrueCenter.X() + s.getHaloSize(), currentShipTrueCenter.Y() - s.getHaloSize());
+		for (Starship s : ships) {
+			updateTrueCenter(s);
+			setModel(currentShipTrueCenter.X() - s.getRadarRange(), currentShipTrueCenter.Y() + s.getRadarRange(),
+					currentShipTrueCenter.X() + s.getRadarRange(), currentShipTrueCenter.Y() - s.getRadarRange());
+		}
+	}
+	
+	public void drawAllScan(ArrayList<Starship> ships){
+		rangeTexture.bind();
+		setTextureCoords(0, 0, 1, 1);
+		for (Starship s : ships) {
+			updateTrueCenter(s);
+			setModel(currentShipTrueCenter.X() - s.getScanRange(), currentShipTrueCenter.Y() + s.getScanRange(),
+					currentShipTrueCenter.X() + s.getScanRange(), currentShipTrueCenter.Y() - s.getScanRange());
+		}
 	}
 	
 	public void setColor(double percentage){
@@ -89,14 +107,5 @@ public class HealthbarRenderer {
 		currentShipTrueCenter.setY(s.getY() + s.getYOff());
 		currentShipTrueCenter.rotatePoint(s.getX(), s.getY(), s.getAngle());
 	}
-	
-	public void bindHealthTexture(){
-		colors.bind();
-	}
-	
-	public void bindShipHaloTexture(){
-		haloTexture.bind();
-	}
-	
 
 }
