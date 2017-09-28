@@ -1065,12 +1065,12 @@ public class StarshipArena {
 									&& ships.get(s).getY() > CURR_Y - (shipDisplayBorder * getHeightScalar()) && ships.get(s).getY() < CURR_Y + CAMERA_HEIGHT + (shipDisplayBorder * getHeightScalar())){
 								if(isVisible(ships.get(s), player)){
 									ships.get(s).display();
-									ArrayList<Starship> selectedShips = player.getSelectedShips();
-									shiprenderer.drawAllShipHalos(selectedShips);
-									shiprenderer.drawAllHPBars(selectedShips);
 								}
 							}
 						}
+						ArrayList<Starship> selectedShips = player.getSelectedShips();
+						shiprenderer.drawAllShipHalos(selectedShips);
+						shiprenderer.drawAllHPBars(selectedShips);
 					}
 					else{
 						//display ship icons
