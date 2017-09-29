@@ -40,6 +40,8 @@ import java.io.IOException;
 
 public class StarshipArena {
 	
+	static ShipRenderer shiprenderer;
+	
 	Window window;
 	
 	int WINDOW_WIDTH = 1300;
@@ -896,6 +898,8 @@ public class StarshipArena {
 		defeatMessage.setTopLeft(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 + 70);
 		defeatMessage.setBottomRight(WINDOW_WIDTH / 2 + 100, WINDOW_HEIGHT / 2 - 70);
 		defeatMessage.setPoints();
+		
+		shiprenderer = new ShipRenderer();
 				
 		genTiles();
 
@@ -988,10 +992,7 @@ public class StarshipArena {
 					}
 					
 					//Show FOW
-					for (int i = 0; i < ships.size(); i++) {
-						if (ships.get(i).getTeam().equals(player.getTeam()))
-							ships.get(i).showView();
-					}
+					shiprenderer.drawAllFOW(player.getControlledShips());
 					for (int i = 0; i < planets.size(); i++) {
 						if (planets.get(i).getTeam().equals(player.getTeam()))
 							planets.get(i).showView();
@@ -1057,14 +1058,18 @@ public class StarshipArena {
 					
 					if(CAMERA_WIDTH < 10400 && CAMERA_HEIGHT < 7200){
 						//display ships
-						for(int s = 0; s < ships.size(); s++){
-							if(ships.get(s).getX() > CURR_X - (shipDisplayBorder * getWidthScalar()) && ships.get(s).getX() < CURR_X + CAMERA_WIDTH + (shipDisplayBorder * getWidthScalar())
-									&& ships.get(s).getY() > CURR_Y - (shipDisplayBorder * getHeightScalar()) && ships.get(s).getY() < CURR_Y + CAMERA_HEIGHT + (shipDisplayBorder * getHeightScalar())){
-								if(isVisible(ships.get(s), player)){
-									ships.get(s).display();
-								}
-							}
-						}
+//						for(int s = 0; s < ships.size(); s++){
+//							if(ships.get(s).getX() > CURR_X - (shipDisplayBorder * getWidthScalar()) && ships.get(s).getX() < CURR_X + CAMERA_WIDTH + (shipDisplayBorder * getWidthScalar())
+//									&& ships.get(s).getY() > CURR_Y - (shipDisplayBorder * getHeightScalar()) && ships.get(s).getY() < CURR_Y + CAMERA_HEIGHT + (shipDisplayBorder * getHeightScalar())){
+//								if(isVisible(ships.get(s), player)){
+//									ships.get(s).display();
+//								}
+//							}
+//						}
+						shiprenderer.drawAllShips(ships);
+						ArrayList<Starship> selectedShips = player.getSelectedShips();
+						shiprenderer.drawAllShipHalos(selectedShips);
+						shiprenderer.drawAllHPBars(selectedShips);
 					}
 					else{
 						//display ship icons
@@ -1088,11 +1093,7 @@ public class StarshipArena {
 					
 					//display weapons range of selected ships
 					if(f1Pressed){
-						for (int s = 0; s < ships.size(); s++) {
-							if(ships.get(s).isSelected() && ships.get(s).getTeam().equals(player.getTeam())){
-								ships.get(s).showScan();
-							}
-						}
+						shiprenderer.drawAllScan(player.getControlledShips());
 					}
 						
 					
