@@ -14,7 +14,6 @@ public class Starship {
 	Starship target = null;
 	Random random = new Random();
 	StarshipArena game;
-	Model model;
 	static Texture tex = new Texture("WIP.png");
 	//halo rendering variables
 	int haloSize = 80;
@@ -24,7 +23,7 @@ public class Starship {
 	static Texture redSelectedCircle = new Texture("red_selected_circle.png");
 		
 	double[] vertices;
-	double[] textureCoords; 
+	double[] textureCoords = new double[4]; 
 	int[] indices;
 	Point center;
 	Point[] points;
@@ -106,10 +105,7 @@ public class Starship {
 		hitbox = generateHitbox();
 		applyScaleFactor();
 		vertices = new double[points.length * 2];
-		setTextureCoords();
-		setIndices();
 		setPoints();
-		model = new Model(vertices, textureCoords, indices);
 		game.addShip(this);
 	}
 	
@@ -199,7 +195,6 @@ public class Starship {
 				break;
 			}
 		}
-		model.destroy();
 		//Close turret sound clips, save memory hopefully
 //		for (int i = 0; i < turrets.size(); i++) {
 //			turrets.get(i).clip.close();
@@ -209,10 +204,7 @@ public class Starship {
 	
 	public void setTexture(){
 		tex.bind();
-	}
-	
-	public void setTextureCoords(){
-		textureCoords = new double[]{0, 1, 0.5, 0, 1, 1};
+		setTextureCoords(0,0,1,1);
 	}
 	
 	public double[] getTextureCoords(){
@@ -226,10 +218,6 @@ public class Starship {
 		textureCoords[3] = y2;
 	}
 	
-	public void setIndices(){
-		indices = new int[]{0, 1, 2};
-	}
-	
 	public boolean checkHealth(){
 		if(current_health > 0){
 			return true;
@@ -240,12 +228,7 @@ public class Starship {
 		}
 	}
 	
-	public void display(){
-		setTexture();
-		model.render(vertices);
-	}
-	
-	public void displayIcon(){
+	public void setIconTexture(){
 		setTextureCoords(0, 0, 1, 1);
 		if(team == "blue"){
 			if(selected){
@@ -263,8 +246,6 @@ public class Starship {
 				redCircle.bind();
 			}
 		}
-		model.setTextureCoords(textureCoords);
-		model.render(vertices);
 	}
 	
 	//The superclass' doRandomMovement makes sure every ship class processes its command queue before executing its default behavior.

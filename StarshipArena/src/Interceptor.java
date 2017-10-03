@@ -84,6 +84,7 @@ public class Interceptor extends Starship{
 	
 	
 	public void setTexture(){
+		interceptor_sprites.bind();
 		if(team.equals("blue")){
 			if(current_velocity > 4){
 				setTextureCoords(0.75, 0, 1, 0.5);
@@ -112,15 +113,6 @@ public class Interceptor extends Starship{
 				setTextureCoords(0, 0.5, 0.25, 1);
 			}
 		}
-		model.setTextureCoords(textureCoords);
-	}
-	
-	public void setTextureCoords(){
-		textureCoords = new double[]{0, 0, 0, 1, 1, 0, 1, 1};
-	}
-	
-	public void setIndices(){
-		indices = new int[]{0, 1, 2, 2, 1, 3};
 	}
 	
 	public Point[] generatePoints(){
