@@ -14,7 +14,6 @@ public class Starship {
 	Starship target = null;
 	Random random = new Random();
 	StarshipArena game;
-	Model model;
 	static Texture tex = new Texture("WIP.png");
 	//halo rendering variables
 	int haloSize = 80;
@@ -24,7 +23,7 @@ public class Starship {
 	static Texture redSelectedCircle = new Texture("red_selected_circle.png");
 		
 	double[] vertices;
-	double[] textureCoords; 
+	double[] textureCoords = new double[4]; 
 	int[] indices;
 	Point center;
 	Point[] points;
@@ -106,10 +105,7 @@ public class Starship {
 		hitbox = generateHitbox();
 		applyScaleFactor();
 		vertices = new double[points.length * 2];
-		setTextureCoords();
-		setIndices();
 		setPoints();
-		model = new Model(vertices, textureCoords, indices);
 		game.addShip(this);
 	}
 	
@@ -199,7 +195,6 @@ public class Starship {
 				break;
 			}
 		}
-		model.destroy();
 		//Close turret sound clips, save memory hopefully
 //		for (int i = 0; i < turrets.size(); i++) {
 //			turrets.get(i).clip.close();
@@ -209,25 +204,18 @@ public class Starship {
 	
 	public void setTexture(){
 		tex.bind();
+		setTextureCoords(0,0,1,1);
 	}
 	
-	public void setTextureCoords(){
-		textureCoords = new double[]{0, 1, 0.5, 0, 1, 1};
+	public double[] getTextureCoords(){
+		return textureCoords;
 	}
 	
-	public void setTextureCoords(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4){
+	public void setTextureCoords(double x1, double y1, double x2, double y2){
 		textureCoords[0] = x1;
 		textureCoords[1] = y1;
 		textureCoords[2] = x2;
 		textureCoords[3] = y2;
-		textureCoords[4] = x3;
-		textureCoords[5] = y3;
-		textureCoords[6] = x4;
-		textureCoords[7] = y4;
-	}
-	
-	public void setIndices(){
-		indices = new int[]{0, 1, 2};
 	}
 	
 	public boolean checkHealth(){
@@ -240,13 +228,8 @@ public class Starship {
 		}
 	}
 	
-	public void display(){
-		setTexture();
-		model.render(vertices);
-	}
-	
-	public void displayIcon(){
-		setTextureCoords(0, 0, 0, 1, 1, 0, 1, 1);
+	public void setIconTexture(){
+		setTextureCoords(0, 0, 1, 1);
 		if(team == "blue"){
 			if(selected){
 				blueSelectedCircle.bind();
@@ -263,8 +246,6 @@ public class Starship {
 				redCircle.bind();
 			}
 		}
-		model.setTextureCoords(textureCoords);
-		model.render(vertices);
 	}
 	
 	//The superclass' doRandomMovement makes sure every ship class processes its command queue before executing its default behavior.
@@ -308,10 +289,10 @@ public class Starship {
 	public void edgeGuard(){
 		int BORDER = 100;
 		//left edge
-		if(center.X() < BORDER && angle <= 90){
+		if(center.X() < x_min + BORDER && angle <= 90){
 			current_turn_speed = -max_turn_speed;
 		}
-		else if(center.X() < BORDER && angle <= 180){
+		else if(center.X() < x_min + BORDER && angle <= 180){
 			current_turn_speed = max_turn_speed;
 		}
 		//right edge
@@ -322,10 +303,10 @@ public class Starship {
 			current_turn_speed = -max_turn_speed;
 		}
 		//bottom edge
-		else if(center.Y() < BORDER && angle >= 90 && angle <= 180){
+		else if(center.Y() < y_min + BORDER && angle >= 90 && angle <= 180){
 			current_turn_speed = -max_turn_speed;
 		}
-		else if(center.Y() < BORDER && angle > 180 && angle <= 270){
+		else if(center.Y() < y_min + BORDER && angle > 180 && angle <= 270){
 			current_turn_speed = max_turn_speed;
 		}
 		//top edge

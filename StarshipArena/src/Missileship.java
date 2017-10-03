@@ -99,33 +99,32 @@ public class Missileship extends Starship{
 		missileship_sprites.bind();
 		if(team.equals("blue")){
 			if(current_velocity > 4){
-				setTextureCoords(0.75, 0, 0.75, 0.5, 1, 0, 1, 0.5);
+				setTextureCoords(0.75, 0, 1, 0.5);
 			}
 			else if(current_velocity > 2){
-				setTextureCoords(0.5, 0, 0.5, 0.5, 0.75, 0, 0.75, 0.5);
+				setTextureCoords(0.5, 0, 0.75, 0.5);
 			}
 			else if(current_velocity > 0){
-				setTextureCoords(0.25, 0, 0.25, 0.5, 0.5, 0, 0.5, 0.5);
+				setTextureCoords(0.25, 0, 0.5, 0.5);
 			}
 			else{
-				setTextureCoords(0, 0, 0, 0.5, 0.25, 0, 0.25, 0.5);
+				setTextureCoords(0, 0, 0.25, 0.5);
 			}
 		}
 		else{
 			if(current_velocity > 4){
-				setTextureCoords(0.75, 0.5, 0.75, 1, 1, 0.5, 1, 1);
+				setTextureCoords(0.75, 0.5, 1, 1);
 			}
 			else if(current_velocity > 2){
-				setTextureCoords(0.5, 0.5, 0.5, 1, 0.75, 0.5, 0.75, 1);
+				setTextureCoords(0.5, 0.5, 0.75, 1);
 			}
 			else if(current_velocity > 0){
-				setTextureCoords(0.25, 0.5, 0.25, 1, 0.5, 0.5, 0.5, 1);
+				setTextureCoords(0.25, 0.5, 0.5, 1);
 			}
 			else{
-				setTextureCoords(0, 0.5, 0, 1, 0.25, 0.5, 0.25, 1);
+				setTextureCoords(0, 0.5, 0.25, 1);
 			}
 		}
-		model.setTextureCoords(textureCoords);
 	}
 	
 	

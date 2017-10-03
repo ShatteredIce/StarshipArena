@@ -44,7 +44,11 @@ public class Planet {
 	int currentCooldown = 50;
 	ArrayList<String[]> buildOrders = new ArrayList<String[]>();
 	
-	
+	//Planet surface dimensions
+	double surfaceX;
+	double surfaceY;
+	double dimensionX;
+	double dimensionY;
 	
 	Planet(StarshipArena mygame, double spawnx, double spawny, int newTexId){
 		
