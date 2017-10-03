@@ -14,34 +14,45 @@ public class ShipRenderer {
 	static Texture interceptor_sprites = new Texture("interceptor_sprites.png");
 	static Texture missileship_sprites = new Texture("missileship_sprites.png");
 	
-	public void drawAllShips(ArrayList<Starship> allShips){
-		fighter_sprites.bind();
-		for (Starship s : allShips) {
-			if(s instanceof Fighter){
-				s.setTexture();
-				setTextureCoords(s.getTextureCoords());
-				setRotatedModel(s.vertices);
-			}
-		}
-		interceptor_sprites.bind();
-		for (Starship s : allShips) {
-			if(s instanceof Interceptor){
-				s.setTexture();
-				setTextureCoords(s.getTextureCoords());
-				setRotatedModel(s.vertices);
-			}
-		}
-		missileship_sprites.bind();
-		for (Starship s : allShips) {
-			if(s instanceof Missileship){
-				s.setTexture();
-				setTextureCoords(s.getTextureCoords());
-				setRotatedModel(s.vertices);
-			}
-		}
-		
+//function is broken
+//	public void drawAllShips(ArrayList<Starship> allShips){
+//		fighter_sprites.bind();
+//		for (Starship s : allShips) {
+//			if(s instanceof Fighter){
+//				s.setTexture();
+//				setTextureCoords(s.getTextureCoords());
+//				setRotatedModel(s.vertices);
+//			}
+//		}
+//		interceptor_sprites.bind();
+//		for (Starship s : allShips) {
+//			if(s instanceof Interceptor){
+//				s.setTexture();
+//				setTextureCoords(s.getTextureCoords());
+//				setRotatedModel(s.vertices);
+//			}
+//		}
+//		missileship_sprites.bind();
+//		for (Starship s : allShips) {
+//			if(s instanceof Missileship){
+//				s.setTexture();
+//				setTextureCoords(s.getTextureCoords());
+//				setRotatedModel(s.vertices);
+//			}
+//		}
+//	}
+	
+	public void drawShip(Starship s){
+		s.setTexture();
+		setTextureCoords(s.getTextureCoords());
+		setRotatedModel(s.vertices);
 	}
 	
+	public void drawShipIcon(Starship s){
+		s.setIconTexture();
+		setTextureCoords(s.getTextureCoords());
+		setRotatedModel(s.vertices);
+	}
 	public void drawAllHPBars(ArrayList<Starship> selected){
 		HPColors.bind();
 		for (Starship s : selected) {

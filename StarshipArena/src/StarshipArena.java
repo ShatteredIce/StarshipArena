@@ -1058,15 +1058,14 @@ public class StarshipArena {
 					
 					if(CAMERA_WIDTH < 10400 && CAMERA_HEIGHT < 7200){
 						//display ships
-//						for(int s = 0; s < ships.size(); s++){
-//							if(ships.get(s).getX() > CURR_X - (shipDisplayBorder * getWidthScalar()) && ships.get(s).getX() < CURR_X + CAMERA_WIDTH + (shipDisplayBorder * getWidthScalar())
-//									&& ships.get(s).getY() > CURR_Y - (shipDisplayBorder * getHeightScalar()) && ships.get(s).getY() < CURR_Y + CAMERA_HEIGHT + (shipDisplayBorder * getHeightScalar())){
-//								if(isVisible(ships.get(s), player)){
-//									ships.get(s).display();
-//								}
-//							}
-//						}
-						shiprenderer.drawAllShips(ships);
+						for(int s = 0; s < ships.size(); s++){
+							if(ships.get(s).getX() > CURR_X - (shipDisplayBorder * getWidthScalar()) && ships.get(s).getX() < CURR_X + CAMERA_WIDTH + (shipDisplayBorder * getWidthScalar())
+									&& ships.get(s).getY() > CURR_Y - (shipDisplayBorder * getHeightScalar()) && ships.get(s).getY() < CURR_Y + CAMERA_HEIGHT + (shipDisplayBorder * getHeightScalar())){
+								if(isVisible(ships.get(s), player)){
+									shiprenderer.drawShip(ships.get(s));
+								}
+							}
+						}
 						ArrayList<Starship> selectedShips = player.getSelectedShips();
 						shiprenderer.drawAllShipHalos(selectedShips);
 						shiprenderer.drawAllHPBars(selectedShips);
@@ -1077,7 +1076,7 @@ public class StarshipArena {
 							if(ships.get(s).getX() > CURR_X - (shipDisplayBorder * getWidthScalar()) && ships.get(s).getX() < CURR_X + CAMERA_WIDTH + (shipDisplayBorder * getWidthScalar())
 									&& ships.get(s).getY() > CURR_Y - (shipDisplayBorder * getHeightScalar()) && ships.get(s).getY() < CURR_Y + CAMERA_HEIGHT + (shipDisplayBorder * getHeightScalar())){
 								if(isVisible(ships.get(s), player)){
-									ships.get(s).displayIcon();
+									shiprenderer.drawShipIcon(ships.get(s));
 								}
 							}
 						}
