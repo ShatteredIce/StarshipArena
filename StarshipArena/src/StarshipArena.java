@@ -55,6 +55,22 @@ public class StarshipArena {
 	
 	double WORLD_WIDTH = 260000;
     double WORLD_HEIGHT = 180000;
+    
+    //TODO Get rid of all the hardcoded dimensions
+    double START_X = 0;
+    double START_Y = 0;
+    double END_X = WORLD_WIDTH;
+    double END_Y = WORLD_HEIGHT;
+    
+    double SPACE_START_X = 0;
+    double SPACE_START_Y = 0;
+    double SPACE_END_X = WORLD_WIDTH;
+    double SPACE_END_Y = WORLD_HEIGHT;
+    double SPACE_CURR_X = 0;
+	double SPACE_CURR_Y = 0;
+	double SPACE_CAMERA_WIDTH = 2600;
+	double SPACE_CAMERA_HEIGHT = 1800;
+	
 
     double CURR_X = 0;
 	double CURR_Y = 0;
@@ -66,7 +82,7 @@ public class StarshipArena {
 	//Game scale: In future, it can be changed in an options menu
 	//TODO Reduce the default numbers by 10x, then set default levelScale to 10
 	//Right now game scale is causing lag, I suspect because of the double multiplication. Thus, try ^
-	double levelScale = 0.2;
+	double levelScale = 1;
 	
 	int gameState = 1;
 	int SLOW = 1;
@@ -135,7 +151,6 @@ public class StarshipArena {
 	Clip menuMusic;
 	
 	boolean mute = false;
-	//TODO Disabled fog for testing direct attack
 	boolean fog = false;
 	
 	
@@ -442,6 +457,15 @@ public class StarshipArena {
 				if(gameState == 3){
 					updateZoomLevel(false);
 				}
+			//Enter/exit planet views
+			if ( key == GLFW_KEY_PERIOD && action == GLFW_PRESS )
+				if (player.selectedPlanet != null) {
+					loadSubLevel(player.selectedPlanet);
+				}
+			if ( key == GLFW_KEY_COMMA && action == GLFW_PRESS )
+				loadSubLevel(null);
+			
+			
 			if ( key == GLFW_KEY_F1 && action == GLFW_RELEASE ){
 				if(player.getSelectedPlanet() != null /*&& player.getSelectedPlanet().getTeam().equals(player.getTeam())*/){
 					player.getSelectedPlanet().setResources(player.getSelectedPlanet().getResources() + 100);
@@ -537,6 +561,7 @@ public class StarshipArena {
 				//relative camera coordinates
 				xpos.put(0, Math.min(Math.max(xpos.get(0), windowXOffset), WINDOW_WIDTH + windowXOffset));
 				ypos.put(0, Math.min(Math.max(ypos.get(0), windowYOffset), WINDOW_HEIGHT + windowYOffset));
+				//TODO This is fucked up, causing issues with addcommand();
 				xpos.put(1, getWidthScalar() * (xpos.get(0) - windowXOffset) + CURR_X);
 				ypos.put(1, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0) + windowYOffset) + CURR_Y));
 				//true window coordinates
@@ -771,7 +796,8 @@ public class StarshipArena {
 								}
 								//If the click was on a ship, attack that ship. Else, move to point clicked
 								if (targetShip == null) {
-									s.addCommand(shiftPressed, altPressed, controlPressed, tPressed, null, new Point(Math.max(Math.min(xpos.get(1), WORLD_WIDTH), 0), Math.max(Math.min(ypos.get(1), WORLD_HEIGHT), 0)));
+//									s.addCommand(shiftPressed, altPressed, controlPressed, tPressed, null, new Point(Math.max(Math.min(xpos.get(1), WORLD_WIDTH), 0), Math.max(Math.min(ypos.get(1), WORLD_HEIGHT), 0)));
+									s.addCommand(shiftPressed, altPressed, controlPressed, tPressed, null, new Point(Math.max(Math.min(xpos.get(1), END_X), START_X), Math.max(Math.min(ypos.get(1), END_Y), START_Y)));
 								}
 								else {
 									s.addCommand(shiftPressed, false, controlPressed, false, targetShip, null);
@@ -1122,16 +1148,24 @@ public class StarshipArena {
 							if (Double.isNaN(angle)) angle = 180;
 							double newFirstX, newFirstY, newSecondX, newSecondY;
 							if (second.getY() > first.getY()) {
-								newFirstX = Math.min(Math.max(first.center.x - Math.cos(angle) / first.weight, first.getClickRadius()), WORLD_WIDTH - first.getClickRadius());
-								newFirstY = Math.min(Math.max(first.center.y - Math.sin(angle) / first.weight, first.getClickRadius()), WORLD_HEIGHT - first.getClickRadius());
-								newSecondX = Math.min(Math.max(second.center.x + Math.cos(angle) / second.weight, second.getClickRadius()), WORLD_WIDTH - second.getClickRadius());
-								newSecondY = Math.min(Math.max(second.center.y + Math.sin(angle) / second.weight, second.getClickRadius()), WORLD_HEIGHT - second.getClickRadius());
+								newFirstX = Math.min(Math.max(first.center.x - Math.cos(angle) / first.weight, first.x_min + first.getClickRadius()), first.x_max - first.getClickRadius());
+								newFirstY = Math.min(Math.max(first.center.y - Math.sin(angle) / first.weight, first.y_min + first.getClickRadius()), first.y_max - first.getClickRadius());
+								newSecondX = Math.min(Math.max(second.center.x + Math.cos(angle) / second.weight, second.x_min + second.getClickRadius()), second.x_max - second.getClickRadius());
+								newSecondY = Math.min(Math.max(second.center.y + Math.sin(angle) / second.weight, second.y_min + second.getClickRadius()), second.y_max - second.getClickRadius());
+//								newFirstX = Math.min(Math.max(first.center.x - Math.cos(angle) / first.weight, first.getClickRadius()), WORLD_WIDTH - first.getClickRadius());
+//								newFirstY = Math.min(Math.max(first.center.y - Math.sin(angle) / first.weight, first.getClickRadius()), WORLD_HEIGHT - first.getClickRadius());
+//								newSecondX = Math.min(Math.max(second.center.x + Math.cos(angle) / second.weight, second.getClickRadius()), WORLD_WIDTH - second.getClickRadius());
+//								newSecondY = Math.min(Math.max(second.center.y + Math.sin(angle) / second.weight, second.getClickRadius()), WORLD_HEIGHT - second.getClickRadius());
 							}
 							else {
-								newFirstX = Math.min(Math.max(first.center.x - Math.cos(angle) / first.weight, first.getClickRadius()), WORLD_WIDTH - first.getClickRadius());
-								newFirstY = Math.min(Math.max(first.center.y + Math.sin(angle) / first.weight, first.getClickRadius()), WORLD_HEIGHT - first.getClickRadius());
-								newSecondX = Math.min(Math.max(second.center.x + Math.cos(angle) / second.weight, second.getClickRadius()), WORLD_WIDTH - second.getClickRadius());
-								newSecondY = Math.min(Math.max(second.center.y - Math.sin(angle) / second.weight, second.getClickRadius()), WORLD_HEIGHT - second.getClickRadius());
+								newFirstX = Math.min(Math.max(first.center.x - Math.cos(angle) / first.weight, first.x_min + first.getClickRadius()), first.x_max - first.getClickRadius());
+								newFirstY = Math.min(Math.max(first.center.y + Math.sin(angle) / first.weight, first.y_min + first.getClickRadius()), first.y_max - first.getClickRadius());
+								newSecondX = Math.min(Math.max(second.center.x + Math.cos(angle) / second.weight, second.x_min + second.getClickRadius()), second.x_max - second.getClickRadius());
+								newSecondY = Math.min(Math.max(second.center.y - Math.sin(angle) / second.weight, second.y_min + second.getClickRadius()), second.y_max - second.getClickRadius());
+//								newFirstX = Math.min(Math.max(first.center.x - Math.cos(angle) / first.weight, first.getClickRadius()), WORLD_WIDTH - first.getClickRadius());
+//								newFirstY = Math.min(Math.max(first.center.y + Math.sin(angle) / first.weight, first.getClickRadius()), WORLD_HEIGHT - first.getClickRadius());
+//								newSecondX = Math.min(Math.max(second.center.x + Math.cos(angle) / second.weight, second.getClickRadius()), WORLD_WIDTH - second.getClickRadius());
+//								newSecondY = Math.min(Math.max(second.center.y - Math.sin(angle) / second.weight, second.getClickRadius()), WORLD_HEIGHT - second.getClickRadius());
 							}
 							if(!(first instanceof BasicPod || first instanceof PlanetRadar || first instanceof PlanetLaser)){
 								first.center = new Point(newFirstX, newFirstY);
@@ -1358,13 +1392,13 @@ public class StarshipArena {
 					
 					//Check which direction the camera should move, and move accordingly
 					if (panLeft)
-						CURR_X = Math.max(0, CURR_X - CAMERA_WIDTH / 30);
+						CURR_X = Math.max(START_X, CURR_X - CAMERA_WIDTH / 30);
 					if (panRight)
-						CURR_X = Math.min(WORLD_WIDTH - CAMERA_WIDTH, CURR_X + CAMERA_WIDTH / 30);
+						CURR_X = Math.min(END_X - CAMERA_WIDTH, CURR_X + CAMERA_WIDTH / 30);
 					if (panDown)
-						CURR_Y = Math.max((int) (-150 * getHeightScalar()), CURR_Y - CAMERA_HEIGHT / 30);
+						CURR_Y = Math.max((int) (START_Y - 150 * getHeightScalar()), CURR_Y - CAMERA_HEIGHT / 30);
 					if (panUp)
-						CURR_Y = Math.min(WORLD_HEIGHT - CAMERA_HEIGHT, CURR_Y + CAMERA_HEIGHT / 30);
+						CURR_Y = Math.min(END_Y - CAMERA_HEIGHT, CURR_Y + CAMERA_HEIGHT / 30);
 					
 					
 					window.swapBuffers();
@@ -1394,10 +1428,15 @@ public class StarshipArena {
 	
 	public double[] getScreenBounds(){
     	double[] bounds = new double[4];
-    	bounds[0] = 0;
-    	bounds[1] = WORLD_WIDTH;
-    	bounds[2] = 0;
-    	bounds[3] = WORLD_HEIGHT;
+//    	bounds[0] = 0;
+//    	bounds[1] = WORLD_WIDTH;
+//    	bounds[2] = 0;
+//    	bounds[3] = WORLD_HEIGHT;
+    	bounds[0] = START_X;
+    	bounds[1] = END_X;
+    	bounds[2] = START_Y;
+    	bounds[3] = END_Y;
+    	
     	return bounds;
     }
 	
@@ -1412,6 +1451,19 @@ public class StarshipArena {
 	//Each ship has a random starting location and angle
 	public void createShips(int num){
 		new Planet(this, 23000 * levelScale, 10000 * levelScale, 1).setTeam("blue");
+		//TODO Trying to do planet surface without using a new class
+		for (int i = 0; i < planets.size(); i++) {
+			Planet p = planets.get(i);
+			p.surfaceX = -100000 + i * 100000;
+			p.surfaceY = -100000;
+			p.dimensionX = 10000;
+			p.dimensionY = 10000;
+			loadSubLevel(p);
+			for (int j = 0; j < 10; j++) {
+				new Fighter(this, "blue", p.surfaceX + 500, p.surfaceY + 500, 0);
+			}
+			loadSubLevel(null);
+		}
 //		int startx;
 //		int starty;
 //		int angle;
@@ -1607,7 +1659,8 @@ public class StarshipArena {
 		int MIN_WIDTH = 650;
 		int MIN_HEIGHT = 450;
 		if(zoomOut){
-			if(/*zoomLevel < 5 && */WORLD_WIDTH >= CAMERA_WIDTH * 1.5 && WORLD_HEIGHT >= CAMERA_HEIGHT * 1.5){
+			//TODO Change this to START_X and stuff
+			if(/*zoomLevel < 5 && */END_X - START_X >= CAMERA_WIDTH * 1.5 && END_Y - START_Y >= CAMERA_HEIGHT * 1.5){
 				zoomLevel++;
 				CAMERA_WIDTH *= 1.5;
 				CAMERA_HEIGHT *= 1.5;
@@ -1619,22 +1672,22 @@ public class StarshipArena {
 					CURR_X -= CAMERA_WIDTH / 6;
 					CURR_Y -= CAMERA_WIDTH / 6;
 				}
-				if(CURR_X + CAMERA_WIDTH > WORLD_WIDTH){
-					CURR_X = WORLD_WIDTH - CAMERA_WIDTH;
+				if(CURR_X + CAMERA_WIDTH > END_X){
+					CURR_X = END_X - CAMERA_WIDTH;
 				}
-				if(CURR_Y + CAMERA_HEIGHT > WORLD_HEIGHT){
-					CURR_Y = WORLD_HEIGHT - CAMERA_HEIGHT;
+				if(CURR_Y + CAMERA_HEIGHT > END_Y){
+					CURR_Y = END_Y - CAMERA_HEIGHT;
 				}
-				if(CURR_X < 0){
-					CURR_X = 0;
+				if(CURR_X < START_X){
+					CURR_X = START_X;
 				}
-				if(CURR_Y < 0){
-					CURR_Y = 0;
+				if(CURR_Y < START_Y){
+					CURR_Y = START_Y;
 				}
 			}
 		}
 		else{
-			if(/*zoomLevel > 1*/ CAMERA_WIDTH - 2 * MIN_WIDTH > 0 && CAMERA_HEIGHT - 2 * MIN_HEIGHT > 0){
+			if(/*zoomLevel > 1*/ CAMERA_WIDTH - 2 * MIN_WIDTH > START_X && CAMERA_HEIGHT - 2 * MIN_HEIGHT > START_Y){
 				zoomLevel--;
 				CAMERA_WIDTH /= 1.5;
 				CAMERA_HEIGHT /= 1.5;
@@ -2247,9 +2300,48 @@ public class StarshipArena {
 			
 		}
 	
+		START_X = 0;
+		START_Y = 0;
+		END_X = WORLD_WIDTH;
+		END_Y = WORLD_HEIGHT;
+		
+	    SPACE_START_X = 0;
+	    SPACE_START_Y = 0;
+	    SPACE_END_X = WORLD_WIDTH;
+	    SPACE_END_Y = WORLD_HEIGHT;
+		
 		genTiles();
 		playerList.add(player);
 		playerList.add(enemy.getPlayer());
+	}
+	
+	//Loads a sublevel, changing START_X and END_X and stuff. If parameter is null, load space
+	//Save values of space dimensions in order to make future loading of space easier
+	public void loadSubLevel(Planet p) {
+		if (p == null) {
+			START_X = SPACE_START_X;
+			START_Y = SPACE_START_Y;
+			END_X = SPACE_END_X;
+			END_Y = SPACE_END_Y;
+			CURR_X = SPACE_CURR_X;
+			CURR_Y = SPACE_CURR_Y;
+			CAMERA_WIDTH = SPACE_CAMERA_WIDTH;
+			CAMERA_HEIGHT = SPACE_CAMERA_HEIGHT;
+		}
+		else {
+			SPACE_CURR_X = CURR_X;
+			SPACE_CURR_Y = CURR_Y;
+			SPACE_CAMERA_WIDTH = CAMERA_WIDTH;
+			SPACE_CAMERA_HEIGHT = CAMERA_HEIGHT;
+			START_X = p.surfaceX;
+			START_Y = p.surfaceY;
+			END_X = p.surfaceX + p.dimensionX;
+			END_Y = p.surfaceY + p.dimensionY;
+			CURR_X = START_X;
+			CURR_Y = START_Y;
+			CAMERA_WIDTH = 2600;
+			CAMERA_HEIGHT = 1800;
+		}
 	}
 	
 	//check projectile collisions
