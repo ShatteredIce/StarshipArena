@@ -26,6 +26,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import java.nio.*;
+import java.time.Instant;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -1136,7 +1137,8 @@ public class StarshipArena {
 					boxSelect.setPoints();
 					boxSelect.display();
 				}
-				
+
+				Instant time = Instant.now();
 				
 				//Make ships drift apart if they're too close
 				for (int s = 0; s < ships.size(); s++) {
@@ -1194,217 +1196,220 @@ public class StarshipArena {
 								first.locationTarget = null;
 							}
 
-							if (second.locationTarget != null && distance(second.center.x, second.center.y, second.locationTarget.x, second.locationTarget.y) < second.getClickRadius() * 4 && !second.commands.isEmpty())
+							if (second.locationTarget != null && distance(second.center.x, second.center.y, second.locationTarget.x, second.locationTarget.y) < second.getClickRadius() * 4 && !second.commands.isEmpty()) {
 								second.commands.remove(0);
 								second.locationTarget = null;
 							}
 						}
 					}
-					checkProjectiles();
-					
+				}
+				checkProjectiles();
+				
 //					enemy.buyShips();
-					enemy.move();
-					
-					
-					projectTrueWindowCoordinates();
-					
-					//display settings icon
-					settingsIcon.display();
-					
-					//Display sidebar and figure out what has been selected
-					boolean sidebarIsDisplayed = false;
-					sidebar.display();
-					int sumCurrentHP = 0;
-					int sumMaxHP = 0;
-					int numFightersSelected = 0;
-					int numInterceptorsSelected = 0;
-					int numTransportsSelected = 0;
-					int numMissileshipsSelected = 0;
-					int numPodsSelected = 0;
-					String shipStatus = "Idle";
-					Planet selectedPlanet = null;
-					int selectedPlanetResources = Integer.MIN_VALUE;
-					boolean alliedPlanetSelected = false;
-					String planetControllingTeam = "none";
-					String shipsControllingTeam = "none";
-					String podTypeSelected = "none";
-					for(int p = 0; p < planets.size(); p++){
-						if(planets.get(p).getSelected()){
-							sidebarIsDisplayed = true;
-							selectedPlanet = planets.get(p);
-							selectedPlanetResources = selectedPlanet.getResources();
-							planetControllingTeam = selectedPlanet.getTeam();
+				enemy.move();
+				
+				
+				projectTrueWindowCoordinates();
+				
+				//display settings icon
+				settingsIcon.display();
+				
+				//Display sidebar and figure out what has been selected
+				boolean sidebarIsDisplayed = false;
+				sidebar.display();
+				int sumCurrentHP = 0;
+				int sumMaxHP = 0;
+				int numFightersSelected = 0;
+				int numInterceptorsSelected = 0;
+				int numTransportsSelected = 0;
+				int numMissileshipsSelected = 0;
+				int numPodsSelected = 0;
+				String shipStatus = "Idle";
+				Planet selectedPlanet = null;
+				int selectedPlanetResources = Integer.MIN_VALUE;
+				boolean alliedPlanetSelected = false;
+				String planetControllingTeam = "none";
+				String shipsControllingTeam = "none";
+				String podTypeSelected = "none";
+				for(int p = 0; p < planets.size(); p++){
+					if(planets.get(p).getSelected()){
+						sidebarIsDisplayed = true;
+						selectedPlanet = planets.get(p);
+						selectedPlanetResources = selectedPlanet.getResources();
+						planetControllingTeam = selectedPlanet.getTeam();
+					}
+				}
+				for (int s = 0; s < ships.size(); s++) {
+					if (ships.get(s).isSelected()) {
+						sidebarIsDisplayed = true;
+						sumCurrentHP += ships.get(s).current_health;
+						sumMaxHP += ships.get(s).max_health;
+						shipsControllingTeam = ships.get(s).getTeam();
+						if (ships.get(s).locationTarget != null && shipStatus.equals("Idle"))shipStatus = "Moving";
+						if (ships.get(s).target != null && !shipStatus.equals("Taking damage")) shipStatus = "Engaging enemy";
+						if (ships.get(s).damageDisplayDelay > 900) shipStatus = "Taking damage";
+						if (ships.get(s) instanceof Fighter) numFightersSelected++;
+						else if (ships.get(s) instanceof Interceptor) numInterceptorsSelected++;
+						else if (ships.get(s) instanceof Transport) numTransportsSelected++;
+						else if (ships.get(s) instanceof Missileship) numMissileshipsSelected++;
+						else if (ships.get(s) instanceof BasicPod) {
+							numPodsSelected++;
+							if (ships.get(s) instanceof MissilePod) podTypeSelected = "Missile Turret";
+							else if (ships.get(s) instanceof MachineGunPod) podTypeSelected = "Machinegun Turret";
+							else if (ships.get(s) instanceof BasicPod) podTypeSelected = "Basic Turret";
 						}
 					}
-					for (int s = 0; s < ships.size(); s++) {
-						if (ships.get(s).isSelected()) {
-							sidebarIsDisplayed = true;
-							sumCurrentHP += ships.get(s).current_health;
-							sumMaxHP += ships.get(s).max_health;
-							shipsControllingTeam = ships.get(s).getTeam();
-							if (ships.get(s).locationTarget != null && shipStatus.equals("Idle"))shipStatus = "Moving";
-							if (ships.get(s).target != null && !shipStatus.equals("Taking damage")) shipStatus = "Engaging enemy";
-							if (ships.get(s).damageDisplayDelay > 900) shipStatus = "Taking damage";
-							if (ships.get(s) instanceof Fighter) numFightersSelected++;
-							else if (ships.get(s) instanceof Interceptor) numInterceptorsSelected++;
-							else if (ships.get(s) instanceof Transport) numTransportsSelected++;
-							else if (ships.get(s) instanceof Missileship) numMissileshipsSelected++;
-							else if (ships.get(s) instanceof BasicPod) {
-								numPodsSelected++;
-								if (ships.get(s) instanceof MissilePod) podTypeSelected = "Missile Turret";
-								else if (ships.get(s) instanceof MachineGunPod) podTypeSelected = "Machinegun Turret";
-								else if (ships.get(s) instanceof BasicPod) podTypeSelected = "Basic Turret";
-							}
-						}
-					}
-					
-					//Display bitmap font letters
-					destroyAllText();
-					if (sidebarIsDisplayed) {
-						if (selectedPlanetResources > Integer.MIN_VALUE) {
-							writeText("Planet resources:", 20, 40);
-							if (planetControllingTeam.equals(player.getTeam())){
+				}
+				
+				//Display bitmap font letters
+				destroyAllText();
+				if (sidebarIsDisplayed) {
+					if (selectedPlanetResources > Integer.MIN_VALUE) {
+						writeText("Planet resources:", 20, 40);
+						if (planetControllingTeam.equals(player.getTeam())){
 //								writeText("" + selectedPlanetResources, 20, 20);
-								alliedPlanetSelected = true;
-							}
-							else{
+							alliedPlanetSelected = true;
+						}
+						else{
 //								writeText("??", 20, 20);
 //								writeText("" + selectedPlanetResources, 20, 20);
-							}
-							writeText("Controlled by:", 20, 100);
-							//if planet is visible
-							if(isVisible(selectedPlanet, player)){
-								writeText("" + selectedPlanetResources, 20, 20);
-								writeText(planetControllingTeam, 20, 80);
-							}
-							else{
-								writeText("???", 20, 20);
-								writeText("???", 20, 80);
-							}
 						}
-						else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected + numMissileshipsSelected + numPodsSelected == 1) {
-							if (numFightersSelected == 1) writeText("Fighter", 400, 15, 30);
-							else if (numInterceptorsSelected == 1) writeText("Interceptor", 400, 15, 30);
-							else if (numTransportsSelected == 1) writeText("Transport", 400, 15, 30);
-							else if (numMissileshipsSelected == 1) writeText("Missileship", 400, 15, 30);
-							else if (numPodsSelected == 1) writeText(podTypeSelected, 300, 15, 30);
+						writeText("Controlled by:", 20, 100);
+						//if planet is visible
+						if(isVisible(selectedPlanet, player)){
+							writeText("" + selectedPlanetResources, 20, 20);
+							writeText(planetControllingTeam, 20, 80);
+						}
+						else{
+							writeText("???", 20, 20);
+							writeText("???", 20, 80);
+						}
+					}
+					else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected + numMissileshipsSelected + numPodsSelected == 1) {
+						if (numFightersSelected == 1) writeText("Fighter", 400, 15, 30);
+						else if (numInterceptorsSelected == 1) writeText("Interceptor", 400, 15, 30);
+						else if (numTransportsSelected == 1) writeText("Transport", 400, 15, 30);
+						else if (numMissileshipsSelected == 1) writeText("Missileship", 400, 15, 30);
+						else if (numPodsSelected == 1) writeText(podTypeSelected, 300, 15, 30);
 //							if(shipsControllingTeam.equals(player.getTeam()))
-							if (sumCurrentHP - (int)sumCurrentHP > 0)		
-								sumCurrentHP++;
-								writeText("Armor:" + sumCurrentHP + "/" + sumMaxHP, 800, 20);
+						if (sumCurrentHP - (int)sumCurrentHP > 0)
+							sumCurrentHP++;
+							writeText("Armor:" + sumCurrentHP + "/" + sumMaxHP, 800, 20);
 //							else
 //								writeText("Armor:??/??", 800, 20);
-							writeText("Faction:", 20, 100);
-							writeText(shipsControllingTeam, 20, 80);
-							writeText("Status:", 20, 40);
-							writeText(shipStatus, 20, 20);
-						}
-						else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected  + numMissileshipsSelected + numPodsSelected > 1) {
-							writeText("Starfleet(" + (numFightersSelected + numInterceptorsSelected + numTransportsSelected + numMissileshipsSelected + numPodsSelected) + ")", 400, 15, 30);
-							writeText("Fighters:" + numFightersSelected, 1000, 120);
-							writeText("Interceptors:" + numInterceptorsSelected, 1000, 100);
+						writeText("Faction:", 20, 100);
+						writeText(shipsControllingTeam, 20, 80);
+						writeText("Status:", 20, 40);
+						writeText(shipStatus, 20, 20);
+					}
+					else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected  + numMissileshipsSelected + numPodsSelected > 1) {
+						writeText("Starfleet(" + (numFightersSelected + numInterceptorsSelected + numTransportsSelected + numMissileshipsSelected + numPodsSelected) + ")", 400, 15, 30);
+						writeText("Fighters:" + numFightersSelected, 1000, 120);
+						writeText("Interceptors:" + numInterceptorsSelected, 1000, 100);
 //							writeText("Transports:" + numTransportsSelected, 1000, 60);
-							writeText("Missileships:" + numMissileshipsSelected, 1000, 80);
-							writeText("Turrets:" + numPodsSelected, 1000, 60);
+						writeText("Missileships:" + numMissileshipsSelected, 1000, 80);
+						writeText("Turrets:" + numPodsSelected, 1000, 60);
 //							if (shipsControllingTeam.equals(player.getTeam()))
-							if (sumCurrentHP - (int)sumCurrentHP > 0)		
-								sumCurrentHP++;
-								writeText("Fleet armor:" + sumCurrentHP + "/" + sumMaxHP, 800, 20);
+						if (sumCurrentHP - (int)sumCurrentHP > 0)		
+							sumCurrentHP++;
+							writeText("Fleet armor:" + sumCurrentHP + "/" + sumMaxHP, 800, 20);
 //							else
 //								writeText("Fleet armor:??/??", 800, 20);
-							writeText("Faction:", 20, 100);
-							writeText(shipsControllingTeam, 20, 80);
-							writeText("Fleet status:", 20, 40);
-							writeText(shipStatus, 20, 20);
-						}
-						if(alliedPlanetSelected){
-							planetMainMenu.display();
-						}
-						
-						for (int i = 0; i < text.size(); i++) {
-	//						text.get(i).setPoints();
-							text.get(i).display();
-						}
+						writeText("Faction:", 20, 100);
+						writeText(shipsControllingTeam, 20, 80);
+						writeText("Fleet status:", 20, 40);
+						writeText(shipStatus, 20, 20);
 					}
-					else {
-						writeText("Blue", 100, 15, 30);
-						writeText("Red", 1100, 15, 30);
-						int blueResources = 0;
-						int redResources = 0;
-						int bluePlanets = 0;
-						int redPlanets = 0;
-						for (int i = 0; i < planets.size(); i++) {
-							if (planets.get(i).getTeam().equals("red")) {
-								redPlanets++;
-								redResources += planets.get(i).storedResources;
-							}
-							else if (planets.get(i).getTeam().equals("blue")) {
-								bluePlanets++;
-								blueResources += planets.get(i).storedResources;
-							}
-						}
-						int redShips = 0;
-						int blueShips = 0;
-						for (int i = 0; i < ships.size(); i++) {
-							if (ships.get(i).getTeam().equals("red")) {
-								redShips++;
-							}
-							else if (ships.get(i).getTeam().equals("blue")) {
-								blueShips++;
-							}
-						}
-						writeText("Ships: " + blueShips, 20, 100);
-						writeText("Ships: " + redShips, 1000, 100);
-						writeText("Planets: " + bluePlanets, 20, 80);
-						writeText("Planets: " + redPlanets, 1000, 80);
-						writeText("Resources: " + blueResources, 20, 60);
-						writeText("Resources: " + redResources, 1000, 60);
-					}
-					
-					displayBorders();
-					
-					//Check win
-					if (player.getControlledPlanets().size() == 0 && player.getControlledShips().size() == 0) {
-						if(endLevelTimer >= endLevelDelay){
-							gameState = 5;
-							endLevelTimer = 0;
-						}
-						else{
-							endLevelTimer++;
-						}
-					}
-					else if (enemy.getPlayer().getControlledPlanets().size() == 0 && enemy.getPlayer().getControlledShips().size() == 0) {
-						if(endLevelTimer >= endLevelDelay){
-							gameState = 4;
-							endLevelTimer = 0;
-						}
-						else{
-							endLevelTimer++;
-						}
+					if(alliedPlanetSelected){
+						planetMainMenu.display();
 					}
 					
 					for (int i = 0; i < text.size(); i++) {
 //						text.get(i).setPoints();
 						text.get(i).display();
 					}
-					
-					glDisable(GL_TEXTURE_2D);
-					
-					//Check which direction the camera should move, and move accordingly
-					if (panLeft)
-						CURR_X = Math.max(START_X, CURR_X - CAMERA_WIDTH / 30);
-					if (panRight)
-						CURR_X = Math.min(END_X - CAMERA_WIDTH, CURR_X + CAMERA_WIDTH / 30);
-					if (panDown)
-						CURR_Y = Math.max((int) (START_Y - 150 * getHeightScalar()), CURR_Y - CAMERA_HEIGHT / 30);
-					if (panUp)
-						CURR_Y = Math.min(END_Y - CAMERA_HEIGHT, CURR_Y + CAMERA_HEIGHT / 30);
-					
-					
-					window.swapBuffers();
-		        
 				}
+				else {
+					writeText("Blue", 100, 15, 30);
+					writeText("Red", 1100, 15, 30);
+					int blueResources = 0;
+					int redResources = 0;
+					int bluePlanets = 0;
+					int redPlanets = 0;
+					for (int i = 0; i < planets.size(); i++) {
+						if (planets.get(i).getTeam().equals("red")) {
+							redPlanets++;
+							redResources += planets.get(i).storedResources;
+						}
+						else if (planets.get(i).getTeam().equals("blue")) {
+							bluePlanets++;
+							blueResources += planets.get(i).storedResources;
+						}
+					}
+					int redShips = 0;
+					int blueShips = 0;
+					for (int i = 0; i < ships.size(); i++) {
+						if (ships.get(i).getTeam().equals("red")) {
+							redShips++;
+						}
+						else if (ships.get(i).getTeam().equals("blue")) {
+							blueShips++;
+						}
+					}
+					writeText("Ships: " + blueShips, 20, 100);
+					writeText("Ships: " + redShips, 1000, 100);
+					writeText("Planets: " + bluePlanets, 20, 80);
+					writeText("Planets: " + redPlanets, 1000, 80);
+					writeText("Resources: " + blueResources, 20, 60);
+					writeText("Resources: " + redResources, 1000, 60);
+				}
+				
+				displayBorders();
+				
+				//Check win
+				if (player.getControlledPlanets().size() == 0 && player.getControlledShips().size() == 0) {
+					if(endLevelTimer >= endLevelDelay){
+						gameState = 5;
+						endLevelTimer = 0;
+					}
+					else{
+						endLevelTimer++;
+					}
+				}
+				else if (enemy.getPlayer().getControlledPlanets().size() == 0 && enemy.getPlayer().getControlledShips().size() == 0) {
+					if(endLevelTimer >= endLevelDelay){
+						gameState = 4;
+						endLevelTimer = 0;
+					}
+					else{
+						endLevelTimer++;
+					}
+				}
+				
+				for (int i = 0; i < text.size(); i++) {
+//						text.get(i).setPoints();
+					text.get(i).display();
+				}
+				
+				glDisable(GL_TEXTURE_2D);
+				
+				//Check which direction the camera should move, and move accordingly
+				if (panLeft)
+					CURR_X = Math.max(START_X, CURR_X - CAMERA_WIDTH / 30);
+				if (panRight)
+					CURR_X = Math.min(END_X - CAMERA_WIDTH, CURR_X + CAMERA_WIDTH / 30);
+				if (panDown)
+					CURR_Y = Math.max((int) (START_Y - 150 * getHeightScalar()), CURR_Y - CAMERA_HEIGHT / 30);
+				if (panUp)
+					CURR_Y = Math.min(END_Y - CAMERA_HEIGHT, CURR_Y + CAMERA_HEIGHT / 30);
+				
+				
+				window.swapBuffers();
+				
+				}
+
 			}
+			System.out.println(Instant.now().compareTo(time) / 1000000);
 		}
 	}
 
@@ -1712,6 +1717,7 @@ public class StarshipArena {
 		destroyAllExplosions();
 		destroyAllTiles();
 		playerList.clear();
+		loadSubLevel(null);
 		mute = trueMuteState;
 		menuMusic.stop();
 		if (!gameMusic.isActive()) {

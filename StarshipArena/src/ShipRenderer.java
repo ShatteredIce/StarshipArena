@@ -1,3 +1,4 @@
+import java.time.Instant;
 import java.util.ArrayList;
 
 public class ShipRenderer {
@@ -39,7 +40,6 @@ public class ShipRenderer {
 				setRotatedModel(s.vertices);
 			}
 		}
-		
 	}
 	
 	public void drawAllHPBars(ArrayList<Starship> selected){

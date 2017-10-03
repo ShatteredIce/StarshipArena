@@ -308,10 +308,10 @@ public class Starship {
 	public void edgeGuard(){
 		int BORDER = 100;
 		//left edge
-		if(center.X() < BORDER && angle <= 90){
+		if(center.X() < x_min + BORDER && angle <= 90){
 			current_turn_speed = -max_turn_speed;
 		}
-		else if(center.X() < BORDER && angle <= 180){
+		else if(center.X() < x_min + BORDER && angle <= 180){
 			current_turn_speed = max_turn_speed;
 		}
 		//right edge
@@ -322,10 +322,10 @@ public class Starship {
 			current_turn_speed = -max_turn_speed;
 		}
 		//bottom edge
-		else if(center.Y() < BORDER && angle >= 90 && angle <= 180){
+		else if(center.Y() < y_min + BORDER && angle >= 90 && angle <= 180){
 			current_turn_speed = -max_turn_speed;
 		}
-		else if(center.Y() < BORDER && angle > 180 && angle <= 270){
+		else if(center.Y() < y_min + BORDER && angle > 180 && angle <= 270){
 			current_turn_speed = max_turn_speed;
 		}
 		//top edge
