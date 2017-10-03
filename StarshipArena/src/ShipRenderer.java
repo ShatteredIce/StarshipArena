@@ -1,3 +1,4 @@
+import java.time.Instant;
 import java.util.ArrayList;
 
 public class ShipRenderer {
@@ -14,6 +15,7 @@ public class ShipRenderer {
 	static Texture interceptor_sprites = new Texture("interceptor_sprites.png");
 	static Texture missileship_sprites = new Texture("missileship_sprites.png");
 	
+
 //function is broken
 //	public void drawAllShips(ArrayList<Starship> allShips){
 //		fighter_sprites.bind();
