@@ -1691,7 +1691,7 @@ public class StarshipArena {
 			}
 		}
 		else{
-			if(/*zoomLevel > 1*/ CAMERA_WIDTH - 2 * MIN_WIDTH > START_X && CAMERA_HEIGHT - 2 * MIN_HEIGHT > START_Y){
+			if(/*zoomLevel > 1*/ CAMERA_WIDTH - 2 * MIN_WIDTH > 0 && CAMERA_HEIGHT - 2 * MIN_HEIGHT > 0){
 				zoomLevel--;
 				CAMERA_WIDTH /= 1.5;
 				CAMERA_HEIGHT /= 1.5;
@@ -2304,17 +2304,40 @@ public class StarshipArena {
 
 			
 		}
-	
+		//Define current dimensions of the map being observed (space by default)
 		START_X = 0;
 		START_Y = 0;
 		END_X = WORLD_WIDTH;
 		END_Y = WORLD_HEIGHT;
 		
+		//Define dimensions of the space map (which will be used to reutnr to space when needed)
 	    SPACE_START_X = 0;
 	    SPACE_START_Y = 0;
 	    SPACE_END_X = WORLD_WIDTH;
 	    SPACE_END_Y = WORLD_HEIGHT;
-		
+	    
+	    //Create planet surfaces
+	    for (int i = 0; i < planets.size(); i++) {
+			Planet p = planets.get(i);
+			p.surfaceX = -100000 + i * 100000;
+			p.surfaceY = -100000;
+			p.dimensionX = 10000;
+			p.dimensionY = 10000;
+			
+			//TODO Hardcoding tile size isn't probably a good idea
+			Tile temp = new Tile(this, p.surfaceX + p.dimensionX / 2, p.surfaceY + p.dimensionY / 2, 15000);
+			//TODO Ask Nathan to get some proper backgrounds for planet surfaces and store them in Tile the same way
+			//TODO that Planet stores planet textures (needs transparency, or no FOG)
+			temp.setSpecialTexture(Planet.textures[p.texId]);
+			
+			loadSubLevel(p);
+			//Testing with 10 ships
+			for (int j = 0; j < 10; j++) {
+				new Fighter(this, "blue", p.surfaceX + 500, p.surfaceY + 500, 0);
+			}
+			loadSubLevel(null);
+		}
+	    
 		genTiles();
 		playerList.add(player);
 		playerList.add(enemy.getPlayer());
@@ -2346,6 +2369,12 @@ public class StarshipArena {
 			CURR_Y = START_Y;
 			CAMERA_WIDTH = 2600;
 			CAMERA_HEIGHT = 1800;
+		}
+		
+		if(player.selectedPlanet != null) player.selectedPlanet.setSelected(false);
+		player.selectedPlanet = null;
+		for (int i = 0; i < ships.size(); i++) {
+			ships.get(i).setSelected(false);
 		}
 	}
 	

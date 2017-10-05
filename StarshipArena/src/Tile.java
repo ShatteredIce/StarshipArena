@@ -4,6 +4,8 @@ public class Tile {
 	StarshipArena game;
 	Model model;
 	static Texture backgroundTexture = new Texture("background_semitransparent.png");
+	//Texture for planet surface
+	Texture specialTexture = null;
 	
 	double[] vertices;
 	double[] textureCoords; 
@@ -11,10 +13,14 @@ public class Tile {
 	Point center;
 	Point[] points;
 	int size;
-	
-	Tile(StarshipArena mygame, int spawnx, int spawny){
+	//Default (space) tiles
+	Tile(StarshipArena mygame, double spawnx, double spawny){
+		this(mygame, spawnx, spawny, 3600);
+	}
+	//Custom (planet) tiles
+	Tile(StarshipArena mygame, double spawnx, double spawny, int newsize){
 		game = mygame;
-		size = (int)(3600 * game.levelScale);
+		size = (int)(newsize * game.levelScale);
 		center = new Point(spawnx, spawny);
 		points = generatePoints();
 		vertices = new double[points.length * 2];
@@ -55,7 +61,8 @@ public class Tile {
 	}
 	
 	public void display(){
-		backgroundTexture.bind();
+		if (specialTexture != null) specialTexture.bind();
+		else backgroundTexture.bind();
 		model.render(vertices);
 	}
 	
@@ -74,6 +81,10 @@ public class Tile {
 	
 	public double getY() {
 		return center.Y();
+	}
+	
+	public void setSpecialTexture(Texture tex) {
+		specialTexture = tex;
 	}
 
 }

@@ -5,7 +5,7 @@ public class MachineGunPod extends BasicPod{
 	static Texture tex2 = new Texture("blue_machinegunpod.png");
 	
 	static double primary_damage = 1;
-	static int primary_cooldown = 15;
+	static int primary_cooldown = 8;
 	static int primary_spread = 20;
 	static int primary_accuracy = 95;
 	static int primary_range = 1200;
