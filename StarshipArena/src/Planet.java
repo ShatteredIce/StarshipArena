@@ -14,13 +14,11 @@ public class Planet {
 	int radar_range;
 	int texId = 0;
 	boolean selected = false;
-	static Texture tex0 = new Texture("planet0.png");
-	static Texture tex1 = new Texture("planet1.png");
-	static Texture tex2 = new Texture("planet2.png");
-	static Texture tex3 = new Texture("planet3.png");
-	static Texture tex4 = new Texture("planet4.png");
-	static Texture tex5 = new Texture("planet5.png");
-	static Texture tex6 = new Texture("planet6.png");
+	static Texture[] textures = {new Texture("planet0.png"), new Texture("planet1.png"),
+			new Texture("planet2.png"), new Texture("planet3.png"), new Texture("planet4.png"),
+			new Texture("planet5.png"), new Texture("planet6.png")
+	};
+
 	//halo and FOW rendering variables
 	Model haloModel;
 	double[] haloVertices;
@@ -209,27 +207,7 @@ public class Planet {
 	}
 	
 	public void setTexture(){
-		if(texId == 1){
-			tex1.bind();
-		}
-		else if(texId == 2){
-			tex2.bind();
-		}
-		else if(texId == 3){
-			tex3.bind();
-		}
-		else if(texId == 4){
-			tex4.bind();
-		}
-		else if(texId == 5){
-			tex5.bind();
-		}
-		else if(texId == 6){
-			tex6.bind();
-		}
-		else{
-			tex0.bind();
-		}
+		textures[texId].bind();
 	}
 	
 	public void setHaloTexture(){
