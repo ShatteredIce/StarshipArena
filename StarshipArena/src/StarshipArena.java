@@ -109,6 +109,8 @@ public class StarshipArena {
     boolean f1Pressed = false;
     boolean lPressed = false;
     
+    boolean shipTracking = false;
+    
     DoubleBuffer oldMouseX;
     DoubleBuffer oldMouseY;
     DoubleBuffer newMouseX;
@@ -349,6 +351,8 @@ public class StarshipArena {
 				panDown = true;
 			if ( key == GLFW_KEY_S && action == GLFW_RELEASE )
 				panDown = false;
+			if ( key == GLFW_KEY_C && action == GLFW_PRESS )
+				shipTracking = !shipTracking;
 			
 			//Stop a ship's movement
 			if( key == GLFW_KEY_Z && action == GLFW_RELEASE ){
@@ -997,6 +1001,7 @@ public class StarshipArena {
 					staticFrame = true;
 				}
 			}
+			//MAIN GAME RENDERING LOOP
 			else if(gameState == 3){
 
 				if(staticFrame == true){
@@ -1120,6 +1125,10 @@ public class StarshipArena {
 					//display weapons range of selected ships
 					if(f1Pressed){
 						shiprenderer.drawAllScan(player.getControlledShips());
+					}
+					
+					if(shipTracking) {
+						updateShipTracking(player);
 					}
 						
 					
@@ -1604,38 +1613,6 @@ public class StarshipArena {
 		}
 	
 	public void updateZoomLevel(boolean zoomOut){
-//		int ZOOM_WIDTH = 650;
-//		int ZOOM_HEIGHT = 450;
-//		if(zoomOut){
-//			if(/*zoomLevel < 5 && */WORLD_WIDTH >= CAMERA_WIDTH + ZOOM_WIDTH && WORLD_HEIGHT >= CAMERA_HEIGHT + ZOOM_HEIGHT){
-//				zoomLevel++;
-//				CAMERA_WIDTH += ZOOM_WIDTH;
-//				CAMERA_HEIGHT += ZOOM_HEIGHT;
-//				CURR_X -= ZOOM_WIDTH / 2;
-//				CURR_Y -= ZOOM_HEIGHT / 2;
-//				if(CURR_X + CAMERA_WIDTH > WORLD_WIDTH){
-//					CURR_X = WORLD_WIDTH - CAMERA_WIDTH;
-//				}
-//				if(CURR_Y + CAMERA_HEIGHT > WORLD_HEIGHT){
-//					CURR_Y = WORLD_HEIGHT - CAMERA_HEIGHT;
-//				}
-//				if(CURR_X < 0){
-//					CURR_X = 0;
-//				}
-//				if(CURR_Y < 0){
-//					CURR_Y = 0;
-//				}
-//			}
-//		}
-//		else{
-//			if(/*zoomLevel > 1*/ CAMERA_WIDTH - 2 * ZOOM_WIDTH > 0 && CAMERA_HEIGHT - 2 * ZOOM_HEIGHT > 0){
-//				zoomLevel--;
-//				CAMERA_WIDTH -= ZOOM_WIDTH;
-//				CAMERA_HEIGHT -= ZOOM_HEIGHT;
-//				CURR_X += ZOOM_WIDTH / 2;
-//				CURR_Y += ZOOM_HEIGHT / 2;
-//			}
-//		}
 		DoubleBuffer xpos = BufferUtils.createDoubleBuffer(3);
 		DoubleBuffer ypos = BufferUtils.createDoubleBuffer(3);
 		glfwGetCursorPos(window.getWindowHandle(), xpos, ypos);
@@ -1706,6 +1683,24 @@ public class StarshipArena {
 			}
 		}
 	}
+	
+	public void updateShipTracking(Player p){
+		double avgX = 0;
+		double avgY = 0;
+		ArrayList<Starship> selected = p.getSelectedShips();
+		if(selected.size() == 0) {
+			return;
+		}
+		for (int i = 0; i < selected.size(); i++) {
+			avgX += selected.get(i).getX();
+			avgY += selected.get(i).getY();
+		}
+		avgX /= selected.size();
+		avgY /= selected.size();
+		CURR_X = avgX - CAMERA_WIDTH/2;
+		CURR_Y = avgY - CAMERA_HEIGHT/2;
+	}
+	
 	public void loadLevel(int level){
 		//TODO Add new variable double scale and add it to each variable that needs scaling
 		boolean trueMuteState = mute;
