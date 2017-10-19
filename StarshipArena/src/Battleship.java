@@ -33,7 +33,7 @@ public class Battleship extends Starship{
 	
 	//"Plasma hose" - Triple plasma
 	static double damage3 = 4;
-	static int cooldown3 = 45;
+	static int cooldown3 = 15;
 	static int spread3 = 15;
 	static int accuracy3 = 95;
 	static int range3 = 1000;
@@ -128,7 +128,7 @@ public class Battleship extends Starship{
 		Turret turret3_3 = new Turret(game, this, team, 0, 0, angle, damage3, cooldown3, 
 				spread3, accuracy3, range3, speed3, lifetime3, id3, 0, 1);
 //		primaryTurret2.setOffset(primary_xoffset - 25, primary_yoffset + 20, -5);
-		turret3_3.setOffset(xoffset3, -yoffset3);
+		turret3_3.setOffset(xoffset3, yoffset3);
 		turrets.add(turret3_3);
 	}
 	
