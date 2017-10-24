@@ -64,26 +64,27 @@ public class StarshipArena {
     double WORLD_HEIGHT = 180000 * levelScale;
     
     //TODO Get rid of all the hardcoded dimensions
-    double START_X = 0;
-    double START_Y = 0;
-    double END_X = WORLD_WIDTH;
-    double END_Y = WORLD_HEIGHT;
+    double currentMin_X = 0;
+    double currentMin_Y = 0;
+    double currentMax_X = WORLD_WIDTH;
+    double currentMax_Y = WORLD_HEIGHT;
     
-    double SPACE_START_X = 0;
-    double SPACE_START_Y = 0;
-    double SPACE_END_X = WORLD_WIDTH;
-    double SPACE_END_Y = WORLD_HEIGHT;
-    double SPACE_CURR_X = 0;
-	double SPACE_CURR_Y = 0;
-	double SPACE_CAMERA_WIDTH = 2600;
-	double SPACE_CAMERA_HEIGHT = 1800;
+    double spaceMin_X = 0;
+    double spaceMin_Y = 0;
+    double spaceMax_X = WORLD_WIDTH;
+    double spaceMax_Y = WORLD_HEIGHT;
+    
+    //previous camera view saved when zooming into planet
+    double spaceView_X = 0;
+	double spaceView_Y = 0;
+	double spaceViewWidth = 2600;
+	double spaceViewHeight = 1800;
 	
-
-    double CURR_X = 0;
-	double CURR_Y = 0;
-	double CAMERA_SPEED = 10;
-	double CAMERA_WIDTH = 2600;
-	double CAMERA_HEIGHT = 1800;
+    double viewX = 0;
+	double viewY = 0;
+	double cameraSpeed = 10;
+	double cameraWidth = 2600;
+	double cameraHeight = 1800;
 	int zoomLevel = 3;
 	
 	int gameState = 1;
@@ -568,8 +569,8 @@ public class StarshipArena {
 				xpos.put(0, Math.min(Math.max(xpos.get(0), windowXOffset), WINDOW_WIDTH + windowXOffset));
 				ypos.put(0, Math.min(Math.max(ypos.get(0), windowYOffset), WINDOW_HEIGHT + windowYOffset));
 				//TODO This is fucked up, causing issues with addcommand();
-				xpos.put(1, getWidthScalar() * (xpos.get(0) - windowXOffset) + CURR_X);
-				ypos.put(1, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0) + windowYOffset) + CURR_Y));
+				xpos.put(1, getWidthScalar() * (xpos.get(0) - windowXOffset) + viewX);
+				ypos.put(1, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0) + windowYOffset) + viewY));
 				//true window coordinates
 				xpos.put(2, xpos.get(0) - windowXOffset);
 				ypos.put(2, (WINDOW_HEIGHT - ypos.get(0) + windowYOffset));
@@ -803,7 +804,7 @@ public class StarshipArena {
 								//If the click was not on a ship, move to location. Else, attack the clicked ship
 								if (targetShip == null) {
 //									s.addCommand(shiftPressed, altPressed, controlPressed, tPressed, null, new Point(Math.max(Math.min(xpos.get(1), WORLD_WIDTH), 0), Math.max(Math.min(ypos.get(1), WORLD_HEIGHT), 0)));
-									s.addCommand(shiftPressed, altPressed, controlPressed, tPressed, null, new Point(Math.max(Math.min(xpos.get(1), END_X - s.getClickRadius()), START_X + s.getClickRadius()), Math.max(Math.min(ypos.get(1), END_Y - s.getClickRadius()), START_Y + s.getClickRadius())));
+									s.addCommand(shiftPressed, altPressed, controlPressed, tPressed, null, new Point(Math.max(Math.min(xpos.get(1), currentMax_X - s.getClickRadius()), currentMin_X + s.getClickRadius()), Math.max(Math.min(ypos.get(1), currentMax_Y - s.getClickRadius()), currentMin_Y + s.getClickRadius())));
 								}
 								else {
 									s.addCommand(shiftPressed, false, controlPressed, false, targetShip, null);
@@ -1044,8 +1045,8 @@ public class StarshipArena {
 						planets.get(p).checkCapturePoint();
 						planets.get(p).updateResources();
 						//only display if planet is in camera window
-						if(planets.get(p).getX() > CURR_X - (planetDisplayBorder * getWidthScalar()) && planets.get(p).getX() < CURR_X + CAMERA_WIDTH + (planetDisplayBorder * getWidthScalar()) 
-								&& planets.get(p).getY() > CURR_Y - (planetDisplayBorder * getHeightScalar()) && planets.get(p).getY() < CURR_Y + CAMERA_HEIGHT + (planetDisplayBorder * getHeightScalar())){
+						if(planets.get(p).getX() > viewX - (planetDisplayBorder * getWidthScalar()) && planets.get(p).getX() < viewX + cameraWidth + (planetDisplayBorder * getWidthScalar()) 
+								&& planets.get(p).getY() > viewY - (planetDisplayBorder * getHeightScalar()) && planets.get(p).getY() < viewY + cameraHeight + (planetDisplayBorder * getHeightScalar())){
 							if(isVisible(planets.get(p), player)){
 								planets.get(p).display(true);
 							}
@@ -1090,11 +1091,11 @@ public class StarshipArena {
 				    	explosions.get(e).update();
 					}
 					
-					if(CAMERA_WIDTH < 10400 && CAMERA_HEIGHT < 7200){
+					if(cameraWidth < 10400 && cameraHeight < 7200){
 						//display ships
 						for(int s = 0; s < ships.size(); s++){
-							if(ships.get(s).getX() > CURR_X - (shipDisplayBorder * getWidthScalar()) && ships.get(s).getX() < CURR_X + CAMERA_WIDTH + (shipDisplayBorder * getWidthScalar())
-									&& ships.get(s).getY() > CURR_Y - (shipDisplayBorder * getHeightScalar()) && ships.get(s).getY() < CURR_Y + CAMERA_HEIGHT + (shipDisplayBorder * getHeightScalar())){
+							if(ships.get(s).getX() > viewX - (shipDisplayBorder * getWidthScalar()) && ships.get(s).getX() < viewX + cameraWidth + (shipDisplayBorder * getWidthScalar())
+									&& ships.get(s).getY() > viewY - (shipDisplayBorder * getHeightScalar()) && ships.get(s).getY() < viewY + cameraHeight + (shipDisplayBorder * getHeightScalar())){
 								if(isVisible(ships.get(s), player)){
 									shiprenderer.drawShip(ships.get(s));
 								}
@@ -1107,8 +1108,8 @@ public class StarshipArena {
 					else{
 						//display ship icons
 						for(int s = 0; s < ships.size(); s++){
-							if(ships.get(s).getX() > CURR_X - (shipDisplayBorder * getWidthScalar()) && ships.get(s).getX() < CURR_X + CAMERA_WIDTH + (shipDisplayBorder * getWidthScalar())
-									&& ships.get(s).getY() > CURR_Y - (shipDisplayBorder * getHeightScalar()) && ships.get(s).getY() < CURR_Y + CAMERA_HEIGHT + (shipDisplayBorder * getHeightScalar())){
+							if(ships.get(s).getX() > viewX - (shipDisplayBorder * getWidthScalar()) && ships.get(s).getX() < viewX + cameraWidth + (shipDisplayBorder * getWidthScalar())
+									&& ships.get(s).getY() > viewY - (shipDisplayBorder * getHeightScalar()) && ships.get(s).getY() < viewY + cameraHeight + (shipDisplayBorder * getHeightScalar())){
 								if(isVisible(ships.get(s), player)){
 									shiprenderer.drawShipIcon(ships.get(s));
 								}
@@ -1141,8 +1142,8 @@ public class StarshipArena {
 					DoubleBuffer ypos = BufferUtils.createDoubleBuffer(2);
 					glfwGetCursorPos(window.getWindowHandle(), xpos, ypos);
 					//convert the glfw coordinate to our coordinate system
-					xpos.put(1, getWidthScalar() * (xpos.get(0) - windowXOffset) + CURR_X);
-					ypos.put(1, (getHeightScalar() * ((WINDOW_HEIGHT) - ypos.get(0) + windowYOffset) + CURR_Y));
+					xpos.put(1, getWidthScalar() * (xpos.get(0) - windowXOffset) + viewX);
+					ypos.put(1, (getHeightScalar() * ((WINDOW_HEIGHT) - ypos.get(0) + windowYOffset) + viewY));
 					boxSelect.setBottomRight(xpos.get(1), ypos.get(1));
 					boxSelect.setPoints();
 					boxSelect.display();
@@ -1403,16 +1404,29 @@ public class StarshipArena {
 				
 				glDisable(GL_TEXTURE_2D);
 				
+				//mouse on edge scrolling
+				DoubleBuffer xpos = BufferUtils.createDoubleBuffer(3);
+				DoubleBuffer ypos = BufferUtils.createDoubleBuffer(3);
+				glfwGetCursorPos(window.getWindowHandle(), xpos, ypos);
+					//glfw coordinates bounded by window offsets
+					xpos.put(0, Math.min(Math.max(xpos.get(0), windowXOffset), WINDOW_WIDTH + windowXOffset));
+					ypos.put(0, Math.min(Math.max(ypos.get(0), windowYOffset), WINDOW_HEIGHT + windowYOffset));
+					//relative camera coordinates based on camera position and scale
+					xpos.put(1, getWidthScalar() * (xpos.get(0) - windowXOffset) + viewX);
+					ypos.put(1, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0) + windowYOffset) + viewY));
+					//true window coordinates
+					xpos.put(2, xpos.get(0) - windowXOffset);
+					ypos.put(2, (WINDOW_HEIGHT - ypos.get(0) + windowYOffset));
+				System.out.println(xpos.get(2) + " " + ypos.get(2));
 				//Check which direction the camera should move, and move accordingly
-				if (panLeft)
-					CURR_X = Math.max(START_X, CURR_X - CAMERA_WIDTH / 30);
-				if (panRight)
-					CURR_X = Math.min(END_X - CAMERA_WIDTH, CURR_X + CAMERA_WIDTH / 30);
-				if (panDown)
-					CURR_Y = Math.max((int) (START_Y - 150 * getHeightScalar()), CURR_Y - CAMERA_HEIGHT / 30);
-				if (panUp)
-					CURR_Y = Math.min(END_Y - CAMERA_HEIGHT, CURR_Y + CAMERA_HEIGHT / 30);
-				
+				if (panLeft || (xpos.get(2) == 0))
+					viewX = Math.max(currentMin_X, viewX - cameraWidth / 30);
+				if (panRight || (xpos.get(2) == WINDOW_WIDTH))
+					viewX = Math.min(currentMax_X - cameraWidth, viewX + cameraWidth / 30);
+				if (panDown || (ypos.get(2) == 0))
+					viewY = Math.max((int) (currentMin_Y - 150 * getHeightScalar()), viewY - cameraHeight / 30);
+				if (panUp || (ypos.get(2) == WINDOW_HEIGHT))
+					viewY = Math.min(currentMax_Y - cameraHeight, viewY + cameraHeight / 30);
 				
 				window.swapBuffers();
 				System.out.println(Instant.now().compareTo(time) / 1000000);
@@ -1430,7 +1444,7 @@ public class StarshipArena {
 	public void projectRelativeCameraCoordinates(){
 		glMatrixMode(GL_PROJECTION);
         glLoadIdentity(); // Resets any previous projection matrices
-        glOrtho((-windowXOffset * getWidthScalar()) + CURR_X, CURR_X + CAMERA_WIDTH + (windowXOffset * getWidthScalar()), CURR_Y + ((-windowYOffset) * getHeightScalar()), CURR_Y + CAMERA_HEIGHT + ((windowYOffset)* getHeightScalar()), 1, -1);
+        glOrtho((-windowXOffset * getWidthScalar()) + viewX, viewX + cameraWidth + (windowXOffset * getWidthScalar()), viewY + ((-windowYOffset) * getHeightScalar()), viewY + cameraHeight + ((windowYOffset)* getHeightScalar()), 1, -1);
         glMatrixMode(GL_MODELVIEW);
 	}
 	
@@ -1447,10 +1461,10 @@ public class StarshipArena {
 //    	bounds[1] = WORLD_WIDTH;
 //    	bounds[2] = 0;
 //    	bounds[3] = WORLD_HEIGHT;
-    	bounds[0] = START_X;
-    	bounds[1] = END_X;
-    	bounds[2] = START_Y;
-    	bounds[3] = END_Y;
+    	bounds[0] = currentMin_X;
+    	bounds[1] = currentMax_X;
+    	bounds[2] = currentMin_Y;
+    	bounds[3] = currentMax_Y;
     	
     	return bounds;
     }
@@ -1621,8 +1635,8 @@ public class StarshipArena {
 		xpos.put(0, Math.min(Math.max(xpos.get(0), windowXOffset), WINDOW_WIDTH + windowXOffset));
 		ypos.put(0, Math.min(Math.max(ypos.get(0), windowYOffset), WINDOW_HEIGHT + windowYOffset));
 		//relative camera coordinates
-		xpos.put(1, getWidthScalar() * (xpos.get(0) - windowXOffset) + CURR_X);
-		ypos.put(1, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0) + windowYOffset) + CURR_Y));
+		xpos.put(1, getWidthScalar() * (xpos.get(0) - windowXOffset) + viewX);
+		ypos.put(1, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0) + windowYOffset) + viewY));
 		//true window coordinates
 		xpos.put(2, xpos.get(0) - windowXOffset);
 		ypos.put(2, (WINDOW_HEIGHT - ypos.get(0) + windowYOffset));
@@ -1643,44 +1657,44 @@ public class StarshipArena {
 		int MIN_HEIGHT = 450;
 		if(zoomOut){
 			//TODO Change this to START_X and stuff
-			if(/*zoomLevel < 5 && */END_X - START_X >= CAMERA_WIDTH * 1.5 && END_Y - START_Y >= CAMERA_HEIGHT * 1.5){
+			if(/*zoomLevel < 5 && */currentMax_X - currentMin_X >= cameraWidth * 1.5 && currentMax_Y - currentMin_Y >= cameraHeight * 1.5){
 				zoomLevel++;
-				CAMERA_WIDTH *= 1.5;
-				CAMERA_HEIGHT *= 1.5;
+				cameraWidth *= 1.5;
+				cameraHeight *= 1.5;
 				if(mouseInFrame){
-					CURR_X = oldX - CAMERA_WIDTH * xAxisDistance;
-					CURR_Y = oldY - CAMERA_HEIGHT * yAxisDistance;
+					viewX = oldX - cameraWidth * xAxisDistance;
+					viewY = oldY - cameraHeight * yAxisDistance;
 				}
 				else{
-					CURR_X -= CAMERA_WIDTH / 6;
-					CURR_Y -= CAMERA_WIDTH / 6;
+					viewX -= cameraWidth / 6;
+					viewY -= cameraWidth / 6;
 				}
-				if(CURR_X + CAMERA_WIDTH > END_X){
-					CURR_X = END_X - CAMERA_WIDTH;
+				if(viewX + cameraWidth > currentMax_X){
+					viewX = currentMax_X - cameraWidth;
 				}
-				if(CURR_Y + CAMERA_HEIGHT > END_Y){
-					CURR_Y = END_Y - CAMERA_HEIGHT;
+				if(viewY + cameraHeight > currentMax_Y){
+					viewY = currentMax_Y - cameraHeight;
 				}
-				if(CURR_X < START_X){
-					CURR_X = START_X;
+				if(viewX < currentMin_X){
+					viewX = currentMin_X;
 				}
-				if(CURR_Y < START_Y){
-					CURR_Y = START_Y;
+				if(viewY < currentMin_Y){
+					viewY = currentMin_Y;
 				}
 			}
 		}
 		else{
-			if(/*zoomLevel > 1*/ CAMERA_WIDTH - 2 * MIN_WIDTH > 0 && CAMERA_HEIGHT - 2 * MIN_HEIGHT > 0){
+			if(/*zoomLevel > 1*/ cameraWidth - 2 * MIN_WIDTH > 0 && cameraHeight - 2 * MIN_HEIGHT > 0){
 				zoomLevel--;
-				CAMERA_WIDTH /= 1.5;
-				CAMERA_HEIGHT /= 1.5;
+				cameraWidth /= 1.5;
+				cameraHeight /= 1.5;
 				if(mouseInFrame){
-					CURR_X = oldX - CAMERA_WIDTH * xAxisDistance;
-					CURR_Y = oldY - CAMERA_HEIGHT * yAxisDistance;
+					viewX = oldX - cameraWidth * xAxisDistance;
+					viewY = oldY - cameraHeight * yAxisDistance;
 				}
 				else{
-					CURR_X += CAMERA_WIDTH / 4;
-					CURR_Y += CAMERA_HEIGHT / 4;
+					viewX += cameraWidth / 4;
+					viewY += cameraHeight / 4;
 				}
 			}
 		}
@@ -1699,8 +1713,8 @@ public class StarshipArena {
 		}
 		avgX /= selected.size();
 		avgY /= selected.size();
-		CURR_X = avgX - CAMERA_WIDTH/2;
-		CURR_Y = avgY - CAMERA_HEIGHT/2;
+		viewX = avgX - cameraWidth/2;
+		viewY = avgY - cameraHeight/2;
 	}
 	
 	public void loadLevel(int level){
@@ -1724,15 +1738,15 @@ public class StarshipArena {
 		
 		currentLevel = level;
 		zoomLevel = 3;
-		CAMERA_WIDTH = 26000 * levelScale;
-		CAMERA_HEIGHT = 18000 * levelScale;
+		cameraWidth = 26000 * levelScale;
+		cameraHeight = 18000 * levelScale;
 		if(level == 1){
 			WORLD_WIDTH = 39000 * levelScale;
 		    WORLD_HEIGHT = 27000 * levelScale;
-		    CURR_X = 0 * levelScale;
-			CURR_Y = 0 * levelScale;
-			CAMERA_WIDTH = 26000 * levelScale;
-			CAMERA_HEIGHT = 18000 * levelScale;
+		    viewX = 0 * levelScale;
+			viewY = 0 * levelScale;
+			cameraWidth = 26000 * levelScale;
+			cameraHeight = 18000 * levelScale;
 			enemy = new Enemy(this, new Player(this, "red"));
 			//TODO Enemy Fighters are commented out so I can test new ships, and left Planet is auto-given to blue. Reverse these changes after testing concludes.
 			new Planet(this, 13500 * levelScale, 10000 * levelScale, 1).setTeam("blue");;
@@ -1782,10 +1796,10 @@ public class StarshipArena {
 		else if(level == 2){
 			WORLD_WIDTH = 39000 * levelScale;
 		    WORLD_HEIGHT = 27000 * levelScale;
-		    CURR_X = 0 * levelScale;
-			CURR_Y = 0 * levelScale;
-			CAMERA_WIDTH = 26000 * levelScale;
-			CAMERA_HEIGHT = 18000 * levelScale;
+		    viewX = 0 * levelScale;
+			viewY = 0 * levelScale;
+			cameraWidth = 26000 * levelScale;
+			cameraHeight = 18000 * levelScale;
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
 			new Planet(this, 13500 * levelScale, 10000 * levelScale, 1);
 			new Planet(this, 30000 * levelScale, 15000 * levelScale, 2).setTeam("red");
@@ -1810,8 +1824,8 @@ public class StarshipArena {
 		else if (level == 3) {
 			WORLD_WIDTH = 50000 * levelScale;
 		    WORLD_HEIGHT = 40000 * levelScale;
-		    CURR_X = 2000 * levelScale;
-			CURR_Y = 2000 * levelScale;
+		    viewX = 2000 * levelScale;
+			viewY = 2000 * levelScale;
 			zoomLevel = 2;
 			
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
@@ -1844,11 +1858,11 @@ public class StarshipArena {
 		else if (level == 4) {
 			WORLD_WIDTH = 100000 * levelScale;
 		    WORLD_HEIGHT = 80000 * levelScale;
-		    CURR_X = 2000 * levelScale;
-			CURR_Y = 2000 * levelScale;
+		    viewX = 2000 * levelScale;
+			viewY = 2000 * levelScale;
 			zoomLevel = 3;
-			CAMERA_WIDTH = 52000 * levelScale;
-			CAMERA_HEIGHT = 36000 * levelScale;
+			cameraWidth = 52000 * levelScale;
+			cameraHeight = 36000 * levelScale;
 			
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
 			new Planet(this, 13500 * levelScale, 10000 * levelScale, 1).setTeam("blue");
@@ -1902,11 +1916,11 @@ public class StarshipArena {
 		else if (level == 5) {
 			WORLD_WIDTH = 100000 * levelScale;
 		    WORLD_HEIGHT = 80000 * levelScale;
-		    CURR_X = 17500 * levelScale;
-			CURR_Y = 24000 * levelScale;
+		    viewX = 17500 * levelScale;
+			viewY = 24000 * levelScale;
 			zoomLevel = 3;
-			CAMERA_WIDTH = 52000 * levelScale;
-			CAMERA_HEIGHT = 36000 * levelScale;
+			cameraWidth = 52000 * levelScale;
+			cameraHeight = 36000 * levelScale;
 			
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
 			new Planet(this, 13500 * levelScale, 10000 * levelScale, 1).setTeam("blue");
@@ -1966,11 +1980,11 @@ public class StarshipArena {
 		else if(level == 6){
 			WORLD_WIDTH = 75000 * levelScale;
 		    WORLD_HEIGHT = 60000 * levelScale;
-		    CURR_X = 16000 * levelScale;
-			CURR_Y = 7000 * levelScale;
+		    viewX = 16000 * levelScale;
+			viewY = 7000 * levelScale;
 			zoomLevel = 2;
-			CAMERA_WIDTH = 45500 * levelScale;
-			CAMERA_HEIGHT = 31500 * levelScale;
+			cameraWidth = 45500 * levelScale;
+			cameraHeight = 31500 * levelScale;
 			
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
 			
@@ -2013,11 +2027,11 @@ public class StarshipArena {
 		else if(level == 7){
 			WORLD_WIDTH = 60000 * levelScale;
 		    WORLD_HEIGHT = 80000 * levelScale;
-		    CURR_X = 4000 * levelScale;
-			CURR_Y = 3000 * levelScale;
+		    viewX = 4000 * levelScale;
+			viewY = 3000 * levelScale;
 			zoomLevel = 3;
-			CAMERA_WIDTH = 52000 * levelScale;
-			CAMERA_HEIGHT = 36000 * levelScale;
+			cameraWidth = 52000 * levelScale;
+			cameraHeight = 36000 * levelScale;
 			
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
 			
@@ -2095,11 +2109,11 @@ public class StarshipArena {
 		else if (level == 8) {
 			WORLD_WIDTH = 100000 * levelScale;
 		    WORLD_HEIGHT = 80000 * levelScale;
-		    CURR_X = 17500 * levelScale;
-			CURR_Y = 24000 * levelScale;
+		    viewX = 17500 * levelScale;
+			viewY = 24000 * levelScale;
 			zoomLevel = 3;
-			CAMERA_WIDTH = 52000 * levelScale;
-			CAMERA_HEIGHT = 36000 * levelScale;
+			cameraWidth = 52000 * levelScale;
+			cameraHeight = 36000 * levelScale;
 			
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
 			new Planet(this, 13500 * levelScale, 10000 * levelScale, 1).setTeam("red");
@@ -2161,11 +2175,11 @@ public class StarshipArena {
 		else if(level == 9){
 			WORLD_WIDTH = 125000 * levelScale;
 		    WORLD_HEIGHT = 50000 * levelScale;
-		    CURR_X = 37250 * levelScale;
-			CURR_Y = 9250 * levelScale;
+		    viewX = 37250 * levelScale;
+			viewY = 9250 * levelScale;
 			zoomLevel = 3;
-			CAMERA_WIDTH = 45500 * levelScale;
-			CAMERA_HEIGHT = 31500 * levelScale;
+			cameraWidth = 45500 * levelScale;
+			cameraHeight = 31500 * levelScale;
 			
 			enemy = new AdvancedEnemy(this, new Player(this, "red"));
 			new Planet(this, 57500 * levelScale, 30000 * levelScale, 3).setTeam("blue");
@@ -2227,11 +2241,11 @@ public class StarshipArena {
 		else if(level == 10){
 			WORLD_WIDTH = 120000 * levelScale;
 		    WORLD_HEIGHT = 40000 * levelScale;
-		    CURR_X = 250 * levelScale;
-			CURR_Y = 0 * levelScale;
+		    viewX = 250 * levelScale;
+			viewY = 0 * levelScale;
 			zoomLevel = 3;
-			CAMERA_WIDTH = 45500 * levelScale;
-			CAMERA_HEIGHT = 31500 * levelScale;
+			cameraWidth = 45500 * levelScale;
+			cameraHeight = 31500 * levelScale;
 			new Planet(this, 13000 * levelScale, 25000 * levelScale, 2).setTeam("blue");
 			new Planet(this, 12000 * levelScale, 13000 * levelScale, 2).setTeam("blue");
 			new Planet(this, 56000 * levelScale, 32000 * levelScale, 2).setTeam("red");
@@ -2302,10 +2316,10 @@ public class StarshipArena {
 			
 		}
 		//Define current dimensions of the map being observed (space by default)
-		START_X = 0;
-		START_Y = 0;
-		END_X = WORLD_WIDTH;
-		END_Y = WORLD_HEIGHT;
+		currentMin_X = 0;
+		currentMin_Y = 0;
+		currentMax_X = WORLD_WIDTH;
+		currentMax_Y = WORLD_HEIGHT;
 		//TODO Doing setScreenBounds within the constructor is causing hellish problems. I'll have to do it here again
 		//TODO Note, this will not work if one plans to generate surface ships within the level definition.
 		//TODO Solution is to never spawn surface ships
@@ -2314,10 +2328,10 @@ public class StarshipArena {
 		}
 		
 		//Define dimensions of the space map (which will be used to reutnr to space when needed)
-	    SPACE_START_X = 0;
-	    SPACE_START_Y = 0;
-	    SPACE_END_X = WORLD_WIDTH;
-	    SPACE_END_Y = WORLD_HEIGHT;
+	    spaceMin_X = 0;
+	    spaceMin_Y = 0;
+	    spaceMax_X = WORLD_WIDTH;
+	    spaceMax_Y = WORLD_HEIGHT;
 	    
 	    //Create planet surfaces
 	    for (int i = 0; i < planets.size(); i++) {
@@ -2350,28 +2364,28 @@ public class StarshipArena {
 	//Save values of space dimensions in order to make future loading of space easier
 	public void loadSubLevel(Planet p) {
 		if (p == null) {
-			START_X = SPACE_START_X;
-			START_Y = SPACE_START_Y;
-			END_X = SPACE_END_X;
-			END_Y = SPACE_END_Y;
-			CURR_X = SPACE_CURR_X;
-			CURR_Y = SPACE_CURR_Y;
-			CAMERA_WIDTH = SPACE_CAMERA_WIDTH;
-			CAMERA_HEIGHT = SPACE_CAMERA_HEIGHT;
+			currentMin_X = spaceMin_X;
+			currentMin_Y = spaceMin_Y;
+			currentMax_X = spaceMax_X;
+			currentMax_Y = spaceMax_Y;
+			viewX = spaceView_X;
+			viewY = spaceView_Y;
+			cameraWidth = spaceViewWidth;
+			cameraHeight = spaceViewHeight;
 		}
 		else {
-			SPACE_CURR_X = CURR_X;
-			SPACE_CURR_Y = CURR_Y;
-			SPACE_CAMERA_WIDTH = CAMERA_WIDTH;
-			SPACE_CAMERA_HEIGHT = CAMERA_HEIGHT;
-			START_X = p.surfaceX;
-			START_Y = p.surfaceY;
-			END_X = p.surfaceX + p.dimensionX;
-			END_Y = p.surfaceY + p.dimensionY;
-			CURR_X = START_X;
-			CURR_Y = START_Y;
-			CAMERA_WIDTH = 2600;
-			CAMERA_HEIGHT = 1800;
+			spaceView_X = viewX;
+			spaceView_Y = viewY;
+			spaceViewWidth = cameraWidth;
+			spaceViewHeight = cameraHeight;
+			currentMin_X = p.surfaceX;
+			currentMin_Y = p.surfaceY;
+			currentMax_X = p.surfaceX + p.dimensionX;
+			currentMax_Y = p.surfaceY + p.dimensionY;
+			viewX = currentMin_X;
+			viewY = currentMin_Y;
+			cameraWidth = 2600;
+			cameraHeight = 1800;
 		}
 		
 		if(player.selectedPlanet != null) player.selectedPlanet.setSelected(false);
@@ -2702,19 +2716,19 @@ public class StarshipArena {
 	}
 	
 	public double getCameraX(){
-		return CURR_X;
+		return viewX;
 	}
 	
 	public double getCameraY(){
-		return CURR_Y;
+		return viewY;
 	}
 	
 	public double getCameraWidth(){
-		return CAMERA_WIDTH;
+		return cameraWidth;
 	}
 	
 	public double getCameraHeight(){
-		return CAMERA_HEIGHT;
+		return cameraHeight;
 	}
 	
 	public int getWindowWidth(){
@@ -2726,11 +2740,11 @@ public class StarshipArena {
 	}
 	
 	public double getWidthScalar(){
-		return(double) CAMERA_WIDTH / (double) WINDOW_WIDTH;
+		return(double) cameraWidth / (double) WINDOW_WIDTH;
 	}
 	
 	public double getHeightScalar(){
-		return(double) CAMERA_HEIGHT / (double) WINDOW_HEIGHT;
+		return(double) cameraHeight / (double) WINDOW_HEIGHT;
 	}
 	
 	//Text is written such that the first letter of the text has center at startx, starty

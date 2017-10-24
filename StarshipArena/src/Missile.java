@@ -60,10 +60,10 @@ public class Missile extends Projectile {
 		for (int i = 15; i < 20; i++) {
 			if (game.mute) break;
 			if (!game.soundEffects[i].isRunning()) {
-				double cameraX = game.CURR_X + game.CAMERA_WIDTH / 2;
-				double cameraY = game.CURR_Y + game.CAMERA_HEIGHT / 2;
+				double cameraX = game.viewX + game.cameraWidth / 2;
+				double cameraY = game.viewY + game.cameraHeight / 2;
 				//This formula decrease the volume the further away the player is from the weapon event, but increase volume for high levels of zoom
-				float dbDiff = (float)(game.distance(cameraX, cameraY, center.X(), center.Y()) / game.CAMERA_WIDTH * -20 + 10000 / game.CAMERA_WIDTH);
+				float dbDiff = (float)(game.distance(cameraX, cameraY, center.X(), center.Y()) / game.cameraWidth * -20 + 10000 / game.cameraWidth);
 				FloatControl gainControl = (FloatControl) game.soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
 				gainControl.setValue(Math.max(-80, Math.min(6, game.HITEX_DB + dbDiff))); // Increase volume by a number of decibels.
 				game.soundEffects[i].setFramePosition(0);
@@ -83,10 +83,10 @@ public class Missile extends Projectile {
 		for (int i = 15; i < 20; i++) {
 			if (game.mute) break;
 			if (!game.soundEffects[i].isRunning()) {
-				double cameraX = game.CURR_X + game.CAMERA_WIDTH / 2;
-				double cameraY = game.CURR_Y + game.CAMERA_HEIGHT / 2;
+				double cameraX = game.viewX + game.cameraWidth / 2;
+				double cameraY = game.viewY + game.cameraHeight / 2;
 				//This formula decrease the volume the further away the player is from the weapon event, but increase volume for high levels of zoom
-				float dbDiff = (float)(game.distance(cameraX, cameraY, center.X(), center.Y()) / game.CAMERA_WIDTH * -20 + 10000 / game.CAMERA_WIDTH);
+				float dbDiff = (float)(game.distance(cameraX, cameraY, center.X(), center.Y()) / game.cameraWidth * -20 + 10000 / game.cameraWidth);
 				FloatControl gainControl = (FloatControl) game.soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
 				gainControl.setValue(Math.max(-80, Math.min(6, game.HITEX_DB + dbDiff))); // Increase volume by a number of decibels.
 				game.soundEffects[i].setFramePosition(0);

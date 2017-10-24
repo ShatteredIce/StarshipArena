@@ -168,10 +168,10 @@ public class Turret {
 		int projectileBonuses = 0;
 		if (piercing) projectileBonuses++;
 		//Get position of the center of the camera, to determine distance from the sound event
-		double cameraX = game.CURR_X + game.CAMERA_WIDTH / 2;
-		double cameraY = game.CURR_Y + game.CAMERA_HEIGHT / 2;
+		double cameraX = game.viewX + game.cameraWidth / 2;
+		double cameraY = game.viewY + game.cameraHeight / 2;
 		//This formula decrease the volume the further away the player is from the weapon event, but increase volume for high levels of zoom
-		float dbDiff = (float)(game.distance(cameraX, cameraY, center.X(), center.Y()) / game.CAMERA_WIDTH * -10 + 5 - game.CAMERA_WIDTH / 5000);
+		float dbDiff = (float)(game.distance(cameraX, cameraY, center.X(), center.Y()) / game.cameraWidth * -10 + 5 - game.cameraWidth / 5000);
 		//launch a non-homing projectile
 		if (projectile_type != 4) {
 			new Projectile(game, owner, team, center.X(), center.Y(), projectile_damage, (newAngle + angleOff + 360) % 360, accuracy, projectile_speed, projectile_lifetime, projectile_type, projectileBonuses);
