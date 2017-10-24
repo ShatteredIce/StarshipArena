@@ -70,7 +70,7 @@ public class Player {
 		return costOfShips;
 	}
 	
-	public void checkVisible() {
+	public void checkVisible(ArrayList<Planet> controlledPlanets, ArrayList<Starship> controlledShips) {
 		for (int i = 0; i < visibleShips.size(); i++) {
 			//TODO If and when we implement static structures (e.g. buildings), don't remove them here, unless they are destroyed.
 			visibleShips.remove(i);
@@ -95,9 +95,9 @@ public class Player {
 				continue;
 			}
 			Planet currentPlanet;
-			for (int j = 0; j < this.getControlledPlanets().size(); j++) {
+			for (int j = 0; j < controlledPlanets.size(); j++) {
 				//If any of our planets can see it (distance from ship to planet < planet's radar range), ship is visible
-				currentPlanet = this.getControlledPlanets().get(j);
+				currentPlanet = controlledPlanets.get(j);
 				if(game.distance(ship.getX(), ship.getY(), currentPlanet.getX(), currentPlanet.getY()) <= currentPlanet.getRadarRange()){
 					visibleShips.add(ship);
 					continue loop;
@@ -105,8 +105,8 @@ public class Player {
 			}
 			Starship currentShip;
 			//If any of our starships can see it, ship is visible
-			for (int s = 0; s < this.getControlledShips().size(); s++) {
-				currentShip = this.getControlledShips().get(s);
+			for (int s = 0; s < controlledShips.size(); s++) {
+				currentShip = controlledShips.get(s);
 				if(game.distance(ship.getX(), ship.getY(), currentShip.getX(), currentShip.getY()) <= currentShip.getRadarRange()){
 					visibleShips.add(ship);
 					continue loop;

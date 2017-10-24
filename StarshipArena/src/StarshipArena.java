@@ -54,8 +54,14 @@ public class StarshipArena {
 	int windowXOffset;
 	int windowYOffset;
 	
-	double WORLD_WIDTH = 260000;
-    double WORLD_HEIGHT = 180000;
+	//Game scale: In future, it can be changed in an options menu
+	//TODO Reduce the default numbers by 10x, then set default levelScale to 10
+	//Right now game scale is causing lag, I suspect because of the double multiplication. Thus, try ^
+	double levelScale = 1;
+	
+	
+	double WORLD_WIDTH = 260000 * levelScale;
+    double WORLD_HEIGHT = 180000 * levelScale;
     
     //TODO Get rid of all the hardcoded dimensions
     double START_X = 0;
@@ -79,11 +85,6 @@ public class StarshipArena {
 	double CAMERA_WIDTH = 2600;
 	double CAMERA_HEIGHT = 1800;
 	int zoomLevel = 3;
-	
-	//Game scale: In future, it can be changed in an options menu
-	//TODO Reduce the default numbers by 10x, then set default levelScale to 10
-	//Right now game scale is causing lag, I suspect because of the double multiplication. Thus, try ^
-	double levelScale = 1;
 	
 	int gameState = 1;
 	int SLOW = 1;
@@ -154,7 +155,7 @@ public class StarshipArena {
 	Clip menuMusic;
 	
 	boolean mute = false;
-	boolean fog = false;
+	boolean fog = true;
 	
 	
 
@@ -799,10 +800,10 @@ public class StarshipArena {
 										break;
 									}
 								}
-								//If the click was on a ship, attack that ship. Else, move to point clicked
+								//If the click was not on a ship, move to location. Else, attack the clicked ship
 								if (targetShip == null) {
 //									s.addCommand(shiftPressed, altPressed, controlPressed, tPressed, null, new Point(Math.max(Math.min(xpos.get(1), WORLD_WIDTH), 0), Math.max(Math.min(ypos.get(1), WORLD_HEIGHT), 0)));
-									s.addCommand(shiftPressed, altPressed, controlPressed, tPressed, null, new Point(Math.max(Math.min(xpos.get(1), END_X), START_X), Math.max(Math.min(ypos.get(1), END_Y), START_Y)));
+									s.addCommand(shiftPressed, altPressed, controlPressed, tPressed, null, new Point(Math.max(Math.min(xpos.get(1), END_X - s.getClickRadius()), START_X + s.getClickRadius()), Math.max(Math.min(ypos.get(1), END_Y - s.getClickRadius()), START_Y + s.getClickRadius())));
 								}
 								else {
 									s.addCommand(shiftPressed, false, controlPressed, false, targetShip, null);
@@ -1020,7 +1021,8 @@ public class StarshipArena {
 					
 					//Precompute isVisible()
 					for (int i = 0; i < playerList.size(); i++) {
-						playerList.get(i).checkVisible();
+						Player p = playerList.get(i);
+						p.checkVisible(p.getControlledPlanets(), p.getControlledShips());
 					}
 					
 					//Show FOW
@@ -1736,27 +1738,27 @@ public class StarshipArena {
 			new Planet(this, 13500 * levelScale, 10000 * levelScale, 1).setTeam("blue");;
 			new PlanetRadar(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
 			new Planet(this, 30000 * levelScale, 15000 * levelScale, 2).setTeam("red");
-//			new PlanetLaser(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new PlanetLaser(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
 			
-//			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			
-//			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			
-//			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			
+			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			
+			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
 			
 			
-			for (int i = 0; i < 320; i++) {
-				if (i % 16 == 0) {
-					new Missileship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-				}
-				new Fighter(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
-			}
+//			for (int i = 0; i < 320; i++) {
+//				if (i % 16 == 0) {
+//					new Missileship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+//				}
+//				new Fighter(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
+//			}
 			
 			
 			
@@ -2304,6 +2306,12 @@ public class StarshipArena {
 		START_Y = 0;
 		END_X = WORLD_WIDTH;
 		END_Y = WORLD_HEIGHT;
+		//TODO Doing setScreenBounds within the constructor is causing hellish problems. I'll have to do it here again
+		//TODO Note, this will not work if one plans to generate surface ships within the level definition.
+		//TODO Solution is to never spawn surface ships
+		for (int i = 0; i < ships.size(); i++) {
+			ships.get(i).setScreenBounds(getScreenBounds());
+		}
 		
 		//Define dimensions of the space map (which will be used to reutnr to space when needed)
 	    SPACE_START_X = 0;
