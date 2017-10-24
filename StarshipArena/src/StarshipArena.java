@@ -57,11 +57,11 @@ public class StarshipArena {
 	//Game scale: In future, it can be changed in an options menu
 	//TODO Reduce the default numbers by 10x, then set default levelScale to 10
 	//Right now game scale is causing lag, I suspect because of the double multiplication. Thus, try ^
-	double levelScale = 0.4;
+	double levelScale = 1;
 	
 	
-	double WORLD_WIDTH = 260000;
-    double WORLD_HEIGHT = 180000;
+	double WORLD_WIDTH = 260000 * levelScale;
+    double WORLD_HEIGHT = 180000 * levelScale;
     
     //TODO Get rid of all the hardcoded dimensions
     double START_X = 0;
@@ -155,7 +155,7 @@ public class StarshipArena {
 	Clip menuMusic;
 	
 	boolean mute = false;
-	boolean fog = false;
+	boolean fog = true;
 	
 	
 
@@ -1021,7 +1021,8 @@ public class StarshipArena {
 					
 					//Precompute isVisible()
 					for (int i = 0; i < playerList.size(); i++) {
-						playerList.get(i).checkVisible();
+						Player p = playerList.get(i);
+						p.checkVisible(p.getControlledPlanets(), p.getControlledShips());
 					}
 					
 					//Show FOW
@@ -1737,27 +1738,27 @@ public class StarshipArena {
 			new Planet(this, 13500 * levelScale, 10000 * levelScale, 1).setTeam("blue");;
 			new PlanetRadar(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
 			new Planet(this, 30000 * levelScale, 15000 * levelScale, 2).setTeam("red");
-//			new PlanetLaser(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new PlanetLaser(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
 			
-//			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			
-//			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			
-//			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			
+			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			
+			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
 			
 			
-			for (int i = 0; i < 320; i++) {
-				if (i % 16 == 0) {
-					new Missileship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-				}
-				new Fighter(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
-			}
+//			for (int i = 0; i < 320; i++) {
+//				if (i % 16 == 0) {
+//					new Missileship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+//				}
+//				new Fighter(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
+//			}
 			
 			
 			
