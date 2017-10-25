@@ -401,7 +401,8 @@ public class Starship {
 						current_turn_speed = 0;
 						targeted_velocity = max_velocity;
 					}
-					else if ((this instanceof Missileship || this instanceof BasicPod) && this.angle >= (relativeAngle + 359) % 360 && this.angle <= (relativeAngle + 1) % 360) {
+					//TODO Idk what this is doing
+					else if ((this instanceof Missileship || this instanceof BasicPod) && this.angle >= (relativeAngle + 358) % 360 && this.angle <= (relativeAngle + 2) % 360) {
 						targeted_velocity = max_velocity;
 						move_angle = angle;
 					}
