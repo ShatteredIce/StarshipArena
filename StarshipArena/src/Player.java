@@ -80,6 +80,38 @@ public class Player {
 			visiblePlanets.remove(i);
 			i--;
 		}
+		
+		//Visibility of planets checked by similar argument to ships; look below
+		loop2:
+		for (int i = 0; i < game.planets.size(); i++) {
+			Planet planet = game.planets.get(i);
+			if(game.fog == false){
+				visiblePlanets.add(planet);
+				continue;
+			}
+			if(planet.getTeam().equals(this.getTeam())){
+				visiblePlanets.add(planet);
+				continue;
+			}
+			Planet currentPlanet;
+			for (int j = 0; j < this.getControlledPlanets().size(); j++) {
+				currentPlanet = this.getControlledPlanets().get(j);
+				//Here, we check if distance from the edge of the planet we're checking to the planet we're checking against is less than radar range
+				if(game.distance(planet.getX(), planet.getY(), currentPlanet.getX(), currentPlanet.getY()) <= currentPlanet.getRadarRange() + planet.planetSize){
+					visiblePlanets.add(planet);
+					continue loop2;
+				}
+			}
+			Starship currentShip;
+			for (int s = 0; s < this.getControlledShips().size(); s++) {
+				currentShip = this.getControlledShips().get(s);
+				//Again, we only care if the ship can see the outer edge of the planet, not the very center of the planet.
+				if(game.distance(planet.getX(), planet.getY(), currentShip.getX(), currentShip.getY()) <= currentShip.getRadarRange() + planet.planetSize){
+					visiblePlanets.add(planet);
+					continue loop2;
+				}
+			}
+		}
 		loop:
 			//Loop through Starships
 		for (int i = 0; i < game.ships.size(); i++) {
@@ -103,6 +135,14 @@ public class Player {
 					continue loop;
 				}
 			}
+			//We can see all ships that are on planets that we can see (to prevent player confusion: "Where are those missiles coming from?")
+			for (int j = 0; j < visiblePlanets.size(); j++) {
+				currentPlanet = visiblePlanets.get(j);
+				if (game.distance(ship.getX(), ship.getY(), currentPlanet.getX(), currentPlanet.getY()) <= currentPlanet.planetSize) {
+					visibleShips.add(ship);
+					continue loop;
+				}
+			}
 			Starship currentShip;
 			//If any of our starships can see it, ship is visible
 			for (int s = 0; s < controlledShips.size(); s++) {
@@ -110,35 +150,6 @@ public class Player {
 				if(game.distance(ship.getX(), ship.getY(), currentShip.getX(), currentShip.getY()) <= currentShip.getRadarRange()){
 					visibleShips.add(ship);
 					continue loop;
-				}
-			}
-		}
-		//Visibility of planets checked by similar argument
-		loop2:
-		for (int i = 0; i < game.planets.size(); i++) {
-			Planet planet = game.planets.get(i);
-			if(game.fog == false){
-				visiblePlanets.add(planet);
-				continue;
-			}
-			if(planet.getTeam().equals(this.getTeam())){
-				visiblePlanets.add(planet);
-				continue;
-			}
-			Planet currentPlanet;
-			for (int j = 0; j < this.getControlledPlanets().size(); j++) {
-				currentPlanet = this.getControlledPlanets().get(j);
-				if(game.distance(planet.getX(), planet.getY(), currentPlanet.getX(), currentPlanet.getY()) <= currentPlanet.getRadarRange()){
-					visiblePlanets.add(planet);
-					continue loop2;
-				}
-			}
-			Starship currentShip;
-			for (int s = 0; s < this.getControlledShips().size(); s++) {
-				currentShip = this.getControlledShips().get(s);
-				if(game.distance(planet.getX(), planet.getY(), currentShip.getX(), currentShip.getY()) <= currentShip.getRadarRange()){
-					visiblePlanets.add(planet);
-					continue loop2;
 				}
 			}
 		}

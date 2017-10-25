@@ -80,6 +80,7 @@ public class MissilePod extends BasicPod{
 		else{
 			tex2.bind();
 		}
+		setTextureCoords(0,0,1,1);
 	}
 	
 	public void setTextureCoords(){
