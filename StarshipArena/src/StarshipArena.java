@@ -438,18 +438,25 @@ public class StarshipArena {
 						if (!alreadyHave) typesSelected.add(ships.get(i));
 					}
 				}
+				//If we already have ships selected, only select ships of the same type
+				//Also check if the ships are on the same surface by checking X and Y bounds
 				if (typesSelected.size() > 0) {
 					for (int i = 0; i < ships.size(); i++) {
 						for (int j = 0; j < typesSelected.size(); j++) {
 							if (typesSelected.get(j).getClass().equals(ships.get(i).getClass())
-									&& typesSelected.get(j).getTeam().equals(ships.get(i).getTeam()))
+									&& typesSelected.get(j).getTeam().equals(ships.get(i).getTeam())
+									&& currentMin_Y == ships.get(i).y_min
+									&& currentMin_X == ships.get(i).x_min)
 								ships.get(i).setSelected(true);
 						}
 					}
 				}
+				//If no ships selected, select all allied ships
 				else {
 					for (int i = 0; i < ships.size(); i++) {
-						if (ships.get(i).getTeam().equals(player.getTeam()) && !(ships.get(i) instanceof BasicPod)){
+						if (ships.get(i).getTeam().equals(player.getTeam()) && !(ships.get(i) instanceof BasicPod) 
+								&& currentMin_Y == ships.get(i).y_min
+								&& currentMin_X == ships.get(i).x_min){
 							ships.get(i).setSelected(true);
 						}
 					}
@@ -2316,6 +2323,8 @@ public class StarshipArena {
 			
 		}
 		//Define current dimensions of the map being observed (space by default)
+		//TODO Try making some of the below (e.g. plant surface creation) functions, so they
+		//can be conveniently called in the above if statements
 		currentMin_X = 0;
 		currentMin_Y = 0;
 		currentMax_X = WORLD_WIDTH;

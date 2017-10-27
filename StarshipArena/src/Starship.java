@@ -371,7 +371,7 @@ public class Starship {
 		if(locationTarget != null){
 			double relativeAngle = game.angleToPoint(this.getX(), this.getY(), locationTarget.X(), locationTarget.Y());
 			//TODO Debug here
-			if (selected) System.out.println("Target angle: " + relativeAngle);
+//			if (selected) System.out.println("Target angle: " + relativeAngle);
 			
 			double distance = distance(this.getX(), this.getY(), locationTarget.X(), locationTarget.Y());
 			double leftBearing = getTurnDistance(relativeAngle, true);
@@ -403,7 +403,7 @@ public class Starship {
 					//If the ship is within 1 angle of the proper movement angle, don't turn in order to save wobbling headaches
 					double howFarOff = Math.abs(this.move_angle - relativeAngle);
 					//TODO Debug
-					if (selected) System.out.println("Difference angle: " + howFarOff);
+//					if (selected) System.out.println("Difference angle: " + howFarOff);
 					if (howFarOff <= 1 || howFarOff >= 359) {
 					//if(Math.min(leftBearing, rightBearing) < 2){
 						current_turn_speed = 0;
