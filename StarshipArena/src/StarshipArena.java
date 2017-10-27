@@ -1417,7 +1417,7 @@ public class StarshipArena {
 					//true window coordinates
 					xpos.put(2, xpos.get(0) - windowXOffset);
 					ypos.put(2, (WINDOW_HEIGHT - ypos.get(0) + windowYOffset));
-				System.out.println(xpos.get(2) + " " + ypos.get(2));
+//				System.out.println(xpos.get(2) + " " + ypos.get(2));
 				//Check which direction the camera should move, and move accordingly
 				if (panLeft || (xpos.get(2) == 0))
 					viewX = Math.max(currentMin_X, viewX - cameraWidth / 30);
@@ -1429,7 +1429,7 @@ public class StarshipArena {
 					viewY = Math.min(currentMax_Y - cameraHeight, viewY + cameraHeight / 30);
 				
 				window.swapBuffers();
-				System.out.println(Instant.now().compareTo(time) / 1000000);
+//				System.out.println(Instant.now().compareTo(time) / 1000000);
 				}
 
 			}

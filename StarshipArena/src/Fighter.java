@@ -8,7 +8,7 @@ public class Fighter extends Starship{
 	
 	//weaponry
 	static double primary_damage = 4;
-	static int primary_cooldown = 90;
+	static int primary_cooldown = 60;
 	static int primary_spread = 5;
 	static int primary_accuracy = 95;
 	static int primary_range = 700;

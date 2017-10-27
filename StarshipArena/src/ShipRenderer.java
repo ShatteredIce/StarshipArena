@@ -60,6 +60,8 @@ public class ShipRenderer {
 		for (Starship s : selected) {
 			updateTrueCenter(s);
 			drawHPBar(s);
+			System.out.println("Ship angle: " + s.angle);
+			System.out.println("Ship targeted velocity: " + s.targeted_velocity);
 		}
 	}
 	

@@ -6,7 +6,7 @@ public class BasicPod extends Starship{
 	static Texture tex2 = new Texture("blue_basicpod.png");
 	
 	static double primary_damage = 2;
-	static int primary_cooldown = 100;
+	static int primary_cooldown = 15;
 	static int primary_spread = 10;
 	static int primary_accuracy = 99;
 	static int primary_range = 1500;

@@ -37,7 +37,7 @@ public class Sniper extends Starship{
 		//movement
 		acceleration = 0.1;
 //		max_velocity = 4.5;
-		max_velocity = 10;
+		max_velocity = 8;
 		max_reverse_velocity = -2;
 		min_turn_velocity = 1;
 		max_turn_speed = 3;
@@ -80,6 +80,7 @@ public class Sniper extends Starship{
 //	}
 	//TODO This should be roughly right?
 	public void setTexture(){
+		missileship_sprites.bind();
 		if(team.equals("blue")){
 			if(current_velocity > 4){
 				setTextureCoords(0.75, 0, 1, 0.5);
