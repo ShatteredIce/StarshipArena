@@ -182,15 +182,40 @@ public class Missileship extends Starship{
 	
 	public void doRandomMovement(){
 		super.doRandomMovement();
-		if(target != null && target.getHealth() <= 0){
-			target = null;
+		//Ignore checks if we are direct targeting
+		if (!directTarget) {
+			if(target != null && target.getHealth() <= 0){
+				target = null;
+			}
+			getClosestEnemy();
 		}
-		getClosestEnemy();
-		moveToLocation();
+		//if we have a location and attack move is false
+		if(locationTarget != null && attackMove == false){
+			moveToLocation();
+		}
+		//if we have no target
+		else if(target == null){
+			moveToLocation();
+		}
+		else {
+			//If we have a target and we are attack moving, stop moving.
+			if (attackMove) {
+				targeted_velocity = 0;
+			}
+			//If we are not attack moving but have a direct target, move to engage them.
+			if (directTarget && distance(getX(), getY(), target.getX(), target.getY()) > scan_range) {
+				lockPosition = false;
+				locationTarget = new Point(target.getX(), target.getY());
+				moveToLocation();
+			}
+		}
 			
 //		moveTurrets();
 		edgeGuard();
-		getClosestEnemy();
+		//Again, ignore checks if not direct targeting
+		if (!directTarget) {
+			getClosestEnemy();
+		}
 	}
 	
 	//gets the closest enemy and changes target accordingly

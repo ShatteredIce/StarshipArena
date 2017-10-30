@@ -251,13 +251,16 @@ public class Starship {
 	//The superclass' doRandomMovement makes sure every ship class processes its command queue before executing its default behavior.
 	//TODO For every ship, I must teach it how to deal with directTarget
 	public void doRandomMovement(){
+		//If ship has commands:
 		if (!commands.isEmpty()) {
 			Command command = commands.get(0);
+			//If the command is a location target, tell the ship to move there (apply modifiers e.g. alt for attack-move).
 			if (command.isLocationTarget) {
 				locationTarget = command.locationTarget;
 				isDirectTarget(false);
 				setAttackMove(command.alt);
 				setLockPosition(command.t);
+				//If the command is complete (we have moved to the location/turned to face the direction if it's a turn command), remove it.
 				if (!lockPosition && distance(this.getX(), this.getY(), locationTarget.X(), locationTarget.Y()) < 50)
 					commands.remove(0);
 				else if (lockPosition) {
@@ -270,8 +273,10 @@ public class Starship {
 				}
 			}
 			else {
+				//Otherwise, we are targeting a ship. Direct target it.
 				target = command.target;
 				isDirectTarget(true);
+				//If command is a direct target, in theory we can ignore modifiers. But read them in just in case.
 				setAttackMove(command.alt);
 				setLockPosition(command.t);
 				if (target == null || target.getHealth() <= 0 || !game.isVisible(target, this.getTeam()))
