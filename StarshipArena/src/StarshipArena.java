@@ -1348,6 +1348,8 @@ public class StarshipArena {
 					}
 				}
 				else {
+					//Given that we know that no ships are selected, set shipTracking to false.
+					shipTracking = false;
 					writeText("Blue", 100, 15, 30);
 					writeText("Red", 1100, 15, 30);
 					int blueResources = 0;
@@ -1426,15 +1428,22 @@ public class StarshipArena {
 					ypos.put(2, (WINDOW_HEIGHT - ypos.get(0) + windowYOffset));
 //				System.out.println(xpos.get(2) + " " + ypos.get(2));
 				//Check which direction the camera should move, and move accordingly
-				if (panLeft || (xpos.get(2) == 0))
+				if (panLeft || (xpos.get(2) == 0)) {
 					viewX = Math.max(currentMin_X, viewX - cameraWidth / 30);
-				if (panRight || (xpos.get(2) == WINDOW_WIDTH))
+					shipTracking = false;
+				}
+				if (panRight || (xpos.get(2) == WINDOW_WIDTH)) {
 					viewX = Math.min(currentMax_X - cameraWidth, viewX + cameraWidth / 30);
-				if (panDown || (ypos.get(2) == 0))
+					shipTracking = false;
+				}
+				if (panDown || (ypos.get(2) == 0)) {
 					viewY = Math.max((int) (currentMin_Y - 150 * getHeightScalar()), viewY - cameraHeight / 30);
-				if (panUp || (ypos.get(2) == WINDOW_HEIGHT))
+					shipTracking = false;
+				}
+				if (panUp || (ypos.get(2) == WINDOW_HEIGHT)) {
 					viewY = Math.min(currentMax_Y - cameraHeight, viewY + cameraHeight / 30);
-				
+					shipTracking = false;
+				}
 				window.swapBuffers();
 //				System.out.println(Instant.now().compareTo(time) / 1000000);
 				}
