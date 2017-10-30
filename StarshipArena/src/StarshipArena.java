@@ -438,18 +438,25 @@ public class StarshipArena {
 						if (!alreadyHave) typesSelected.add(ships.get(i));
 					}
 				}
+				//If we already have ships selected, only select ships of the same type
+				//Also check if the ships are on the same surface by checking X and Y bounds
 				if (typesSelected.size() > 0) {
 					for (int i = 0; i < ships.size(); i++) {
 						for (int j = 0; j < typesSelected.size(); j++) {
 							if (typesSelected.get(j).getClass().equals(ships.get(i).getClass())
-									&& typesSelected.get(j).getTeam().equals(ships.get(i).getTeam()))
+									&& typesSelected.get(j).getTeam().equals(ships.get(i).getTeam())
+									&& currentMin_Y == ships.get(i).y_min
+									&& currentMin_X == ships.get(i).x_min)
 								ships.get(i).setSelected(true);
 						}
 					}
 				}
+				//If no ships selected, select all allied ships
 				else {
 					for (int i = 0; i < ships.size(); i++) {
-						if (ships.get(i).getTeam().equals(player.getTeam()) && !(ships.get(i) instanceof BasicPod)){
+						if (ships.get(i).getTeam().equals(player.getTeam()) && !(ships.get(i) instanceof BasicPod) 
+								&& currentMin_Y == ships.get(i).y_min
+								&& currentMin_X == ships.get(i).x_min){
 							ships.get(i).setSelected(true);
 						}
 					}
@@ -1341,6 +1348,8 @@ public class StarshipArena {
 					}
 				}
 				else {
+					//Given that we know that no ships are selected, set shipTracking to false.
+					shipTracking = false;
 					writeText("Blue", 100, 15, 30);
 					writeText("Red", 1100, 15, 30);
 					int blueResources = 0;
@@ -1419,15 +1428,22 @@ public class StarshipArena {
 					ypos.put(2, (WINDOW_HEIGHT - ypos.get(0) + windowYOffset));
 //				System.out.println(xpos.get(2) + " " + ypos.get(2));
 				//Check which direction the camera should move, and move accordingly
-				if (panLeft || (xpos.get(2) == 0))
+				if (panLeft || (xpos.get(2) == 0)) {
 					viewX = Math.max(currentMin_X, viewX - cameraWidth / 30);
-				if (panRight || (xpos.get(2) == WINDOW_WIDTH))
+					shipTracking = false;
+				}
+				if (panRight || (xpos.get(2) == WINDOW_WIDTH)) {
 					viewX = Math.min(currentMax_X - cameraWidth, viewX + cameraWidth / 30);
-				if (panDown || (ypos.get(2) == 0))
+					shipTracking = false;
+				}
+				if (panDown || (ypos.get(2) == 0)) {
 					viewY = Math.max((int) (currentMin_Y - 150 * getHeightScalar()), viewY - cameraHeight / 30);
-				if (panUp || (ypos.get(2) == WINDOW_HEIGHT))
+					shipTracking = false;
+				}
+				if (panUp || (ypos.get(2) == WINDOW_HEIGHT)) {
 					viewY = Math.min(currentMax_Y - cameraHeight, viewY + cameraHeight / 30);
-				
+					shipTracking = false;
+				}
 				window.swapBuffers();
 //				System.out.println(Instant.now().compareTo(time) / 1000000);
 				}
@@ -2316,6 +2332,8 @@ public class StarshipArena {
 			
 		}
 		//Define current dimensions of the map being observed (space by default)
+		//TODO Try making some of the below (e.g. plant surface creation) functions, so they
+		//can be conveniently called in the above if statements
 		currentMin_X = 0;
 		currentMin_Y = 0;
 		currentMax_X = WORLD_WIDTH;
