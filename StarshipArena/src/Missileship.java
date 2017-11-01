@@ -193,8 +193,8 @@ public class Missileship extends Starship{
 		if(!attackMove && !directTarget){
 			moveToLocation();
 		}
-		//if we have no target
-		else if(target == null){
+		//if we have no target or target not close enough
+		else if(!directTarget && (target == null || distance(getX(), getY(), target.getX(), target.getY()) > scan_range * 0.9)){
 			moveToLocation();
 		}
 		//Else, we must be attack moving and/or direct targeting.

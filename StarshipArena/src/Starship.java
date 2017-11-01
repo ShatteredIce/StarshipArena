@@ -407,6 +407,7 @@ public class Starship {
 					
 					//If the ship is within 1 angle of the proper movement angle, don't turn in order to save wobbling headaches
 					double howFarOff = Math.abs(this.move_angle - relativeAngle);
+					double slowShipHowFarOff = Math.abs(this.angle - relativeAngle);
 					//TODO Debug
 //					if (selected) System.out.println("Difference angle: " + howFarOff);
 					if (howFarOff <= 1 || howFarOff >= 359) {
@@ -414,7 +415,7 @@ public class Starship {
 						current_turn_speed = 0;
 						targeted_velocity = max_velocity;
 					}
-					else if ((this instanceof Missileship || this instanceof BasicPod) && (howFarOff <= 1 || howFarOff >= 359)) {
+					else if ((this instanceof Missileship || this instanceof BasicPod) && (slowShipHowFarOff <= 1 || slowShipHowFarOff >= 359)) {
 						targeted_velocity = max_velocity;
 						move_angle = angle;
 					}

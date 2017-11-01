@@ -113,7 +113,8 @@ public class Missile extends Projectile {
 			target = null;
 		}
 		//get a new target if missile has no target or target is far away AND missile is not direct targeting
-		if(!directTarget && (target == null || game.distance(center.X(), center.Y(), target.getX(), target.getY()) >= scan_range / 2)){
+		//Corner case of a direct targeted ship being dead: Check this and attempt to redirect missiles
+		if(target == null || (!directTarget && game.distance(center.X(), center.Y(), target.getX(), target.getY()) >= scan_range / 2)){
 			getClosestEnemy();
 		}
 		if (target != null) {
