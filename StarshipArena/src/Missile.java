@@ -16,10 +16,16 @@ public class Missile extends Projectile {
 	double max_turn_speed = 0.5;
 	//weaponry
 	int scan_range = 4000;
+	boolean directTarget = false;
 
-	public Missile(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newdamage, double spawnangle, int accuracy, double newspeed, double newlifetime, int id) {
+	public Missile(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newdamage, double spawnangle, int accuracy, double newspeed, double newlifetime, int id, Starship newtarget) {
 		super(mygame, newowner, myteam, spawnx, spawny, newdamage, spawnangle, accuracy, newspeed, newlifetime, id);
 		max_velocity = newspeed;
+		//If the owner ship was direct targeting a ship, its missiles should home towards that ship.
+		if (newtarget != null) {
+			target = newtarget;
+			directTarget = true;
+		}
 	}
 	
 	public void destroy(Starship victim){
@@ -106,8 +112,9 @@ public class Missile extends Projectile {
 		if(target != null && target.getHealth() <= 0){
 			target = null;
 		}
-		//get a new target if fighter has no target or target is far away
-		if(target == null || game.distance(center.X(), center.Y(), target.getX(), target.getY()) >= scan_range / 2){
+		//get a new target if missile has no target or target is far away AND missile is not direct targeting
+		//Corner case of a direct targeted ship being dead: Check this and attempt to redirect missiles
+		if(target == null || (!directTarget && game.distance(center.X(), center.Y(), target.getX(), target.getY()) >= scan_range / 2)){
 			getClosestEnemy();
 		}
 		if (target != null) {

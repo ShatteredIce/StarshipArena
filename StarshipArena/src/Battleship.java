@@ -230,15 +230,61 @@ public class Battleship extends Starship{
 	
 	public void doRandomMovement(){
 		super.doRandomMovement();
-		if(target != null && target.getHealth() <= 0){
-			target = null;
+		//Ignore checks if we are direct targeting; super will take care of that
+		if (!directTarget) {
+			if(target != null && target.getHealth() <= 0){
+				target = null;
+			}
+			getClosestEnemy();
 		}
-		getClosestEnemy();
-		moveToLocation();
+		//if we have a location and attack move is false and we are not direct targeting anyone
+		if(locationTarget != null && !attackMove && !directTarget){
+			moveToLocation();
+		}
+		//if we have no target or target not close enough
+		else if(locationTarget != null && (target == null || distance(getX(), getY(), target.getX(), target.getY()) > range3 * 0.9)){
+			moveToLocation();
+		}
+		//Else, we must be attack moving and/or direct targeting.
+		else {
+			//If we have a target and we are attack moving, stop moving.
+			if (attackMove) {
+				locationTarget = new Point(target.getX(), target.getY());
+				lockPosition = true;
+				moveToLocation();
+			}
+			//If we are not attack moving but have a direct target, move to engage them.
+			if (directTarget) {
+				locationTarget = new Point(target.getX(), target.getY());
+				//If we are not close enough, move towards them
+				if (distance(getX(), getY(), target.getX(), target.getY()) > range3) {
+					lockPosition = false;
+				}
+				//Else, turn to face target
+				else {
+					lockPosition = true;
+				}
+				moveToLocation();
+//				System.out.println("Missileship distance to: " + (distance(getX(), getY(), target.getX(), target.getY()) - scan_range));
+			}
+			//Final case: Battleship acquires a close range target while idle. Turn to face and destroy
+			else if (target != null && distance(getX(), getY(), target.getX(), target.getY()) < range3 * 0.9){
+				locationTarget = new Point(target.getX(), target.getY());
+				lockPosition = true;
+				moveToLocation();
+			}
+			//Prevent breaking?
+			else {
+				locationTarget = null;
+				moveToLocation();
+			}
+		}
 			
-//		moveTurrets();
 		edgeGuard();
-		getClosestEnemy();
+		//Again, ignore checks if not direct targeting
+		if (!directTarget) {
+			getClosestEnemy();
+		}
 	}
 	
 	/* TODO If Battleship has various weapons of different range, I will have to add a boolean "detached" to Turret

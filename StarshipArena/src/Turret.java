@@ -218,7 +218,9 @@ public class Turret {
 		}
 		//launch missile and sfx
 		else if (projectile_type == 4){
-			new Missile(game, owner, team, center.X(), center.Y(), projectile_damage, (newAngle + angleOff + 360) % 360, accuracy, projectile_speed, projectile_lifetime, projectile_type);
+			if (owner.directTarget)
+				new Missile(game, owner, team, center.X(), center.Y(), projectile_damage, (newAngle + angleOff + 360) % 360, accuracy, projectile_speed, projectile_lifetime, projectile_type, owner.target);
+			else new Missile(game, owner, team, center.X(), center.Y(), projectile_damage, (newAngle + angleOff + 360) % 360, accuracy, projectile_speed, projectile_lifetime, projectile_type, null);
 			if (game.mute) return;
 			for (int i = 10; i < 15; i++) {
 				if (!game.soundEffects[i].isRunning()) {
