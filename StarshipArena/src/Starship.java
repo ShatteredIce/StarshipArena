@@ -7,8 +7,6 @@ public class Starship {
 	
 	//Command queues: String commands paired with Point and Starship arrays
 	ArrayList<Command> commands = new ArrayList<Command>();
-	ArrayList<Point> locationTargets = new ArrayList<Point>();
-	ArrayList<Starship> targets = new ArrayList<Starship>();
 	
 	int damageDisplayDelay = 0;
 	Starship target = null;
@@ -288,6 +286,8 @@ public class Starship {
 			setAttackMove(false);
 			setLockPosition(false);
 			isDirectTarget(false);
+			//Will this help or screw up things?
+			locationTarget = null;
 		}
 	}
 	

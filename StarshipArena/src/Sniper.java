@@ -164,16 +164,65 @@ public class Sniper extends Starship{
 	
 	
 	public void doRandomMovement(){
+
 		super.doRandomMovement();
-		if(target != null && target.getHealth() <= 0){
-			target = null;
+		//Ignore checks if we are direct targeting; super will take care of that
+		if (!directTarget) {
+			if(target != null && target.getHealth() <= 0){
+				target = null;
+			}
+			getClosestEnemy();
 		}
-		getClosestEnemy();
-		moveToLocation();
+		//if we have a location and attack move is false and we are not direct targeting anyone
+		if(!attackMove && !directTarget){
+			moveToLocation();
+		}
+		//if we have no target
+		else if(target == null){
+			moveToLocation();
+		}
+		//Else, we must be attack moving and/or direct targeting.
+		else {
+			//If we have a target and we are attack moving, stop moving.
+			if (attackMove) {
+				targeted_velocity = 0;
+			}
+			//If we are not attack moving but have a direct target, move to engage them.
+			if (directTarget) {
+				//If we are not close enough, move towards them
+				if (distance(getX(), getY(), target.getX(), target.getY()) > scan_range) {
+					lockPosition = false;
+					locationTarget = new Point(target.getX(), target.getY());
+				}
+				//Else, stop moving towards them
+				else {
+					lockPosition = false;
+					locationTarget = null;
+				}
+				moveToLocation();
+//				System.out.println("Missileship distance to: " + (distance(getX(), getY(), target.getX(), target.getY()) - scan_range));
+			}
+		}
 			
 //		moveTurrets();
 		edgeGuard();
-		getClosestEnemy();
+		//Again, ignore checks if not direct targeting
+		if (!directTarget) {
+			getClosestEnemy();
+		}
+	
+		
+		
+//		super.doRandomMovement();
+//		if(target != null && target.getHealth() <= 0){
+//			target = null;
+//		}
+//		getClosestEnemy();
+//		moveToLocation();
+//			
+////		moveTurrets();
+//		edgeGuard();
+//		getClosestEnemy();
 	}
 	
 	/* TODO If Sniper has various weapons of different range (probs won't), I will have to add a boolean "detached" to Turret
