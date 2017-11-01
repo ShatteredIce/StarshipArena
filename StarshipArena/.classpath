@@ -123,5 +123,6 @@
 	<classpathentry kind="lib" path="lib/lwjgl-release-3.1.1-custom/lwjgl-xxhash-sources.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl-release-3.1.1-custom/lwjgl-xxhash.jar"/>
 	<classpathentry kind="lib" path="lib/lwjgl-release-3.1.1-custom/lwjgl.jar"/>
+	<classpathentry kind="lib" path="lib/slick-util.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
