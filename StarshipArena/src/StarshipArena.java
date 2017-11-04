@@ -25,9 +25,6 @@
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.TrueTypeFont;
-
 import java.nio.*;
 import java.time.Instant;
 
@@ -39,7 +36,6 @@ import java.util.Random;
 
 import javax.sound.sampled.*;
 
-import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
 
@@ -203,9 +199,6 @@ public class StarshipArena {
 	Layer border3;
 	Layer border4;
 	
-	//Slick fonts and text
-	TrueTypeFont font;
-	
 	Layer victoryMessage;
 	Layer defeatMessage;
 	Button nextLevelButton = new Button(WINDOW_WIDTH / 2 - 70, WINDOW_HEIGHT / 2 + 5, WINDOW_WIDTH / 2 + 70, WINDOW_HEIGHT / 2 - 25);
@@ -304,6 +297,7 @@ public class StarshipArena {
 //				FloatControl gainControl = (FloatControl) soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
 //				gainControl.setValue(1.0f); // Increase volume by a number of decibels.
 			}
+			
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
@@ -949,13 +943,6 @@ public class StarshipArena {
 				
 		genTiles();
 
-		//TODO Debug
-		//Create Times New Roman font
-		Font tNRoman = new Font("Times New Roman", Font.PLAIN, 12);
-		System.out.println("Font reached before");
-		font = new TrueTypeFont(tNRoman, false);
-		System.out.println("Font reached after");
-		
 		// Run the rendering loop until the user has attempted to close
 		// the window or has pressed the ESCAPE key.
 		int slowCounter = 0;
@@ -2784,11 +2771,9 @@ public class StarshipArena {
 	}
 	
 	public void writeText(String newText, int startx, int starty, int textSize) {
-//		for (int i = 0; i < newText.length(); i++) {
-//			new BitmapFontLetter(this, newText.charAt(i), startx + i * textSize, starty, textSize);
-//		 }
-		Color.white.bind();
-		font.drawString(startx, starty, newText, Color.black);
+		for (int i = 0; i < newText.length(); i++) {
+			new BitmapFontLetter(this, newText.charAt(i), startx + i * textSize, starty, textSize);
+		 }
 	}
 	
 	//Add audio clip. Used for explosions.
