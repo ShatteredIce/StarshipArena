@@ -5,13 +5,13 @@ public class BasicPod extends Starship{
 	static Texture tex1 = new Texture("red_basicpod.png");
 	static Texture tex2 = new Texture("blue_basicpod.png");
 	
-	static double primary_damage = 2;
-	static int primary_cooldown = 15;
+	static double primary_damage = 4;
+	static int primary_cooldown = 20;
 	static int primary_spread = 10;
 	static int primary_accuracy = 99;
-	static int primary_range = 1500;
+	static int primary_range = 2200;
 	static int primary_speed = 15;
-	static int primary_lifetime = 1500;
+	static int primary_lifetime = 2300;
 	static int primary_xoffset = 0;
 	static int primary_yoffset = 20;
 	int primary_id = 0;
@@ -30,7 +30,7 @@ public class BasicPod extends Starship{
 	
 	public void shipStats(){
 		max_health = 40;
-		scan_range = primary_range * 3/4;
+		scan_range = primary_range - 20;
 		radar_range = primary_range;
 		//movement
 		acceleration = 0.1;

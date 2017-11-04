@@ -66,12 +66,14 @@ public class ShipRenderer {
 		}
 	}
 	
-	public void drawHPBar(Starship s){	
+	public void drawHPBar(Starship s){
+		//The Math.mins limit HP bar's maximum width to 120 * 3 = 360
 		setColor(-1); //base color
-		setModel(currentShipTrueCenter.X() - (s.getMaxHealth() / 2) * 3, currentShipTrueCenter.Y() - s.getClickRadius(), currentShipTrueCenter.X() + (s.getMaxHealth() / 2) * 3, currentShipTrueCenter.Y() - s.getClickRadius() - 10);
+		setModel(currentShipTrueCenter.X() - (Math.min(60, s.getMaxHealth() / 2)) * 3, currentShipTrueCenter.Y() - s.getClickRadius(), currentShipTrueCenter.X() + (Math.min(60, s.getMaxHealth() / 2)) * 3, currentShipTrueCenter.Y() - s.getClickRadius() - 10);
 	
 		setColor(s.getHealth()/s.getMaxHealth()); //color based on hp remaining
-		setModel(currentShipTrueCenter.X() - (s.getMaxHealth() / 2) * 3, currentShipTrueCenter.Y() - s.getClickRadius(), currentShipTrueCenter.X() + (s.getHealth() - s.getMaxHealth() / 2) * 3, currentShipTrueCenter.Y() - s.getClickRadius() - 10);
+		setModel(currentShipTrueCenter.X() - (Math.min(60, s.getMaxHealth() / 2)) * 3, currentShipTrueCenter.Y() - s.getClickRadius(), currentShipTrueCenter.X() + 
+				(Math.abs(s.getHealth() - s.getMaxHealth() / 2) / (s.getMaxHealth() / 2) * 60 < Math.abs(s.getHealth() - s.getMaxHealth() / 2) ? (s.getHealth() - s.getMaxHealth() / 2) / (s.getMaxHealth() / 2) * 60 : s.getHealth() - s.getMaxHealth() / 2) * 3, currentShipTrueCenter.Y() - s.getClickRadius() - 10);
 	}
 	
 	public void drawAllShipHalos(ArrayList<Starship> selected){

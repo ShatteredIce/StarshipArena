@@ -29,7 +29,7 @@ public class PlanetLaser extends Starship{
 	
 	public void shipStats(){
 		max_health = 100;
-		scan_range = primary_range;
+		scan_range = primary_range - 20;
 		radar_range = primary_range;
 		//movement
 		acceleration = 0;

@@ -31,7 +31,7 @@ public class MissilePod extends BasicPod{
 	
 	public void shipStats(){
 		max_health = 80;
-		scan_range = primary_range * 3/4;
+		scan_range = primary_range - 20;
 		radar_range = primary_range;
 		//movement
 		acceleration = 0.1;

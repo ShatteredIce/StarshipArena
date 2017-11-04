@@ -34,8 +34,8 @@ public class Battleship extends Starship{
 	//"Plasma hose" - Triple plasma
 	static double damage3 = 4;
 	static int cooldown3 = 15;
-	static int spread3 = 15;
-	static int accuracy3 = 95;
+	static int spread3 = 5;
+	static int accuracy3 = 100;
 	static int range3 = 1000;
 	static int speed3 = 20;
 	static int lifetime3 = 900;
@@ -114,19 +114,19 @@ public class Battleship extends Starship{
 		
 		
 		Turret turret3_1 = new Turret(game, this, team, 0, 0, angle, damage3, cooldown3, 
-				spread3, accuracy3, range3, speed3, lifetime3, id3, 0, 1);
+				spread3, accuracy3, range3, speed3, lifetime3, id3, 0, 0);
 //		primaryTurret2.setOffset(primary_xoffset - 25, primary_yoffset + 20, -5);
 		turret3_1.setOffset(-xoffset3, yoffset3);
 		turrets.add(turret3_1);
 		
 		Turret turret3_2 = new Turret(game, this, team, 0, 0, angle, damage3, cooldown3, 
-				spread3, accuracy3, range3, speed3, lifetime3, id3, 0, 1);
+				spread3, accuracy3, range3, speed3, lifetime3, id3, 0, 0);
 //		primaryTurret1.setOffset(primary_xoffset + 25, primary_yoffset + 20, -15);
-		turret3_2.setOffset(0, yoffset3);
+		turret3_2.setOffset(0, yoffset3 + 20);
 		turrets.add(turret3_2);
 		
 		Turret turret3_3 = new Turret(game, this, team, 0, 0, angle, damage3, cooldown3, 
-				spread3, accuracy3, range3, speed3, lifetime3, id3, 0, 1);
+				spread3, accuracy3, range3, speed3, lifetime3, id3, 0, 0);
 //		primaryTurret2.setOffset(primary_xoffset - 25, primary_yoffset + 20, -5);
 		turret3_3.setOffset(xoffset3, yoffset3);
 		turrets.add(turret3_3);

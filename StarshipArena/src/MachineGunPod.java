@@ -5,12 +5,12 @@ public class MachineGunPod extends BasicPod{
 	static Texture tex2 = new Texture("blue_machinegunpod.png");
 	
 	static double primary_damage = 1;
-	static int primary_cooldown = 8;
+	static int primary_cooldown = 4;
 	static int primary_spread = 20;
-	static int primary_accuracy = 95;
-	static int primary_range = 1200;
+	static int primary_accuracy = 99;
+	static int primary_range = 1600;
 	static int primary_speed = 15;
-	static int primary_lifetime = 1200;
+	static int primary_lifetime = 1700;
 	static int primary_xoffset = 15;
 	static int primary_yoffset = 20;
 	static int primary_id = 3;
@@ -30,7 +30,7 @@ public class MachineGunPod extends BasicPod{
 	
 	public void shipStats(){
 		max_health = 45;
-		scan_range = primary_range * 3/4;
+		scan_range = primary_range - 20;
 		radar_range = primary_range;
 		//movement
 		acceleration = 0.1;

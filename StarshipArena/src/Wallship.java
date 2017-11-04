@@ -9,13 +9,13 @@ public class Wallship extends Starship{
 	
 	//TODO Wallship should have two Interceptor-type 180 degree autoaim mguns
 	static double primary_damage = 1;
-	static int primary_cooldown = 20;
+	static int primary_cooldown = 10;
 	static int primary_spread = 150;
 	static int primary_accuracy = 97;
-	static int primary_range = 500;
+	static int primary_range = 700;
 	static int primary_speed = 20; 
-	static int primary_lifetime = 600;
-	static int primary_xoffset = -50;
+	static int primary_lifetime = 650;
+	static int primary_xoffset = -30;
 	static int primary_yoffset = 30;
 	static int primary_id = 3;
 	
@@ -32,7 +32,7 @@ public class Wallship extends Starship{
 	}
 	//Stats were modified
 	public void shipStats(){
-		max_health = 120;
+		max_health = 500;
 		//movement
 		acceleration = 0.1;
 		max_velocity = 6;
@@ -40,7 +40,7 @@ public class Wallship extends Starship{
 		min_turn_velocity = 1;
 		max_turn_speed = 2;
 		//weaponry
-		scan_range = 500;
+		scan_range = 700;
 		radar_range = 1000;
 		//other
 		clickRadius = 110;
@@ -69,6 +69,17 @@ public class Wallship extends Starship{
 //		primaryTurret2.setOffset(primary_xoffset - 25, primary_yoffset + 20, -5);
 		primaryTurret2.setOffset(primary_xoffset, primary_yoffset);
 		turrets.add(primaryTurret2);
+		Turret primaryTurret3 = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
+				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 0, 1);
+//		primaryTurret1.setOffset(primary_xoffset + 25, primary_yoffset + 20, -15);
+		primaryTurret3.setOffset(-2 * primary_xoffset, primary_yoffset);
+		turrets.add(primaryTurret3);
+		
+		Turret primaryTurret4 = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
+				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 0, 1);
+//		primaryTurret2.setOffset(primary_xoffset - 25, primary_yoffset + 20, -5);
+		primaryTurret4.setOffset(2 * primary_xoffset, primary_yoffset);
+		turrets.add(primaryTurret4);
 	}
 	
 //	public void moveTurrets(){
