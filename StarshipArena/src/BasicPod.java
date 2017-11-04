@@ -83,10 +83,10 @@ public class BasicPod extends Starship{
 				double leftBearing = getTurnDistance(relativeAngle, true);
 				double rightBearing = getTurnDistance(relativeAngle, false);
 				if(leftBearing <= rightBearing){ //turn left
-					current_turn_speed = max_turn_speed;
+					current_turn_speed = Math.min(max_turn_speed, (Math.round(relativeAngle) - this.angle + 3600) % 360);
 				}
 				else{ //turn right
-					current_turn_speed = -max_turn_speed;
+					current_turn_speed = Math.max(-max_turn_speed, -((this.angle - Math.round(relativeAngle) + 3600) % 360));
 				}
 			}
 			else{

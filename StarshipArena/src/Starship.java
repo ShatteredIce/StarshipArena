@@ -385,13 +385,15 @@ public class Starship {
 				if(leftBearing < max_turn_speed || rightBearing < max_turn_speed){
 					lockPosition = false;
 					locationTarget = null;
+					//TODO Debug
+					if (this instanceof Battleship) System.out.println("Battleship stopped turning");
 				}
 				//adjust angle
 				else if(leftBearing <= rightBearing){ //turn left
-					current_turn_speed = Math.min((relativeAngle - angle + 3600) % 360, max_turn_speed);
+					current_turn_speed = Math.min((Math.round(relativeAngle) - angle + 3600) % 360, max_turn_speed);
 				}
 				else{ //turn right
-					current_turn_speed = Math.max(-((angle - relativeAngle + 3600) % 360), -max_turn_speed);
+					current_turn_speed = Math.max(-((angle - Math.round(relativeAngle) + 3600) % 360), -max_turn_speed);
 				}
 				//Missileship and similar thinks that drifting like crazy is cool. It's not.
 				targeted_velocity = 0;
