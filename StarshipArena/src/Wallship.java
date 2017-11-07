@@ -9,12 +9,12 @@ public class Wallship extends Starship{
 	
 	//TODO Wallship should have two Interceptor-type 180 degree autoaim mguns
 	static double primary_damage = 1;
-	static int primary_cooldown = 10;
-	static int primary_spread = 150;
+	static int primary_cooldown = 20;
+	static int primary_spread = 360;
 	static int primary_accuracy = 97;
-	static int primary_range = 700;
+	static int primary_range = 500;
 	static int primary_speed = 20; 
-	static int primary_lifetime = 650;
+	static int primary_lifetime = 550;
 	static int primary_xoffset = -30;
 	static int primary_yoffset = 30;
 	static int primary_id = 3;
@@ -32,7 +32,7 @@ public class Wallship extends Starship{
 	}
 	//Stats were modified
 	public void shipStats(){
-		max_health = 500;
+		max_health = 400;
 		//movement
 		acceleration = 0.1;
 		max_velocity = 6;
@@ -40,7 +40,7 @@ public class Wallship extends Starship{
 		min_turn_velocity = 1;
 		max_turn_speed = 2;
 		//weaponry
-		scan_range = 700;
+		scan_range = 500;
 		radar_range = 1000;
 		//other
 		clickRadius = 110;
@@ -69,17 +69,20 @@ public class Wallship extends Starship{
 //		primaryTurret2.setOffset(primary_xoffset - 25, primary_yoffset + 20, -5);
 		primaryTurret2.setOffset(primary_xoffset, primary_yoffset);
 		turrets.add(primaryTurret2);
-		Turret primaryTurret3 = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
-				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 0, 1);
-//		primaryTurret1.setOffset(primary_xoffset + 25, primary_yoffset + 20, -15);
-		primaryTurret3.setOffset(-2 * primary_xoffset, primary_yoffset);
-		turrets.add(primaryTurret3);
 		
-		Turret primaryTurret4 = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
-				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 0, 1);
-//		primaryTurret2.setOffset(primary_xoffset - 25, primary_yoffset + 20, -5);
-		primaryTurret4.setOffset(2 * primary_xoffset, primary_yoffset);
-		turrets.add(primaryTurret4);
+		//Seems like giving Wallship 4 turrets is too OP
+		
+//		Turret primaryTurret3 = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
+//				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 0, 1);
+////		primaryTurret1.setOffset(primary_xoffset + 25, primary_yoffset + 20, -15);
+//		primaryTurret3.setOffset(-2 * primary_xoffset, primary_yoffset);
+//		turrets.add(primaryTurret3);
+//		
+//		Turret primaryTurret4 = new Turret(game, this, team, 0, 0, angle, primary_damage, primary_cooldown, 
+//				primary_spread, primary_accuracy, primary_range, primary_speed, primary_lifetime, primary_id, 0, 1);
+////		primaryTurret2.setOffset(primary_xoffset - 25, primary_yoffset + 20, -5);
+//		primaryTurret4.setOffset(2 * primary_xoffset, primary_yoffset);
+//		turrets.add(primaryTurret4);
 	}
 	
 //	public void moveTurrets(){
@@ -160,15 +163,48 @@ public class Wallship extends Starship{
 	
 	public void doRandomMovement(){
 		super.doRandomMovement();
-		if(target != null && target.getHealth() <= 0){
-			target = null;
+		//Ignore checks if we are direct targeting; super will take care of that
+		if (!directTarget) {
+			if(target != null && target.getHealth() <= 0){
+				target = null;
+			}
+			getClosestEnemy();
 		}
-		getClosestEnemy();
-		moveToLocation();
+		//if we have a location and attack move is false and we are not direct targeting anyone
+		if(!attackMove && !directTarget){
+			moveToLocation();
+		}
+		//if we have no target or target not close enough
+		else if(!directTarget && (target == null || distance(getX(), getY(), target.getX(), target.getY()) > scan_range * 0.9)){
+			moveToLocation();
+		}
+		//Else, we must be attack moving and/or direct targeting.
+		else {
+			//If we have a target and we are attack moving, stop moving.
+			if (attackMove) {
+				targeted_velocity = 0;
+			}
+			//If we are not attack moving but have a direct target, move to engage them.
+			if (directTarget) {
+				//If we are not close enough, move towards them
+				if (distance(getX(), getY(), target.getX(), target.getY()) > scan_range) {
+					lockPosition = false;
+					locationTarget = new Point(target.getX(), target.getY());
+				}
+				//Else, stop moving towards them
+				else {
+					lockPosition = false;
+					locationTarget = null;
+				}
+				moveToLocation();
+			}
+		}
 			
-//		moveTurrets();
 		edgeGuard();
-		getClosestEnemy();
+		//Again, ignore checks if not direct targeting
+		if (!directTarget) {
+			getClosestEnemy();
+		}
 	}
 	
 	/* TODO If Wallship has various weapons of different range (probs won't), I will have to add a boolean "detached" to Turret

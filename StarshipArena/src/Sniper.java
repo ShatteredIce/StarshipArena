@@ -186,7 +186,6 @@ public class Sniper extends Starship{
 			//If we have a target and we are attack moving, stop moving.
 			if (attackMove) {
 				targeted_velocity = 0;
-				System.out.println("Sniper distance to target: " + distance(getX(), getY(), target.getX(), target.getY()));
 			}
 			//If we are not attack moving but have a direct target, move to engage them.
 			if (directTarget) {

@@ -17,9 +17,9 @@ public class AdvancedEnemy extends Enemy{
 		int interceptorsCost = 0;
 		int missileshipsCost = 0;
 		for (int i = 0; i < playerShips.size(); i++) {
-			if (playerShips.get(i) instanceof Fighter) fightersCost += 5;
-			else if (playerShips.get(i) instanceof Interceptor) interceptorsCost += 20;
-			else if (playerShips.get(i) instanceof Missileship) missileshipsCost += 40;
+			if (playerShips.get(i) instanceof Fighter) fightersCost += game.FIGHTER_COST;
+			else if (playerShips.get(i) instanceof Interceptor) interceptorsCost += game.INTERCEPTOR_COST;
+			else if (playerShips.get(i) instanceof Missileship) missileshipsCost += game.MISSILESHIP_COST;
 		}
 		int total = fightersCost + interceptorsCost + missileshipsCost;
 		//Find the proportion of each type of ship. This helps weight ship purchase probability by enemy ship proportion
@@ -123,9 +123,9 @@ public class AdvancedEnemy extends Enemy{
 			}
 		}
 		for (int i = 0; i < myShips.size(); i++) {
-			if (myShips.get(i) instanceof Fighter && myShips.get(i).locationTarget == null) costOfShips += 5;
-			else if (myShips.get(i) instanceof Interceptor && myShips.get(i).locationTarget == null) costOfShips += 20;
-			else if (myShips.get(i) instanceof Missileship && myShips.get(i).locationTarget == null) costOfShips += 40;
+			if (myShips.get(i) instanceof Fighter && myShips.get(i).locationTarget == null) costOfShips += game.FIGHTER_COST;
+			else if (myShips.get(i) instanceof Interceptor && myShips.get(i).locationTarget == null) costOfShips += game.INTERCEPTOR_COST;
+			else if (myShips.get(i) instanceof Missileship && myShips.get(i).locationTarget == null) costOfShips += game.MISSILESHIP_COST;
 			else if (myShips.get(i) instanceof Transport) {
 				myTransports.add(myShips.remove(i));
 				i--;
@@ -146,15 +146,15 @@ public class AdvancedEnemy extends Enemy{
 			if (costOfAttack <= 0) break;
 			if (myShips.get(i) instanceof Fighter && myShips.get(i).locationTarget == null) {
 				attackGroup.add(myShips.get(i));
-				costOfAttack -= 5;
+				costOfAttack -= game.FIGHTER_COST;
 			}
 			else if (myShips.get(i) instanceof Interceptor && myShips.get(i).locationTarget == null) {
 				attackGroup.add(myShips.get(i));
-				costOfAttack -= 20;
+				costOfAttack -= game.INTERCEPTOR_COST;
 			}
 			else if (myShips.get(i) instanceof Missileship && myShips.get(i).locationTarget == null) {
 				attackGroup.add(myShips.get(i));
-				costOfAttack -= 40;
+				costOfAttack -= game.MISSILESHIP_COST;
 			}
 		}
 		//First target any planets without ships around them
@@ -186,6 +186,7 @@ public class AdvancedEnemy extends Enemy{
 				}
 				else {
 					for (int i = 0; i < attackGroup.size(); i++) {
+						//TODO Issue commands here instead of location targets
 						attackGroup.get(i).setLocationTarget(game.planets.get(targetPlanet).center);
 					}
 				}
@@ -195,6 +196,7 @@ public class AdvancedEnemy extends Enemy{
 				if(playerShips.size() > 0) {
 					int targetShip = random.nextInt(playerShips.size());
 					for (int i = 0; i < attackGroup.size(); i++) {
+						//TODO Issue commands here instead of location targets
 						attackGroup.get(i).setLocationTarget(playerShips.get(targetShip).center);
 					}
 				}

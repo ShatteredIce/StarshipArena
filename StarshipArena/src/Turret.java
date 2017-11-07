@@ -9,7 +9,8 @@ import javax.sound.sampled.FloatControl;
  * Autoaim: 1
  * Piercing: 2
  * Pulse: 4 (pulse weapons fire multiple projectiles (default 200, for Pulse Laser), one after another, each time they attack)
- * (any additional bonuses): 8, 16, 32, etc
+ * Splash: 8
+ * (any additional bonuses): 16, 32, etc
  * 
  * For example, a turret with the bonus piercing:
  * - bonuses = 2;
@@ -48,17 +49,20 @@ public class Turret {
 	double yOff = 0;
 	double angleOff = 0;
 	//Bonuses booleans:
+	boolean splash = false;
 	boolean pulse = false;
 	boolean piercing = false;
 	boolean autoAiming = false;
 	int angle_offset = 0;
 	
 	//Bonuses integers:
+	int SPLASH = 8;
 	int PULSE = 4;
 	int PIERCING = 2;
 	int AUTOAIM = 1;
 	
 	//Bonuses values:
+	int splashSize = 300;
 	int pulseSize = 200;
 	
 	//Sound effects
@@ -90,6 +94,12 @@ public class Turret {
 		//Bonuses are here. See top of this file for explanation of bonuses
 		//WARNING: Bonuses must be modulo'ed in DESCENDING ORDER!
 		//TODO To save a tiny bit of time, try using bitwise AND (e.g. bonuses & PULSE > 0) and bitwise XOR (e.g. bonuses = bonuses ^ PULSE)
+		if (bonuses % SPLASH != bonuses) {
+			splash = true;
+			bonuses %= SPLASH;
+			//TODO Debug
+			System.out.println("Turret created with splash");
+		}
 		if (bonuses % PULSE != bonuses) {
 			pulse = true;
 			bonuses %= PULSE;
@@ -166,7 +176,8 @@ public class Turret {
 	
 	public void fire(double newAngle){
 		int projectileBonuses = 0;
-		if (piercing) projectileBonuses++;
+		if (piercing) projectileBonuses += PIERCING;
+		if (splash) projectileBonuses += SPLASH;
 		//Get position of the center of the camera, to determine distance from the sound event
 		double cameraX = game.viewX + game.cameraWidth / 2;
 		double cameraY = game.viewY + game.cameraHeight / 2;
@@ -174,7 +185,9 @@ public class Turret {
 		float dbDiff = (float)(game.distance(cameraX, cameraY, center.X(), center.Y()) / game.cameraWidth * -10 + 5 - game.cameraWidth / 5000);
 		//launch a non-homing projectile
 		if (projectile_type != 4) {
-			new Projectile(game, owner, team, center.X(), center.Y(), projectile_damage, (newAngle + angleOff + 360) % 360, accuracy, projectile_speed, projectile_lifetime, projectile_type, projectileBonuses);
+			Projectile p = new Projectile(game, owner, team, center.X(), center.Y(), projectile_damage, (newAngle + angleOff + 360) % 360, accuracy, projectile_speed, projectile_lifetime, projectile_type, projectileBonuses);
+			//Splash projectiles need to know their splash radius
+			p.splashSize = splashSize;
 			//plasma sfx
 			if (game.mute) return;
 			if (projectile_type < 3) {
@@ -218,9 +231,14 @@ public class Turret {
 		}
 		//launch missile and sfx
 		else if (projectile_type == 4){
-			if (owner.directTarget)
-				new Missile(game, owner, team, center.X(), center.Y(), projectile_damage, (newAngle + angleOff + 360) % 360, accuracy, projectile_speed, projectile_lifetime, projectile_type, owner.target);
-			else new Missile(game, owner, team, center.X(), center.Y(), projectile_damage, (newAngle + angleOff + 360) % 360, accuracy, projectile_speed, projectile_lifetime, projectile_type, null);
+			if (owner.directTarget) {
+				Missile m = new Missile(game, owner, team, center.X(), center.Y(), projectile_damage, (newAngle + angleOff + 360) % 360, accuracy, projectile_speed, projectile_lifetime, projectile_type, projectileBonuses, owner.target);
+				m.splashSize = splashSize;
+			}
+			else {
+				Missile m = new Missile(game, owner, team, center.X(), center.Y(), projectile_damage, (newAngle + angleOff + 360) % 360, accuracy, projectile_speed, projectile_lifetime, projectile_type, projectileBonuses, null);
+				m.splashSize = splashSize;
+			}
 			if (game.mute) return;
 			for (int i = 10; i < 15; i++) {
 				if (!game.soundEffects[i].isRunning()) {

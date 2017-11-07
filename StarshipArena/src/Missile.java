@@ -18,8 +18,8 @@ public class Missile extends Projectile {
 	int scan_range = 4000;
 	boolean directTarget = false;
 
-	public Missile(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newdamage, double spawnangle, int accuracy, double newspeed, double newlifetime, int id, Starship newtarget) {
-		super(mygame, newowner, myteam, spawnx, spawny, newdamage, spawnangle, accuracy, newspeed, newlifetime, id);
+	public Missile(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newdamage, double spawnangle, int accuracy, double newspeed, double newlifetime, int id, int bonuses, Starship newtarget) {
+		super(mygame, newowner, myteam, spawnx, spawny, newdamage, spawnangle, accuracy, newspeed, newlifetime, id, bonuses);
 		max_velocity = newspeed;
 		//If the owner ship was direct targeting a ship, its missiles should home towards that ship.
 		if (newtarget != null) {
@@ -31,7 +31,7 @@ public class Missile extends Projectile {
 	public void destroy(Starship victim){
 		model.destroy();
 		game.removeProjectile(this);
-		new Explosion(game, center.X(), center.Y(), 55);
+		new Explosion(game, center.X(), center.Y(), 300).ticksPerFrame = 0.5;
 //		for (int i = 0; i < 360; i += 40) {
 		for (int i = 0; i < 2; i++) {
 //				if(victim instanceof MissilePod){
