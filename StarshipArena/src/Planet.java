@@ -325,7 +325,7 @@ public class Planet {
 		for (int i = 0; i < buildOrders.size(); i++) {
 			if (buildOrders.get(i)[0].equals(team)) {
 				if (team.equals("blue")) {
-					//This little "temp" workaround is required because buyShips references the planet that the player
+					//This little "Planet temp" workaround is required because buyShips references the planet that the player
 					//has selected
 					Planet temp = game.player.getSelectedPlanet();
 					game.player.setSelectedPlanet(this);

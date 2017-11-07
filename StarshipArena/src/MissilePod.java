@@ -5,7 +5,7 @@ public class MissilePod extends BasicPod{
 	static Texture tex1 = new Texture("red_missilepod.png");
 	static Texture tex2 = new Texture("blue_missilepod.png");
 	
-	static double primary_damage = 5;
+	static double primary_damage = 2.5;
 	static int primary_cooldown = 80;
 	static int primary_spread = 55;
 	static int primary_accuracy = 95;
@@ -31,7 +31,7 @@ public class MissilePod extends BasicPod{
 	
 	public void shipStats(){
 		max_health = 80;
-		scan_range = primary_range * 3/4;
+		scan_range = primary_range - 20;
 		radar_range = primary_range;
 		//movement
 		acceleration = 0.1;

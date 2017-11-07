@@ -25,13 +25,17 @@
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
+
+import java.lang.reflect.Array;
 import java.nio.*;
 import java.time.Instant;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 import javax.sound.sampled.*;
@@ -122,12 +126,16 @@ public class StarshipArena {
     int INTERCEPTOR_COST = 20;
     int TRANSPORT_COST = 10;
     int MISSILESHIP_COST = 40;
+    int WALLSHIP_COST = 30;
+    int SNIPER_COST = 60;
+    int BATTLESHIP_COST = 80;
     
-    int PROXIMITY_SIZE = 150;
+    int PROXIMITY_SIZE = 300;
     
     int planetDisplayBorder = 4500;
     int shipDisplayBorder = 100;
     
+    //Sound decibel offsets
     float PLASMA_DB = -20.0f;
     float MGUN_DB = -18.0f;
     float MISSILE_DB = -4.0f;
@@ -158,6 +166,8 @@ public class StarshipArena {
 	boolean mute = false;
 	boolean fog = false;
 	
+	//Damage multipliers array;
+	double[][] damageMultipliers = new double[7][8];
 	
 
 	Sidebar sidebar;
@@ -246,6 +256,19 @@ public class StarshipArena {
 		windowYOffset = window.getYOffset();
 		System.out.println(windowXOffset);
 		System.out.println(windowYOffset);
+		
+		//Set up damage multipliers array:
+		for (int i = 0; i < damageMultipliers.length; i++) {
+			Arrays.fill(damageMultipliers[i], 1);
+		}
+		//Fighters are vulnerable to missiles
+		damageMultipliers[1][4] = 4;
+		//Interceptors are resistant to missiles
+		damageMultipliers[2][4] = 0.5;
+		//Missileships are resistant to plasma (all three colors)
+		damageMultipliers[3][0] = 0.5; damageMultipliers[3][1] = 0.5; damageMultipliers[3][2] = 0.5;
+		//Missileships are vulnerable to machineguns
+		damageMultipliers[3][3] = 2;
 		
 		try {
 			gameMusic = AudioSystem.getClip();
@@ -549,8 +572,60 @@ public class StarshipArena {
 				else {
 					buyShips(player, 3);
 				}
-//			if ( key == GLFW_KEY_4 && action == GLFW_PRESS)
-//				buyShips(player, 4);
+			if ( key == GLFW_KEY_4 && action == GLFW_PRESS)
+				if(shiftPressed){
+					assignControlGroup(player, 4);
+				}
+				else if(player.getSelectedPlanet() == null){
+					displayControlGroup(player, 4);
+				}
+				else if (lPressed){
+					player.getSelectedPlanet().setLoop(player.getTeam(), "4");
+				}
+				else {
+					buyShips(player, 4);
+				}
+			if ( key == GLFW_KEY_5 && action == GLFW_PRESS)
+				if(shiftPressed){
+					assignControlGroup(player, 5);
+				}
+				else if(player.getSelectedPlanet() == null){
+					displayControlGroup(player, 5);
+				}
+				else if (lPressed){
+					player.getSelectedPlanet().setLoop(player.getTeam(), "5");
+				}
+				else {
+					buyShips(player, 5);
+				}
+			if ( key == GLFW_KEY_6 && action == GLFW_PRESS)
+				if(shiftPressed){
+					assignControlGroup(player, 6);
+				}
+				else if(player.getSelectedPlanet() == null){
+					displayControlGroup(player, 6);
+				}
+				else if (lPressed){
+					player.getSelectedPlanet().setLoop(player.getTeam(), "6");
+				}
+				else {
+					buyShips(player, 6);
+				}
+			
+			//Some cheat commands!!! Useful for testing purposes
+			//H heals selected ships to full health
+			if (key == GLFW_KEY_H && action == GLFW_PRESS)
+				for (int i = 0; i < ships.size(); i++) {
+					Starship s = ships.get(i);
+					if (s.isSelected()) s.current_health = s.max_health;
+				}
+			//K insta destroyes selected ships
+			if (key == GLFW_KEY_K && action == GLFW_PRESS)
+				for (int i = 0; i < ships.size(); i++) {
+					Starship s = ships.get(i);
+					if (s.isSelected()) s.current_health = -1;
+				}
+			
 			if ( key == GLFW_KEY_ENTER && action == GLFW_PRESS) {
 				if (gameState != 3) {
 					gameState = 3;
@@ -1223,7 +1298,6 @@ public class StarshipArena {
 				}
 				checkProjectiles();
 				
-//					enemy.buyShips();
 				enemy.move();
 				
 				
@@ -1561,6 +1635,8 @@ public class StarshipArena {
 	}
 	
 	public void buyShips(Player player, int type){
+		//TODO Debug:
+		System.out.println("Type to buy: " + type);
 		Planet p = player.getSelectedPlanet();
 		//if player has selected an allied planet
 		int spawnangle = 0;
@@ -1592,6 +1668,26 @@ public class StarshipArena {
 				new Missileship(this, p.getTeam(), (int) p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(), 
 						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), spawnangle);
 				
+			}
+			
+			//NEW SHIP CLASSES:
+			//Attempt to buy Wallship
+			else if (type == 4 && p.getResources() >= WALLSHIP_COST) {
+				p.setResources(p.getResources() - WALLSHIP_COST);
+				new Wallship(this, p.getTeam(), (int)p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(),
+						(int)p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), spawnangle);
+			}
+			//Attempt to buy Sniper
+			else if (type == 5 && p.getResources() >= SNIPER_COST) {
+				p.setResources(p.getResources() - SNIPER_COST);
+				new Sniper(this, p.getTeam(), (int)p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(),
+						(int)p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), spawnangle);
+			}
+			//Attempt to buy Battleship
+			else if (type == 6 && p.getResources() >= BATTLESHIP_COST) {
+				p.setResources(p.getResources() - BATTLESHIP_COST);
+				new Battleship(this, p.getTeam(), (int)p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(),
+						(int)p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), spawnangle);
 			}
 		}
 	}
@@ -1768,27 +1864,27 @@ public class StarshipArena {
 			new Planet(this, 13500 * levelScale, 10000 * levelScale, 1).setTeam("blue");;
 			new PlanetRadar(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
 			new Planet(this, 30000 * levelScale, 15000 * levelScale, 2).setTeam("red");
-			new PlanetLaser(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+//			new PlanetLaser(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
 			
-			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+//			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+//			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+//			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+//			
+//			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+//			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+//			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+//			
+//			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+//			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+//			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
 			
-			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
 			
-			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-			
-			
-//			for (int i = 0; i < 320; i++) {
-//				if (i % 16 == 0) {
-//					new Missileship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//				}
-//				new Fighter(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
-//			}
+			for (int i = 0; i < 320; i++) {
+				if (i % 16 == 0) {
+					new Missileship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+				}
+				new Fighter(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
+			}
 			
 			
 			
@@ -2419,77 +2515,62 @@ public class StarshipArena {
     		Projectile p = projectiles.get(i);
 			for (int j = 0; j < ships.size(); j++) {
 				Starship s = ships.get(j);
-				if (p.getOwner() != null ) {
-					if(!p.getOwner().equals(s) && (!p.getTeam().equals(s.getTeam()) || p.getTeam().equals("none")) && 
-							polygon_intersection(p.getPoints(), s.getPoints())){
-						//fighters have a weakness to missiles
-						if (p instanceof Missile && s instanceof Fighter && !p.pierced.contains(s))
-							s.setHealth(s.getHealth()-p.getDamage()*8);
-						//interceptor has a resistance to missiles
-						else if (p instanceof Missile && s instanceof Interceptor && !p.pierced.contains(s))
-							s.setHealth(s.getHealth()-p.getDamage()/2);
-						//Missileships have resistance to plasma
-						else if (p.texId < 3 && s instanceof Missileship && !p.pierced.contains(s))
-							s.setHealth(s.getHealth()-p.getDamage() / 2);
-						//Missileships are vulnerable to machineguns
-						else if (p.texId == 3 && s instanceof Missileship && !p.pierced.contains(s))
-							s.setHealth(s.getHealth()-p.getDamage()*2);
-						else if (!p.pierced.contains(s))
-							s.setHealth(s.getHealth()-p.getDamage());
-		    			s.damageDisplayDelay = 1000;
-		    			if (p instanceof Missile) {
-		    				Missile m = (Missile)p;
-		    				m.destroy(s);
-		    			}
-		    			else{
-			    			if(!p.piercing){
-			    				p.destroy();
-			    				projectiles.remove(p);
-			    			}
-			    			else if (!p.pierced.contains(s)){
-			    				new Explosion(this, p.center.X()+random.nextInt(21)-10, p.center.Y()+random.nextInt(21)-10, 30);
-			    				p.pierced.add(s);
-			    			}
-		    			}
-		    		}
-				}
-				else if ((!p.getTeam().equals(s.getTeam()) || p.getTeam().equals("none")) && 
-							polygon_intersection(p.getPoints(), s.getPoints())) {
-					//fighters have a weakness to missiles
-					if (p instanceof Missile && s instanceof Fighter && !p.pierced.contains(s))
-						s.setHealth(s.getHealth()-p.getDamage()*4);
-					//interceptor has a high resistance to missiles
-					else if (p instanceof Missile && s instanceof Interceptor && !p.pierced.contains(s))
-						s.setHealth(s.getHealth()-p.getDamage()/5);
-//					//Missileships have resistance to plasma
-//					else if (p.texId < 3 && s instanceof Missileship)
-//						s.setHealth(s.getHealth()-p.getDamage() / 2);
-					//Missileships are vulnerable to machineguns
-					else if (p.texId == 3 && s instanceof Missileship && !p.pierced.contains(s))
-						s.setHealth(s.getHealth()-p.getDamage()*2);
-					else if (!p.pierced.contains(s))
-						s.setHealth(s.getHealth()-p.getDamage());
+				//Check all ships to see if a collision with projectile is valid
+				if(polygon_intersection(p.getPoints(), s.getPoints()) && (p.getOwner() == null || !p.getOwner().equals(s))
+						&& (!p.getTeam().equals(s.getTeam()) || p.getTeam().equals("none"))){
+					//Figure out what type of ship this is and what type of projectile this is
+					int shipType = getShipType(s);
+					int projectileType = p.texId;
+					//If this projectile has not hit this ship before, hit it.
+					if (!p.pierced.contains(s)) {
+						s.setHealth(s.getHealth() - damageMultipliers[shipType][projectileType] * p.getDamage());
+					}
 	    			s.damageDisplayDelay = 1000;
+	    			//Special destructor is called for missiles
 	    			if (p instanceof Missile) {
 	    				Missile m = (Missile)p;
 	    				m.destroy(s);
 	    			}
-	    			else{
-		    			if(p.getType() != 5 && p.getType() != 6){
-		    				p.destroy();
-		    				projectiles.remove(p);
-		    			}
-		    			else{
-		    				new Explosion(this, p.center.X()+random.nextInt(21)-10, p.center.Y()+random.nextInt(21)-10, 20);
-		    			}
-	    			}
-				}
+					//If projectile is splash, do damage to all ships within radius that are enemies
+					if (p.splash) {
+						for (int k = 0; k < ships.size(); k++) {
+							Starship splashCheck = ships.get(k);
+							if (distance(p.center.x, p.center.y, splashCheck.getX(), splashCheck.getY()) < p.splashSize
+									&& (!p.getTeam().equals(s.getTeam()) || p.getTeam().equals("null"))) {
+								shipType = getShipType(splashCheck);
+								//Piercing checks not performed with splashCheck, hopefully won't bite later
+								splashCheck.setHealth(splashCheck.getHealth() - damageMultipliers[shipType][projectileType] * p.getDamage());
+							}
+						}
+					}
+	    			//If projectile is not piercing, destroy it. Else, allow it to hit targets not already pierced
+					if (!p.piercing) {
+						p.destroy();
+						projectiles.remove(p);
+					} else if (!p.pierced.contains(s)) {
+						new Explosion(this, p.center.X()
+								+ random.nextInt(21) - 10, p.center.Y()
+								+ random.nextInt(21) - 10, 30);
+						p.pierced.add(s);
+					}
+	    		}
 			}
 		}
     }
 	
 
 	
+	private int getShipType(Starship s) {
+		if (s instanceof Fighter) return 1;
+		if (s instanceof Interceptor) return 2;
+		if (s instanceof Missileship) return 3;
+		if (s instanceof Wallship) return 4;
+		if (s instanceof Sniper) return 5;
+		if (s instanceof Battleship) return 6;
+		//Do we have to differentiate between Pods, Radar, etc? Or all 0 could be fine.
+		return 0;
+	}
+
 	//returns an int from 0 to 359
 	public int angleToPoint(double center_x, double center_y, double target_x, double target_y){
     	//first quadrant
@@ -2796,7 +2877,7 @@ public class StarshipArena {
 //		}
 //	}
 	
-	//Recursively get a proximity group of allied ships. Used to find approximate fleet strength.
+	//Recursively get a proximity group of allied ships. Used to find approximate fleet strength and/or do proximity damage
 	public void proximityGroup(ArrayList<Starship> chosen, ArrayList<Starship> allShips, Starship current) {
 		for (int i = 0; i < allShips.size(); i++) {
 			Starship s = allShips.get(i);

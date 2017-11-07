@@ -8,7 +8,7 @@ public class Battleship extends Starship{
 	static Texture missileship_sprites = new Texture("missileship_sprites.png");
 	
 	//Dual missile launchers
-	static double damage1 = 5;
+	static double damage1 = 2.5;
 	static int cooldown1 = 300;
 	static int spread1 = 360;
 	static int accuracy1 = 95;
@@ -21,7 +21,7 @@ public class Battleship extends Starship{
 	
 	//Dual pulse lasers
 	static double damage2 = 1;
-	static int cooldown2 = 700;
+	static int cooldown2 = 500;
 	static int spread2 = 360;
 	static int accuracy2 = 100;
 	static int range2 = 1400;
@@ -30,12 +30,13 @@ public class Battleship extends Starship{
 	static int xoffset2 = 0;
 	static int yoffset2 = 75;
 	static int id2 = 5;
+	static int pulseSize2 = 140;
 	
 	//"Plasma hose" - Triple plasma
 	static double damage3 = 4;
 	static int cooldown3 = 15;
-	static int spread3 = 15;
-	static int accuracy3 = 95;
+	static int spread3 = 5;
+	static int accuracy3 = 100;
 	static int range3 = 1000;
 	static int speed3 = 20;
 	static int lifetime3 = 900;
@@ -84,13 +85,13 @@ public class Battleship extends Starship{
 			id3 = 2;
 		}
 		Turret turret1_1 = new Turret(game, this, team, 0, 0, angle, damage1, cooldown1, 
-				spread1, accuracy1, range1, speed1, lifetime1, id1, 0, 1);
+				spread1, accuracy1, range1, speed1, lifetime1, id1, 0, 9);
 //		primaryTurret1.setOffset(primary_xoffset + 25, primary_yoffset + 20, -15);
 		turret1_1.setOffset(xoffset1, yoffset1);
 		turrets.add(turret1_1);
 		
 		Turret turret1_2 = new Turret(game, this, team, 0, 0, angle, damage1, cooldown1, 
-				spread1, accuracy1, range1, speed1, lifetime1, id1, 0, 1);
+				spread1, accuracy1, range1, speed1, lifetime1, id1, 0, 9);
 //		primaryTurret2.setOffset(primary_xoffset - 25, primary_yoffset + 20, -5);
 		turret1_2.setOffset(-xoffset1, yoffset1);
 		turrets.add(turret1_2);
@@ -101,32 +102,32 @@ public class Battleship extends Starship{
 				spread2, accuracy2, range2, speed2, lifetime2, id2, 0, 7);
 //		primaryTurret1.setOffset(primary_xoffset + 25, primary_yoffset + 20, -15);
 		turret2_1.setOffset(xoffset2, yoffset2);
-		turret2_1.setPulseSize(100);
+		turret2_1.setPulseSize(pulseSize2);
 		turrets.add(turret2_1);
 		
 		Turret turret2_2 = new Turret(game, this, team, 0, 0, angle, damage2, cooldown2, 
 				spread2, accuracy2, range2, speed2, lifetime2, id2, 0, 7);
 //		primaryTurret2.setOffset(primary_xoffset - 25, primary_yoffset + 20, -5);
 		turret2_2.setOffset(xoffset2, -yoffset2);
-		turret2_2.setPulseSize(100);
+		turret2_2.setPulseSize(pulseSize2);
 		turrets.add(turret2_2);
 		
 		
 		
 		Turret turret3_1 = new Turret(game, this, team, 0, 0, angle, damage3, cooldown3, 
-				spread3, accuracy3, range3, speed3, lifetime3, id3, 0, 1);
+				spread3, accuracy3, range3, speed3, lifetime3, id3, 0, 0);
 //		primaryTurret2.setOffset(primary_xoffset - 25, primary_yoffset + 20, -5);
 		turret3_1.setOffset(-xoffset3, yoffset3);
 		turrets.add(turret3_1);
 		
 		Turret turret3_2 = new Turret(game, this, team, 0, 0, angle, damage3, cooldown3, 
-				spread3, accuracy3, range3, speed3, lifetime3, id3, 0, 1);
+				spread3, accuracy3, range3, speed3, lifetime3, id3, 0, 0);
 //		primaryTurret1.setOffset(primary_xoffset + 25, primary_yoffset + 20, -15);
-		turret3_2.setOffset(0, yoffset3);
+		turret3_2.setOffset(0, yoffset3 + 20);
 		turrets.add(turret3_2);
 		
 		Turret turret3_3 = new Turret(game, this, team, 0, 0, angle, damage3, cooldown3, 
-				spread3, accuracy3, range3, speed3, lifetime3, id3, 0, 1);
+				spread3, accuracy3, range3, speed3, lifetime3, id3, 0, 0);
 //		primaryTurret2.setOffset(primary_xoffset - 25, primary_yoffset + 20, -5);
 		turret3_3.setOffset(xoffset3, yoffset3);
 		turrets.add(turret3_3);
@@ -287,9 +288,6 @@ public class Battleship extends Starship{
 		}
 	}
 	
-	/* TODO If Battleship has various weapons of different range, I will have to add a boolean "detached" to Turret
-	 * which enables the shorter-range turrets to fire independent of longer range turrets, which determine the scan range
-	 */
 	//gets the closest enemy and changes target accordingly
 	public void getClosestEnemy(){
 		if (target != null && game.distance(center.x, center.y, target.getX(), target.getY()) > scan_range) target = null;
@@ -297,9 +295,9 @@ public class Battleship extends Starship{
 		if(scanned.size() != 0){
 			for (int i = 0; i < scanned.size(); i++) {
 				Starship s = scanned.get(i);
-				//if fighter has no team, or scanned enemy is on another team or closer than current target
-				//Missileship is a special case; it shoots further than it can see, so it is the only ship where
-				//we must check whether it can even see target.
+				//To prevent Battleship from turning like crazy to try to focus on a target, stop switching targets
+				//once a target within plasma range is acquired.
+				if (target != null && distance(getX(), getY(), target.getX(), target.getY()) < range3) break;
 				if(game.isVisible(s, team) && (team.equals("none") || !s.getTeam().equals(team)) && (target == null ||
 					game.distance(center.X(), center.Y(), s.getX(), s.getY()) - getClosestBearing(s) < 
 					game.distance(center.X(), center.Y(), target.getX(), target.getY()) - getClosestBearing(target))){

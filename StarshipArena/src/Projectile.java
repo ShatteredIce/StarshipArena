@@ -30,8 +30,13 @@ public class Projectile {
 	int texId;
 	
 	//Bonuses:
+	int SPLASH = 8;
 	int PIERCING = 1;
+	
+	boolean splash = false;
 	boolean piercing = false;
+	
+	int splashSize = 300;
 	
 	Projectile(StarshipArena mygame, Starship newowner, String myteam, double spawnx, double spawny, double newdamage,
 			double spawnangle, int accuracy, double newspeed, double newlifetime, int id){
@@ -60,6 +65,12 @@ public class Projectile {
 		setIndices();
 		setPoints();
 		model = new Model(vertices, textureCoords, indices);
+		if (bonuses % SPLASH != bonuses) {
+			splash = true;
+			bonuses %= SPLASH;
+			//TODO Debug
+			System.out.println("Created projectile with splash");
+		}
 		if (bonuses % PIERCING != bonuses) {
 			piercing = true;
 			bonuses %= PIERCING;

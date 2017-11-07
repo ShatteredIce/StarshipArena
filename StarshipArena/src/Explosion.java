@@ -13,7 +13,7 @@ public class Explosion {
 	Point[] points;
 	
 	int size = 100;
-	int ticksPerFrame = 2;
+	double ticksPerFrame = 2;
 	int lifetime = -1;
 	
 	Explosion(StarshipArena mygame, double spawnx, double spawny) {
