@@ -97,8 +97,6 @@ public class Turret {
 		if (bonuses % SPLASH != bonuses) {
 			splash = true;
 			bonuses %= SPLASH;
-			//TODO Debug
-			System.out.println("Turret created with splash");
 		}
 		if (bonuses % PULSE != bonuses) {
 			pulse = true;

@@ -68,8 +68,6 @@ public class Projectile {
 		if (bonuses % SPLASH != bonuses) {
 			splash = true;
 			bonuses %= SPLASH;
-			//TODO Debug
-			System.out.println("Created projectile with splash");
 		}
 		if (bonuses % PIERCING != bonuses) {
 			piercing = true;

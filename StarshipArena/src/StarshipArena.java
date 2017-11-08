@@ -110,7 +110,6 @@ public class StarshipArena {
     boolean shiftPressed = false;
     boolean tPressed = false;
     boolean controlPressed = false;
-    //TODO Not finished alt implement
     boolean altPressed = false;
     boolean f1Pressed = false;
     boolean lPressed = false;
@@ -650,7 +649,6 @@ public class StarshipArena {
 				//relative camera coordinates
 				xpos.put(0, Math.min(Math.max(xpos.get(0), windowXOffset), WINDOW_WIDTH + windowXOffset));
 				ypos.put(0, Math.min(Math.max(ypos.get(0), windowYOffset), WINDOW_HEIGHT + windowYOffset));
-				//TODO This is fucked up, causing issues with addcommand();
 				xpos.put(1, getWidthScalar() * (xpos.get(0) - windowXOffset) + viewX);
 				ypos.put(1, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0) + windowYOffset) + viewY));
 				//true window coordinates
@@ -867,7 +865,8 @@ public class StarshipArena {
 						//For each ship, if it is selected and owned by player...
 						for (int i = 0; i < ships.size(); i++) {
 							Starship s = ships.get(i);
-							if (s.isSelected() && s.getTeam().equals(player.getTeam())) {
+							//TODO Enemy ships can be given orders (testing)
+							if (s.isSelected() /*&& s.getTeam().equals(player.getTeam())*/) {
 								//If shift is not pressed, player is not queueing commands. Clear the current queue
 								if (!shiftPressed) s.commands.clear();
 								ArrayList<Starship> visibleShips = player.visibleShips;
@@ -1570,7 +1569,6 @@ public class StarshipArena {
 	//Each ship has a random starting location and angle
 	public void createShips(int num){
 		new Planet(this, 23000 * levelScale, 10000 * levelScale, 1).setTeam("blue");
-		//TODO Trying to do planet surface without using a new class
 		for (int i = 0; i < planets.size(); i++) {
 			Planet p = planets.get(i);
 			p.surfaceX = -100000 + i * 100000;
@@ -1635,8 +1633,6 @@ public class StarshipArena {
 	}
 	
 	public void buyShips(Player player, int type){
-		//TODO Debug:
-		System.out.println("Type to buy: " + type);
 		Planet p = player.getSelectedPlanet();
 		//if player has selected an allied planet
 		int spawnangle = 0;
@@ -1768,7 +1764,6 @@ public class StarshipArena {
 		int MIN_WIDTH = 650;
 		int MIN_HEIGHT = 450;
 		if(zoomOut){
-			//TODO Change this to START_X and stuff
 			if(/*zoomLevel < 5 && */currentMax_X - currentMin_X >= cameraWidth * 1.5 && currentMax_Y - currentMin_Y >= cameraHeight * 1.5){
 				zoomLevel++;
 				cameraWidth *= 1.5;
@@ -1830,7 +1825,6 @@ public class StarshipArena {
 	}
 	
 	public void loadLevel(int level){
-		//TODO Add new variable double scale and add it to each variable that needs scaling
 		boolean trueMuteState = mute;
 		mute = true;
 		destroyAllShips();
@@ -1862,7 +1856,7 @@ public class StarshipArena {
 			enemy = new Enemy(this, new Player(this, "red"));
 			//TODO Enemy Fighters are commented out so I can test new ships, and left Planet is auto-given to blue. Reverse these changes after testing concludes.
 			new Planet(this, 13500 * levelScale, 10000 * levelScale, 1).setTeam("blue");;
-			new PlanetRadar(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
+//			new PlanetRadar(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
 			new Planet(this, 30000 * levelScale, 15000 * levelScale, 2).setTeam("red");
 //			new PlanetLaser(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
 			
@@ -1879,13 +1873,15 @@ public class StarshipArena {
 //			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
 			
 			
-			for (int i = 0; i < 320; i++) {
+			for (int i = 0; i < 10; i++) {
 				if (i % 20 == 0) {
 					new Battleship(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
 				}
-				new Interceptor(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+//				new Interceptor(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
 			}
-			
+			for (int i = 0; i < 32; i++) {
+				new Fighter(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			}
 			
 			
 //			new Fighter(this, "blue", 5000 * levelScale, 4000 * levelScale, 0);
@@ -2349,7 +2345,6 @@ public class StarshipArena {
 			
 			
 		}
-		//TODO Scaled upwards up to here.
 		else if(level == 10){
 			WORLD_WIDTH = 120000 * levelScale;
 		    WORLD_HEIGHT = 40000 * levelScale;
@@ -2458,7 +2453,7 @@ public class StarshipArena {
 			//TODO Hardcoding tile size isn't probably a good idea
 			Tile temp = new Tile(this, p.surfaceX + p.dimensionX / 2, p.surfaceY + p.dimensionY / 2, 15000);
 			//TODO Ask Nathan to get some proper backgrounds for planet surfaces and store them in Tile the same way
-			//TODO that Planet stores planet textures (needs transparency, or no FOG)
+			//TODO that Planet stores planet textures (needs transparency, or no FOG, or even better, make all tiles opaque but use glDraw so that it's set to 90%)
 			temp.setSpecialTexture(Planet.textures[p.texId]);
 			
 			loadSubLevel(p);
