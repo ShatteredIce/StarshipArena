@@ -1880,10 +1880,10 @@ public class StarshipArena {
 			
 			
 			for (int i = 0; i < 320; i++) {
-				if (i % 16 == 0) {
-					new Missileship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+				if (i % 20 == 0) {
+					new Battleship(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
 				}
-				new Fighter(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
+				new Interceptor(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
 			}
 			
 			

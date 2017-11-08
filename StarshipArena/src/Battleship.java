@@ -30,7 +30,7 @@ public class Battleship extends Starship{
 	static int xoffset2 = 0;
 	static int yoffset2 = 75;
 	static int id2 = 5;
-	static int pulseSize2 = 140;
+	static int pulseSize2 = 70;
 	
 	//"Plasma hose" - Triple plasma
 	static double damage3 = 4;
