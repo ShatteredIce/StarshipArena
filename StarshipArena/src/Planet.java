@@ -4,13 +4,12 @@ public class Planet {
 	
 	StarshipArena game;
 	//planet rendering variables
-	Model model;
 	double[] vertices;
-	double[] textureCoords; 
-	int[] indices;
+	double[] textureCoords = {0,0,1,1}; 
 	Point center;
 	Point[] points;
 	int planetSize;
+	int haloSize;
 	int radar_range;
 	int texId = 0;
 	boolean selected = false;
@@ -20,16 +19,13 @@ public class Planet {
 	};
 
 	//halo and FOW rendering variables
-	Model haloModel;
 	double[] haloVertices;
 	double[] radarVertices;
 	Point[] haloPoints;
 	Point[] radarPoints;
-	int haloSize;
 	static Texture blueHalo = new Texture("blue_halo.png");
 	static Texture redHalo = new Texture("red_halo.png");
 	static Texture whiteHalo = new Texture("white_halo.png");
-	static Texture FOWTexture = new Texture("FOW_halo.png");
 	//planet ingame variables
 	String team = "none";
 	String capturingTeam = "none";
@@ -64,17 +60,14 @@ public class Planet {
 		center = new Point(spawnx, spawny);
 		points = generatePoints(planetSize);
 		vertices = new double[points.length * 2];
-		setTextureCoords();
-		setIndices();
 		setPoints();
-		model = new Model(vertices, textureCoords, indices);
 		//set up halo and FOW around the planet
 		haloPoints = generatePoints(haloSize);
 		haloVertices = new double[haloPoints.length * 2];
+		setHaloPoints();
 		radarPoints = generatePoints(radar_range);
 		radarVertices = new double[radarPoints.length * 2];
-		setHaloPoints();
-		haloModel = new Model(haloVertices, textureCoords, indices);
+		setRadarPoints();
 		game.addPlanet(this);
 	}
 	
@@ -198,8 +191,8 @@ public class Planet {
 	
 	public Point[] generatePoints(int size){
 		Point[] points = new Point[]{
-			new Point(-size, -size, true),
 			new Point(-size, size, true),
+			new Point(-size, -size, true),
 			new Point(size, size, true),
 			new Point(size, -size, true),
 		};
@@ -238,31 +231,12 @@ public class Planet {
 		
 	}
 	
-	public void setTextureCoords(){
-		textureCoords = new double[]{0, 1, 0, 0, 1, 0, 1, 1};
-	}
+//	public void setTextureCoords(){
+//		textureCoords = new double[]{0, 1, 0, 0, 1, 0, 1, 1};
+//	}
 	
-	public void setIndices(){
-		indices = new int[]{0, 1, 2, 2, 3, 0};
-	}
-	
-	public void display(boolean inRange){
-		setTexture();
-		model.render(vertices);
-		if(inRange){
-			setHaloTexture();
-			haloModel.render(haloVertices);
-		}
-	}
-	
-	public void showView(){
-		setRadarPoints();
-		FOWTexture.bind();
-		haloModel.render(radarVertices);
-	}
 	
 	public void destroy(){
-		model.destroy();
 		game.removePlanet(this);
 	}
 	
@@ -341,6 +315,10 @@ public class Planet {
 				//I don't check for "none" player buying ships because they can't
 			}
 		}
+	}
+	
+	public double[] getTextureCoords(){
+		return textureCoords;
 	}
 
 }

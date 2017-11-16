@@ -163,7 +163,7 @@ public class StarshipArena {
 	Clip menuMusic;
 	
 	boolean mute = false;
-	boolean fog = false;
+	boolean fog = true;
 	
 	//Damage multipliers array;
 	double[][] damageMultipliers = new double[7][8];
@@ -1108,11 +1108,7 @@ public class StarshipArena {
 					}
 					
 					//Show FOW
-					shiprenderer.drawAllFOW(player.getControlledShips());
-					for (int i = 0; i < planets.size(); i++) {
-						if (planets.get(i).getTeam().equals(player.getTeam()))
-							planets.get(i).showView();
-					}
+					shiprenderer.drawAllFOW(player.getControlledShips(), player.getControlledPlanets());
 					
 					
 					//Display background
@@ -1128,12 +1124,7 @@ public class StarshipArena {
 						//only display if planet is in camera window
 						if(planets.get(p).getX() > viewX - (planetDisplayBorder * getWidthScalar()) && planets.get(p).getX() < viewX + cameraWidth + (planetDisplayBorder * getWidthScalar()) 
 								&& planets.get(p).getY() > viewY - (planetDisplayBorder * getHeightScalar()) && planets.get(p).getY() < viewY + cameraHeight + (planetDisplayBorder * getHeightScalar())){
-							if(isVisible(planets.get(p), player)){
-								planets.get(p).display(true);
-							}
-							else{
-								planets.get(p).display(false);
-							}
+							shiprenderer.drawPlanet(planets.get(p), isVisible(planets.get(p), player));
 						}
 					}
 					
