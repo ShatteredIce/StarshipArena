@@ -1,18 +1,18 @@
 import java.util.ArrayList;
 
-//TODO Couldn't I base sniper off of Turret? It's supposed to turn and target enemies like a turret.
 public class Sniper extends Starship{
 	int changeDirection = 0;
 	int changeDirectionCooldown = 0;
 	//TODO Wrong sprites
 	static Texture missileship_sprites = new Texture("missileship_sprites.png");
 	
+	//Sniper turret
 	static double primary_damage = 180;
 //	static double primary_damage = 4;
-	static int primary_cooldown = 300;
+	static int primary_cooldown = 900;
 //	static int primary_cooldown = 10;
 	static int primary_spread = 360;
-	static int primary_accuracy = 99;
+	static int primary_accuracy = 40;
 	static int primary_range = 8000;
 	static int primary_speed = 200;
 	static int primary_lifetime = 8000;
@@ -31,16 +31,15 @@ public class Sniper extends Starship{
 	public Sniper(StarshipArena mygame, String newteam, double spawnx, double spawny, double spawnangle){
 		super(mygame, newteam, spawnx, spawny, spawnangle);
 	}
-	//TODO Change stats
 	public void shipStats(){
-		max_health = 45;
+		max_health = 15;
 		//movement
 		acceleration = 0.1;
-//		max_velocity = 4.5;
-		max_velocity = 8;
+		max_velocity = 4.5;
+//		max_velocity = 8;
 		max_reverse_velocity = -2;
 		min_turn_velocity = 1;
-		max_turn_speed = 3;
+		max_turn_speed = 1.5;
 		//weaponry
 		scan_range = 8000;
 		radar_range = 1500;
@@ -52,7 +51,6 @@ public class Sniper extends Starship{
 		haloSize = 160;
 		weight = 1;
 	}
-	//TODO Different turrets
 	public void shipTurrets(){
 //		if(team.equals("blue")){
 //			primary_id = 1;

@@ -7,7 +7,7 @@ public class MachineGunPod extends BasicPod{
 	static double primary_damage = 1;
 	static int primary_cooldown = 4;
 	static int primary_spread = 20;
-	static int primary_accuracy = 99;
+	static int primary_accuracy = 80;
 	static int primary_range = 1600;
 	static int primary_speed = 15;
 	static int primary_lifetime = 1700;

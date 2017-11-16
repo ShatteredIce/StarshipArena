@@ -2,7 +2,7 @@
 
 
 
-//TODO Implemetn quadtree/sectors, then we won't need to do any of this Surface complicated BS
+//TODO Implement quadtree/sectors, then we won't need to do any of this Surface complicated BS
 import java.util.ArrayList;
 
 public class Surface {

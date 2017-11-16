@@ -1,13 +1,12 @@
 import java.util.ArrayList;
 
-//TODO Most of these functions need to be modified; a TODO is placed next to each, sometimes with brief description
 public class Wallship extends Starship{
 	int changeDirection = 0;
 	int changeDirectionCooldown = 0;
 	//TODO Wrong sprites
 	static Texture missileship_sprites = new Texture("missileship_sprites.png");
 	
-	//TODO Wallship should have two Interceptor-type 180 degree autoaim mguns
+	//Dual machinegun turrets (360 degree)
 	static double primary_damage = 1;
 	static int primary_cooldown = 20;
 	static int primary_spread = 360;

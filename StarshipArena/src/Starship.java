@@ -247,7 +247,6 @@ public class Starship {
 	}
 	
 	//The superclass' doRandomMovement makes sure every ship class processes its command queue before executing its default behavior.
-	//TODO For every ship, I must teach it how to deal with directTarget
 	public void doRandomMovement(){
 		//If ship has commands:
 		if (!commands.isEmpty()) {

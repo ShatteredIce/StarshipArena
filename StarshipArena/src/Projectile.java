@@ -68,8 +68,6 @@ public class Projectile {
 		if (bonuses % SPLASH != bonuses) {
 			splash = true;
 			bonuses %= SPLASH;
-			//TODO Debug
-			System.out.println("Created projectile with splash");
 		}
 		if (bonuses % PIERCING != bonuses) {
 			piercing = true;
@@ -112,13 +110,15 @@ public class Projectile {
 	}
 	
 	public void setAccuracy(int accuracy){
-		int randomized_angle = random.nextInt(100-accuracy+1);
-		int direction = random.nextInt(2);
-		if(direction == 0){
-			angle += randomized_angle;
-		}
-		else{
-			angle -= randomized_angle;
+		if (random.nextInt(100) >= accuracy) {
+			int randomized_angle = random.nextInt(8);
+			int direction = random.nextInt(2);
+			if(direction == 0){
+				angle += randomized_angle;
+			}
+			else{
+				angle -= randomized_angle;
+			}
 		}
 	}
 	

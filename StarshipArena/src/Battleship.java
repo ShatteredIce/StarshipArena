@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 
-//TODO Most of these functions need to be modified; a TODO is placed next to each, sometimes with brief description
 public class Battleship extends Starship{
 	int changeDirection = 0;
 	int changeDirectionCooldown = 0;
@@ -21,7 +20,7 @@ public class Battleship extends Starship{
 	
 	//Dual pulse lasers
 	static double damage2 = 1;
-	static int cooldown2 = 500;
+	static int cooldown2 = 700;
 	static int spread2 = 360;
 	static int accuracy2 = 100;
 	static int range2 = 1400;
@@ -30,7 +29,7 @@ public class Battleship extends Starship{
 	static int xoffset2 = 0;
 	static int yoffset2 = 75;
 	static int id2 = 5;
-	static int pulseSize2 = 140;
+	static int pulseSize2 = 70;
 	
 	//"Plasma hose" - Triple plasma
 	static double damage3 = 4;
@@ -55,7 +54,6 @@ public class Battleship extends Starship{
 	public Battleship(StarshipArena mygame, String newteam, double spawnx, double spawny, double spawnangle){
 		super(mygame, newteam, spawnx, spawny, spawnangle);
 	}
-	//TODO Change stats
 	public void shipStats(){
 		max_health = 200;
 		//movement
@@ -75,7 +73,6 @@ public class Battleship extends Starship{
 		haloSize = 160;
 		weight = 3;
 	}
-	//TODO Different turrets
 	public void shipTurrets(){
 		if(team.equals("blue")){
 			id3 = 1;
