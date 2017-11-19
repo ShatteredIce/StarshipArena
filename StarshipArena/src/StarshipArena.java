@@ -263,7 +263,7 @@ public class StarshipArena {
 		//Fighters are vulnerable to missiles
 		damageMultipliers[1][4] = 4;
 		//Interceptors are resistant to missiles
-		damageMultipliers[2][4] = 0.5;
+		damageMultipliers[2][4] = 0.25;
 		//Missileships are resistant to plasma (all three colors)
 		damageMultipliers[3][0] = 0.5; damageMultipliers[3][1] = 0.5; damageMultipliers[3][2] = 0.5;
 		//Missileships are vulnerable to machineguns
@@ -1873,15 +1873,16 @@ public class StarshipArena {
 //			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
 			
 			
-			for (int i = 0; i < 10; i++) {
+			for (int i = 0; i < 320; i++) {
 				if (i % 20 == 0) {
-					new Battleship(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
+					new Missileship(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
 				}
-//				new Interceptor(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-			}
-			for (int i = 0; i < 32; i++) {
 				new Fighter(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+//				new Fighter(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
 			}
+//			for (int i = 0; i < 32; i++) {
+//				new Interceptor(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+//			}
 			
 			
 //			new Fighter(this, "blue", 5000 * levelScale, 4000 * levelScale, 0);
@@ -2535,6 +2536,7 @@ public class StarshipArena {
 								shipType = getShipType(splashCheck);
 								//Piercing checks not performed with splashCheck, hopefully won't bite later
 								splashCheck.setHealth(splashCheck.getHealth() - damageMultipliers[shipType][projectileType] * p.getDamage());
+								splashCheck.damageDisplayDelay = 1000;
 							}
 						}
 					}

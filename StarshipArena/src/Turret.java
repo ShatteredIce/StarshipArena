@@ -62,7 +62,7 @@ public class Turret {
 	int AUTOAIM = 1;
 	
 	//Bonuses values:
-	int splashSize = 300;
+	int splashSize = 500;
 	int pulseSize = 200;
 	
 	//Sound effects
