@@ -12,35 +12,6 @@ public class ShipRenderer {
 	static Texture FOWTexture = new Texture("FOW_halo.png");
 	static Texture rangeTexture = new Texture("range_halo.png");
 	
-
-//function is broken
-//	public void drawAllShips(ArrayList<Starship> allShips){
-//		fighter_sprites.bind();
-//		for (Starship s : allShips) {
-//			if(s instanceof Fighter){
-//				s.setTexture();
-//				setTextureCoords(s.getTextureCoords());
-//				setRotatedModel(s.vertices);
-//			}
-//		}
-//		interceptor_sprites.bind();
-//		for (Starship s : allShips) {
-//			if(s instanceof Interceptor){
-//				s.setTexture();
-//				setTextureCoords(s.getTextureCoords());
-//				setRotatedModel(s.vertices);
-//			}
-//		}
-//		missileship_sprites.bind();
-//		for (Starship s : allShips) {
-//			if(s instanceof Missileship){
-//				s.setTexture();
-//				setTextureCoords(s.getTextureCoords());
-//				setRotatedModel(s.vertices);
-//			}
-//		}
-//	}
-	
 	public void drawShip(Starship s){
 		s.setTexture();
 		setTextureCoords(s.getTextureCoords());
@@ -69,6 +40,24 @@ public class ShipRenderer {
 		setColor(s.getHealth()/s.getMaxHealth()); //color based on hp remaining
 		setModel(currentShipTrueCenter.X() - (Math.min(60, s.getMaxHealth() / 2)) * 3, currentShipTrueCenter.Y() - s.getClickRadius(), currentShipTrueCenter.X() + 
 				(Math.abs(s.getHealth() - s.getMaxHealth() / 2) / (s.getMaxHealth() / 2) * 60 < Math.abs(s.getHealth() - s.getMaxHealth() / 2) ? (s.getHealth() - s.getMaxHealth() / 2) / (s.getMaxHealth() / 2) * 60 : s.getHealth() - s.getMaxHealth() / 2) * 3, currentShipTrueCenter.Y() - s.getClickRadius() - 10);
+	}
+	
+	public void drawAllBuildBars(ArrayList<Planet> controlled){
+		HPColors.bind();
+		for (Planet p: controlled){
+			if(p.isBuilding){
+				drawBuildBar(p);
+			}
+		}
+	}
+	
+	public void drawBuildBar(Planet p){
+		setColor(-1); //base color
+		setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize(), p.getX()+p.getSize()/2, p.getY()-p.getSize() - 30);
+		
+		setColor(p.getBuildPercentage()); //color based on build percentage
+		setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize(), (p.getX()-p.getSize()/2) + p.getBuildPercentage()*p.getSize(), 
+				p.getY()-p.getSize() - 30);
 	}
 	
 	public void drawAllShipHalos(ArrayList<Starship> selected){

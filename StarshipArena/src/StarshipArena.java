@@ -163,7 +163,7 @@ public class StarshipArena {
 	Clip menuMusic;
 	
 	boolean mute = false;
-	boolean fog = true;
+	boolean fog = false;
 	
 	//Damage multipliers array;
 	double[][] damageMultipliers = new double[7][8];
@@ -528,7 +528,7 @@ public class StarshipArena {
 					assignControlGroup(player, 0);
 				}
 				else if (lPressed){
-					player.getSelectedPlanet().setLoop(player.getTeam(), "0");
+//					player.getSelectedPlanet().setLoop(player.getTeam(), "0");
 				}
 			}
 			if ( key == GLFW_KEY_1 && action == GLFW_PRESS){
@@ -539,7 +539,7 @@ public class StarshipArena {
 					displayControlGroup(player, 1);
 				}
 				else if (lPressed){
-					player.getSelectedPlanet().setLoop(player.getTeam(), "1");
+//					player.getSelectedPlanet().setLoop(player.getTeam(), "1");
 				}
 				else {
 					buyShips(player, 1);
@@ -553,7 +553,7 @@ public class StarshipArena {
 					displayControlGroup(player, 2);
 				}
 				else if (lPressed){
-					player.getSelectedPlanet().setLoop(player.getTeam(), "2");
+//					player.getSelectedPlanet().setLoop(player.getTeam(), "2");
 				}
 				else {
 					buyShips(player, 2);
@@ -566,7 +566,7 @@ public class StarshipArena {
 					displayControlGroup(player, 3);
 				}
 				else if (lPressed){
-					player.getSelectedPlanet().setLoop(player.getTeam(), "3");
+//					player.getSelectedPlanet().setLoop(player.getTeam(), "3");
 				}
 				else {
 					buyShips(player, 3);
@@ -579,7 +579,7 @@ public class StarshipArena {
 					displayControlGroup(player, 4);
 				}
 				else if (lPressed){
-					player.getSelectedPlanet().setLoop(player.getTeam(), "4");
+//					player.getSelectedPlanet().setLoop(player.getTeam(), "4");
 				}
 				else {
 					buyShips(player, 4);
@@ -592,7 +592,7 @@ public class StarshipArena {
 					displayControlGroup(player, 5);
 				}
 				else if (lPressed){
-					player.getSelectedPlanet().setLoop(player.getTeam(), "5");
+//					player.getSelectedPlanet().setLoop(player.getTeam(), "5");
 				}
 				else {
 					buyShips(player, 5);
@@ -605,7 +605,7 @@ public class StarshipArena {
 					displayControlGroup(player, 6);
 				}
 				else if (lPressed){
-					player.getSelectedPlanet().setLoop(player.getTeam(), "6");
+//					player.getSelectedPlanet().setLoop(player.getTeam(), "6");
 				}
 				else {
 					buyShips(player, 6);
@@ -1120,13 +1120,15 @@ public class StarshipArena {
 					//Update planets
 					for(int p = 0; p < planets.size(); p++){
 						planets.get(p).checkCapturePoint();
-						planets.get(p).updateResources();
+						planets.get(p).update();
 						//only display if planet is in camera window
 						if(planets.get(p).getX() > viewX - (planetDisplayBorder * getWidthScalar()) && planets.get(p).getX() < viewX + cameraWidth + (planetDisplayBorder * getWidthScalar()) 
 								&& planets.get(p).getY() > viewY - (planetDisplayBorder * getHeightScalar()) && planets.get(p).getY() < viewY + cameraHeight + (planetDisplayBorder * getHeightScalar())){
 							shiprenderer.drawPlanet(planets.get(p), isVisible(planets.get(p), player));
 						}
 					}
+					
+					shiprenderer.drawAllBuildBars(player.getControlledPlanets());
 					
 					//heal ships in planet range
 			    	for (int i = 0; i < planets.size(); i++) {
@@ -1632,28 +1634,18 @@ public class StarshipArena {
 			//attempt to buy fighter
 			if(type == 1 && p.getResources() >= FIGHTER_COST){
 				p.setResources(p.getResources() - FIGHTER_COST);
-				new Fighter(this, p.getTeam(), (int) p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(), 
-						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), spawnangle);
+				p.queueShip(1);
 			}
 			//attempt to buy interceptor
 			else if(type == 2 && p.getResources() >= INTERCEPTOR_COST){
 				p.setResources(p.getResources() - INTERCEPTOR_COST);
-				new Interceptor(this, p.getTeam(), (int) p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(), 
-						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), spawnangle);
+				p.queueShip(2);
 				
 			}
-//			//attempt to buy transport
-//			else if(type == 3 && p.getResources() >= TRANSPORT_COST){
-//				p.setResources(p.getResources() - TRANSPORT_COST);
-//				new Transport(this, p.getTeam(), (int) p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(), 
-//						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), 0);
-//				
-//			}
 			//attempt to buy missileship
 			else if(type ==3 && p.getResources() >= MISSILESHIP_COST){
 				p.setResources(p.getResources() - MISSILESHIP_COST);
-				new Missileship(this, p.getTeam(), (int) p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(), 
-						(int) p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), spawnangle);
+				p.queueShip(3);
 				
 			}
 			
@@ -1661,20 +1653,17 @@ public class StarshipArena {
 			//Attempt to buy Wallship
 			else if (type == 4 && p.getResources() >= WALLSHIP_COST) {
 				p.setResources(p.getResources() - WALLSHIP_COST);
-				new Wallship(this, p.getTeam(), (int)p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(),
-						(int)p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), spawnangle);
+				p.queueShip(4);
 			}
 			//Attempt to buy Sniper
 			else if (type == 5 && p.getResources() >= SNIPER_COST) {
 				p.setResources(p.getResources() - SNIPER_COST);
-				new Sniper(this, p.getTeam(), (int)p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(),
-						(int)p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), spawnangle);
+				p.queueShip(5);
 			}
 			//Attempt to buy Battleship
 			else if (type == 6 && p.getResources() >= BATTLESHIP_COST) {
 				p.setResources(p.getResources() - BATTLESHIP_COST);
-				new Battleship(this, p.getTeam(), (int)p.getX() + random.nextInt(p.getSize() * 2) - p.getSize(),
-						(int)p.getY() + random.nextInt(p.getSize() * 2) - p.getSize(), spawnangle);
+				p.queueShip(6);
 			}
 		}
 	}
