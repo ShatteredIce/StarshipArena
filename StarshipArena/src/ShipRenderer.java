@@ -11,38 +11,6 @@ public class ShipRenderer {
 	static Texture haloTexture = new Texture("ships_halo.png");
 	static Texture FOWTexture = new Texture("FOW_halo.png");
 	static Texture rangeTexture = new Texture("range_halo.png");
-	static Texture fighter_sprites = new Texture("fighter_sprites.png");
-	static Texture interceptor_sprites = new Texture("interceptor_sprites.png");
-	static Texture missileship_sprites = new Texture("missileship_sprites.png");
-	
-
-//function is broken
-//	public void drawAllShips(ArrayList<Starship> allShips){
-//		fighter_sprites.bind();
-//		for (Starship s : allShips) {
-//			if(s instanceof Fighter){
-//				s.setTexture();
-//				setTextureCoords(s.getTextureCoords());
-//				setRotatedModel(s.vertices);
-//			}
-//		}
-//		interceptor_sprites.bind();
-//		for (Starship s : allShips) {
-//			if(s instanceof Interceptor){
-//				s.setTexture();
-//				setTextureCoords(s.getTextureCoords());
-//				setRotatedModel(s.vertices);
-//			}
-//		}
-//		missileship_sprites.bind();
-//		for (Starship s : allShips) {
-//			if(s instanceof Missileship){
-//				s.setTexture();
-//				setTextureCoords(s.getTextureCoords());
-//				setRotatedModel(s.vertices);
-//			}
-//		}
-//	}
 	
 	public void drawShip(Starship s){
 		s.setTexture();
@@ -55,6 +23,7 @@ public class ShipRenderer {
 		setTextureCoords(s.getTextureCoords());
 		setRotatedModel(s.vertices);
 	}
+	
 	public void drawAllHPBars(ArrayList<Starship> selected){
 		HPColors.bind();
 		for (Starship s : selected) {
@@ -73,6 +42,24 @@ public class ShipRenderer {
 				(Math.abs(s.getHealth() - s.getMaxHealth() / 2) / (s.getMaxHealth() / 2) * 60 < Math.abs(s.getHealth() - s.getMaxHealth() / 2) ? (s.getHealth() - s.getMaxHealth() / 2) / (s.getMaxHealth() / 2) * 60 : s.getHealth() - s.getMaxHealth() / 2) * 3, currentShipTrueCenter.Y() - s.getClickRadius() - 10);
 	}
 	
+	public void drawAllBuildBars(ArrayList<Planet> controlled){
+		HPColors.bind();
+		for (Planet p: controlled){
+			if(p.isBuilding){
+				drawBuildBar(p);
+			}
+		}
+	}
+	
+	public void drawBuildBar(Planet p){
+		setColor(-1); //base color
+		setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize(), p.getX()+p.getSize()/2, p.getY()-p.getSize() - 30);
+		
+		setColor(p.getBuildPercentage()); //color based on build percentage
+		setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize(), (p.getX()-p.getSize()/2) + p.getBuildPercentage()*p.getSize(), 
+				p.getY()-p.getSize() - 30);
+	}
+	
 	public void drawAllShipHalos(ArrayList<Starship> selected){
 		haloTexture.bind();
 		setTextureCoords(0, 0, 1, 1);
@@ -83,13 +70,16 @@ public class ShipRenderer {
 		}
 	}
 	
-	public void drawAllFOW(ArrayList<Starship> ships){
+	public void drawAllFOW(ArrayList<Starship> ships, ArrayList<Planet> planets){
 		FOWTexture.bind();
 		setTextureCoords(0, 0, 1, 1);
 		for (Starship s : ships) {
 			updateTrueCenter(s);
 			setModel(currentShipTrueCenter.X() - s.getRadarRange(), currentShipTrueCenter.Y() + s.getRadarRange(),
 					currentShipTrueCenter.X() + s.getRadarRange(), currentShipTrueCenter.Y() - s.getRadarRange());
+		}
+		for (Planet p : planets) {
+			setModel(p.radarVertices);
 		}
 	}
 	
@@ -124,6 +114,17 @@ public class ShipRenderer {
 		}
 	}
 	
+	public void drawPlanet(Planet p, boolean inRange) {
+		p.setTexture();
+		setTextureCoords(p.getTextureCoords());
+		setModel(p.vertices);
+		if(inRange) {
+			p.setHaloTexture();
+			setModel(p.haloVertices);
+		}
+	}
+	
+	
 	public void setTextureCoords(double x1, double y1, double x2, double y2){
 		textureCoords[0] = x1;
 		textureCoords[1] = y1;
@@ -157,6 +158,10 @@ public class ShipRenderer {
 		vertices[5] = y1;
 		vertices[6] = x2;
 		vertices[7] = y2;
+		box.render(vertices);
+	}
+	
+	public void setModel(double[] vertices) {
 		box.render(vertices);
 	}
 	

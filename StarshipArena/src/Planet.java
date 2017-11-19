@@ -1,16 +1,17 @@
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Planet {
 	
 	StarshipArena game;
+	Random random = new Random();
 	//planet rendering variables
-	Model model;
 	double[] vertices;
-	double[] textureCoords; 
-	int[] indices;
+	double[] textureCoords = {0,0,1,1}; 
 	Point center;
 	Point[] points;
 	int planetSize;
+	int haloSize;
 	int radar_range;
 	int texId = 0;
 	boolean selected = false;
@@ -20,16 +21,13 @@ public class Planet {
 	};
 
 	//halo and FOW rendering variables
-	Model haloModel;
 	double[] haloVertices;
 	double[] radarVertices;
 	Point[] haloPoints;
 	Point[] radarPoints;
-	int haloSize;
 	static Texture blueHalo = new Texture("blue_halo.png");
 	static Texture redHalo = new Texture("red_halo.png");
 	static Texture whiteHalo = new Texture("white_halo.png");
-	static Texture FOWTexture = new Texture("FOW_halo.png");
 	//planet ingame variables
 	String team = "none";
 	String capturingTeam = "none";
@@ -38,9 +36,14 @@ public class Planet {
 	int maxCaptureTime;
 	int storedResources = 0;
 	int resourcesPerTick = 1;
-	int resourcesCooldown = 50;
-	int currentCooldown = 50;
-	ArrayList<String[]> buildOrders = new ArrayList<String[]>();
+	int maxResourceTimer = 50;
+	int resourceTimer = 50;
+	//ship building
+	boolean isBuilding = false;
+	int maxBuildTimer = 100;
+	int buildTimer = 100;
+	ArrayList<Integer> buildOrder = new ArrayList<Integer>();
+	
 	
 	//Planet surface dimensions
 	double surfaceX;
@@ -64,17 +67,14 @@ public class Planet {
 		center = new Point(spawnx, spawny);
 		points = generatePoints(planetSize);
 		vertices = new double[points.length * 2];
-		setTextureCoords();
-		setIndices();
 		setPoints();
-		model = new Model(vertices, textureCoords, indices);
 		//set up halo and FOW around the planet
 		haloPoints = generatePoints(haloSize);
 		haloVertices = new double[haloPoints.length * 2];
+		setHaloPoints();
 		radarPoints = generatePoints(radar_range);
 		radarVertices = new double[radarPoints.length * 2];
-		setHaloPoints();
-		haloModel = new Model(haloVertices, textureCoords, indices);
+		setRadarPoints();
 		game.addPlanet(this);
 	}
 	
@@ -146,11 +146,12 @@ public class Planet {
 					captureTime = 0;
 					if(team.equals("none")){
 						team = capturingTeam;
+						storedResources/= 2;
+						clearBuildOrder();
 					}
 					else{
 						team = "none";
 						captureTime = maxCaptureTime;
-						storedResources/= 2;
 					}
 				}
 			}
@@ -198,8 +199,8 @@ public class Planet {
 	
 	public Point[] generatePoints(int size){
 		Point[] points = new Point[]{
-			new Point(-size, -size, true),
 			new Point(-size, size, true),
+			new Point(-size, -size, true),
 			new Point(size, size, true),
 			new Point(size, -size, true),
 		};
@@ -222,48 +223,134 @@ public class Planet {
 		}
 	}
 	
-	public void updateResources() {
-		if(team.equals("none")){
-			return;
+	public void update() {
+		if(!team.equals("none")){
+			//if team is not none and cooldown for resources is over, get resources
+			if(resourceTimer == 0){
+				storedResources += resourcesPerTick;
+				resourceTimer = maxResourceTimer;
+//				checkLoop();
+			}
+			else{
+				resourceTimer--;
+			}
+			if(isBuilding){
+				if(buildTimer == 0){
+					isBuilding = false;
+					buildTimer = maxBuildTimer;
+					spawnShip(buildOrder.get(0));
+					buildOrder.remove(0);
+				}
+				else{
+					buildTimer--;
+				}
+			}
+			else{
+				if(!buildOrder.isEmpty()){
+					isBuilding = true;
+				}
+			}
+			
 		}
-		//if team is not none and cooldown for resources is over, get resources
-		else if(currentCooldown == 0){
-			storedResources += resourcesPerTick;
-			currentCooldown = resourcesCooldown;
-			checkLoop();
-		}
-		else{
-			currentCooldown--;
-		}
+		
 		
 	}
 	
-	public void setTextureCoords(){
-		textureCoords = new double[]{0, 1, 0, 0, 1, 0, 1, 1};
+//	public void setTextureCoords(){
+//		textureCoords = new double[]{0, 1, 0, 0, 1, 0, 1, 1};
+//	}
+	
+	
+	public void destroy(){
+		game.removePlanet(this);
 	}
 	
-	public void setIndices(){
-		indices = new int[]{0, 1, 2, 2, 3, 0};
+	public void setTeam(String newTeam) {
+		team = newTeam;
+		captureTime = maxCaptureTime;
 	}
 	
-	public void display(boolean inRange){
-		setTexture();
-		model.render(vertices);
-		if(inRange){
-			setHaloTexture();
-			haloModel.render(haloVertices);
+//	public void setLoop(String team, String ship) {
+//		String[] temp = new String[2];
+//		temp[0] = team;
+//		temp[1] = ship;
+//		for (int i = 0; i < buildOrders.size(); i++) {
+//			if (buildOrders.get(i)[0].equals(team)) {
+//				buildOrders.remove(i);
+//				i--;
+//			}
+//		}
+//		if (!temp.equals("0"))
+//			buildOrders.add(temp);
+//	}
+//	
+//	public void checkLoop() {
+//		for (int i = 0; i < buildOrders.size(); i++) {
+//			if (buildOrders.get(i)[0].equals(team)) {
+//				if (team.equals("blue")) {
+//					//This little "Planet temp" workaround is required because buyShips references the planet that the player
+//					//has selected
+//					Planet temp = game.player.getSelectedPlanet();
+//					game.player.setSelectedPlanet(this);
+//					game.buyShips(game.player, Integer.parseInt(buildOrders.get(i)[1]));
+//					game.player.setSelectedPlanet(temp);
+//				}
+//				else {
+//					Planet temp = game.enemy.getPlayer().getSelectedPlanet();
+//					game.enemy.getPlayer().setSelectedPlanet(this);
+//					game.buyShips(game.enemy.getPlayer(), Integer.parseInt(buildOrders.get(i)[1]));
+//					game.enemy.getPlayer().setSelectedPlanet(temp);
+//				}
+//				//I don't check for "none" player buying ships because they can't
+//			}
+//		}
+//	}
+	
+	public void queueShip(int type){
+		buildOrder.add(type);
+	}
+	
+	public void spawnShip(int type){
+		int spawnangle = 0;
+		if (team.equals("red")){
+			spawnangle = 180;
+		}
+		switch (type) {
+		case 1:
+			new Fighter(game, team, (int) center.X() + random.nextInt(planetSize * 2) - planetSize, 
+			(int) center.Y() + random.nextInt(planetSize * 2) - planetSize, spawnangle);
+			break;
+		case 2:
+			new Interceptor(game, team, (int) center.X() + random.nextInt(planetSize * 2) - planetSize, 
+			(int) center.Y() + random.nextInt(planetSize * 2) - planetSize, spawnangle);
+			break;
+		case 3:
+			new Missileship(game, team, (int) center.X() + random.nextInt(planetSize * 2) - planetSize, 
+			(int) center.Y() + random.nextInt(planetSize * 2) - planetSize, spawnangle);
+			break;
+		case 4:
+			new Wallship(game, team, (int) center.X() + random.nextInt(planetSize * 2) - planetSize, 
+			(int) center.Y() + random.nextInt(planetSize * 2) - planetSize, spawnangle);
+			break;
+		case 5:
+			new Sniper(game, team, (int) center.X() + random.nextInt(planetSize * 2) - planetSize, 
+			(int) center.Y() + random.nextInt(planetSize * 2) - planetSize, spawnangle);
+			break;
+		case 6:
+			new Battleship(game, team, (int) center.X() + random.nextInt(planetSize * 2) - planetSize, 
+			(int) center.Y() + random.nextInt(planetSize * 2) - planetSize, spawnangle);
+			break;
 		}
 	}
 	
-	public void showView(){
-		setRadarPoints();
-		FOWTexture.bind();
-		haloModel.render(radarVertices);
+	public void clearBuildOrder(){
+		isBuilding = false;
+		buildTimer = maxBuildTimer;
+		buildOrder.clear();
 	}
 	
-	public void destroy(){
-		model.destroy();
-		game.removePlanet(this);
+	public double[] getTextureCoords(){
+		return textureCoords;
 	}
 	
 	public int getSize(){
@@ -302,45 +389,8 @@ public class Planet {
 		return center.Y();
 	}
 	
-	public void setTeam(String newTeam) {
-		team = newTeam;
-		captureTime = maxCaptureTime;
-	}
-	
-	public void setLoop(String team, String ship) {
-		String[] temp = new String[2];
-		temp[0] = team;
-		temp[1] = ship;
-		for (int i = 0; i < buildOrders.size(); i++) {
-			if (buildOrders.get(i)[0].equals(team)) {
-				buildOrders.remove(i);
-				i--;
-			}
-		}
-		if (!temp.equals("0"))
-			buildOrders.add(temp);
-	}
-	
-	public void checkLoop() {
-		for (int i = 0; i < buildOrders.size(); i++) {
-			if (buildOrders.get(i)[0].equals(team)) {
-				if (team.equals("blue")) {
-					//This little "Planet temp" workaround is required because buyShips references the planet that the player
-					//has selected
-					Planet temp = game.player.getSelectedPlanet();
-					game.player.setSelectedPlanet(this);
-					game.buyShips(game.player, Integer.parseInt(buildOrders.get(i)[1]));
-					game.player.setSelectedPlanet(temp);
-				}
-				else {
-					Planet temp = game.enemy.getPlayer().getSelectedPlanet();
-					game.enemy.getPlayer().setSelectedPlanet(this);
-					game.buyShips(game.enemy.getPlayer(), Integer.parseInt(buildOrders.get(i)[1]));
-					game.enemy.getPlayer().setSelectedPlanet(temp);
-				}
-				//I don't check for "none" player buying ships because they can't
-			}
-		}
+	public double getBuildPercentage(){
+		return 1 - ((double) buildTimer/ (double) maxBuildTimer);
 	}
 
 }
