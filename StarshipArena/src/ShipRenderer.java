@@ -82,10 +82,10 @@ public class ShipRenderer {
 						p.getY()-p.getSize() + 100);
 			}
 			else if(p.getTeam() == "red") {
-				setColor("red");
-				setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize() + 70, p.getX()+p.getSize()/2, p.getY()-p.getSize() + 100);
 				setColor("default");
-				setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize() + 70, (p.getX()-p.getSize()/2) + p.getCapturePercentage()*p.getSize(), 
+				setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize() + 70, p.getX()+p.getSize()/2, p.getY()-p.getSize() + 100);
+				setColor("red");
+				setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize() + 70, (p.getX()-p.getSize()/2) + (1 - p.getCapturePercentage())*p.getSize(), 
 						p.getY()-p.getSize() + 100);
 
 			}
@@ -100,10 +100,10 @@ public class ShipRenderer {
 						p.getY()-p.getSize() + 70);
 			}
 			else if(p.getTeam() == "blue") {
-				setColor("blue");
-				setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize(), p.getX()+p.getSize()/2, p.getY()-p.getSize() + 30);
 				setColor("default");
-				setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize(), (p.getX()-p.getSize()/2) + p.getCapturePercentage()*p.getSize(), 
+				setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize(), p.getX()+p.getSize()/2, p.getY()-p.getSize() + 30);
+				setColor("blue");
+				setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize(), (p.getX()-p.getSize()/2) + (1 - p.getCapturePercentage())*p.getSize(), 
 						p.getY()-p.getSize() + 70);
 
 			}
