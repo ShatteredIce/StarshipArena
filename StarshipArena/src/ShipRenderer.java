@@ -8,6 +8,7 @@ public class ShipRenderer {
 	Point currentShipTrueCenter = new Point();
 	Model box = new Model(vertices, textureCoords, new int[]{0, 1, 2, 2, 1, 3});
 	static Texture HPColors = new Texture("hpbar_colors.png");
+	static Texture teamColors = new Texture("team_colors.png");
 	static Texture haloTexture = new Texture("ships_halo.png");
 	static Texture FOWTexture = new Texture("FOW_halo.png");
 	static Texture rangeTexture = new Texture("range_halo.png");
@@ -54,6 +55,61 @@ public class ShipRenderer {
 	public void drawBuildBar(Planet p){
 		setColor(-1); //base color
 		setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize(), p.getX()+p.getSize()/2, p.getY()-p.getSize() - 30);
+		
+		setColor(p.getBuildPercentage()); //color based on build percentage
+		setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize(), (p.getX()-p.getSize()/2) + p.getBuildPercentage()*p.getSize(), 
+				p.getY()-p.getSize() - 30);
+	}
+	
+	public void drawAllCaptureBars(ArrayList<Planet> planets) {
+		teamColors.bind();
+		for (Planet p: planets) {
+			drawCaptureBar(p);
+		}
+	}
+	
+	
+	public void drawCaptureBar(Planet p){
+		if(p.getCapturingTeam() == "none") {
+			return;
+		}
+		else if(p.getCapturingTeam() == "blue") {
+			if(p.getTeam() == "none") {
+				setColor("default");
+				setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize() + 70, p.getX()+p.getSize()/2, p.getY()-p.getSize() + 100);
+				setColor("blue");
+				setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize() + 70, (p.getX()-p.getSize()/2) + p.getCapturePercentage()*p.getSize(), 
+						p.getY()-p.getSize() + 100);
+			}
+			else if(p.getTeam() == "red") {
+				setColor("red");
+				setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize() + 70, p.getX()+p.getSize()/2, p.getY()-p.getSize() + 100);
+				setColor("default");
+				setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize() + 70, (p.getX()-p.getSize()/2) + p.getCapturePercentage()*p.getSize(), 
+						p.getY()-p.getSize() + 100);
+
+			}
+			
+		}
+		else if(p.getCapturingTeam() == "red") {
+			if(p.getTeam() == "none") {
+				setColor("default");
+				setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize(), p.getX()+p.getSize()/2, p.getY()-p.getSize() + 30);
+				setColor("red");
+				setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize(), (p.getX()-p.getSize()/2) + p.getCapturePercentage()*p.getSize(), 
+						p.getY()-p.getSize() + 70);
+			}
+			else if(p.getTeam() == "blue") {
+				setColor("blue");
+				setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize(), p.getX()+p.getSize()/2, p.getY()-p.getSize() + 30);
+				setColor("default");
+				setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize(), (p.getX()-p.getSize()/2) + p.getCapturePercentage()*p.getSize(), 
+						p.getY()-p.getSize() + 70);
+
+			}
+			
+		}
+	
 		
 		setColor(p.getBuildPercentage()); //color based on build percentage
 		setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize(), (p.getX()-p.getSize()/2) + p.getBuildPercentage()*p.getSize(), 
@@ -111,6 +167,18 @@ public class ShipRenderer {
 		}
 		else{
 			setTextureCoords(0.5, 0.667, 1, 1);
+		}
+	}
+	
+	public void setColor(String color) {
+		if(color == "blue") {
+			setTextureCoords(0, 0, 0.5, 0.5);
+		}
+		else if(color == "red") {
+			setTextureCoords(0.5, 0, 1, 0.5);
+		}
+		else{
+			setTextureCoords(0, 0.5, 0.5, 1);
 		}
 	}
 	

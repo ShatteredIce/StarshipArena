@@ -381,6 +381,14 @@ public class Planet {
 		return team;
 	}
 	
+	public String getCapturingTeam() {
+		return capturingTeam;
+	}
+	
+	public double getCapturePercentage() {
+		return 1 - ((double) captureTime/ (double) maxCaptureTime);
+	}
+	
 	public double getX() {
 		return center.X();
 	}
