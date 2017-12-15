@@ -268,6 +268,8 @@ public class StarshipArena {
 		damageMultipliers[3][0] = 0.5; damageMultipliers[3][1] = 0.5; damageMultipliers[3][2] = 0.5;
 		//Missileships are vulnerable to machineguns
 		damageMultipliers[3][3] = 2;
+		//Wallships are vulnerable to snipers
+		damageMultipliers[4][7] = 3;
 		
 		try {
 			gameMusic = AudioSystem.getClip();
@@ -1823,26 +1825,26 @@ public class StarshipArena {
 			new Planet(this, 30000 * levelScale, 15000 * levelScale, 2).setTeam("red");
 //			new PlanetLaser(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
 			
-//			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			
-//			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			
-//			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			
+			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			
+			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
 			
 			
-			for (int i = 0; i < 320; i++) {
-				if (i % 20 == 0) {
-					new Missileship(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
-				}
-				new Fighter(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//				new Fighter(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
-			}
+//			for (int i = 0; i < 320; i++) {
+//				if (i % 20 == 0) {
+//					new Missileship(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
+//				}
+//				new Fighter(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+////				new Fighter(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
+//			}
 //			for (int i = 0; i < 32; i++) {
 //				new Interceptor(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
 //			}

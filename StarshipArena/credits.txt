@@ -7,9 +7,9 @@
                                 
                                                                               
 =======================================
-Nathan Purwosumarto - Lead Programmer. Wrote the majority of the game's framework.
-Kevin Jin - Programmer. Worked on balancing the game and making it fun.
-Jonathan To - Lead Graphics Designer. Drew the majority of the ship graphics and projectiles.
+Nathan Purwosumarto - Programmer. Wrote the majority of the game's framework/pseudo-engine.
+Kevin Jin - Programmer. Worked on balancing the game, adding game features, and making it fun.
+Jonathan To - Graphics Designer. Drew the majority of the ship graphics and projectiles.
 Albert Chen - Graphics Designer. Drew the planets.
 
 
