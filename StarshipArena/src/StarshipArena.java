@@ -1128,6 +1128,7 @@ public class StarshipArena {
 						}
 					}
 					
+					shiprenderer.drawAllCaptureBars(planets);
 					shiprenderer.drawAllBuildBars(player.getControlledPlanets());
 					
 					//heal ships in planet range
