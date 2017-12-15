@@ -393,9 +393,9 @@ public class StarshipArena {
 			}
 			
 			if ( key == GLFW_KEY_L && action == GLFW_PRESS )
-				lPressed = true;
-			if ( key == GLFW_KEY_L && action == GLFW_RELEASE )
-				lPressed = false;
+				if (player.getSelectedPlanet() != null) player.getSelectedPlanet().setLoop(!player.getSelectedPlanet().looping);
+//			if ( key == GLFW_KEY_L && action == GLFW_RELEASE )
+//				lPressed = false;
 			
 			//TODO Remove this testing thing for proximity groups after testing concludes
 			if( key == GLFW_KEY_P && action == GLFW_RELEASE ){
@@ -527,8 +527,8 @@ public class StarshipArena {
 				if(shiftPressed){
 					assignControlGroup(player, 0);
 				}
-				else if (lPressed){
-//					player.getSelectedPlanet().setLoop(player.getTeam(), "0");
+				else if (player.getSelectedPlanet() != null) {
+					player.getSelectedPlanet().clearBuildOrder();
 				}
 			}
 			if ( key == GLFW_KEY_1 && action == GLFW_PRESS){
@@ -537,9 +537,6 @@ public class StarshipArena {
 				}
 				else if(player.getSelectedPlanet() == null){
 					displayControlGroup(player, 1);
-				}
-				else if (lPressed){
-//					player.getSelectedPlanet().setLoop(player.getTeam(), "1");
 				}
 				else {
 					buyShips(player, 1);
@@ -552,9 +549,6 @@ public class StarshipArena {
 				else if(player.getSelectedPlanet() == null){
 					displayControlGroup(player, 2);
 				}
-				else if (lPressed){
-//					player.getSelectedPlanet().setLoop(player.getTeam(), "2");
-				}
 				else {
 					buyShips(player, 2);
 				}
@@ -564,9 +558,6 @@ public class StarshipArena {
 				}
 				else if(player.getSelectedPlanet() == null){
 					displayControlGroup(player, 3);
-				}
-				else if (lPressed){
-//					player.getSelectedPlanet().setLoop(player.getTeam(), "3");
 				}
 				else {
 					buyShips(player, 3);
@@ -578,9 +569,6 @@ public class StarshipArena {
 				else if(player.getSelectedPlanet() == null){
 					displayControlGroup(player, 4);
 				}
-				else if (lPressed){
-//					player.getSelectedPlanet().setLoop(player.getTeam(), "4");
-				}
 				else {
 					buyShips(player, 4);
 				}
@@ -591,9 +579,6 @@ public class StarshipArena {
 				else if(player.getSelectedPlanet() == null){
 					displayControlGroup(player, 5);
 				}
-				else if (lPressed){
-//					player.getSelectedPlanet().setLoop(player.getTeam(), "5");
-				}
 				else {
 					buyShips(player, 5);
 				}
@@ -603,9 +588,6 @@ public class StarshipArena {
 				}
 				else if(player.getSelectedPlanet() == null){
 					displayControlGroup(player, 6);
-				}
-				else if (lPressed){
-//					player.getSelectedPlanet().setLoop(player.getTeam(), "6");
 				}
 				else {
 					buyShips(player, 6);
@@ -1633,37 +1615,37 @@ public class StarshipArena {
 		if(p != null && p.getTeam().equals(player.getTeam())){
 			if (p.getTeam().equals("red")) spawnangle = 180;
 			//attempt to buy fighter
-			if(type == 1 && p.getResources() >= FIGHTER_COST){
-				p.setResources(p.getResources() - FIGHTER_COST);
+			if(type == 1){
+//				p.setResources(p.getResources() - FIGHTER_COST);
 				p.queueShip(1);
 			}
 			//attempt to buy interceptor
-			else if(type == 2 && p.getResources() >= INTERCEPTOR_COST){
-				p.setResources(p.getResources() - INTERCEPTOR_COST);
+			else if(type == 2){
+//				p.setResources(p.getResources() - INTERCEPTOR_COST);
 				p.queueShip(2);
 				
 			}
 			//attempt to buy missileship
-			else if(type ==3 && p.getResources() >= MISSILESHIP_COST){
-				p.setResources(p.getResources() - MISSILESHIP_COST);
+			else if(type ==3){
+//				p.setResources(p.getResources() - MISSILESHIP_COST);
 				p.queueShip(3);
 				
 			}
 			
 			//NEW SHIP CLASSES:
 			//Attempt to buy Wallship
-			else if (type == 4 && p.getResources() >= WALLSHIP_COST) {
-				p.setResources(p.getResources() - WALLSHIP_COST);
+			else if (type == 4) {
+//				p.setResources(p.getResources() - WALLSHIP_COST);
 				p.queueShip(4);
 			}
 			//Attempt to buy Sniper
-			else if (type == 5 && p.getResources() >= SNIPER_COST) {
-				p.setResources(p.getResources() - SNIPER_COST);
+			else if (type == 5) {
+//				p.setResources(p.getResources() - SNIPER_COST);
 				p.queueShip(5);
 			}
 			//Attempt to buy Battleship
-			else if (type == 6 && p.getResources() >= BATTLESHIP_COST) {
-				p.setResources(p.getResources() - BATTLESHIP_COST);
+			else if (type == 6) {
+//				p.setResources(p.getResources() - BATTLESHIP_COST);
 				p.queueShip(6);
 			}
 		}

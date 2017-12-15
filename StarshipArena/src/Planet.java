@@ -42,6 +42,8 @@ public class Planet {
 	boolean isBuilding = false;
 	int maxBuildTimer = 100;
 	int buildTimer = 100;
+	boolean looping = false;
+	int[] shipCosts;
 	ArrayList<Integer> buildOrder = new ArrayList<Integer>();
 	
 	
@@ -75,6 +77,10 @@ public class Planet {
 		radarPoints = generatePoints(radar_range);
 		radarVertices = new double[radarPoints.length * 2];
 		setRadarPoints();
+		
+		shipCosts = new int[6]; shipCosts[0] = game.FIGHTER_COST; shipCosts[1] = game.INTERCEPTOR_COST; shipCosts[2] = game.MISSILESHIP_COST;
+		shipCosts[3] = game.WALLSHIP_COST; shipCosts[4] = game.SNIPER_COST; shipCosts[5] = game.BATTLESHIP_COST;
+		
 		game.addPlanet(this);
 	}
 	
@@ -239,6 +245,7 @@ public class Planet {
 					isBuilding = false;
 					buildTimer = maxBuildTimer;
 					spawnShip(buildOrder.get(0));
+					if (looping) buildOrder.add(buildOrder.get(0));
 					buildOrder.remove(0);
 				}
 				else{
@@ -246,7 +253,8 @@ public class Planet {
 				}
 			}
 			else{
-				if(!buildOrder.isEmpty()){
+				if(!buildOrder.isEmpty() && storedResources >= shipCosts[buildOrder.get(0) - 1]){
+					storedResources -= shipCosts[buildOrder.get(0) - 1];
 					isBuilding = true;
 				}
 			}
@@ -305,6 +313,10 @@ public class Planet {
 //			}
 //		}
 //	}
+	
+	public void setLoop(boolean loop) {
+		looping = loop;
+	}
 	
 	public void queueShip(int type){
 		buildOrder.add(type);

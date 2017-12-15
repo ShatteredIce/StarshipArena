@@ -27,6 +27,8 @@ public class AdvancedEnemy extends Enemy{
 		double interceptorProp = (double)interceptorsCost / total;
 		double missileshipProp = (double)missileshipsCost / total;
 		for (int i = 0; i < myPlanets.size(); i++) {
+			Planet p = myPlanets.get(i);
+			p.setLoop(true);
 			double rand = random.nextDouble();
 			if (rand < fighterProp + 0.05) {
 //				myPlanets.get(i).setLoop(enemyPlayer.getTeam(), "3");
@@ -40,6 +42,8 @@ public class AdvancedEnemy extends Enemy{
 //					if (attackDelay < 2000)
 //						attackDelay += 1000;
 //				}
+				enemyPlayer.setSelectedPlanet(p);
+				game.buyShips(enemyPlayer, 3);
 			}
 			else if (rand < fighterProp + interceptorProp - 0.05 || enemyPlayer.getControlledShips().size() == 0) {
 //				if (myPlanets.get(i).getResources() >= 5) {
@@ -47,6 +51,8 @@ public class AdvancedEnemy extends Enemy{
 //					game.buyShips(enemyPlayer, 1);
 //				}
 //				myPlanets.get(i).setLoop(enemyPlayer.getTeam(), "1");
+				enemyPlayer.setSelectedPlanet(p);
+				game.buyShips(enemyPlayer, 1);
 			}
 			else if (rand < fighterProp + interceptorProp + missileshipProp) {
 //				if (myPlanets.get(i).getResources() >= 20) {
@@ -60,6 +66,8 @@ public class AdvancedEnemy extends Enemy{
 //						attackDelay += 1000;
 //				}
 //				myPlanets.get(i).setLoop(enemyPlayer.getTeam(), "2");
+				enemyPlayer.setSelectedPlanet(p);
+				game.buyShips(enemyPlayer, 2);
 			}
 		}
 	}
