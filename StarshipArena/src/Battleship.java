@@ -75,6 +75,7 @@ public class Battleship extends Starship{
 	}
 	public void shipTurrets(){
 		if(team.equals("blue")){
+			id2 = 5;
 			id3 = 1;
 		}
 		else if(team.equals("red")){

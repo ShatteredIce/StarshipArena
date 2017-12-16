@@ -202,11 +202,22 @@ public class Turret {
 			}
 			//mgun sfx
 			//TODO This sound effect is also temporary sniper sfx
-			else if (projectile_type == 3 || projectile_type == 7) {
+			else if (projectile_type == 3) {
 				for (int i = 5; i < 10; i++) {
 					if (game.soundEffects[i].getFramePosition() > 1000 || !game.soundEffects[i].isRunning()) {
 						FloatControl gainControl = (FloatControl) game.soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
 						gainControl.setValue(Math.max(-80, Math.min(6, game.MGUN_DB + dbDiff))); // Increase volume by a number of decibels.
+						game.soundEffects[i].setFramePosition(0);
+						game.soundEffects[i].start();
+						break;
+					}
+				}
+			}
+			else if (projectile_type == 7) {
+				for (int i = 5; i < 10; i++) {
+					if (game.soundEffects[i].getFramePosition() > 1000 || !game.soundEffects[i].isRunning()) {
+						FloatControl gainControl = (FloatControl) game.soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
+						gainControl.setValue(Math.max(-80, Math.min(6, game.SNIPER_DB + dbDiff))); // Increase volume by a number of decibels.
 						game.soundEffects[i].setFramePosition(0);
 						game.soundEffects[i].start();
 						break;

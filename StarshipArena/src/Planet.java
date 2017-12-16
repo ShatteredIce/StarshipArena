@@ -355,9 +355,11 @@ public class Planet {
 		}
 	}
 	
+	//Clear the build queue, stop the current construction, and refund resources if a ship is currently building
 	public void clearBuildOrder(){
 		isBuilding = false;
 		buildTimer = maxBuildTimer;
+		if (!buildOrder.isEmpty()) storedResources += shipCosts[buildOrder.get(0) - 1];
 		buildOrder.clear();
 	}
 	
