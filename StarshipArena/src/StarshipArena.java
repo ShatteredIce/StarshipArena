@@ -139,6 +139,7 @@ public class StarshipArena {
     float MGUN_DB = -18.0f;
     float MISSILE_DB = -4.0f;
     float LASER_DB = -8.0f;
+    float SNIPER_DB = 1.0f;
     float HITEX_DB = -8.0f;
     float DEATHEX_DB = 1.0f;
     
@@ -263,11 +264,15 @@ public class StarshipArena {
 		//Fighters are vulnerable to missiles
 		damageMultipliers[1][4] = 4;
 		//Interceptors are resistant to missiles
-		damageMultipliers[2][4] = 0.5;
+		damageMultipliers[2][4] = 0.25;
 		//Missileships are resistant to plasma (all three colors)
 		damageMultipliers[3][0] = 0.5; damageMultipliers[3][1] = 0.5; damageMultipliers[3][2] = 0.5;
 		//Missileships are vulnerable to machineguns
 		damageMultipliers[3][3] = 2;
+		//Wallships are vulnerable to snipers
+		damageMultipliers[4][7] = 3;
+		//Wallships are resistant to missiles
+		damageMultipliers[4][4] = 0.25;
 		
 		try {
 			gameMusic = AudioSystem.getClip();
@@ -393,9 +398,9 @@ public class StarshipArena {
 			}
 			
 			if ( key == GLFW_KEY_L && action == GLFW_PRESS )
-				lPressed = true;
-			if ( key == GLFW_KEY_L && action == GLFW_RELEASE )
-				lPressed = false;
+				if (player.getSelectedPlanet() != null) player.getSelectedPlanet().setLoop(!player.getSelectedPlanet().looping);
+//			if ( key == GLFW_KEY_L && action == GLFW_RELEASE )
+//				lPressed = false;
 			
 			//TODO Remove this testing thing for proximity groups after testing concludes
 			if( key == GLFW_KEY_P && action == GLFW_RELEASE ){
@@ -527,8 +532,8 @@ public class StarshipArena {
 				if(shiftPressed){
 					assignControlGroup(player, 0);
 				}
-				else if (lPressed){
-//					player.getSelectedPlanet().setLoop(player.getTeam(), "0");
+				else if (player.getSelectedPlanet() != null) {
+					player.getSelectedPlanet().clearBuildOrder();
 				}
 			}
 			if ( key == GLFW_KEY_1 && action == GLFW_PRESS){
@@ -537,9 +542,6 @@ public class StarshipArena {
 				}
 				else if(player.getSelectedPlanet() == null){
 					displayControlGroup(player, 1);
-				}
-				else if (lPressed){
-//					player.getSelectedPlanet().setLoop(player.getTeam(), "1");
 				}
 				else {
 					buyShips(player, 1);
@@ -552,9 +554,6 @@ public class StarshipArena {
 				else if(player.getSelectedPlanet() == null){
 					displayControlGroup(player, 2);
 				}
-				else if (lPressed){
-//					player.getSelectedPlanet().setLoop(player.getTeam(), "2");
-				}
 				else {
 					buyShips(player, 2);
 				}
@@ -564,9 +563,6 @@ public class StarshipArena {
 				}
 				else if(player.getSelectedPlanet() == null){
 					displayControlGroup(player, 3);
-				}
-				else if (lPressed){
-//					player.getSelectedPlanet().setLoop(player.getTeam(), "3");
 				}
 				else {
 					buyShips(player, 3);
@@ -578,9 +574,6 @@ public class StarshipArena {
 				else if(player.getSelectedPlanet() == null){
 					displayControlGroup(player, 4);
 				}
-				else if (lPressed){
-//					player.getSelectedPlanet().setLoop(player.getTeam(), "4");
-				}
 				else {
 					buyShips(player, 4);
 				}
@@ -591,9 +584,6 @@ public class StarshipArena {
 				else if(player.getSelectedPlanet() == null){
 					displayControlGroup(player, 5);
 				}
-				else if (lPressed){
-//					player.getSelectedPlanet().setLoop(player.getTeam(), "5");
-				}
 				else {
 					buyShips(player, 5);
 				}
@@ -603,9 +593,6 @@ public class StarshipArena {
 				}
 				else if(player.getSelectedPlanet() == null){
 					displayControlGroup(player, 6);
-				}
-				else if (lPressed){
-//					player.getSelectedPlanet().setLoop(player.getTeam(), "6");
 				}
 				else {
 					buyShips(player, 6);
@@ -1308,6 +1295,9 @@ public class StarshipArena {
 				int numInterceptorsSelected = 0;
 				int numTransportsSelected = 0;
 				int numMissileshipsSelected = 0;
+				int numWallshipsSelected = 0;
+				int numSnipersSelected = 0;
+				int numBattleshipsSelected = 0;
 				int numPodsSelected = 0;
 				String shipStatus = "Idle";
 				Planet selectedPlanet = null;
@@ -1337,6 +1327,9 @@ public class StarshipArena {
 						else if (ships.get(s) instanceof Interceptor) numInterceptorsSelected++;
 						else if (ships.get(s) instanceof Transport) numTransportsSelected++;
 						else if (ships.get(s) instanceof Missileship) numMissileshipsSelected++;
+						else if (ships.get(s) instanceof Wallship) numWallshipsSelected++;
+						else if (ships.get(s) instanceof Sniper) numSnipersSelected++;
+						else if (ships.get(s) instanceof Battleship) numBattleshipsSelected++;
 						else if (ships.get(s) instanceof BasicPod) {
 							numPodsSelected++;
 							if (ships.get(s) instanceof MissilePod) podTypeSelected = "Missile Turret";
@@ -1364,17 +1357,25 @@ public class StarshipArena {
 						if(isVisible(selectedPlanet, player)){
 							writeText("" + selectedPlanetResources, 20, 20);
 							writeText(planetControllingTeam, 20, 80);
+							for (int i = 0; i < Math.min(selectedPlanet.buildOrder.size(), 20); i++) {
+								writeText(selectedPlanet.buildOrder.get(i) + "", 500 + i * 20, 20);
+							}
 						}
 						else{
 							writeText("???", 20, 20);
 							writeText("???", 20, 80);
 						}
 					}
-					else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected + numMissileshipsSelected + numPodsSelected == 1) {
+					else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected
+							+ numMissileshipsSelected + numWallshipsSelected + numSnipersSelected
+							+ numBattleshipsSelected + numPodsSelected == 1) {
 						if (numFightersSelected == 1) writeText("Fighter", 400, 15, 30);
 						else if (numInterceptorsSelected == 1) writeText("Interceptor", 400, 15, 30);
 						else if (numTransportsSelected == 1) writeText("Transport", 400, 15, 30);
 						else if (numMissileshipsSelected == 1) writeText("Missileship", 400, 15, 30);
+						else if (numWallshipsSelected == 1) writeText("Wallship", 400, 15, 30);
+						else if (numSnipersSelected == 1) writeText("Sniper", 400, 15, 30);
+						else if (numBattleshipsSelected == 1) writeText("Battleship", 400, 15, 30);
 						else if (numPodsSelected == 1) writeText(podTypeSelected, 300, 15, 30);
 //							if(shipsControllingTeam.equals(player.getTeam()))
 						if (sumCurrentHP - (int)sumCurrentHP > 0)
@@ -1387,13 +1388,20 @@ public class StarshipArena {
 						writeText("Status:", 20, 40);
 						writeText(shipStatus, 20, 20);
 					}
-					else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected  + numMissileshipsSelected + numPodsSelected > 1) {
-						writeText("Starfleet(" + (numFightersSelected + numInterceptorsSelected + numTransportsSelected + numMissileshipsSelected + numPodsSelected) + ")", 400, 15, 30);
-						writeText("Fighters:" + numFightersSelected, 1000, 120);
-						writeText("Interceptors:" + numInterceptorsSelected, 1000, 100);
+					else if (numFightersSelected + numInterceptorsSelected + numTransportsSelected
+							+ numMissileshipsSelected + numWallshipsSelected + numSnipersSelected
+							+ numBattleshipsSelected + numPodsSelected > 1) {
+						writeText("Starfleet(" + (numFightersSelected + numInterceptorsSelected + numTransportsSelected
+								+ numMissileshipsSelected + numWallshipsSelected + numSnipersSelected
+								+ numBattleshipsSelected + numPodsSelected) + ")", 400, 15, 30);
+						writeText("F:" + numFightersSelected, 1000, 120);
+						writeText("I:" + numInterceptorsSelected, 1000, 100);
 //							writeText("Transports:" + numTransportsSelected, 1000, 60);
-						writeText("Missileships:" + numMissileshipsSelected, 1000, 80);
-						writeText("Turrets:" + numPodsSelected, 1000, 60);
+						writeText("M:" + numMissileshipsSelected, 1000, 80);
+						writeText("W:" + numWallshipsSelected, 1000, 60);
+						writeText("S:" + numSnipersSelected, 1200, 120);
+						writeText("B:" + numBattleshipsSelected, 1200, 100);
+						writeText("T:" + numPodsSelected, 1200, 80);
 //							if (shipsControllingTeam.equals(player.getTeam()))
 						if (sumCurrentHP - (int)sumCurrentHP > 0)		
 							sumCurrentHP++;
@@ -1633,37 +1641,37 @@ public class StarshipArena {
 		if(p != null && p.getTeam().equals(player.getTeam())){
 			if (p.getTeam().equals("red")) spawnangle = 180;
 			//attempt to buy fighter
-			if(type == 1 && p.getResources() >= FIGHTER_COST){
-				p.setResources(p.getResources() - FIGHTER_COST);
+			if(type == 1){
+//				p.setResources(p.getResources() - FIGHTER_COST);
 				p.queueShip(1);
 			}
 			//attempt to buy interceptor
-			else if(type == 2 && p.getResources() >= INTERCEPTOR_COST){
-				p.setResources(p.getResources() - INTERCEPTOR_COST);
+			else if(type == 2){
+//				p.setResources(p.getResources() - INTERCEPTOR_COST);
 				p.queueShip(2);
 				
 			}
 			//attempt to buy missileship
-			else if(type ==3 && p.getResources() >= MISSILESHIP_COST){
-				p.setResources(p.getResources() - MISSILESHIP_COST);
+			else if(type ==3){
+//				p.setResources(p.getResources() - MISSILESHIP_COST);
 				p.queueShip(3);
 				
 			}
 			
 			//NEW SHIP CLASSES:
 			//Attempt to buy Wallship
-			else if (type == 4 && p.getResources() >= WALLSHIP_COST) {
-				p.setResources(p.getResources() - WALLSHIP_COST);
+			else if (type == 4) {
+//				p.setResources(p.getResources() - WALLSHIP_COST);
 				p.queueShip(4);
 			}
 			//Attempt to buy Sniper
-			else if (type == 5 && p.getResources() >= SNIPER_COST) {
-				p.setResources(p.getResources() - SNIPER_COST);
+			else if (type == 5) {
+//				p.setResources(p.getResources() - SNIPER_COST);
 				p.queueShip(5);
 			}
 			//Attempt to buy Battleship
-			else if (type == 6 && p.getResources() >= BATTLESHIP_COST) {
-				p.setResources(p.getResources() - BATTLESHIP_COST);
+			else if (type == 6) {
+//				p.setResources(p.getResources() - BATTLESHIP_COST);
 				p.queueShip(6);
 			}
 		}
@@ -1841,28 +1849,29 @@ public class StarshipArena {
 			new Planet(this, 30000 * levelScale, 15000 * levelScale, 2).setTeam("red");
 //			new PlanetLaser(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
 			
-//			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			
-//			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			
-//			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-//			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Wallship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			
+			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Sniper(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			
+			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+			new Battleship(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
 			
 			
-			for (int i = 0; i < 10; i++) {
-				if (i % 20 == 0) {
-					new Battleship(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
-				}
+//			for (int i = 0; i < 320; i++) {
+//				if (i % 20 == 0) {
+//					new Missileship(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
+//				}
+//				new Fighter(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
+////				new Fighter(this, "blue", 13500 * levelScale, 10000 * levelScale, 45);
+//			}
+//			for (int i = 0; i < 32; i++) {
 //				new Interceptor(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-			}
-			for (int i = 0; i < 32; i++) {
-				new Fighter(this, "red", 30000 * levelScale, 15000 * levelScale, 45);
-			}
+//			}
 			
 			
 //			new Fighter(this, "blue", 5000 * levelScale, 4000 * levelScale, 0);
@@ -2516,6 +2525,7 @@ public class StarshipArena {
 								shipType = getShipType(splashCheck);
 								//Piercing checks not performed with splashCheck, hopefully won't bite later
 								splashCheck.setHealth(splashCheck.getHealth() - damageMultipliers[shipType][projectileType] * p.getDamage());
+								splashCheck.damageDisplayDelay = 1000;
 							}
 						}
 					}

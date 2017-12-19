@@ -6,10 +6,23 @@
 				\____/ \__, |___/\__\___|_| |_| |_|___/ \_| |_/_| |_|_|  \___|
 				        __/ |                                                 
 				       |___/                                                  
-This controls manual is accurate as of September 20, 2017.
+**SYSTEMS AFIRE**
+
+This controls manual is accurate as of December 14, 2017. Written by Kevin Jin.
+
+**IMPORTANT NOTES**
+The first level of the game is currently being used as a testing ground for ships. Please skip over it, or beat it using Cheats (please don't waste your time beating it normally!).
+Missileship, Wallship, Sniper, and Battleship currently look identical because we don't have enough textures right now.
+Wallship, Sniper, and Battleship currently don't have information displays when selected because they are new ships.
 
 
-=====HOW TO PLAY=====
+--Sections--
+ - INTRODUCTION
+ - STRATEGY
+ - CONTROLS
+
+
+*****INTRODUCTION*****
 Systems Afire is a 2D space-based RTS written in Java using the LWJGL game library.
 
 
@@ -25,33 +38,47 @@ and to capture enemy planets (by moving ships to them).
 There are three ship types in the game:
 
  1: Fighters. These are the basic combat starship. Costing 5 resources, they have 20 armor and are mounted with a medium-damage plasma cannon.
-    They move fairly slowly and are not very maneuverable, but en masse they will melt anything in their path.
+    They move fairly slowly and are not very maneuverable, but en masse they will melt (almost!) anything in their path.
      - Counters: Interceptor
      - Countered by: Missileship
 
  2: Interceptors. These are advanced starships designed for quick and effective penetration into enemy territory. Costing 20 resources, they have 30 armor
-    and are mounted with not only a plasma cannon but also two high-damage machine guns. They are quick and agile and are great for raiding
-    and ambushing troops.
+    and are mounted with not only a plasma cannon but also two high-damage machine guns. They are quick and agile and are great for raiding and ambushing enemies.
      - Counters: Missileship
      - Countered by: Fighter
 
  3: Missileships. These heavy behemoths are well-suited with long-range harassment and defense. Costing 40 resources, they have 50 armor and are mounted with four
-    long-range missile launchers. Although they are slow and unwieldy, their missiles have excellent range and are great for creating no-fly zones.
+    long-range missile launchers. Although they are slow and unwieldy, their missiles have excellent range, deal splash damage, and are great for creating no-fly zones.
      - Counters: Fighter
      - Countered by: Interceptor
 
- Future ship classes: Sniper (long-range ship that can one-shot many things), Battleship (well-armed frontline unit), and Wallship (a flying pool of HP).
+ 4: Wallships. These ships serve as a super-heavy tank. Costing 30 resources, they have 400 armor and are mounted with two weak, close-range
+    machineguns. They can fly at a reasonable speed, but their value comes from the immense amount of armor they tote.
+     - Counters: Nothing by itself, but works well as a damage sponge in a larger, diverse battlegroup. Can effectively soak up missile damage with near-zero effect.
+     - Countered by: Everything when by itself. Especially vulnerable to the Sniper and Battleship.
 
+ 5: Sniper. These fragile ships work well as harrassment units and long-range support. Costing 50 resources, they only have 15 armor, but they are equipped
+    with a high-power particle cannon. Although its weapon has a lengthy reload time, it has the longest range in the game, and severly damages or destroys
+    any single ship with a direct hit.
+     - Counters: Anything at long range. Especially effective against expensive units, such as Missileships or Battleships.
+     - Countered by: Most ships at close range.
 
-Ships begin to slowly regenerate HP if they are out of combat for about 10 seconds. This regeneration is faster if the ships are near an allied planet.
+ 6: Battleship. These ships are ideal for the frontline. Costing 60 resources, they have 120 armor and are armed to the teeth: three high-firerate, forward facing plasma cannons,
+    two missile launchers, and two laser turrets. Its plasma cannons are effective at shredding high-armor foes, its missile launchers serve as light anti-swarm, and its dangerous
+    laser turrets serve as both anti-swarm and anti-tank (due to their high damage)! When facing enemies at medium to close range, there is nothing more dangerous.
+    - Counters: Any ships at close range, aside from a Fighter swarm perhaps.
+    - Countered by: Long-range harrasers, such as Missileship or Sniper
 
-A player should use these three ship types to build an effective army to conquer more planets. Planets provide resource production, so the player with more planets
-will be able to build more ships and perform better in the long run. The enemy will be building these ships too, so you must build smartly to counter them.
+*NOTES*:
+ - Ship counters are on a equal-cost basis. So, 4 fighters (cost 20) will counter an interceptor (cost 20), but one fighter (cost 5) will not necessarily counter one interceptor (cost 20).
+ - Ship balancing is currently a work-in-progress. The first 3 ship classes are well-balanced against each other, but the newest 3 ships are not so well balanced on account of being added recently.
+ - Ships begin to slowly regenerate HP if they are out of combat for about 10 seconds. This regeneration is faster if the ships are near an allied planet.
+ - A player should use these three ship types to build an effective army to conquer more planets. Planets provide resource production, so the player with more planets
+   will be able to build more ships and perform better in the long run. The enemy will be building these ships too, so you must build smartly to counter them.
+ - If fog of war is enabled (see source code, boolean variable 'fog' in StarshipArena.java), not everything on the map is immediately visible. The player will need to scout areas and keep intelligence coverage
+   over important locations on the map in order to perform optimally.
 
-Not everything on the map is immediately visible (although fog of war may have been toggled, so perhaps everything is immediately visible).
-The player will need to scout areas and keep intelligence coverage over many locations on the map in order to perform optimally.
-
-**NOTE** Every planet produces and stores resources independently! So, you will need to build ships on all of your planets in order to be spending all your resources.
+**IMPORTANT NOTE** Every planet produces and stores resources independently! So, you will need to build ships on all of your planets in order to be spending all your resources.
 
 
 There are also an assortment of weapon pods (aka turrets) in the game:
@@ -64,11 +91,19 @@ There are also an assortment of weapon pods (aka turrets) in the game:
 Currently, weapon pods cannot be purchased.
 
 
-Static structures do not exist yet, although work is beginning on them. Currently, there is one static structure (and it cannot be purchased):
+Static structures do not exist yet, although work is beginning on them. Currently, there is one pseudo-static structure (and it cannot be purchased):
 
  Planet Radar: Immobile radar stationed over a planet that grants a large amount of vision to the controller.
 
-*****HOTKEYS*****:
+
+
+
+
+
+
+
+
+*****CONTROLS*****:
 ---ESSENTIAL---
  - Left click:
        * In menu: Navigate the menus and select levels to play.
@@ -93,7 +128,7 @@ Static structures do not exist yet, although work is beginning on them. Currentl
 
  - Space:
        * In game: If no ships are selected, select all allied ships.
-         Otherwise, select all ships that are in the same faction and of the same type as the current selection.
+         Otherwise, select all ships that are in the same faction and of the same type as ships in the current selection.
 
  - +/- OR Mouse scroll:
        * In game: Zoom the camera in or out.
@@ -101,10 +136,12 @@ Static structures do not exist yet, although work is beginning on them. Currentl
  - Arrow keys OR WASD:
        * In game: Pan the camera to see more of the battlefield.
 
- - Numbers (1, 2, 3, [later, after new ships added: 4, 5, 6]):
-       * In game: With an allied planet selected, build Fighters (number 1), Interceptors (number 2), or Missileships (number 3) if resources are sufficient.
+ - Numbers:
+       * In game: With an allied planet selected, queues a Fighter (number 1), Interceptor (#2), Missileship (#3), Wallship (#4), Sniper (#5), or Battleship (#6).
+         Ships in queue will begin building as soon as resources are sufficient, in the order they were queued. Afterwards, they will be removed from the queue unless loop-build is enabled (see 'L', below).
+         Pressing #0 when an allied planet is selected will clear the planet's build queue.
 
-         If command groups were previously created (see Shift, below), pressing a number (1-3) without a planet selected will select the given command group.
+         If command groups were previously created (see Shift, below), pressing a number (1-6) without a planet selected will select the given command group.
 
  - Esc:
        * In menu: Exit the game.
@@ -125,7 +162,7 @@ Static structures do not exist yet, although work is beginning on them. Currentl
          Ships will finish executing the other commands in its queue, then execute the newly queued command.
          All sorts of commands can be queued: Attack-move, turn, direct attack, and normal move can all be queued.
 
-         Holding 'shift' while pressing a number (1-3 currently) with ships selected will add the selected ships to the numbered command group.
+         Holding 'shift' while pressing a number (1-6 currently) with ships selected will add the selected ships to the numbered command group.
          Ships can only be in one command group at a time, so adding a ship already in a command group to another command group will remove it
          from its initial command group.
          
@@ -138,27 +175,47 @@ Static structures do not exist yet, although work is beginning on them. Currentl
          Ships selected will clear their command queues and cease movement.
 
  - L:
-       * In game: Holding 'L' while building ships (selecting a planet and pressing a number) will issue a "loop-build" order.
-         The planet will build the given ship type (see Numbers, above) whenever it has enough resources.
+       * In game: Pressing 'L' while an allied planet is selected will toggle loop-build.
+         When loop-building is enabled, ships are added to the back of the queue after being built (instead of being removed from the queue).
 
  - F1:
        * In game: Holding 'F1' with ships selected will show the "engage ranges" (usually the same as weapon range) of the selected ships.
-         Red circles will be drawn showing the range at which these ships can and will attack other ships (assuming they can see the enemy ships).
+         Red circles will be drawn showing the range at which these ships can AND will attack other ships (assuming they can see the enemy ships).
 
          Pressing 'F1' with a planet selected, however, is a Cheat (see below).
 
+ - C:
+       * In game: Pressing 'C' while ships are selected will toggle camera-tracking.
+         When enabled, the camera will track the selected ships, always keeping the camera focused on the center of the selected group.
+         Deselecting all ships will automatically disable camera-tracking.
 
+**UNFINISHED FEATURES**
+ - ',' and '.'
+       * In game: When a planet is selected, pressing '.' will shift the camera to viewing the planet's surface.
+         This is the unfinished beginning of ground-based warfare in the game.
 
+         When viewing a planet surface, pressing ',' will shift the camera to viewing space again.
+         Note: Pressing ',' while not on a planet surface may cause minor camera bugs.
 
 
 ---CHEATS/DEV TOOLS---
  - Enter:
        * In menu: Enter the test world. This is used for demonstration and testing of new features/ships.
 
-       If another level is loaded at any point, pressing 'Enter' will instead enter that level in its current state.
+       If another level is loaded at any point after the game begins running, pressing 'Enter' will instead enter that level in its current state.
+       **NOTE** This is not a save file! Exiting and reentering the game will cause the currently-"saved" level to be lost.
 
  - '[' and ']':
-       * In game: Slow the game down with '[' and use ']' to speed it back up to normal.
+       * In game: Slow the game down with '[' and use ']' to speed it back up to normal. Extremely useful for dev testing.
 
  - F1:
-       * In game: With a planet selected, instantly add 100 resources to the selected planet.
+       * In game: With a planet selected, instantly add 100 resources to the selected planet. Useful for dev testing, or just plain cheating.
+
+ - K:
+       * In game: Instantly destroy all ships selected (regardless of faction). Useful for speeding up testing of levels, or just plain cheating.
+
+ - H:
+       * In game: Instantly heals all ships selected to full health (regardless of faction). Useful when testing ship interactions (to heal a partially-damaged ship so that it can be tested again).
+
+
+

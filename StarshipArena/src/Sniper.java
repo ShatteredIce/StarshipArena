@@ -7,9 +7,9 @@ public class Sniper extends Starship{
 	static Texture missileship_sprites = new Texture("missileship_sprites.png");
 	
 	//Sniper turret
-	static double primary_damage = 180;
+	static double primary_damage = 56;
 //	static double primary_damage = 4;
-	static int primary_cooldown = 900;
+	static int primary_cooldown = 300;
 //	static int primary_cooldown = 10;
 	static int primary_spread = 360;
 	static int primary_accuracy = 40;
