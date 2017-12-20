@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.sound.sampled.FloatControl;
+
 public class Projectile {
 	
 	Random random = new Random();
@@ -218,6 +220,26 @@ public class Projectile {
 		game.removeProjectile(this);
 		if (texId < 3) new Explosion(game, center.X(), center.Y(), 40);
 		else if (texId == 3) new Explosion(game, center.X(), center.Y(), 20);
+		else if (texId == 7) {
+			new Explosion(game, center.X(), center.Y(), 120);
+			for (int i = 15; i < 20; i++) {
+				if (game.mute) break;
+				if (!game.soundEffects[i].isRunning()) {
+					double cameraX = game.viewX + game.cameraWidth / 2;
+					double cameraY = game.viewY + game.cameraHeight / 2;
+					//This formula decrease the volume the further away the player is from the weapon event, but increase volume for high levels of zoom
+					float dbDiff = (float)(game.distance(cameraX, cameraY, center.X(), center.Y()) / game.cameraWidth * -20 + 10000 / game.cameraWidth);
+					FloatControl gainControl = (FloatControl) game.soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
+					gainControl.setValue(Math.max(-80, Math.min(6, game.HITEX_DB + dbDiff))); // Increase volume by a number of decibels.
+					game.soundEffects[i].setFramePosition(0);
+					game.soundEffects[i].start();
+					break;
+				}
+				else if (game.soundEffects[i].getFramePosition() < 500) {
+					break;
+				}
+			}
+		}
 	}
 	
 	public Starship getOwner(){

@@ -139,7 +139,7 @@ public class StarshipArena {
     float MGUN_DB = -18.0f;
     float MISSILE_DB = -4.0f;
     float LASER_DB = -8.0f;
-    float SNIPER_DB = 1.0f;
+    float SNIPER_DB = 3.0f;
     float HITEX_DB = -8.0f;
     float DEATHEX_DB = 1.0f;
     
@@ -262,7 +262,7 @@ public class StarshipArena {
 			Arrays.fill(damageMultipliers[i], 1);
 		}
 		//Fighters are vulnerable to missiles
-		damageMultipliers[1][4] = 4;
+		damageMultipliers[1][4] = 2;
 		//Interceptors are resistant to missiles
 		damageMultipliers[2][4] = 0.25;
 		//Missileships are resistant to plasma (all three colors)
@@ -321,6 +321,13 @@ public class StarshipArena {
 				soundEffects[i] = AudioSystem.getClip();
 				AudioInputStream laserSfx = AudioSystem.getAudioInputStream(new File("sounds/effects/pulse_laser.wav"));
 				soundEffects[i].open(laserSfx);
+//				FloatControl gainControl = (FloatControl) soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
+//				gainControl.setValue(1.0f); // Increase volume by a number of decibels.
+			}
+			for (int i = 30; i < 35; i++) {
+				soundEffects[i] = AudioSystem.getClip();
+				AudioInputStream sniperSfx = AudioSystem.getAudioInputStream(new File("sounds/effects/cannon_fire2.wav"));
+				soundEffects[i].open(sniperSfx);
 //				FloatControl gainControl = (FloatControl) soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
 //				gainControl.setValue(1.0f); // Increase volume by a number of decibels.
 			}
@@ -532,7 +539,7 @@ public class StarshipArena {
 				if(shiftPressed){
 					assignControlGroup(player, 0);
 				}
-				else if (player.getSelectedPlanet() != null) {
+				else if (player.getSelectedPlanet() != null && player.getTeam().equals(player.getSelectedPlanet().getTeam())) {
 					player.getSelectedPlanet().clearBuildOrder();
 				}
 			}
@@ -2448,9 +2455,9 @@ public class StarshipArena {
 			
 			loadSubLevel(p);
 			//Testing with 10 ships
-			for (int j = 0; j < 10; j++) {
-				new Fighter(this, "blue", p.surfaceX + 500, p.surfaceY + 500, 0);
-			}
+//			for (int j = 0; j < 10; j++) {
+//				new Fighter(this, "blue", p.surfaceX + 500, p.surfaceY + 500, 0);
+//			}
 			loadSubLevel(null);
 		}
 	    

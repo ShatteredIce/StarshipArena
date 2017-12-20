@@ -40,8 +40,8 @@ public class Planet {
 	int resourceTimer = 50;
 	//ship building
 	boolean isBuilding = false;
-	int maxBuildTimer = 100;
-	int buildTimer = 100;
+	int buildTimer = 1;
+	int totalBuildTimer = 1;
 	boolean looping = false;
 	int[] shipCosts;
 	ArrayList<Integer> buildOrder = new ArrayList<Integer>();
@@ -243,8 +243,8 @@ public class Planet {
 			if(isBuilding){
 				if(buildTimer == 0){
 					isBuilding = false;
-					buildTimer = maxBuildTimer;
 					spawnShip(buildOrder.get(0));
+					buildTimer = totalBuildTimer;
 					if (looping) buildOrder.add(buildOrder.get(0));
 					buildOrder.remove(0);
 				}
@@ -255,6 +255,8 @@ public class Planet {
 			else{
 				if(!buildOrder.isEmpty() && storedResources >= shipCosts[buildOrder.get(0) - 1]){
 					storedResources -= shipCosts[buildOrder.get(0) - 1];
+					buildTimer = (int)Math.sqrt(shipCosts[buildOrder.get(0) - 1] * 1000);
+					totalBuildTimer = buildTimer;
 					isBuilding = true;
 				}
 			}
@@ -357,9 +359,9 @@ public class Planet {
 	
 	//Clear the build queue, stop the current construction, and refund resources if a ship is currently building
 	public void clearBuildOrder(){
+		if (!buildOrder.isEmpty() && isBuilding) storedResources += shipCosts[buildOrder.get(0) - 1];
 		isBuilding = false;
-		buildTimer = maxBuildTimer;
-		if (!buildOrder.isEmpty()) storedResources += shipCosts[buildOrder.get(0) - 1];
+		buildTimer = totalBuildTimer;
 		buildOrder.clear();
 	}
 	
@@ -412,7 +414,7 @@ public class Planet {
 	}
 	
 	public double getBuildPercentage(){
-		return 1 - ((double) buildTimer/ (double) maxBuildTimer);
+		return 1 - ((double) buildTimer/ (double) totalBuildTimer);
 	}
 
 }

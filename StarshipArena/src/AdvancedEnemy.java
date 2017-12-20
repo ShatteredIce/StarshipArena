@@ -28,46 +28,48 @@ public class AdvancedEnemy extends Enemy{
 		double missileshipProp = (double)missileshipsCost / total;
 		for (int i = 0; i < myPlanets.size(); i++) {
 			Planet p = myPlanets.get(i);
-			p.setLoop(true);
+			p.setLoop(false);
 			double rand = random.nextDouble();
-			if (rand < fighterProp + 0.05) {
-//				myPlanets.get(i).setLoop(enemyPlayer.getTeam(), "3");
-//				if (myPlanets.get(i).getResources() >= 40) {
-//					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
-//					game.buyShips(enemyPlayer, 3);
-//				}
-//				else if (myPlanets.get(i).getResources() >= 5) {
-////					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
-////					game.buyShips(enemyPlayer, 1);
-//					if (attackDelay < 2000)
-//						attackDelay += 1000;
-//				}
-				enemyPlayer.setSelectedPlanet(p);
-				game.buyShips(enemyPlayer, 3);
-			}
-			else if (rand < fighterProp + interceptorProp - 0.05 || enemyPlayer.getControlledShips().size() == 0) {
-//				if (myPlanets.get(i).getResources() >= 5) {
-//					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
-//					game.buyShips(enemyPlayer, 1);
-//				}
-//				myPlanets.get(i).setLoop(enemyPlayer.getTeam(), "1");
-				enemyPlayer.setSelectedPlanet(p);
-				game.buyShips(enemyPlayer, 1);
-			}
-			else if (rand < fighterProp + interceptorProp + missileshipProp) {
-//				if (myPlanets.get(i).getResources() >= 20) {
-//					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
-//					game.buyShips(enemyPlayer, 2);
-//				}
-//				else if (myPlanets.get(i).getResources() >= 5) {
-////					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
-////					game.buyShips(enemyPlayer, 1);
-//					if (attackDelay < 2000)
-//						attackDelay += 1000;
-//				}
-//				myPlanets.get(i).setLoop(enemyPlayer.getTeam(), "2");
-				enemyPlayer.setSelectedPlanet(p);
-				game.buyShips(enemyPlayer, 2);
+			if (p.buildOrder.size() < 5) {
+				if (rand < fighterProp + 0.05) {
+	//				myPlanets.get(i).setLoop(enemyPlayer.getTeam(), "3");
+	//				if (myPlanets.get(i).getResources() >= 40) {
+	//					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
+	//					game.buyShips(enemyPlayer, 3);
+	//				}
+	//				else if (myPlanets.get(i).getResources() >= 5) {
+	////					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
+	////					game.buyShips(enemyPlayer, 1);
+	//					if (attackDelay < 2000)
+	//						attackDelay += 1000;
+	//				}
+					enemyPlayer.setSelectedPlanet(p);
+					game.buyShips(enemyPlayer, 3);
+				}
+				else if (rand < fighterProp + interceptorProp - 0.05 || enemyPlayer.getControlledShips().size() == 0) {
+	//				if (myPlanets.get(i).getResources() >= 5) {
+	//					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
+	//					game.buyShips(enemyPlayer, 1);
+	//				}
+	//				myPlanets.get(i).setLoop(enemyPlayer.getTeam(), "1");
+					enemyPlayer.setSelectedPlanet(p);
+					game.buyShips(enemyPlayer, 1);
+				}
+				else if (rand < fighterProp + interceptorProp + missileshipProp) {
+	//				if (myPlanets.get(i).getResources() >= 20) {
+	//					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
+	//					game.buyShips(enemyPlayer, 2);
+	//				}
+	//				else if (myPlanets.get(i).getResources() >= 5) {
+	////					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
+	////					game.buyShips(enemyPlayer, 1);
+	//					if (attackDelay < 2000)
+	//						attackDelay += 1000;
+	//				}
+	//				myPlanets.get(i).setLoop(enemyPlayer.getTeam(), "2");
+					enemyPlayer.setSelectedPlanet(p);
+					game.buyShips(enemyPlayer, 2);
+				}
 			}
 		}
 	}
@@ -84,13 +86,15 @@ public class AdvancedEnemy extends Enemy{
 			//to 100% (AI has 150% of idle ships in cost as player)
 			if (enemyPlayer.costOfIdleShips() - game.player.costOfIdleShips() / 2 > shipCountCheck)
 				performAttack();
-			buyShips();
 		}
+		buyShips();
 		ArrayList<Starship> myShips = enemyPlayer.getControlledShips();
-		for (int i = 0; i < myShips.size(); i++) {
-			if (myShips.get(i) instanceof Missileship && myShips.get(i).target != null)
-				myShips.get(i).setLocationTarget(null);
-		}
+		//Stop all missileships in range (defunct)
+//		for (int i = 0; i < myShips.size(); i++) {
+//			if (myShips.get(i) instanceof Missileship && myShips.get(i).target != null)
+//				myShips.get(i).setLocationTarget(null);
+//		}
+		//If enemy controls no planets, move all ships to closest planet
 		if(enemyPlayer.getControlledPlanets().size() == 0){
 			for(int i = 0; i < myShips.size(); i++){
 				Starship current = myShips.get(i);
@@ -107,7 +111,7 @@ public class AdvancedEnemy extends Enemy{
 						}
 					}
 				}
-				current.setLocationTarget(closestPlanet.center);
+				current.addCommand(false, true, false, false, null, closestPlanet.center);
 			}
 		}
 	}
@@ -144,7 +148,7 @@ public class AdvancedEnemy extends Enemy{
 			if (myTransports.get(i).locationTarget == null) {
 				if (myPlanets.size() > 0) {
 					int targetPlanet = random.nextInt(myPlanets.size());
-					myTransports.get(i).setLocationTarget(myPlanets.get(targetPlanet).center);
+					myTransports.get(i).addCommand(false, false, false, false, null, myPlanets.get(targetPlanet).center);
 				}
 			}
 		}
@@ -170,7 +174,7 @@ public class AdvancedEnemy extends Enemy{
 		for (int i = 0; i < game.planets.size(); i++) {
 			if (game.planets.get(i).capturingTeam.equals("none")) {
 				for (int j = 0; j < attackGroup.size(); j++) {
-					attackGroup.get(j).setLocationTarget(game.planets.get(i).center);
+					attackGroup.get(j).addCommand(false, true, false, false, null, game.planets.get(i).center);
 				}
 				attackingUnprotected = true;
 				break;
@@ -194,8 +198,7 @@ public class AdvancedEnemy extends Enemy{
 				}
 				else {
 					for (int i = 0; i < attackGroup.size(); i++) {
-						//TODO Issue commands here instead of location targets
-						attackGroup.get(i).setLocationTarget(game.planets.get(targetPlanet).center);
+						attackGroup.get(i).addCommand(false, true, false, false, null, game.planets.get(targetPlanet).center);
 					}
 				}
 			}
@@ -204,8 +207,7 @@ public class AdvancedEnemy extends Enemy{
 				if(playerShips.size() > 0) {
 					int targetShip = random.nextInt(playerShips.size());
 					for (int i = 0; i < attackGroup.size(); i++) {
-						//TODO Issue commands here instead of location targets
-						attackGroup.get(i).setLocationTarget(playerShips.get(targetShip).center);
+						attackGroup.get(i).addCommand(false, true, false, false, playerShips.get(targetShip), null);
 					}
 				}
 			}

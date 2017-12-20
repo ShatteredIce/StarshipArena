@@ -153,7 +153,7 @@ public class Starship {
 	
 	
 	public void destroy(){
-		if (this instanceof Missileship) {
+		if (this instanceof Missileship || this instanceof Wallship || this instanceof Sniper || this instanceof Battleship) {
 			new Explosion(game, center.X(), center.Y(), 220);
 			for (int i = 0; i < 4; i++) {
 				int x_rand = random.nextInt(5) - 2;

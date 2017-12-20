@@ -31,7 +31,7 @@ public class Missile extends Projectile {
 	public void destroy(Starship victim){
 		model.destroy();
 		game.removeProjectile(this);
-		new Explosion(game, center.X(), center.Y(), 500).ticksPerFrame = 0.5;
+		new Explosion(game, center.X(), center.Y(), 300).ticksPerFrame = 0.5;
 //		for (int i = 0; i < 360; i += 40) {
 		for (int i = 0; i < 2; i++) {
 //				if(victim instanceof MissilePod){
