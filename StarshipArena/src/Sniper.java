@@ -12,7 +12,7 @@ public class Sniper extends Starship{
 	static int primary_cooldown = 300;
 //	static int primary_cooldown = 10;
 	static int primary_spread = 360;
-	static int primary_accuracy = 40;
+	static int primary_accuracy = 80;
 	static int primary_range = 8000;
 	static int primary_speed = 200;
 	static int primary_lifetime = 8000;
@@ -32,7 +32,7 @@ public class Sniper extends Starship{
 		super(mygame, newteam, spawnx, spawny, spawnangle);
 	}
 	public void shipStats(){
-		max_health = 15;
+		max_health = 30;
 		//movement
 		acceleration = 0.1;
 		max_velocity = 4.5;

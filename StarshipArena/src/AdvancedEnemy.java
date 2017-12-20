@@ -31,7 +31,7 @@ public class AdvancedEnemy extends Enemy{
 			p.setLoop(false);
 			double rand = random.nextDouble();
 			if (p.buildOrder.size() < 5) {
-				if (rand < fighterProp + 0.05) {
+				if (rand < fighterProp) {
 	//				myPlanets.get(i).setLoop(enemyPlayer.getTeam(), "3");
 	//				if (myPlanets.get(i).getResources() >= 40) {
 	//					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
@@ -46,7 +46,7 @@ public class AdvancedEnemy extends Enemy{
 					enemyPlayer.setSelectedPlanet(p);
 					game.buyShips(enemyPlayer, 3);
 				}
-				else if (rand < fighterProp + interceptorProp - 0.05 || enemyPlayer.getControlledShips().size() == 0) {
+				else if (rand < fighterProp + interceptorProp || enemyPlayer.getControlledShips().size() == 0) {
 	//				if (myPlanets.get(i).getResources() >= 5) {
 	//					enemyPlayer.setSelectedPlanet(myPlanets.get(i));
 	//					game.buyShips(enemyPlayer, 1);

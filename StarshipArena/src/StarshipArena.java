@@ -269,6 +269,8 @@ public class StarshipArena {
 		damageMultipliers[3][0] = 0.5; damageMultipliers[3][1] = 0.5; damageMultipliers[3][2] = 0.5;
 		//Missileships are vulnerable to machineguns
 		damageMultipliers[3][3] = 2;
+		//Missileships are vulnerable to snipers
+		damageMultipliers[3][7] = 2;
 		//Wallships are vulnerable to snipers
 		damageMultipliers[4][7] = 3;
 		//Wallships are resistant to missiles
