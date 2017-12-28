@@ -1,7 +1,6 @@
-import java.time.Instant;
 import java.util.ArrayList;
 
-public class ShipRenderer {
+public class GameRenderer {
 	
 	double[] vertices = new double[8];
 	double[] textureCoords = new double[8];
@@ -12,6 +11,10 @@ public class ShipRenderer {
 	static Texture haloTexture = new Texture("ships_halo.png");
 	static Texture FOWTexture = new Texture("FOW_halo.png");
 	static Texture rangeTexture = new Texture("range_halo.png");
+	static Texture tex1 = new Texture("title_page.png");
+
+	
+	GameTextures gameTextures = new GameTextures();
 	
 	public void drawShip(Starship s){
 		s.setTexture();
@@ -94,26 +97,22 @@ public class ShipRenderer {
 		else if(p.getCapturingTeam() == "red") {
 			if(p.getTeam() == "none") {
 				setColor("default");
-				setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize(), p.getX()+p.getSize()/2, p.getY()-p.getSize() + 30);
+				setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize() + 70, p.getX()+p.getSize()/2, p.getY()-p.getSize() + 100);
 				setColor("red");
-				setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize(), (p.getX()-p.getSize()/2) + p.getCapturePercentage()*p.getSize(), 
-						p.getY()-p.getSize() + 70);
+				setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize() + 70, (p.getX()-p.getSize()/2) + p.getCapturePercentage()*p.getSize(), 
+						p.getY()-p.getSize() + 100);
 			}
 			else if(p.getTeam() == "blue") {
 				setColor("default");
-				setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize(), p.getX()+p.getSize()/2, p.getY()-p.getSize() + 30);
+				setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize() + 70, p.getX()+p.getSize()/2, p.getY()-p.getSize() + 100);
 				setColor("blue");
-				setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize(), (p.getX()-p.getSize()/2) + (1 - p.getCapturePercentage())*p.getSize(), 
-						p.getY()-p.getSize() + 70);
+				setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize() + 70, (p.getX()-p.getSize()/2) + (1 - p.getCapturePercentage())*p.getSize(), 
+						p.getY()-p.getSize() + 100);
 
 			}
 			
 		}
 	
-		
-		setColor(p.getBuildPercentage()); //color based on build percentage
-		setModel(p.getX()-p.getSize()/2, p.getY()-p.getSize(), (p.getX()-p.getSize()/2) + p.getBuildPercentage()*p.getSize(), 
-				p.getY()-p.getSize() - 30);
 	}
 	
 	public void drawAllShipHalos(ArrayList<Starship> selected){
@@ -254,6 +253,10 @@ public class ShipRenderer {
 		currentShipTrueCenter.setX(s.getX() + s.getXOff());
 		currentShipTrueCenter.setY(s.getY() + s.getYOff());
 		currentShipTrueCenter.rotatePoint(s.getX(), s.getY(), s.getAngle());
+	}
+	
+	public void loadTexture(int id){
+		gameTextures.loadTexture(id);
 	}
 
 }

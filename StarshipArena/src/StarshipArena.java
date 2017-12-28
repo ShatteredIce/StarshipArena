@@ -45,7 +45,7 @@ import java.io.IOException;
 
 public class StarshipArena {
 	
-	static ShipRenderer shiprenderer;
+	static GameRenderer gamerenderer;
 	
 	Window window;
 	
@@ -171,8 +171,6 @@ public class StarshipArena {
 	
 
 	Sidebar sidebar;
-	Layer titlePage;
-	Layer levelSelect;
 	//Would this work:
 //	Button levelSelectButton = new Button(550 + (1300 - WINDOW_WIDTH) / 2, 555 - (900 - WINDOW_HEIGHT) / 2, 760 - (1300 - WINDOW_WIDTH) / 2, 465 + (900 - WINDOW_HEIGHT) / 2);
 	Button levelSelectButton = new Button(550, 555, 760, 465);
@@ -193,24 +191,16 @@ public class StarshipArena {
 	Button controlsButton = new Button(550, 435, 760, 345);
 	Button creditsButton = new Button(550, 315, 760, 225);
 	
-	Layer boxSelect;
+	double boxSelect_startx;
+	double boxSelect_starty;
 	boolean boxSelectCurrent = false;
 	
-	Layer settingsIcon;
 	Button settingsButton = new Button(1250, 898, 1298, 850);
 	
-	Layer planetMainMenu;
 	Button planetBuyButton = new Button(WINDOW_WIDTH - 380, 80, WINDOW_WIDTH - 280, 20);
 	Button planetIndustryButton = new Button(WINDOW_WIDTH - 250, 80, WINDOW_WIDTH - 150, 20);
 	Button planetEconomyButton = new Button(WINDOW_WIDTH - 120, 80, WINDOW_WIDTH - 20, 20);
-	
-	Layer border1;
-	Layer border2;
-	Layer border3;
-	Layer border4;
-	
-	Layer victoryMessage;
-	Layer defeatMessage;
+		
 	Button nextLevelButton = new Button(WINDOW_WIDTH / 2 - 70, WINDOW_HEIGHT / 2 + 5, WINDOW_WIDTH / 2 + 70, WINDOW_HEIGHT / 2 - 25);
 	Button restartLevelButton = new Button(WINDOW_WIDTH / 2 - 70, WINDOW_HEIGHT / 2 - 35, WINDOW_WIDTH / 2 + 70, WINDOW_HEIGHT / 2 - 65);
 	
@@ -729,8 +719,8 @@ public class StarshipArena {
 								menuMusic.loop(Clip.LOOP_CONTINUOUSLY);
 							return;
 						}
-						boxSelect.setTopLeft(xpos.get(1), ypos.get(1));
-						//boxSelect.setBottomRight(xpos.get(0), ypos.get(0));
+						boxSelect_startx = xpos.get(1);
+						boxSelect_starty = ypos.get(1);
 						oldMouseX = xpos;
 						oldMouseY = ypos;
 						boxSelectCurrent = true;
@@ -950,57 +940,9 @@ public class StarshipArena {
 		createShips(200);
 		
 		sidebar = new Sidebar(this, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 18);
-		titlePage = new Layer(1);
-		titlePage.setTopLeft(250, WINDOW_HEIGHT - 150);
-		titlePage.setBottomRight(WINDOW_WIDTH - 250, 150);
-		titlePage.setPoints();
-		levelSelect = new Layer(2);
-		levelSelect.setTopLeft(200, WINDOW_HEIGHT - 50);
-		levelSelect.setBottomRight(WINDOW_WIDTH - 200, 50);
-		levelSelect.setPoints();
-		boxSelect = new Layer(3);
 		//static layer on top of game
-		settingsIcon = new Layer(4);
-		settingsIcon.setTopLeft(WINDOW_WIDTH - 50, WINDOW_HEIGHT - 2);
-		settingsIcon.setBottomRight(WINDOW_WIDTH - 2, WINDOW_HEIGHT - 50);
-		settingsIcon.setPoints();
 		
-		planetMainMenu = new Layer(5);
-		planetMainMenu.setTopLeft(WINDOW_WIDTH - 400, 100);
-		planetMainMenu.setBottomRight(WINDOW_WIDTH, -50);
-		planetMainMenu.setPoints();
-		
-		border1 = new Layer(6);
-		border1.setTopLeft(-windowXOffset, WINDOW_HEIGHT + windowYOffset);
-		border1.setBottomRight(0, -windowYOffset);
-		border1.setPoints();
-		
-		border2 = new Layer(6);
-		border2.setTopLeft(-windowXOffset, WINDOW_HEIGHT + windowYOffset);
-		border2.setBottomRight(WINDOW_WIDTH + windowXOffset, WINDOW_HEIGHT);
-		border2.setPoints();
-		
-		border3 = new Layer(6);
-		border3.setTopLeft(WINDOW_WIDTH, WINDOW_HEIGHT + windowYOffset);
-		border3.setBottomRight(WINDOW_WIDTH + windowXOffset * 2, -windowYOffset);
-		border3.setPoints();
-		
-		border4 = new Layer(6);
-		border4.setTopLeft(-windowXOffset, 0);
-		border4.setBottomRight(WINDOW_WIDTH + windowXOffset, -windowYOffset);
-		border4.setPoints();
-		
-		victoryMessage = new Layer(7);
-		victoryMessage.setTopLeft(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 + 70);
-		victoryMessage.setBottomRight(WINDOW_WIDTH / 2 + 100, WINDOW_HEIGHT / 2 - 70);
-		victoryMessage.setPoints();
-		
-		defeatMessage = new Layer(8);
-		defeatMessage.setTopLeft(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 + 70);
-		defeatMessage.setBottomRight(WINDOW_WIDTH / 2 + 100, WINDOW_HEIGHT / 2 - 70);
-		defeatMessage.setPoints();
-		
-		shiprenderer = new ShipRenderer();
+		gamerenderer = new GameRenderer();
 				
 		genTiles();
 
@@ -1036,20 +978,31 @@ public class StarshipArena {
 				if(staticFrame == false){
 					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 					projectTrueWindowCoordinates();
-					titlePage.display();
-					settingsIcon.display();
+					//draw title page
+					gamerenderer.loadTexture(1);
+					gamerenderer.setTextureCoords(0, 0, 1, 1);
+					gamerenderer.setModel(250, WINDOW_HEIGHT - 150, WINDOW_WIDTH - 250, 150);
+					//draw settings icon
+					gamerenderer.loadTexture(4);
+					gamerenderer.setModel(WINDOW_WIDTH - 50, WINDOW_HEIGHT - 2, WINDOW_WIDTH - 2, WINDOW_HEIGHT - 50);
+					
 					displayBorders();
 					window.swapBuffers();
 					staticFrame = true;
 				}
 			}
-			//display level select
+			//display level select	
 			if(gameState == 2){
 				if(staticFrame == false){
 					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 					projectTrueWindowCoordinates();
-					levelSelect.display();
-					settingsIcon.display();
+					//draw level select
+					gamerenderer.loadTexture(2);
+					gamerenderer.setTextureCoords(0, 0, 1, 1);
+					gamerenderer.setModel(200, WINDOW_HEIGHT - 50, WINDOW_WIDTH - 200, 50);
+					//draw settings icon
+					gamerenderer.loadTexture(4);
+					gamerenderer.setModel(WINDOW_WIDTH - 50, WINDOW_HEIGHT - 2, WINDOW_WIDTH - 2, WINDOW_HEIGHT - 50);
 					displayBorders();
 					window.swapBuffers();
 					staticFrame = true;
@@ -1058,7 +1011,9 @@ public class StarshipArena {
 			else if(gameState == 4){
 				if(staticFrame == false){
 					projectTrueWindowCoordinates();
-					victoryMessage.display();
+					gamerenderer.loadTexture(7);
+					gamerenderer.setTextureCoords(0, 0, 1, 1);
+					gamerenderer.setModel(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 + 70, WINDOW_WIDTH / 2 + 100, WINDOW_HEIGHT / 2 - 70);
 					window.swapBuffers();
 					staticFrame = true;
 				}
@@ -1066,7 +1021,9 @@ public class StarshipArena {
 			else if(gameState == 5){
 				if(staticFrame == false){
 					projectTrueWindowCoordinates();
-					defeatMessage.display();
+					gamerenderer.loadTexture(8);
+					gamerenderer.setTextureCoords(0, 0, 1, 1);
+					gamerenderer.setModel(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT / 2 + 70, WINDOW_WIDTH / 2 + 100, WINDOW_HEIGHT / 2 - 70);
 					window.swapBuffers();
 					staticFrame = true;
 				}
@@ -1095,7 +1052,7 @@ public class StarshipArena {
 					}
 					
 					//Show FOW
-					shiprenderer.drawAllFOW(player.getControlledShips(), player.getControlledPlanets());
+					gamerenderer.drawAllFOW(player.getControlledShips(), player.getControlledPlanets());
 					
 					
 					//Display background
@@ -1111,12 +1068,13 @@ public class StarshipArena {
 						//only display if planet is in camera window
 						if(planets.get(p).getX() > viewX - (planetDisplayBorder * getWidthScalar()) && planets.get(p).getX() < viewX + cameraWidth + (planetDisplayBorder * getWidthScalar()) 
 								&& planets.get(p).getY() > viewY - (planetDisplayBorder * getHeightScalar()) && planets.get(p).getY() < viewY + cameraHeight + (planetDisplayBorder * getHeightScalar())){
-							shiprenderer.drawPlanet(planets.get(p), isVisible(planets.get(p), player));
+							gamerenderer.drawPlanet(planets.get(p), isVisible(planets.get(p), player));
 						}
 					}
 					
-					shiprenderer.drawAllCaptureBars(planets);
-					shiprenderer.drawAllBuildBars(player.getControlledPlanets());
+					gamerenderer.drawAllBuildBars(player.getControlledPlanets());
+					gamerenderer.drawAllCaptureBars(planets);
+
 					
 					//heal ships in planet range
 			    	for (int i = 0; i < planets.size(); i++) {
@@ -1159,13 +1117,13 @@ public class StarshipArena {
 							if(ships.get(s).getX() > viewX - (shipDisplayBorder * getWidthScalar()) && ships.get(s).getX() < viewX + cameraWidth + (shipDisplayBorder * getWidthScalar())
 									&& ships.get(s).getY() > viewY - (shipDisplayBorder * getHeightScalar()) && ships.get(s).getY() < viewY + cameraHeight + (shipDisplayBorder * getHeightScalar())){
 								if(isVisible(ships.get(s), player)){
-									shiprenderer.drawShip(ships.get(s));
+									gamerenderer.drawShip(ships.get(s));
 								}
 							}
 						}
 						ArrayList<Starship> selectedShips = player.getSelectedShips();
-						shiprenderer.drawAllShipHalos(selectedShips);
-						shiprenderer.drawAllHPBars(selectedShips);
+						gamerenderer.drawAllShipHalos(selectedShips);
+						gamerenderer.drawAllHPBars(selectedShips);
 					}
 					else{
 						//display ship icons
@@ -1173,7 +1131,7 @@ public class StarshipArena {
 							if(ships.get(s).getX() > viewX - (shipDisplayBorder * getWidthScalar()) && ships.get(s).getX() < viewX + cameraWidth + (shipDisplayBorder * getWidthScalar())
 									&& ships.get(s).getY() > viewY - (shipDisplayBorder * getHeightScalar()) && ships.get(s).getY() < viewY + cameraHeight + (shipDisplayBorder * getHeightScalar())){
 								if(isVisible(ships.get(s), player)){
-									shiprenderer.drawShipIcon(ships.get(s));
+									gamerenderer.drawShipIcon(ships.get(s));
 								}
 							}
 						}
@@ -1189,7 +1147,7 @@ public class StarshipArena {
 					
 					//display weapons range of selected ships
 					if(f1Pressed){
-						shiprenderer.drawAllScan(player.getControlledShips());
+						gamerenderer.drawAllScan(player.getControlledShips());
 					}
 					
 					if(shipTracking) {
@@ -1206,9 +1164,10 @@ public class StarshipArena {
 					//convert the glfw coordinate to our coordinate system
 					xpos.put(1, getWidthScalar() * (xpos.get(0) - windowXOffset) + viewX);
 					ypos.put(1, (getHeightScalar() * ((WINDOW_HEIGHT) - ypos.get(0) + windowYOffset) + viewY));
-					boxSelect.setBottomRight(xpos.get(1), ypos.get(1));
-					boxSelect.setPoints();
-					boxSelect.display();
+					//draw box select
+					gamerenderer.loadTexture(3);
+					gamerenderer.setTextureCoords(0, 0, 1, 1);
+					gamerenderer.setModel(boxSelect_startx, boxSelect_starty, xpos.get(1), ypos.get(1));
 				}
 
 				Instant time = Instant.now();
@@ -1284,7 +1243,9 @@ public class StarshipArena {
 				projectTrueWindowCoordinates();
 				
 				//display settings icon
-				settingsIcon.display();
+				gamerenderer.loadTexture(4);
+				gamerenderer.setTextureCoords(0, 0, 1, 1);
+				gamerenderer.setModel(WINDOW_WIDTH - 50, WINDOW_HEIGHT - 2, WINDOW_WIDTH - 2, WINDOW_HEIGHT - 50);
 				
 				//Display sidebar and figure out what has been selected
 				boolean sidebarIsDisplayed = false;
@@ -1414,7 +1375,9 @@ public class StarshipArena {
 						writeText(shipStatus, 20, 20);
 					}
 					if(alliedPlanetSelected){
-						planetMainMenu.display();
+						gamerenderer.loadTexture(5);
+						gamerenderer.setTextureCoords(0, 0, 1, 1);
+						gamerenderer.setModel(WINDOW_WIDTH - 400, 100, WINDOW_WIDTH, -50);
 					}
 					
 					for (int i = 0; i < text.size(); i++) {
@@ -1561,10 +1524,12 @@ public class StarshipArena {
     }
 	
 	public void displayBorders(){
-		border1.display();
-		border2.display();
-		border3.display();
-		border4.display();
+		gamerenderer.loadTexture(6);
+		gamerenderer.setTextureCoords(0, 0, 1, 1);
+		gamerenderer.setModel(-windowXOffset, WINDOW_HEIGHT + windowYOffset, 0, -windowYOffset);
+		gamerenderer.setModel(-windowXOffset, WINDOW_HEIGHT + windowYOffset, WINDOW_WIDTH + windowXOffset, WINDOW_HEIGHT);
+		gamerenderer.setModel(WINDOW_WIDTH, WINDOW_HEIGHT + windowYOffset, WINDOW_WIDTH + windowXOffset * 2, -windowYOffset);
+		gamerenderer.setModel(-windowXOffset, 0, WINDOW_WIDTH + windowXOffset, -windowYOffset);
 	}
 	
 	//Creates the number of ships specified by the user
