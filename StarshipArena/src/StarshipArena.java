@@ -244,8 +244,8 @@ public class StarshipArena {
 		window.createWindow("Starship Arena [WIP]");
 		windowXOffset = window.getXOffset();
 		windowYOffset = window.getYOffset();
-		System.out.println(windowXOffset);
-		System.out.println(windowYOffset);
+//		System.out.println(windowXOffset);
+//		System.out.println(windowYOffset);
 		
 		//Set up damage multipliers array:
 		for (int i = 0; i < damageMultipliers.length; i++) {
@@ -257,7 +257,6 @@ public class StarshipArena {
 		damageMultipliers[2][4] = 0.25;
 		//Missileships are resistant to plasma (all three colors)
 		damageMultipliers[3][0] = 0.5; damageMultipliers[3][1] = 0.5; damageMultipliers[3][2] = 0.5;
-		//Missileships are vulnerable to machineguns
 		damageMultipliers[3][3] = 2;
 		//Wallships are vulnerable to snipers
 		damageMultipliers[4][7] = 3;
@@ -519,74 +518,28 @@ public class StarshipArena {
 //			if ( key == GLFW_KEY_UP && action == GLFW_RELEASE )
 //				SLOW = 1;
 			if ( key == GLFW_KEY_0 && action == GLFW_PRESS){
-				if(shiftPressed){
-					assignControlGroup(player, 0);
-				}
-				else if (player.getSelectedPlanet() != null) {
+				if (player.getSelectedPlanet() != null) {
 					player.getSelectedPlanet().clearBuildOrder();
 				}
 			}
-			if ( key == GLFW_KEY_1 && action == GLFW_PRESS){
-				if(shiftPressed){
-					assignControlGroup(player, 1);
-				}
-				else if(player.getSelectedPlanet() == null){
-					displayControlGroup(player, 1);
-				}
-				else {
-					buyShips(player, 1);
-				}
+			if ( key == GLFW_KEY_1 && action == GLFW_PRESS) {
+				numberKeyPressed(1);
 			}
-			if ( key == GLFW_KEY_2 && action == GLFW_PRESS)
-				if(shiftPressed){
-					assignControlGroup(player, 2);
-				}
-				else if(player.getSelectedPlanet() == null){
-					displayControlGroup(player, 2);
-				}
-				else {
-					buyShips(player, 2);
-				}
-			if ( key == GLFW_KEY_3 && action == GLFW_PRESS)
-				if(shiftPressed){
-					assignControlGroup(player, 3);
-				}
-				else if(player.getSelectedPlanet() == null){
-					displayControlGroup(player, 3);
-				}
-				else {
-					buyShips(player, 3);
-				}
-			if ( key == GLFW_KEY_4 && action == GLFW_PRESS)
-				if(shiftPressed){
-					assignControlGroup(player, 4);
-				}
-				else if(player.getSelectedPlanet() == null){
-					displayControlGroup(player, 4);
-				}
-				else {
-					buyShips(player, 4);
-				}
-			if ( key == GLFW_KEY_5 && action == GLFW_PRESS)
-				if(shiftPressed){
-					assignControlGroup(player, 5);
-				}
-				else if(player.getSelectedPlanet() == null){
-					displayControlGroup(player, 5);
-				}
-				else {
-					buyShips(player, 5);
-				}
-			if ( key == GLFW_KEY_6 && action == GLFW_PRESS)
-				if(shiftPressed){
-					assignControlGroup(player, 6);
-				}
-				else if(player.getSelectedPlanet() == null){
-					displayControlGroup(player, 6);
-				}
-				else {
-					buyShips(player, 6);
-				}
+			if ( key == GLFW_KEY_2 && action == GLFW_PRESS) {
+				numberKeyPressed(2);
+			}
+			if ( key == GLFW_KEY_3 && action == GLFW_PRESS) {
+				numberKeyPressed(3);
+			}
+			if ( key == GLFW_KEY_4 && action == GLFW_PRESS) {
+				numberKeyPressed(4);
+			}
+			if ( key == GLFW_KEY_5 && action == GLFW_PRESS) {
+				numberKeyPressed(5);
+			}
+			if ( key == GLFW_KEY_6 && action == GLFW_PRESS) {
+				numberKeyPressed(6);
+			}
 			
 			//Some cheat commands!!! Useful for testing purposes
 			//H heals selected ships to full health
@@ -1532,6 +1485,22 @@ public class StarshipArena {
 		gamerenderer.setModel(-windowXOffset, 0, WINDOW_WIDTH + windowXOffset, -windowYOffset);
 	}
 	
+	//calls whenever a number key is pressed 
+	public void numberKeyPressed(int key) {
+		if(shiftPressed){
+			assignControlGroup(player, key);
+		}
+		else if(controlPressed) {
+			removeControlGroup(player, key);
+		}
+		else if(player.getSelectedPlanet() == null){
+			displayControlGroup(player, key);
+		}
+		else {
+			buyShips(player, key);
+		}
+	}
+	
 	//Creates the number of ships specified by the user
 	//Each ship has a random starting location and angle
 	public void createShips(int num){
@@ -1641,23 +1610,31 @@ public class StarshipArena {
 			}
 		}
 	}
-	//TODO Right now each ship can only be in one control group. Fix that
+	
+	//assigns selected ships to specified control group
 	public void assignControlGroup(Player player, int group){
 		ArrayList<Starship> playerShips = player.getControlledShips();
 		for(int i = 0; i < playerShips.size(); i++){
 			if(playerShips.get(i).isSelected()){
-				playerShips.get(i).setControlGroup(group);
+				playerShips.get(i).addControlGroup(group);
 			}
-			//Ships not selected are removed from the group
-			else if (playerShips.get(i).getControlGroup() == group)
-				playerShips.get(i).setControlGroup(0);
+		}
+	}
+	
+	//removes selected ships from specified control groups
+	public void removeControlGroup(Player player, int group){
+		ArrayList<Starship> playerShips = player.getControlledShips();
+		for(int i = 0; i < playerShips.size(); i++){
+			if(playerShips.get(i).isSelected()){
+				playerShips.get(i).removeControlGroup(group);
+			}
 		}
 	}
 	
 	public void displayControlGroup(Player player, int group){
 		ArrayList<Starship> allShips = getAllShips();
 		for(int i = 0; i < allShips.size(); i++){
-			if(allShips.get(i).getControlGroup() == group){
+			if(allShips.get(i).inControlGroup(group)){
 				allShips.get(i).setSelected(true);
 			}
 			else{
