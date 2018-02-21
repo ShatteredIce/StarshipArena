@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Enemy {
 	
-	StarshipArena game;
+	static StarshipArena game;
 	Player enemyPlayer;
 	
 	

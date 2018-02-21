@@ -11,7 +11,7 @@ public class Starship {
 	int damageDisplayDelay = 0;
 	Starship target = null;
 	Random random = new Random();
-	StarshipArena game;
+	static StarshipArena game;
 	static Texture tex = new Texture("WIP.png");
 	//halo rendering variables
 	int haloSize = 80;

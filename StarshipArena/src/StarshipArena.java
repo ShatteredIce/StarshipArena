@@ -121,13 +121,12 @@ public class StarshipArena {
     DoubleBuffer newMouseX;
     DoubleBuffer newMouseY;
     
-    int FIGHTER_COST = 5;
-    int INTERCEPTOR_COST = 20;
-    int TRANSPORT_COST = 10;
-    int MISSILESHIP_COST = 40;
-    int WALLSHIP_COST = 30;
-    int SNIPER_COST = 60;
-    int BATTLESHIP_COST = 80;
+    final static int FIGHTER_COST = 5;
+    final static int INTERCEPTOR_COST = 20;
+    final static int MISSILESHIP_COST = 40;
+    final static int WALLSHIP_COST = 30;
+    final static int SNIPER_COST = 60;
+    final static int BATTLESHIP_COST = 80;
     
     int PROXIMITY_SIZE = 300;
     

@@ -3,8 +3,22 @@ import java.util.Random;
 
 public class Planet {
 	
-	StarshipArena game;
+	static StarshipArena game;
 	Random random = new Random();
+	
+	//constant variables for all planets
+	final static int[] shipCosts = {StarshipArena.FIGHTER_COST, StarshipArena.INTERCEPTOR_COST, StarshipArena.MISSILESHIP_COST, 
+			StarshipArena.WALLSHIP_COST, StarshipArena.SNIPER_COST, StarshipArena.BATTLESHIP_COST};
+	final static int FIGHTER_BUILDTIME = 100;
+    final static int INTERCEPTOR_BUILDTIME = 200;
+    final static int MISSILESHIP_BUILDTIME = 400;
+    final static int WALLSHIP_BUILDTIME = 600;
+    final static int SNIPER_BUILDTIME = 400;
+    final static int BATTLESHIP_BUILDTIME = 800;
+	final static int[] shipBuildTimes = {FIGHTER_BUILDTIME, INTERCEPTOR_BUILDTIME, MISSILESHIP_BUILDTIME, WALLSHIP_BUILDTIME,
+			SNIPER_BUILDTIME, BATTLESHIP_BUILDTIME};
+	
+	
 	//planet rendering variables
 	double[] vertices;
 	double[] textureCoords = {0,0,1,1}; 
@@ -40,10 +54,10 @@ public class Planet {
 	int resourceTimer = 50;
 	//ship building
 	boolean isBuilding = false;
-	int maxBuildTimer = 100;
-	int buildTimer = 100;
+	int currentShipBuildTimer = 0;
+	int buildTimer = 0;
 	boolean looping = false;
-	int[] shipCosts;
+	
 	ArrayList<Integer> buildOrder = new ArrayList<Integer>();
 	
 	
@@ -76,10 +90,7 @@ public class Planet {
 		setHaloPoints();
 		radarPoints = generatePoints(radar_range);
 		radarVertices = new double[radarPoints.length * 2];
-		setRadarPoints();
-		
-		shipCosts = new int[6]; shipCosts[0] = game.FIGHTER_COST; shipCosts[1] = game.INTERCEPTOR_COST; shipCosts[2] = game.MISSILESHIP_COST;
-		shipCosts[3] = game.WALLSHIP_COST; shipCosts[4] = game.SNIPER_COST; shipCosts[5] = game.BATTLESHIP_COST;
+		setRadarPoints();	
 		
 		game.addPlanet(this);
 	}
@@ -235,7 +246,6 @@ public class Planet {
 			if(resourceTimer == 0){
 				storedResources += resourcesPerTick;
 				resourceTimer = maxResourceTimer;
-//				checkLoop();
 			}
 			else{
 				resourceTimer--;
@@ -243,7 +253,6 @@ public class Planet {
 			if(isBuilding){
 				if(buildTimer == 0){
 					isBuilding = false;
-					buildTimer = maxBuildTimer;
 					spawnShip(buildOrder.get(0));
 					if (looping) buildOrder.add(buildOrder.get(0));
 					buildOrder.remove(0);
@@ -255,6 +264,8 @@ public class Planet {
 			else{
 				if(!buildOrder.isEmpty() && storedResources >= shipCosts[buildOrder.get(0) - 1]){
 					storedResources -= shipCosts[buildOrder.get(0) - 1];
+					currentShipBuildTimer = shipBuildTimes[buildOrder.get(0) - 1];
+					buildTimer = shipBuildTimes[buildOrder.get(0) - 1];
 					isBuilding = true;
 				}
 			}
@@ -319,7 +330,9 @@ public class Planet {
 	}
 	
 	public void queueShip(int type){
-		buildOrder.add(type);
+		if(buildOrder.size() < 16) {
+			buildOrder.add(type);
+		}
 	}
 	
 	public void spawnShip(int type){
@@ -358,7 +371,8 @@ public class Planet {
 	//Clear the build queue, stop the current construction, and refund resources if a ship is currently building
 	public void clearBuildOrder(){
 		isBuilding = false;
-		buildTimer = maxBuildTimer;
+		buildTimer = 0;
+		currentShipBuildTimer = 0;
 		if (!buildOrder.isEmpty()) storedResources += shipCosts[buildOrder.get(0) - 1];
 		buildOrder.clear();
 	}
@@ -412,7 +426,7 @@ public class Planet {
 	}
 	
 	public double getBuildPercentage(){
-		return 1 - ((double) buildTimer/ (double) maxBuildTimer);
+		return 1 - ((double) buildTimer/ (double) currentShipBuildTimer);
 	}
 
 }
