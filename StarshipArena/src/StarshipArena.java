@@ -2,7 +2,7 @@
 //Example of LWJGL 3, displays ships that move randomly in the window
 
 //ANGLE SYSTEM (DO NOT DELETE THESE, DUJIN NEEDS THESE FOR REFERENCE):
-//I find these comments very useful, will not delete - Nathan
+//I find these comments very useful, will not delete
 //			 0
 //		  90 + 270
 //		    180
@@ -26,7 +26,6 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 
-import java.lang.reflect.Array;
 import java.nio.*;
 import java.time.Instant;
 
@@ -889,7 +888,7 @@ public class StarshipArena {
 		playerList.add(player);
 		playerList.add(enemy.getPlayer());
 		
-		createShips(200);
+//		createShips(200);
 		
 		sidebar = new Sidebar(this, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 18);
 		//static layer on top of game
@@ -1467,14 +1466,14 @@ public class StarshipArena {
 	
 	public double[] getScreenBounds(){
     	double[] bounds = new double[4];
-//    	bounds[0] = 0;
-//    	bounds[1] = WORLD_WIDTH;
-//    	bounds[2] = 0;
-//    	bounds[3] = WORLD_HEIGHT;
-    	bounds[0] = currentMin_X;
-    	bounds[1] = currentMax_X;
-    	bounds[2] = currentMin_Y;
-    	bounds[3] = currentMax_Y;
+    	bounds[0] = 0;
+    	bounds[1] = WORLD_WIDTH;
+    	bounds[2] = 0;
+    	bounds[3] = WORLD_HEIGHT;
+//    	bounds[0] = currentMin_X;
+//    	bounds[1] = currentMax_X;
+//    	bounds[2] = currentMin_Y;
+//    	bounds[3] = currentMax_Y;
     	
     	return bounds;
     }
@@ -2366,37 +2365,37 @@ public class StarshipArena {
 		//TODO Doing setScreenBounds within the constructor is causing hellish problems. I'll have to do it here again
 		//TODO Note, this will not work if one plans to generate surface ships within the level definition.
 		//TODO Solution is to never spawn surface ships
-		for (int i = 0; i < ships.size(); i++) {
-			ships.get(i).setScreenBounds(getScreenBounds());
-		}
+//		for (int i = 0; i < ships.size(); i++) {
+//			ships.get(i).setScreenBounds(getScreenBounds());
+//		}
 		
-		//Define dimensions of the space map (which will be used to reutnr to space when needed)
-	    spaceMin_X = 0;
-	    spaceMin_Y = 0;
-	    spaceMax_X = WORLD_WIDTH;
-	    spaceMax_Y = WORLD_HEIGHT;
-	    
-	    //Create planet surfaces
-	    for (int i = 0; i < planets.size(); i++) {
-			Planet p = planets.get(i);
-			p.surfaceX = -100000 + i * 100000;
-			p.surfaceY = -100000;
-			p.dimensionX = 10000;
-			p.dimensionY = 10000;
-			
-			//TODO Hardcoding tile size isn't probably a good idea
-			Tile temp = new Tile(this, p.surfaceX + p.dimensionX / 2, p.surfaceY + p.dimensionY / 2, 15000);
-			//TODO Ask Nathan to get some proper backgrounds for planet surfaces and store them in Tile the same way
-			//TODO that Planet stores planet textures (needs transparency, or no FOG, or even better, make all tiles opaque but use glDraw so that it's set to 90%)
-			temp.setSpecialTexture(Planet.textures[p.texId]);
-			
-			loadSubLevel(p);
-			//Testing with 10 ships
-			for (int j = 0; j < 10; j++) {
-				new Fighter(this, "blue", p.surfaceX + 500, p.surfaceY + 500, 0);
-			}
-			loadSubLevel(null);
-		}
+//		//Define dimensions of the space map (which will be used to reutnr to space when needed)
+//	    spaceMin_X = 0;
+//	    spaceMin_Y = 0;
+//	    spaceMax_X = WORLD_WIDTH;
+//	    spaceMax_Y = WORLD_HEIGHT;
+//	    
+//	    //Create planet surfaces
+//	    for (int i = 0; i < planets.size(); i++) {
+//			Planet p = planets.get(i);
+//			p.surfaceX = -100000 + i * 100000;
+//			p.surfaceY = -100000;
+//			p.dimensionX = 10000;
+//			p.dimensionY = 10000;
+//			
+//			//TODO Hardcoding tile size isn't probably a good idea
+//			Tile temp = new Tile(this, p.surfaceX + p.dimensionX / 2, p.surfaceY + p.dimensionY / 2, 15000);
+//			//TODO Ask Nathan to get some proper backgrounds for planet surfaces and store them in Tile the same way
+//			//TODO that Planet stores planet textures (needs transparency, or no FOG, or even better, make all tiles opaque but use glDraw so that it's set to 90%)
+//			temp.setSpecialTexture(Planet.textures[p.texId]);
+//			
+//			loadSubLevel(p);
+//			//Testing with 10 ships
+//			for (int j = 0; j < 10; j++) {
+//				new Fighter(this, "blue", p.surfaceX + 500, p.surfaceY + 500, 0);
+//			}
+//			loadSubLevel(null);
+//		}
 	    
 		playerList.add(player);
 		playerList.add(enemy.getPlayer());
