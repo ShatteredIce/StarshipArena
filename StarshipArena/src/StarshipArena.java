@@ -162,7 +162,7 @@ public class StarshipArena {
 	Clip gameMusic;
 	Clip menuMusic;
 	
-	boolean mute = false;
+	boolean mute = true;
 	boolean fog = false;
 	
 	//Damage multipliers array;
@@ -995,8 +995,9 @@ public class StarshipArena {
 					counter++;
 					
 					glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-					projectRelativeCameraCoordinates();
 					
+					projectRelativeCameraCoordinates();
+														
 					//Precompute isVisible()
 					for (int i = 0; i < playerList.size(); i++) {
 						Player p = playerList.get(i);
@@ -1006,12 +1007,15 @@ public class StarshipArena {
 					//Show FOW
 					gamerenderer.drawAllFOW(player.getControlledShips(), player.getControlledPlanets());
 					
+					projectTrueWindowCoordinates();
 					
 					//Display background
 					for (int t = 0; t < backgroundTiles.size(); t++) {
 						backgroundTiles.get(t).display();
 					}
 					
+					projectRelativeCameraCoordinates();
+
 					
 					//Update planets
 					for(int p = 0; p < planets.size(); p++){
@@ -1761,7 +1765,6 @@ public class StarshipArena {
 		destroyAllPlanets();
 		destroyAllProjectiles();
 		destroyAllExplosions();
-		destroyAllTiles();
 		playerList.clear();
 		loadSubLevel(null);
 		mute = trueMuteState;
@@ -2395,7 +2398,6 @@ public class StarshipArena {
 			loadSubLevel(null);
 		}
 	    
-		genTiles();
 		playerList.add(player);
 		playerList.add(enemy.getPlayer());
 	}
@@ -2635,13 +2637,13 @@ public class StarshipArena {
         return null;
     }
     
-    public void genTiles(){
-    	for (int x = (int)(-3600 * levelScale); x <= WORLD_WIDTH + 7200 * levelScale; x+=7200 * levelScale) {
-			for (int y = (int)(-3600 * levelScale); y <= WORLD_HEIGHT + 7200 * levelScale; y+=7200 * levelScale) {
-				new Tile(this, x, y);
+    public void genTiles() {
+    	int tileSize = 800;
+    	for (int x = (int)(-tileSize); x <= WINDOW_WIDTH + tileSize*2; x += tileSize*2) {
+    		for (int y = (int)(-tileSize); y <= WINDOW_HEIGHT + tileSize*2; y += tileSize*2) {
+				new Tile(this, x, y, tileSize);
 			}
 		}
-    	
     }
     
     public void destroyAllShips(){
@@ -2666,12 +2668,6 @@ public class StarshipArena {
     public void destroyAllExplosions(){
     	for (int i = explosions.size()-1; i >= 0; i--) {
 			explosions.get(i).destroy();
-		}
-    }
-    
-    public void destroyAllTiles(){
-    	for (int i = backgroundTiles.size()-1; i >= 0; i--) {
-			backgroundTiles.get(i).destroy();
 		}
     }
     
