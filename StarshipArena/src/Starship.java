@@ -11,7 +11,7 @@ public class Starship {
 	int damageDisplayDelay = 0;
 	Starship target = null;
 	Random random = new Random();
-	StarshipArena game;
+	static StarshipArena game;
 	static Texture tex = new Texture("WIP.png");
 	//halo rendering variables
 	int haloSize = 80;
@@ -31,7 +31,7 @@ public class Starship {
 	static double scaleFactor = 1;
 	
 	String team;
-	int control_group = 0;
+	ArrayList<Integer> control_groups = new ArrayList<>();
 	double angle;
 	double move_angle;
 	double targeted_velocity;
@@ -684,12 +684,21 @@ public class Starship {
 		directTarget = b;
 	}
 	
-	public void setControlGroup(int group){
-		control_group = group;
+	public void addControlGroup(int group) {
+		control_groups.add(group);
 	}
 	
-	public int getControlGroup(){
-		return control_group;
+	public void removeControlGroup(int group) {
+		control_groups.remove(Integer.valueOf(group));
+	}
+	
+	public boolean inControlGroup(int group) {
+		for (int i = 0; i < control_groups.size(); i++) {
+			if(control_groups.get(i) == group) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	//When calling this command, put a valid Starship/Point as one input and null for the other one

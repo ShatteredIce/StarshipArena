@@ -17,9 +17,9 @@ public class AdvancedEnemy extends Enemy{
 		int interceptorsCost = 0;
 		int missileshipsCost = 0;
 		for (int i = 0; i < playerShips.size(); i++) {
-			if (playerShips.get(i) instanceof Fighter) fightersCost += game.FIGHTER_COST;
-			else if (playerShips.get(i) instanceof Interceptor) interceptorsCost += game.INTERCEPTOR_COST;
-			else if (playerShips.get(i) instanceof Missileship) missileshipsCost += game.MISSILESHIP_COST;
+			if (playerShips.get(i) instanceof Fighter) fightersCost += StarshipArena.FIGHTER_COST;
+			else if (playerShips.get(i) instanceof Interceptor) interceptorsCost += StarshipArena.INTERCEPTOR_COST;
+			else if (playerShips.get(i) instanceof Missileship) missileshipsCost += StarshipArena.MISSILESHIP_COST;
 		}
 		int total = fightersCost + interceptorsCost + missileshipsCost;
 		//Find the proportion of each type of ship. This helps weight ship purchase probability by enemy ship proportion

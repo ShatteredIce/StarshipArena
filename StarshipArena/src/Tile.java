@@ -20,7 +20,7 @@ public class Tile {
 	//Custom (planet) tiles
 	Tile(StarshipArena mygame, double spawnx, double spawny, int newsize){
 		game = mygame;
-		size = (int)(newsize * game.levelScale);
+		size = (int)(newsize);
 		center = new Point(spawnx, spawny);
 		points = generatePoints();
 		vertices = new double[points.length * 2];
