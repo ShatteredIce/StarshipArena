@@ -7,7 +7,7 @@ public class Wallship extends Starship{
 	static Texture missileship_sprites = new Texture("missileship_sprites.png");
 	
 	//Dual machinegun turrets (360 degree)
-	static double primary_damage = 1;
+	static double primary_damage = 0.5;
 	static int primary_cooldown = 20;
 	static int primary_spread = 360;
 	static int primary_accuracy = 97;
@@ -31,7 +31,7 @@ public class Wallship extends Starship{
 	}
 	//Stats were modified
 	public void shipStats(){
-		max_health = 400;
+		max_health = 300;
 		//movement
 		acceleration = 0.1;
 		max_velocity = 6;

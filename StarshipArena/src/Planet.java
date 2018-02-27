@@ -264,6 +264,9 @@ public class Planet {
 			else{
 				if(!buildOrder.isEmpty() && storedResources >= shipCosts[buildOrder.get(0) - 1]){
 					storedResources -= shipCosts[buildOrder.get(0) - 1];
+					//Dujin's buildtime function
+//					buildTimer = (int)Math.sqrt(shipCosts[buildOrder.get(0) - 1] * 1000);
+//					totalBuildTimer = buildTimer;
 					currentShipBuildTimer = shipBuildTimes[buildOrder.get(0) - 1];
 					buildTimer = shipBuildTimes[buildOrder.get(0) - 1];
 					isBuilding = true;
@@ -370,10 +373,10 @@ public class Planet {
 	
 	//Clear the build queue, stop the current construction, and refund resources if a ship is currently building
 	public void clearBuildOrder(){
+		if (!buildOrder.isEmpty() && isBuilding) storedResources += shipCosts[buildOrder.get(0) - 1];
 		isBuilding = false;
 		buildTimer = 0;
 		currentShipBuildTimer = 0;
-		if (!buildOrder.isEmpty()) storedResources += shipCosts[buildOrder.get(0) - 1];
 		buildOrder.clear();
 	}
 	

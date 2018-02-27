@@ -137,7 +137,7 @@ public class StarshipArena {
     float MGUN_DB = -18.0f;
     float MISSILE_DB = -4.0f;
     float LASER_DB = -8.0f;
-    float SNIPER_DB = 1.0f;
+    float SNIPER_DB = 3.0f;
     float HITEX_DB = -8.0f;
     float DEATHEX_DB = 1.0f;
     
@@ -251,12 +251,14 @@ public class StarshipArena {
 			Arrays.fill(damageMultipliers[i], 1);
 		}
 		//Fighters are vulnerable to missiles
-		damageMultipliers[1][4] = 4;
+		damageMultipliers[1][4] = 2;
 		//Interceptors are resistant to missiles
 		damageMultipliers[2][4] = 0.25;
 		//Missileships are resistant to plasma (all three colors)
 		damageMultipliers[3][0] = 0.5; damageMultipliers[3][1] = 0.5; damageMultipliers[3][2] = 0.5;
 		damageMultipliers[3][3] = 2;
+		//Missileships are vulnerable to snipers
+		damageMultipliers[3][7] = 2;
 		//Wallships are vulnerable to snipers
 		damageMultipliers[4][7] = 3;
 		//Wallships are resistant to missiles
@@ -309,6 +311,13 @@ public class StarshipArena {
 				soundEffects[i] = AudioSystem.getClip();
 				AudioInputStream laserSfx = AudioSystem.getAudioInputStream(new File("sounds/effects/pulse_laser.wav"));
 				soundEffects[i].open(laserSfx);
+//				FloatControl gainControl = (FloatControl) soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
+//				gainControl.setValue(1.0f); // Increase volume by a number of decibels.
+			}
+			for (int i = 30; i < 35; i++) {
+				soundEffects[i] = AudioSystem.getClip();
+				AudioInputStream sniperSfx = AudioSystem.getAudioInputStream(new File("sounds/effects/cannon_fire2.wav"));
+				soundEffects[i].open(sniperSfx);
 //				FloatControl gainControl = (FloatControl) soundEffects[i].getControl(FloatControl.Type.MASTER_GAIN);
 //				gainControl.setValue(1.0f); // Increase volume by a number of decibels.
 			}
@@ -517,7 +526,8 @@ public class StarshipArena {
 //			if ( key == GLFW_KEY_UP && action == GLFW_RELEASE )
 //				SLOW = 1;
 			if ( key == GLFW_KEY_0 && action == GLFW_PRESS){
-				if (player.getSelectedPlanet() != null) {
+				
+				if (player.getSelectedPlanet() != null && player.getTeam().equals(player.getSelectedPlanet().getTeam())) {
 					player.getSelectedPlanet().clearBuildOrder();
 				}
 			}
@@ -2392,7 +2402,8 @@ public class StarshipArena {
 //			ships.get(i).setScreenBounds(getScreenBounds());
 //		}
 		
-//		//Define dimensions of the space map (which will be used to reutnr to space when needed)
+		
+//		//Define dimensions of the space map (which will be used to return to space when needed)
 //	    spaceMin_X = 0;
 //	    spaceMin_Y = 0;
 //	    spaceMax_X = WORLD_WIDTH;
