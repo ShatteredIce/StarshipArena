@@ -10,6 +10,8 @@ public class GameTextures {
 	static Texture tex6 = new Texture("border.png");
 	static Texture tex7 = new Texture("victory_screen.png");
 	static Texture tex8 = new Texture("defeat_screen.png");
+	static Texture tex9 = new Texture("audio_on.png");
+	static Texture tex10 = new Texture("audio_off.png");
 	
 	public void loadTexture(int id){
 		switch (id) {
@@ -36,6 +38,12 @@ public class GameTextures {
 			break;
 		case 8:
 			tex8.bind();
+			break;
+		case 9:
+			tex9.bind();
+			break;
+		case 10:
+			tex10.bind();
 			break;
 		default:
 			try {

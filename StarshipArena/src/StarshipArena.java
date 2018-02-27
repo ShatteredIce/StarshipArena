@@ -161,7 +161,7 @@ public class StarshipArena {
 	Clip gameMusic;
 	Clip menuMusic;
 	
-	boolean mute = true;
+	boolean mute = false;
 	boolean fog = false;
 	
 	//Damage multipliers array;
@@ -193,7 +193,8 @@ public class StarshipArena {
 	double boxSelect_starty;
 	boolean boxSelectCurrent = false;
 	
-	Button settingsButton = new Button(1250, 898, 1298, 850);
+	Button settingsButton = new Button(WINDOW_WIDTH - 50, WINDOW_HEIGHT - 2, WINDOW_WIDTH - 2, WINDOW_HEIGHT - 50);
+	Button audioButton = new Button(WINDOW_WIDTH - 102, WINDOW_HEIGHT - 2, WINDOW_WIDTH - 54, WINDOW_HEIGHT - 50);
 	
 	Button planetBuyButton = new Button(WINDOW_WIDTH - 380, 80, WINDOW_WIDTH - 280, 20);
 	Button planetIndustryButton = new Button(WINDOW_WIDTH - 250, 80, WINDOW_WIDTH - 150, 20);
@@ -587,6 +588,10 @@ public class StarshipArena {
 						if(settingsButton.isClicked(xpos.get(2), ypos.get(2))){
 							System.exit(1);
 						}
+						else if(audioButton.isClicked(xpos.get(2), ypos.get(2))){
+							mute = !mute;
+							staticFrame = false;
+						}
 					}
 					else if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
 					//System.out.println(xpos.get(1) + " " + ypos.get(1));
@@ -619,6 +624,10 @@ public class StarshipArena {
 							staticFrame = false;
 							return;
 						}
+						else if(audioButton.isClicked(xpos.get(2), ypos.get(2))){
+							mute = !mute;
+							staticFrame = false;
+						}
 					}
 					else if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE) {
 						//System.out.println(xpos.get(1) + " " + ypos.get(1));
@@ -643,6 +652,10 @@ public class StarshipArena {
 						
 							staticFrame = false;
 							return;
+						}
+						else if(audioButton.isClicked(xpos.get(2), ypos.get(2))){
+							mute = !mute;
+							staticFrame = false;
 						}
 					}
 					if ( button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_RELEASE){
@@ -669,6 +682,9 @@ public class StarshipArena {
 							if (!mute)
 								menuMusic.loop(Clip.LOOP_CONTINUOUSLY);
 							return;
+						}
+						else if(audioButton.isClicked(xpos.get(2), ypos.get(2))){
+							mute = !mute;
 						}
 						boxSelect_startx = xpos.get(1);
 						boxSelect_starty = ypos.get(1);
@@ -933,10 +949,7 @@ public class StarshipArena {
 					gamerenderer.loadTexture(1);
 					gamerenderer.setTextureCoords(0, 0, 1, 1);
 					gamerenderer.setModel(250, WINDOW_HEIGHT - 150, WINDOW_WIDTH - 250, 150);
-					//draw settings icon
-					gamerenderer.loadTexture(4);
-					gamerenderer.setModel(WINDOW_WIDTH - 50, WINDOW_HEIGHT - 2, WINDOW_WIDTH - 2, WINDOW_HEIGHT - 50);
-					
+					drawUIButtons();
 					displayBorders();
 					window.swapBuffers();
 					staticFrame = true;
@@ -952,8 +965,7 @@ public class StarshipArena {
 					gamerenderer.setTextureCoords(0, 0, 1, 1);
 					gamerenderer.setModel(200, WINDOW_HEIGHT - 50, WINDOW_WIDTH - 200, 50);
 					//draw settings icon
-					gamerenderer.loadTexture(4);
-					gamerenderer.setModel(WINDOW_WIDTH - 50, WINDOW_HEIGHT - 2, WINDOW_WIDTH - 2, WINDOW_HEIGHT - 50);
+					drawUIButtons();
 					displayBorders();
 					window.swapBuffers();
 					staticFrame = true;
@@ -1197,10 +1209,7 @@ public class StarshipArena {
 				
 				projectTrueWindowCoordinates();
 				
-				//display settings icon
-				gamerenderer.loadTexture(4);
-				gamerenderer.setTextureCoords(0, 0, 1, 1);
-				gamerenderer.setModel(WINDOW_WIDTH - 50, WINDOW_HEIGHT - 2, WINDOW_WIDTH - 2, WINDOW_HEIGHT - 50);
+				drawUIButtons();
 				
 				//Display sidebar and figure out what has been selected
 				boolean sidebarIsDisplayed = false;
@@ -1444,6 +1453,20 @@ public class StarshipArena {
 			}
 			
 		}
+	}
+	
+	public void drawUIButtons() {
+		//display settings icon
+		gamerenderer.loadTexture(4);
+		gamerenderer.setTextureCoords(0, 0, 1, 1);
+		gamerenderer.setModel(WINDOW_WIDTH - 50, WINDOW_HEIGHT - 2, WINDOW_WIDTH - 2, WINDOW_HEIGHT - 50);
+		if(!mute) {
+			gamerenderer.loadTexture(9);
+		}
+		else {
+			gamerenderer.loadTexture(10);
+		}
+		gamerenderer.setModel(WINDOW_WIDTH - 102, WINDOW_HEIGHT - 2, WINDOW_WIDTH - 54, WINDOW_HEIGHT - 50);
 	}
 
 	public static void main(String[] args) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
