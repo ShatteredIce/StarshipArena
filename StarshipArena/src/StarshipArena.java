@@ -599,7 +599,7 @@ public class StarshipArena {
 							System.exit(1);
 						}
 						else if(audioButton.isClicked(xpos.get(2), ypos.get(2))){
-							mute = !mute;
+							toggleAudio();
 							staticFrame = false;
 						}
 					}
@@ -635,7 +635,7 @@ public class StarshipArena {
 							return;
 						}
 						else if(audioButton.isClicked(xpos.get(2), ypos.get(2))){
-							mute = !mute;
+							toggleAudio();
 							staticFrame = false;
 						}
 					}
@@ -664,7 +664,7 @@ public class StarshipArena {
 							return;
 						}
 						else if(audioButton.isClicked(xpos.get(2), ypos.get(2))){
-							mute = !mute;
+							toggleAudio();
 							staticFrame = false;
 						}
 					}
@@ -694,7 +694,7 @@ public class StarshipArena {
 							return;
 						}
 						else if(audioButton.isClicked(xpos.get(2), ypos.get(2))){
-							mute = !mute;
+							toggleAudio();
 						}
 						boxSelect_startx = xpos.get(1);
 						boxSelect_starty = ypos.get(1);
@@ -1477,6 +1477,22 @@ public class StarshipArena {
 			gamerenderer.loadTexture(10);
 		}
 		gamerenderer.setModel(WINDOW_WIDTH - 102, WINDOW_HEIGHT - 2, WINDOW_WIDTH - 54, WINDOW_HEIGHT - 50);
+	}
+	
+	public void toggleAudio() {
+		mute = !mute;
+		if(mute) { //stop audio
+			menuMusic.stop();
+			gameMusic.stop();
+		}
+		else { //start audio
+			if(gameState == 3) {
+				gameMusic.start();
+			}
+			else {
+				menuMusic.start();
+			}
+		}
 	}
 
 	public static void main(String[] args) throws IOException, LineUnavailableException, UnsupportedAudioFileException {
