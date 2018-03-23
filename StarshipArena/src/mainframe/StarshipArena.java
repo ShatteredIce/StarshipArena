@@ -608,9 +608,9 @@ public class StarshipArena {
 //			if(xpos.get(0) > windowXOffset && xpos.get(0) < WINDOW_WIDTH + windowXOffset &&
 //					ypos.get(0) > windowYOffset && ypos.get(0) < WINDOW_HEIGHT + windowYOffset){
 				//convert the glfw coordinate to our coordinate system
-				//relative camera coordinates
 				xpos.put(0, Math.min(Math.max(xpos.get(0), windowXOffset), WINDOW_WIDTH + windowXOffset));
 				ypos.put(0, Math.min(Math.max(ypos.get(0), windowYOffset), WINDOW_HEIGHT + windowYOffset));
+				//relative camera coordinates
 				xpos.put(1, getWidthScalar() * (xpos.get(0) - windowXOffset) + viewX);
 				ypos.put(1, (getHeightScalar() * (WINDOW_HEIGHT - ypos.get(0) + windowYOffset) + viewY));
 				//true window coordinates
@@ -1779,7 +1779,7 @@ public class StarshipArena {
 				}
 				else{
 					viewX -= cameraWidth / 6;
-					viewY -= cameraWidth / 6;
+					viewY -= cameraHeight / 6;
 				}
 				if(viewX + cameraWidth > currentMax_X){
 					viewX = currentMax_X - cameraWidth;
